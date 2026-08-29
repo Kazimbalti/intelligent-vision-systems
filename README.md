@@ -81,6 +81,15 @@ one place.
 > [Git LFS](https://git-lfs.com/) — run `git lfs install` once before cloning
 > so `lectures/assets/01_intro/Projects_demo.mp4`, `lectures/NMD_VAS.pptx`,
 > and `lectures/pdf/*.pdf` download correctly.
+>
+> **GitHub Pages caveat:** Pages serves the raw Git LFS *pointer* file, not
+> the real binary, so any `<video>`/`<a>` on the live site can't link to an
+> LFS-tracked path directly. The demo video and lecture PDFs instead link to
+> the [`media-v1` release](../../releases/tag/media-v1) — if you add another
+> large file that needs to play/download from the live site, upload it there
+> too (`gh release upload media-v1 <file>`) and link its
+> `.../releases/download/media-v1/<file>` URL instead of the repo-relative
+> path.
 
 ## Editing content
 
