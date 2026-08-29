@@ -4,7 +4,7 @@
 
 **A complete, 16-week, project-driven Computer Vision course — classical CV through deep learning, deployed live on the Raspberry&nbsp;Pi&nbsp;5.**
 
-[![Course Website](https://img.shields.io/badge/course%20website-live-2ea44f?style=for-the-badge)](https://kazimbalti.github.io/intelligent-vision-systems/)
+[![Private repo](https://img.shields.io/badge/access-invite%20only-6e5494?style=for-the-badge)](#access)
 [![License: MIT](https://img.shields.io/badge/code%20license-MIT-blue.svg?style=for-the-badge)](LICENSE)
 [![Slides: reveal.js](https://img.shields.io/badge/slides-reveal.js-ff5c39?style=for-the-badge)](https://revealjs.com)
 [![Platform](https://img.shields.io/badge/platform-Raspberry%20Pi%205-c51a4a?style=for-the-badge)](https://www.raspberrypi.com/products/raspberry-pi-5/)
@@ -20,19 +20,25 @@ lab). Sixteen lecture decks, fifteen Raspberry&nbsp;Pi&nbsp;5 labs, two
 research-paper-from-scratch labs (U-Net, Transformer), an OpenCV&nbsp;5.0 deep
 dive, and a capstone vision system demoed on real hardware.
 
-## 🔗 Course Website
+## 🔒 Access
 
-**➡️ https://kazimbalti.github.io/intelligent-vision-systems/**
+This repository is **private** — shared only with people the instructor has
+invited as collaborators. There is no public website; browse the course by
+cloning the repo (see [Local preview](#local-preview) below) and opening
+`index.html`, or just read the `.html` files directly on GitHub.
 
-The website is the primary way to browse this course. It has the latest:
+Start here:
 
-- [Syllabus](https://kazimbalti.github.io/intelligent-vision-systems/syllabus.html) — CLOs, textbooks, grading, policies
-- [Schedule](https://kazimbalti.github.io/intelligent-vision-systems/schedule.html) — the full 16-week lecture + lab table
-- [Labs](https://kazimbalti.github.io/intelligent-vision-systems/labs.html) — 15 labs, capstone rubric, project bank
-- [Lectures](https://kazimbalti.github.io/intelligent-vision-systems/lectures/) — 16 interactive reveal.js slide decks
-- [Code & Demos](https://kazimbalti.github.io/intelligent-vision-systems/code/) — runnable OpenCV/PyTorch/Hailo/ESP32 samples
-- [Assignments](https://kazimbalti.github.io/intelligent-vision-systems/assignments/) — the graded assignment bank
-- [Tutorials](https://kazimbalti.github.io/intelligent-vision-systems/tutorials/) — Pi, Git, Python/Conda, VS Code, NumPy, Pydantic
+- [`syllabus.html`](syllabus.html) — CLOs, textbooks, grading, policies
+- [`schedule.html`](schedule.html) — the full 16-week lecture + lab table
+- [`labs.html`](labs.html) — 15 labs, capstone rubric, project bank
+- [`lectures/index.html`](lectures/index.html) — 16 interactive reveal.js slide decks
+- [`code/index.html`](code/index.html) — runnable OpenCV/PyTorch/Hailo/ESP32 samples
+- [`assignments/index.html`](assignments/index.html) — the graded assignment bank
+- [`tutorials/index.html`](tutorials/index.html) — Pi, Git, Python/Conda, VS Code, NumPy, Pydantic
+
+If you'd like your own public copy, fork the repo, make it public, and flip
+on **Settings → Pages** — see [Deploy on GitHub Pages](#deploy-on-github-pages).
 
 ## 📚 About the Course
 
@@ -49,16 +55,6 @@ running thread of **real-time deployment on embedded/edge hardware**:
 - Object detection, segmentation, and Vision Transformers / VLMs
 - Edge deployment: quantisation, pruning, ONNX/TFLite/Hailo, and an **OpenCV 5.0** deep dive
 - A capstone vision system, integrated and demoed live on the **Raspberry Pi 5** (+ AI HAT/Hailo, Pi Camera, ESP32-CAM)
-
-## 🗂️ Repository vs. Course Website
-
-The **course website** (linked above) is the recommended way to browse the
-course — syllabus, schedule, labs, and interactive lecture slides.
-
-This **GitHub repository** is the source behind it: every page, every slide
-deck, the runnable code samples, and the planning documents the course was
-built from. Clone it to get the whole course — slides, code, and labs — in
-one place.
 
 ## Pages
 
@@ -111,13 +107,16 @@ The current files are the already-rendered output and work as-is without it.
 
 ## Deploy on GitHub Pages
 
-This repo is served straight from the `main` branch root via
-**Settings → Pages → Deploy from a branch → `main` / `(root)`** — live at
-<https://kazimbalti.github.io/intelligent-vision-systems/>. `.nojekyll` is
-included so files are served exactly as written, with no Jekyll processing.
+GitHub Pages needs a **public** repo on the Free plan, so publishing is
+currently off (see [Access](#-access)). To publish your own copy:
 
-Forking this course? Same two steps: push to your own repo, then flip on
-Pages in **Settings**.
+1. Make your fork/copy of this repo public (or upgrade to GitHub Pro/Team to
+   publish from a private repo).
+2. **Settings → Pages → Deploy from a branch → `main` / `(root)`**.
+3. Live at `https://<your-username>.github.io/intelligent-vision-systems/`.
+
+`.nojekyll` is included so files are served exactly as written, with no
+Jekyll processing.
 
 ## Local preview
 
@@ -139,7 +138,7 @@ University of Lahore
   Vision* course by Kaveh Fathian, Colorado School of Mines —
   <https://ariarobotics.github.io/cv/> (<https://github.com/ariarobotics/cv>),
   reused here for teaching purposes with attribution on the
-  [Lectures page](https://kazimbalti.github.io/intelligent-vision-systems/lectures/).
+  [Lectures page](lectures/index.html).
 - **Lectures 03–16**, the schedule, labs, assignments, and code samples are
   original materials for this course, built from
   `Intelligent_Vision_Systems_Schedule_and_Labs.docx` and the companion
