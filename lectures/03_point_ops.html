@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.10.18">
+
+  <meta name="author" content="Dr. Muhammad Kazim">
+  <title>Intelligent Vision Systems – Lecture 03 — Point Operations &amp; Thresholding</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-e29227cb4367bc74b13779e945f9984f.css">
+  <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none;
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". ";
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto;
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0;
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Lecture 03 — Point Operations &amp; Thresholding</h1>
+  <p class="subtitle">Lecture 3</p>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Dr. Muhammad Kazim
+</div>
+        <p class="quarto-title-affiliation">
+            Department of Intelligent Systems, University of Lahore
+          </p>
+    </div>
+</div>
+
+</section>
+<section id="this-lecture" class="slide level2">
+<h2>This Lecture</h2>
+<div class="columns">
+<div class="column" style="width:48%;">
+<p><strong>Part I — Point operations</strong></p>
+<ul>
+<li>Look-up tables (LUTs)</li>
+<li>Gamma and log maps</li>
+<li>Contrast stretching</li>
+<li>Histogram equalisation &amp; matching</li>
+<li>CLAHE</li>
+</ul>
+</div><div class="column" style="width:48%;">
+<p><strong>Part II — Thresholding &amp; arithmetic</strong></p>
+<ul>
+<li>Global, Otsu, adaptive, Sauvola thresholding</li>
+<li>Image arithmetic &amp; blending</li>
+<li>Alpha compositing</li>
+<li>Bitwise masks</li>
+<li>Frame differencing</li>
+</ul>
+</div></div>
+<p>Everything here is a <strong>pixel-wise</strong> operation: the output at \((x,y)\) depends only on the input at \((x,y)\) (plus, for adaptive methods, a small local neighbourhood). No spatial mixing yet — that is next lecture.</p>
+</section>
+<section id="point-operations-defined" class="slide level2">
+<h2>Point Operations, Defined</h2>
+<p>A point operation (a.k.a. intensity transformation) applies a function \(T\) independently to every pixel:</p>
+<p><span class="math display">\[
+g(x,y) = T\big(f(x,y)\big)
+\]</span></p>
+<ul>
+<li>\(f\) = input image, \(g\) = output image, \(T\) = the transfer function / mapping</li>
+<li>For an 8-bit image, \(T\) is fully described by a table of 256 output values — a <strong>look-up table (LUT)</strong></li>
+<li>Building the LUT once and indexing into it is dramatically faster than evaluating \(T\) at every pixel</li>
+</ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">import numpy as np, cv2
+
+lut = np.array([T(i) for i in range(256)], dtype=np.uint8)
+out = cv2.LUT(img, lut)          # vectorised, O(1) per pixel after the table is built</code></pre></div></div>
+</section>
+<section id="gamma-correction" class="slide level2">
+<h2>Gamma Correction</h2>
+<p>Power-law mapping, normalised to \([0,1]\):</p>
+<p><span class="math display">\[
+g = c\, f^{\gamma}
+\]</span></p>
+<ul>
+<li>\(\gamma &lt; 1\): brightens shadows, compresses highlights (common for dark/backlit scenes)</li>
+<li>\(\gamma &gt; 1\): darkens — used to <em>encode</em> images for display (monitors expect roughly \(\gamma \approx 2.2\) decoding, so cameras/encoders pre-apply \(\gamma \approx 1/2.2\))</li>
+<li>\(\gamma = 1\): identity</li>
+</ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">def gamma_lut(gamma):
+    inv = 1.0 / gamma
+    table = ((np.arange(256) / 255.0) ** inv * 255).astype(np.uint8)
+    return table
+
+bright = cv2.LUT(img, gamma_lut(0.5))   # gamma &lt; 1 -&gt; brighter shadows</code></pre></div></div>
+</section>
+<section id="log-transform" class="slide level2">
+<h2>The Log Transform</h2>
+<p><span class="math display">\[
+g = c \log(1 + f)
+\]</span></p>
+<ul>
+<li>Compresses a very wide dynamic range (e.g. Fourier-spectrum magnitude, HDR radiance) into a displayable range</li>
+<li>Expands dark values, compresses bright ones — the opposite shape to \(\gamma &gt; 1\)</li>
+<li>Constant \(c\) is usually chosen so the maximum input maps to 255: \(c = 255 / \log(1+f_{\max})\)</li>
+<li>Classic use: visualising a DFT magnitude spectrum (see Lecture 5)</li>
+</ul>
+</section>
+<section id="contrast-stretching" class="slide level2">
+<h2>Contrast Stretching</h2>
+<p>Piecewise-linear mapping that expands a narrow intensity band to fill the full range:</p>
+<p><span class="math display">\[
+g = \frac{f - f_{\min}}{f_{\max} - f_{\min}} \times 255
+\]</span></p>
+<ul>
+<li>Simple <strong>min–max normalisation</strong>; sensitive to outliers (one hot pixel ruins the stretch)</li>
+<li>Robust variant: clip to the 1st/99th percentile before stretching</li>
+<li>OpenCV: <code>cv2.normalize(img, None, 0, 255, cv2.NORM_MINMAX)</code></li>
+<li>Piecewise-linear generalisation ("contrast stretching" in G&amp;W): pick control points \((r_1,s_1), (r_2,s_2)\) and interpolate linearly between them — lets you boost a mid-tone band without clipping</li>
+</ul>
+</section>
+<section id="histograms" class="slide level2">
+<h2>The Histogram</h2>
+<p>The histogram \(h(k)\) counts how many pixels take intensity \(k\); the normalised histogram is a probability mass function:</p>
+<p><span class="math display">\[
+p(k) = \frac{h(k)}{MN}, \qquad k = 0,\dots,255
+\]</span></p>
+<ul>
+<li>A narrow, off-centre histogram &rarr; low-contrast image</li>
+<li>A histogram with two separated modes &rarr; a foreground/background pair (useful for thresholding, later this lecture)</li>
+</ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">hist = cv2.calcHist([gray], [0], None, [256], [0, 256])</code></pre></div></div>
+</section>
+<section id="histogram-equalisation" class="slide level2">
+<h2>Histogram Equalisation</h2>
+<p><strong>Goal:</strong> redistribute intensities so the output histogram is approximately uniform &rarr; maximises global contrast.</p>
+<p>The mapping is the (scaled) cumulative distribution function (CDF) of the input:</p>
+<p><span class="math display">\[
+T(k) = 255 \sum_{j=0}^{k} p(j) = 255 \cdot \text{CDF}(k)
+\]</span></p>
+<ol type="1">
+<li>Compute the histogram \(h(k)\)</li>
+<li>Compute the CDF and scale it to \([0,255]\) — this <em>is</em> the LUT</li>
+<li>Apply the LUT to every pixel</li>
+</ol>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">eq = cv2.equalizeHist(gray)   # grayscale only</code></pre></div></div>
+<p><strong>Pitfall:</strong> on colour images, equalising R, G, B independently shifts the hue. Equalise the <strong>luminance channel</strong> instead (e.g. Y in YCbCr, or V in HSV) and recombine.</p>
+</section>
+<section id="histogram-matching" class="slide level2">
+<h2>Histogram Matching (Specification)</h2>
+<p>Generalises equalisation: instead of a uniform target, match a <strong>reference histogram</strong> (e.g. from a well-exposed reference frame).</p>
+<ol type="1">
+<li>Compute the CDF of the source image, \(\text{CDF}_f\)</li>
+<li>Compute the CDF of the reference/target histogram, \(\text{CDF}_z\)</li>
+<li>For each source level \(k\), find \(z\) such that \(\text{CDF}_z(z) \approx \text{CDF}_f(k)\) — this defines the mapping \(k \mapsto z\)</li>
+</ol>
+<p>Useful for <strong>colour/exposure consistency</strong> across a video sequence or a multi-camera rig — match every frame's histogram to a reference frame so downstream thresholds behave consistently.</p>
+</section>
+<section id="clahe" class="slide level2">
+<h2>CLAHE — Contrast-Limited Adaptive Histogram Equalisation</h2>
+<p>Plain equalisation is <strong>global</strong>: one bright region can dominate and wash out detail elsewhere. CLAHE equalises <strong>locally</strong>, with a clip limit to control noise amplification.</p>
+<ol type="1">
+<li>Split the image into a grid of tiles (e.g. 8&times;8)</li>
+<li>Compute a histogram <strong>per tile</strong>; clip bins above a threshold and redistribute the clipped mass (this is the "contrast-limited" part — prevents flat regions from over-amplifying sensor noise)</li>
+<li>Equalise each tile independently</li>
+<li>Bilinearly interpolate the tile boundaries to avoid blocking artefacts</li>
+</ol>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
+enhanced = clahe.apply(gray)</code></pre></div></div>
+<p><strong>Practitioner note:</strong> CLAHE on the L channel of Lab colour space is the standard recipe for uneven-lighting scenes (shadows, backlighting) on the Pi camera.</p>
+</section>
+<section id="point-ops-pitfalls" class="slide level2">
+<h2>Practitioner Notes — Point Operations</h2>
+<ul>
+<li><strong>Integer overflow:</strong> plain <code>img + 50</code> in NumPy wraps around (uint8 mod 256); use <code>cv2.add</code> / <code>cv2.convertScaleAbs</code>, which saturate at 0/255</li>
+<li><strong>Colour equalisation:</strong> never equalise R, G, B independently — work in a luma/chroma space</li>
+<li><strong>Gamma vs. exposure:</strong> gamma correction cannot recover detail that was clipped (over/under-exposed) at capture — fix exposure/gain first, correct tone second</li>
+<li><strong>CLAHE tile size:</strong> too small &rarr; noise amplification and blocking; too large &rarr; degenerates toward global equalisation. Start at 8&times;8 and tune per scene</li>
+<li>All of these are <span class="math inline">\(O(N)\)</span> per pixel — cheap enough to run every frame on the Raspberry Pi 5 CPU</li>
+</ul>
+</section>
+<section id="thresholding-intro" class="slide level2">
+<h2>Thresholding: Turning Intensity into a Decision</h2>
+<p>The simplest segmentation operator — a point operation whose output is binary:</p>
+<p><span class="math display">\[
+g(x,y) = \begin{cases} 255 & f(x,y) \ge T \\ 0 & f(x,y) &lt; T \end{cases}
+\]</span></p>
+<ul>
+<li>Works well when foreground and background occupy separated intensity ranges (bimodal histogram)</li>
+<li>The entire question is: <strong>how do we choose \(T\)?</strong> — fixed, global-optimal, or spatially varying</li>
+</ul>
+</section>
+<section id="otsu" class="slide level2">
+<h2>Otsu&rsquo;s Method — Optimal Global Threshold</h2>
+<p>Chooses \(T\) automatically by treating the histogram as two classes (background/foreground) and picking the split that <strong>maximises between-class variance</strong> \(\sigma_B^2(T)\) (equivalently minimises within-class variance):</p>
+<p><span class="math display">\[
+\sigma_B^2(T) = \omega_0(T)\,\omega_1(T)\,\big[\mu_0(T) - \mu_1(T)\big]^2
+\]</span></p>
+<ul>
+<li>\(\omega_0, \omega_1\) — class probabilities (fraction of pixels below/above \(T\))</li>
+<li>\(\mu_0, \mu_1\) — class means</li>
+<li>Exhaustive search over all 256 candidate thresholds — cheap, exact, no parameters to tune</li>
+<li>Assumes a roughly <strong>bimodal</strong> histogram; degrades on scenes with uneven illumination or three-or-more intensity classes</li>
+</ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">_, th = cv2.threshold(blurred, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)</code></pre></div></div>
+</section>
+<section id="adaptive-threshold" class="slide level2">
+<h2>Adaptive Thresholding</h2>
+<p>Instead of one global \(T\), compute a <strong>local</strong> threshold per pixel from its neighbourhood:</p>
+<p><span class="math display">\[
+T(x,y) = \text{mean or Gaussian-weighted mean of the } b\times b \text{ window around } (x,y) \; - \; C
+\]</span></p>
+<ul>
+<li>Robust to gradual illumination gradients that break Otsu (a spotlight, a shadow gradient across the frame)</li>
+<li>Two flavours in OpenCV: <code>ADAPTIVE_THRESH_MEAN_C</code> and <code>ADAPTIVE_THRESH_GAUSSIAN_C</code></li>
+<li>Two knobs to tune: block size \(b\) (must be odd; too small &rarr; noisy, too large &rarr; behaves like global) and the constant \(C\) subtracted from the local mean</li>
+</ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">th = cv2.adaptiveThreshold(blurred, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+                            cv2.THRESH_BINARY, 21, 5)   # block=21, C=5</code></pre></div></div>
+</section>
+<section id="sauvola" class="slide level2">
+<h2>Sauvola Thresholding</h2>
+<p>A refinement of adaptive mean thresholding, designed originally for document/text binarisation under uneven lighting:</p>
+<p><span class="math display">\[
+T(x,y) = m(x,y)\left[1 + k\left(\frac{s(x,y)}{R} - 1\right)\right]
+\]</span></p>
+<ul>
+<li>\(m(x,y)\), \(s(x,y)\) — local mean and standard deviation in a window</li>
+<li>\(R\) — dynamic range of the standard deviation (typically 128 for 8-bit), \(k\) — a tunable weight (typically 0.2&ndash;0.5)</li>
+<li>In low-variance (flat) regions, \(T\) drops toward \(m(1-k)\), suppressing background noise that plain adaptive thresholding would misclassify</li>
+<li>Not built into core OpenCV — implement via integral images for mean and mean-of-squares (fast, \(O(1)\) per pixel after the integral image is built), or use <code>scikit-image</code>&rsquo;s <code>threshold_sauvola</code></li>
+</ul>
+</section>
+<section id="thresholding-comparison" class="slide level2">
+<h2>Choosing a Thresholding Method</h2>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Method</th>
+<th>Best for</th>
+<th>Cost</th>
+<th>Weakness</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd"><td>Global (fixed \(T\))</td><td>Controlled, repeatable lighting</td><td>O(1)</td><td>Breaks the moment lighting changes</td></tr>
+<tr class="even"><td>Otsu</td><td>Bimodal histogram, uniform lighting</td><td>O(256)</td><td>One threshold for the whole frame</td></tr>
+<tr class="odd"><td>Adaptive (mean/Gaussian)</td><td>Gradual illumination gradients</td><td>O(N) w/ box filter</td><td>Two parameters to tune per scene</td></tr>
+<tr class="even"><td>Sauvola</td><td>Text/fine structure, strong local contrast</td><td>O(N) w/ integral images</td><td>More parameters; tuned for document images</td></tr>
+</tbody>
+</table>
+<p><strong>Rule of thumb for the Pi 5 labs:</strong> start with Otsu; switch to adaptive/Sauvola the moment you see a shadow or gradient across the frame.</p>
+</section>
+<section id="image-arithmetic" class="slide level2">
+<h2>Image Arithmetic</h2>
+<p>Pixel-wise operations between two (same-size) images:</p>
+<ul>
+<li><strong>Addition/subtraction:</strong> <code>cv2.add</code>, <code>cv2.subtract</code> — <em>saturating</em> (clip to [0,255]), unlike raw NumPy <code>+</code>/<code>-</code> which wraps</li>
+<li><strong>Weighted sum (blending):</strong> <span class="math inline">\(g = \alpha f_1 + (1-\alpha) f_2\)</span> via <code>cv2.addWeighted(f1, alpha, f2, 1-alpha, 0)</code></li>
+<li><strong>Absolute difference:</strong> <code>cv2.absdiff(f1, f2)</code> — the workhorse of frame differencing (below) and change detection</li>
+</ul>
+</section>
+<section id="alpha-compositing" class="slide level2">
+<h2>Alpha Compositing</h2>
+<p>Overlay a foreground image/graphic onto a background using a per-pixel opacity map \(\alpha(x,y) \in [0,1]\) (the <strong>alpha channel</strong>):</p>
+<p><span class="math display">\[
+g(x,y) = \alpha(x,y)\, f_{\text{fg}}(x,y) + \big(1-\alpha(x,y)\big)\, f_{\text{bg}}(x,y)
+\]</span></p>
+<ul>
+<li>Used for HUD overlays (bounding boxes, masks, heatmaps) that should blend rather than fully occlude the frame</li>
+<li>In OpenCV: build a float mask, broadcast-multiply, sum — or pack a 4th (BGRA) channel and composite manually</li>
+</ul>
+</section>
+<section id="bitwise-masks" class="slide level2">
+<h2>Bitwise Operations &amp; Masks</h2>
+<ul>
+<li><code>cv2.bitwise_and</code>, <code>_or</code>, <code>_xor</code>, <code>_not</code> — operate per bit/per pixel, typically with a binary mask as one operand</li>
+<li>Classic pattern: <strong>mask out</strong> a region of interest, or combine two binary masks (e.g. a colour mask AND a motion mask)</li>
+</ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">masked = cv2.bitwise_and(frame, frame, mask=binary_mask)  # keep frame only where mask!=0
+combined = cv2.bitwise_and(color_mask, motion_mask)        # AND two conditions</code></pre></div></div>
+<p>This is exactly how Lab 4&rsquo;s HSV colour detector isolates a coloured object: threshold in HSV to get a mask, then <code>bitwise_and</code> it against the original frame.</p>
+</section>
+<section id="frame-differencing" class="slide level2">
+<h2>Frame Differencing — the Simplest Motion Detector</h2>
+<ol type="1">
+<li>Keep a reference/background frame \(B\) (the previous frame, or a running average)</li>
+<li>Compute \(D = |I_t - B|\) via <code>cv2.absdiff</code></li>
+<li>Threshold \(D\) (Otsu or a fixed value) to get a binary <strong>motion mask</strong></li>
+<li>Clean the mask with morphology (Lecture 6) and find contours (Lecture 5 lab) to localise moving objects</li>
+</ol>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">diff = cv2.absdiff(gray_prev, gray_curr)
+_, motion_mask = cv2.threshold(diff, 25, 255, cv2.THRESH_BINARY)</code></pre></div></div>
+<p><strong>Limitation:</strong> sensitive to camera shake and lighting flicker; only detects the <em>edges</em> of a uniformly-coloured moving object (its interior looks unchanged). Background subtraction (MOG2/KNN, Lecture 11) fixes both.</p>
+</section>
+<section id="code-walkthrough" class="slide level2">
+<h2>Code Walkthrough — <code>01_opencv_basics.py</code></h2>
+<p>This week&rsquo;s reference script (in the course repository) exercises exactly these operations end to end:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">def adjust_brightness_contrast(img, alpha=1.2, beta=20):
+    """alpha = contrast gain, beta = brightness offset. Safe (saturating)."""
+    return cv2.convertScaleAbs(img, alpha=alpha, beta=beta)
+
+img = cv2.imread(args.image)            # NOTE: OpenCV loads as BGR, not RGB
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+hsv  = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+annotated = adjust_brightness_contrast(img.copy(), alpha=1.15, beta=15)</code></pre></div></div>
+<ul>
+<li><code>cv2.convertScaleAbs(img, alpha, beta)</code> computes \(g = \text{saturate}(\alpha f + \beta)\) — a linear point operation, safely clipped</li>
+<li>Note the BGR-not-RGB gotcha: OpenCV&rsquo;s native channel order trips up almost everyone the first time</li>
+</ul>
+</section>
+<section id="arithmetic-pitfalls" class="slide level2">
+<h2>Practitioner Notes — Arithmetic &amp; Masks</h2>
+<ul>
+<li><strong>Never</strong> subtract <code>uint8</code> arrays with raw NumPy when the result can go negative — it wraps (e.g. \(5 - 10 = 251\)). Cast to <code>int16</code>/<code>float32</code> first, or use <code>cv2.subtract</code>/<code>cv2.absdiff</code></li>
+<li>Masks must match the operand&rsquo;s size <strong>and</strong> be single-channel <code>uint8</code>; a common bug is passing a 3-channel mask</li>
+<li><code>addWeighted</code> assumes both inputs are the same dtype/size — resize/crop to match before blending</li>
+<li>On the Raspberry Pi 5, all of today&rsquo;s operations are vectorised NumPy/OpenCV calls — they run comfortably at full camera frame rate; the bottleneck is almost always capture I/O, not this arithmetic</li>
+</ul>
+</section>
+<section id="lab-3" class="slide level2">
+<h2>This Week&rsquo;s Lab — Lab 3: CV Fundamentals I</h2>
+<p><strong>Images, Video &amp; Drawing</strong></p>
+<ul>
+<li>Load and save images; load and save videos</li>
+<li>Drawing functions (lines, shapes, text) — annotate frames the way <code>label_box()</code> does in <code>01_opencv_basics.py</code></li>
+<li>Basic operations: resize, crop, rotate, ROI extraction</li>
+</ul>
+<p><strong>Deliverable:</strong> an image/video I/O utility with on-frame annotations.</p>
+</section>
+<section id="key-takeaways" class="slide level2">
+<h2>Key Takeaways</h2>
+<ul>
+<li>Point operations map \(f(x,y) \to g(x,y)\) independently per pixel — build them once as a LUT, apply in \(O(1)\)</li>
+<li>Histogram equalisation/CLAHE fix <em>contrast</em>; gamma/log fix <em>tone</em>; know which problem you actually have</li>
+<li>Thresholding turns intensity into a decision — Otsu for uniform lighting, adaptive/Sauvola when lighting varies across the frame</li>
+<li>Saturating arithmetic (<code>cv2.add</code>/<code>subtract</code>/<code>absdiff</code>) avoids silent wraparound bugs that raw NumPy will happily produce</li>
+<li>Frame differencing is the simplest motion cue — good enough for Lab 5, replaced by background subtraction once we need robustness (Lecture 11)</li>
+</ul>
+</section>
+<section id="further-reading" class="slide level2">
+<h2>Further Reading</h2>
+<ul>
+<li>Gonzalez &amp; Woods, <em>Digital Image Processing</em> 4e — &sect;3.1&ndash;3.3 (intensity transformations, histogram processing)</li>
+<li>OpenCV docs: <em>Image Thresholding</em>, <em>Histograms</em>, <em>Arithmetic Operations on Images</em></li>
+<li>Sauvola &amp; Pietik&auml;inen (2000), &ldquo;Adaptive document image binarization&rdquo;, <em>Pattern Recognition</em></li>
+</ul>
+</section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+<p>Intelligent Vision Systems; University of Lahore | Dr. Muhammad Kazim</p>
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="../site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
+  <script src="../site_libs/revealjs/plugin/quarto-support/support.js"></script>
+
+
+  <script src="../site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="../site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="../site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="../site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': false,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'pdfMaxPagesPerSlide': 1,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\"><kbd>b</kbd> Toggle Chalkboard</a></li>\n<li class=\"slide-tool-item\" data-item=\"6\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\"><kbd>c</kbd> Toggle Notes Canvas</a></li>\n<li class=\"slide-tool-item\" data-item=\"7\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\"><kbd>d</kbd> Download Drawings</a></li>\n<li class=\"slide-tool-item\" data-item=\"8\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'chalkboard': {"buttons":true},
+'smaller': false,
+
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1600,
+
+        height: 900,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, RevealChalkboard, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button,
+              { trigger: "manual",
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config);
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+
+
+</body></html>

@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.10.18">
+
+  <meta name="author" content="Dr. Muhammad Kazim">
+  <title>Intelligent Vision Systems – Lecture 09 — Segmentation I &amp; II</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-e29227cb4367bc74b13779e945f9984f.css">
+  <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Lecture 09 — Segmentation I &amp; II</h1>
+  <p class="subtitle">Lecture 9</p>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Dr. Muhammad Kazim
+</div>
+        <p class="quarto-title-affiliation">
+            Department of Intelligent Systems, University of Lahore
+          </p>
+    </div>
+</div>
+
+</section>
+<section id="roadmap-09" class="slide level2">
+<h2>Today&rsquo;s Roadmap</h2>
+<ul>
+<li><strong>L17 &mdash; Segmentation I:</strong> region growing &amp; split/merge; k-means &amp; mean-shift in colour space; SLIC superpixels; IoU/Dice evaluation.</li>
+<li><strong>L18 &mdash; Segmentation II:</strong> watershed; graph cuts &amp; GrabCut; active contours (snakes); grouping cues; the bridge from hand-designed masks to learned segmentation.</li>
+</ul>
+<p>Reading: Szeliski 2e &sect;7.5. Lab 9 this week; the <strong>project proposal is due</strong>.</p>
+</section>
+
+<section id="what-is-segmentation" class="slide level2">
+<h2>What Is Segmentation?</h2>
+<p><strong>Segmentation</strong> partitions an image into regions that are homogeneous with respect to some property (colour, texture, motion) and, ideally, correspond to meaningful scene structures.</p>
+<ul>
+<li><strong>Classification</strong> &mdash; one label for the whole image.</li>
+<li><strong>Detection</strong> &mdash; a box per instance.</li>
+<li><strong>Segmentation</strong> &mdash; a label <em>per pixel</em>: which region/object does this pixel belong to?</li>
+</ul>
+<p>Two flavours you will meet later with deep nets: <strong>semantic</strong> segmentation (label per class, instances merged) and <strong>instance</strong> segmentation (label per object instance). Today is entirely classical, pixel- and region-based.</p>
+</section>
+
+<section id="region-growing" class="slide level2">
+<h2>Region Growing</h2>
+<ol type="1">
+<li>Pick one or more <strong>seed pixels</strong>.</li>
+<li>Add a neighbouring pixel to the region if it satisfies a homogeneity test (e.g. <span class="math inline">\(|I(p) - \mu_{\text{region}}| < T\)</span>).</li>
+<li>Update the region statistic (mean) and repeat until no pixel qualifies.</li>
+</ol>
+<p><strong>Pros:</strong> simple, connects naturally, good with a good seed. <strong>Cons:</strong> seed-dependent, sensitive to noise, slow on large images (implement with a queue/stack, not recursion).</p>
+</section>
+
+<section id="split-and-merge" class="slide level2">
+<h2>Split &amp; Merge (Quadtree)</h2>
+<ol type="1">
+<li><strong>Split:</strong> if a region is not homogeneous, divide it into four quadrants; recurse.</li>
+<li><strong>Merge:</strong> after splitting, merge adjacent regions whose union is still homogeneous.</li>
+</ol>
+<p>Homogeneity test: e.g. <span class="math inline">\(\max(I) - \min(I) < T\)</span> or variance &lt; threshold. Produces a quadtree; naturally multi-resolution and less seed-dependent than region growing, but blocky boundaries (mitigated by the merge step).</p>
+</section>
+
+<section id="kmeans-colour" class="slide level2">
+<h2>K-Means in Colour Space</h2>
+<p>Treat every pixel as a point <span class="math inline">\(x_i \in \mathbb{R}^3\)</span> (e.g. Lab or HSV) and cluster into <span class="math inline">\(K\)</span> groups minimising:</p>
+<p><span class="math display">\[
+J = \sum_{k=1}^{K} \sum_{x_i \in C_k} \lVert x_i - \mu_k \rVert^2
+\]</span></p>
+<ol type="1">
+<li>Initialise <span class="math inline">\(K\)</span> centroids (k-means++ for stability).</li>
+<li>Assign each pixel to its nearest centroid.</li>
+<li>Recompute centroids as the mean of assigned pixels.</li>
+<li>Repeat 2&ndash;3 until assignments stop changing.</li>
+</ol>
+<p><strong>Practitioner note:</strong> cluster in <strong>Lab</strong>, not RGB &mdash; perceptual distance behaves much better; add <span class="math inline">\((x, y)\)</span> to the feature vector for spatial coherence.</p>
+</section>
+
+<section id="kmeans-code" class="slide level2">
+<h2>Code &mdash; K-Means Colour Segmentation</h2>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">import cv2, numpy as np
+
+img = cv2.imread("scene.jpg")
+lab = cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
+Z = lab.reshape((-1, 3)).astype(np.float32)
+
+K = 4
+criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 20, 1.0)
+_, labels, centers = cv2.kmeans(Z, K, None, criteria, 5, cv2.KMEANS_PP_CENTERS)
+
+centers = centers.astype(np.uint8)
+seg = centers[labels.flatten()].reshape(img.shape)
+seg_bgr = cv2.cvtColor(seg, cv2.COLOR_LAB2BGR)
+cv2.imwrite("kmeans_seg.jpg", seg_bgr)
+</code></pre></div>
+</section>
+
+<section id="mean-shift" class="slide level2">
+<h2>Mean-Shift Segmentation</h2>
+<p>Mean-shift treats pixels (colour + optionally position) as samples from an unknown density and climbs the density gradient to a mode using a kernel window:</p>
+<p><span class="math display">\[
+m(x) = \frac{\sum_i K(x_i - x)\, x_i}{\sum_i K(x_i - x)} - x
+\]</span></p>
+<ol type="1">
+<li>For each point, iteratively shift the window centre by <span class="math inline">\(m(x)\)</span> until convergence (a mode).</li>
+<li>Points converging to the same mode form one segment.</li>
+</ol>
+<p>Unlike k-means, you don&rsquo;t choose <span class="math inline">\(K\)</span> &mdash; the number of modes falls out of the bandwidth <span class="math inline">\(h\)</span>. OpenCV: <code>cv2.pyrMeanShiftFiltering(img, sp, sr)</code> (spatial and colour radius).</p>
+</section>
+
+<section id="slic" class="slide level2">
+<h2>SLIC Superpixels</h2>
+<p><strong>SLIC</strong> (Simple Linear Iterative Clustering) is a local k-means in a 5-D space <span class="math inline">\([L, a, b, x, y]\)</span>, restricted to a search window around each cluster &mdash; this makes it near-linear time.</p>
+<ol type="1">
+<li>Seed <span class="math inline">\(K\)</span> cluster centres on a regular grid, step <span class="math inline">\(S = \sqrt{N/K}\)</span>.</li>
+<li>Move seeds to the lowest-gradient position in a 3&times;3 neighbourhood (avoid edges/noise).</li>
+<li>Assign each pixel to the nearest centre <em>within <span class="math inline">\(2S\)</span></em> using a weighted colour+space distance.</li>
+<li>Update centres to the mean of their pixels; repeat until convergence; enforce connectivity as a post-pass.</li>
+</ol>
+<p>Superpixels are a pre-processing step, not a final segmentation &mdash; they reduce an image with millions of pixels to a few hundred/thousand perceptually-meaningful atoms for the next stage (graph cuts, classification, etc.).</p>
+</section>
+
+<section id="slic-code" class="slide level2">
+<h2>Code &mdash; SLIC Superpixels</h2>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">import cv2
+
+img = cv2.imread("scene.jpg")
+slic = cv2.ximgproc.createSuperpixelSLIC(img, algorithm=cv2.ximgproc.SLICO,
+                                          region_size=30)
+slic.iterate(10)
+mask = slic.getLabelContourMask()
+overlay = img.copy()
+overlay[mask == 255] = (0, 0, 255)
+print("Superpixels:", slic.getNumberOfSuperpixels())
+cv2.imwrite("slic_overlay.jpg", overlay)
+</code></pre></div>
+<p>Requires <code>opencv-contrib-python</code> (the <code>ximgproc</code> module).</p>
+</section>
+
+<section id="iou-dice" class="slide level2">
+<h2>Evaluating Segmentation: IoU &amp; Dice</h2>
+<p>Given predicted mask <span class="math inline">\(P\)</span> and ground-truth mask <span class="math inline">\(G\)</span>:</p>
+<p><span class="math display">\[
+\text{IoU} = \frac{|P \cap G|}{|P \cup G|}, \qquad
+\text{Dice} = \frac{2|P \cap G|}{|P| + |G|}
+\]</span></p>
+<ul>
+<li>IoU is stricter than Dice for small overlaps; both range <span class="math inline">\([0, 1]\)</span>, 1 = perfect.</li>
+<li><span class="math inline">\(\text{Dice} = \dfrac{2\,\text{IoU}}{1 + \text{IoU}}\)</span> &mdash; they are monotonically related, but not the same number.</li>
+<li>Report per-class IoU and mean IoU (mIoU) for multi-class masks &mdash; a single global pixel-accuracy number hides small-object failures.</li>
+</ul>
+</section>
+
+<section id="watershed" class="slide level2">
+<h2>Watershed Transform</h2>
+<p>Treat the (gradient) image as a topographic surface: bright ridges are gradient maxima (object boundaries), dark basins are homogeneous regions. &ldquo;Flooding&rdquo; from markers upward fills basins until they meet at ridge lines &mdash; those lines are the segmentation boundary.</p>
+<ol type="1">
+<li>Compute the gradient magnitude image.</li>
+<li>Mark <strong>known foreground</strong> (e.g. via distance-transform local maxima) and <strong>known background</strong>; leave the rest unknown (label 0).</li>
+<li>Run <code>cv2.watershed(img, markers)</code> &mdash; boundaries are written back as <span class="math inline">\(-1\)</span> in <code>markers</code>.</li>
+</ol>
+<p><strong>Failure mode: over-segmentation</strong> from noisy gradients &mdash; always smooth first and seed with good markers (distance transform + connected components is the standard recipe for touching objects, e.g. coins or cells).</p>
+</section>
+
+<section id="graph-cuts" class="slide level2">
+<h2>Graph Cuts</h2>
+<p>Model the image as a graph: one node per pixel plus two terminals <em>source</em> (foreground) and <em>sink</em> (background). Minimise an energy:</p>
+<p><span class="math display">\[
+E(L) = \sum_p D_p(L_p) + \lambda \sum_{(p,q) \in \mathcal{N}} V_{p,q}(L_p, L_q)
+\]</span></p>
+<ul>
+<li><span class="math inline">\(D_p\)</span> &mdash; <strong>data term</strong>: cost of labelling pixel <span class="math inline">\(p\)</span> fg/bg (from colour likelihood).</li>
+<li><span class="math inline">\(V_{p,q}\)</span> &mdash; <strong>smoothness term</strong>: penalises label changes between similar neighbours (edge-aware).</li>
+<li>The global optimum for this binary energy is found in polynomial time by <strong>min-cut / max-flow</strong> on the graph.</li>
+</ul>
+</section>
+
+<section id="grabcut" class="slide level2">
+<h2>GrabCut</h2>
+<p>GrabCut wraps graph cuts with iterative colour-model refinement, seeded from just a bounding box:</p>
+<ol type="1">
+<li>User (or an upstream detector) provides a rectangle roughly bounding the foreground.</li>
+<li>Fit Gaussian Mixture Models (GMMs) to the fg/bg colour distributions inside/outside the box.</li>
+<li>Run graph-cut min-cut using the GMMs as the data term to get a fg/bg labelling.</li>
+<li>Re-fit the GMMs using the new labelling; repeat 2&ndash;4 until convergence.</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">import cv2, numpy as np
+
+img = cv2.imread("object.jpg")
+mask = np.zeros(img.shape[:2], np.uint8)
+bgd, fgd = np.zeros((1, 65), np.float64), np.zeros((1, 65), np.float64)
+rect = (50, 50, img.shape[1] - 100, img.shape[0] - 100)
+
+cv2.grabCut(img, mask, rect, bgd, fgd, 5, cv2.GC_INIT_WITH_RECT)
+final = np.where((mask == 2) | (mask == 0), 0, 1).astype("uint8")
+out = img * final[:, :, None]
+</code></pre></div>
+</section>
+
+<section id="active-contours" class="slide level2">
+<h2>Active Contours (Snakes)</h2>
+<p>A snake is a parametric curve <span class="math inline">\(v(s) = (x(s), y(s))\)</span> that deforms to minimise an energy balancing smoothness and image attraction:</p>
+<p><span class="math display">\[
+E_{\text{snake}} = \int_0^1 \underbrace{\alpha |v'(s)|^2 + \beta |v''(s)|^2}_{\text{internal (smoothness)}} + \underbrace{E_{\text{ext}}(v(s))}_{\text{image energy, e.g. } -|\nabla I|^2} \, ds
+\]</span></p>
+<ul>
+<li>Initialise a rough contour near the boundary; it &ldquo;snaps&rdquo; to nearby strong edges.</li>
+<li>Sensitive to initialisation and to <span class="math inline">\((\alpha, \beta)\)</span>; struggles with concave boundaries (addressed by gradient-vector-flow variants).</li>
+<li>OpenCV: <code>cv2.snake</code> is legacy/removed in places &mdash; <code>skimage.segmentation.active_contour</code> is the practical implementation today.</li>
+</ul>
+</section>
+
+<section id="grouping-cues" class="slide level2">
+<h2>Grouping Cues (Gestalt Principles)</h2>
+<p>Every classical method above implicitly encodes one or more <strong>Gestalt</strong> grouping cues that humans use too:</p>
+<ul>
+<li><strong>Proximity</strong> &mdash; nearby elements are grouped (spatial term in k-means/SLIC).</li>
+<li><strong>Similarity</strong> &mdash; similar colour/texture elements are grouped (colour term).</li>
+<li><strong>Continuity</strong> &mdash; smooth contours are preferred (snake internal energy, graph-cut smoothness term).</li>
+<li><strong>Closure</strong> &mdash; the visual system completes partially-occluded boundaries.</li>
+<li><strong>Common fate</strong> &mdash; elements moving together are grouped (motion segmentation, later in optical flow).</li>
+</ul>
+</section>
+
+<section id="bridge-to-unet" class="slide level2">
+<h2>From Hand-Designed Masks to Learned Segmentation</h2>
+<p>Every method today hand-designs the <em>similarity</em> or <em>energy</em> function. The deep-learning alternative <strong>learns</strong> a pixel-to-label mapping end-to-end from data:</p>
+<ul>
+<li><strong>FCN</strong> (Fully Convolutional Network) &mdash; replace classifier heads with 1&times;1 convolutions; upsample to full resolution.</li>
+<li><strong>U-Net</strong> &mdash; a symmetric encoder&ndash;decoder with <strong>skip connections</strong> that fuse coarse semantics with fine spatial detail. You will build this <strong>from scratch</strong> in Lab&nbsp;13.</li>
+<li><strong>Mask R-CNN</strong> &mdash; detection + per-instance mask head (instance segmentation).</li>
+</ul>
+<p>Classical segmentation doesn&rsquo;t disappear: GrabCut/SLIC are still used for dataset annotation tools, and IoU/Dice remain the evaluation metrics for the learned models.</p>
+</section>
+
+<section id="method-comparison" class="slide level2">
+<h2>Choosing a Method</h2>
+<table class="caption-top">
+<thead>
+<tr class="header"><th>Method</th><th>Needs a seed?</th><th>Speed</th><th>Best for</th></tr>
+</thead>
+<tbody>
+<tr class="odd"><td>Region growing</td><td>Yes (seed pixel)</td><td>Fast</td><td>Homogeneous blobs, known start point</td></tr>
+<tr class="even"><td>K-means</td><td>No (choose K)</td><td>Fast</td><td>Colour-distinct regions, quick prototyping</td></tr>
+<tr class="odd"><td>Mean-shift</td><td>No (choose bandwidth)</td><td>Slow</td><td>Unknown region count, smooth colour fields</td></tr>
+<tr class="even"><td>SLIC</td><td>No</td><td>Very fast</td><td>Pre-processing / over-segmentation for later stages</td></tr>
+<tr class="odd"><td>Watershed</td><td>Yes (markers)</td><td>Fast</td><td>Touching/overlapping convex objects</td></tr>
+<tr class="even"><td>GrabCut</td><td>Yes (box)</td><td>Moderate</td><td>Interactive foreground extraction</td></tr>
+</tbody>
+</table>
+</section>
+
+<section id="pitfalls-09" class="slide level2">
+<h2>Common Pitfalls / Practitioner Notes</h2>
+<ul>
+<li><strong>RGB clustering</strong> looks fine on screen but clusters badly &mdash; always segment in Lab or HSV.</li>
+<li>Watershed <strong>over-segments</strong> without good markers; smooth + distance-transform first.</li>
+<li>GrabCut fails when the box excludes part of the object &mdash; give it a generous rectangle.</li>
+<li>IoU is harsh on small objects: a 1-pixel boundary shift on a 10&times;10 mask moves IoU a lot more than on a 500&times;500 mask.</li>
+<li>Classical methods have no notion of &ldquo;class&rdquo; &mdash; they group by appearance, not semantics. That gap is exactly what CNN segmentation closes.</li>
+</ul>
+</section>
+
+<section id="lab-09" class="slide level2">
+<h2>This Week&rsquo;s Lab</h2>
+<p><strong>Lab 9 &mdash; Build a Real-World CV System.</strong></p>
+<ul>
+<li>Plan the project and design its architecture.</li>
+<li>Measure the size of an object in 2-D (using calibration &mdash; preview of next week).</li>
+<li>Build a defect-recognition system.</li>
+<li>Integrate a database (SQLite/MySQL) to log results.</li>
+</ul>
+<p><strong>Deliverable:</strong> an end-to-end measuring / defect system logging to a database.</p>
+<p class="text-muted"><strong>Also due this week: the project proposal</strong> for your capstone.</p>
+</section>
+
+<section id="takeaways-09" class="slide level2">
+<h2>Key Takeaways</h2>
+<ul>
+<li>Segmentation assigns a label to every pixel; classical methods encode a hand-designed similarity or energy function.</li>
+<li>K-means/mean-shift/SLIC group by colour (+ position); watershed/graph-cuts/GrabCut/snakes use boundaries and energy minimisation.</li>
+<li>IoU and Dice are the standard overlap metrics &mdash; they will follow you into every learned-segmentation lab from here on.</li>
+<li>Classical segmentation is the conceptual and practical bridge to U-Net (Lab 13) and Mask R-CNN.</li>
+</ul>
+</section>
+
+<section id="further-reading-09" class="slide level2">
+<h2>Further Reading</h2>
+<ul>
+<li>Szeliski, <em>Computer Vision: Algorithms and Applications</em>, 2e, &sect;7.5 (Segmentation).</li>
+<li>Gonzalez &amp; Woods, <em>Digital Image Processing</em>, 4e, Ch.10 (region-based segmentation, watershed).</li>
+<li>Achanta et al., &ldquo;SLIC Superpixels Compared to State-of-the-Art Superpixel Methods&rdquo;, TPAMI 2012.</li>
+<li>Rother, Kolmogorov &amp; Blake, &ldquo;GrabCut&rdquo;, SIGGRAPH 2004.</li>
+</ul>
+</section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+<p>Intelligent Vision Systems; University of Lahore | Dr. Muhammad Kazim</p>
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="../site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
+  <script src="../site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="../site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="../site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="../site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="../site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': false,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'pdfMaxPagesPerSlide': 1,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\"><kbd>b</kbd> Toggle Chalkboard</a></li>\n<li class=\"slide-tool-item\" data-item=\"6\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\"><kbd>c</kbd> Toggle Notes Canvas</a></li>\n<li class=\"slide-tool-item\" data-item=\"7\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\"><kbd>d</kbd> Download Drawings</a></li>\n<li class=\"slide-tool-item\" data-item=\"8\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'chalkboard': {"buttons":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1600,
+
+        height: 900,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, RevealChalkboard, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>

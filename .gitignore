@@ -1,0 +1,23 @@
+# Claude Code session state (not course content)
+.claude/
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*~
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# Node (site tooling, if ever added)
+node_modules/
+
+# Local scratch / temp
+*.tmp
+.quarto/

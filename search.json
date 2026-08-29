@@ -1,0 +1,205 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Intelligent Vision Systems",
+    "section": "",
+    "text": "BSES | 7th Semester, Section A | University of Lahore | Fall 2026 Intelligent Vision Systems BSES | 7th Semester, Section A | University of Lahore | Fall 2026"
+  },
+  {
+    "objectID": "index.html#intelligent-vision-systems",
+    "href": "index.html#intelligent-vision-systems",
+    "title": "Intelligent Vision Systems",
+    "section": "Intelligent Vision Systems",
+    "text": "Intelligent Vision Systems Welcome to the course website for Intelligent Vision Systems (Applied Computer Vision) , the 7th-semester vision course for BSES, Section A at the University of Lahore . This site is the main entry point for course information, lecture slides, the weekly schedule, lab handouts, and resources. The course follows a complete pipeline: from image formation and classical image processing, through features, geometry and motion, to deep learning and the deployment of real-time vision models on the Raspberry Pi 5 — optionally accelerated with the AI HAT / Hailo NPU and fed by a networked ESP32-CAM. Every one of the 16 weekly sessions pairs 1.5 hours of theory with 1.5 hours of supervised laboratory work, building toward a capstone vision system demonstrated live on target hardware."
+  },
+  {
+    "objectID": "index.html#course-material",
+    "href": "index.html#course-material",
+    "title": "Intelligent Vision Systems",
+    "section": "Course Material",
+    "text": "Course Material Syllabus Course description, outcomes, prerequisites, textbooks, grading policy, and academic integrity. View Syllabus Schedule Week-by-week and lecture-by-lecture topic list with readings, slide links, and deadlines. View Schedule Labs Fifteen hands-on labs on the Raspberry Pi 5 plus a capstone project, week by week, with tasks and deliverables. View Labs Lectures Interactive lecture slides and downloadable PDF versions covering classical and modern vision. View Lectures Code & Demos Python, OpenCV, PyTorch, and on-device inference examples used throughout the course. View Code Assignments Take-home problem sets bridging theory and implementation, with supporting files. View Assignments Tutorials Self-study guides for the tools and software used in the course. View Tutorials"
+  },
+  {
+    "objectID": "index.html#about-the-course",
+    "href": "index.html#about-the-course",
+    "title": "Intelligent Vision Systems",
+    "section": "About the Course",
+    "text": "About the Course Intelligent Vision Systems covers both classical and modern computer vision , with a running emphasis on embedded and edge deployment on the Raspberry Pi 5 : Image formation, sensing, and digital image fundamentals Point operations, spatial and frequency-domain filtering, restoration, morphology Edges, local features, descriptors, matching, and RANSAC Camera calibration, two-view geometry, stereo depth Optical flow, tracking, and recursive estimation Classical recognition, then CNNs for classification, detection, and segmentation Reading & reproducing research papers from scratch: U-Net and the Transformer Model optimisation for the edge: quantisation, pruning, ONNX / TFLite / Hailo The OpenCV 5.0 deep dive: the new DNN engine, ONNX workflows, migration from OpenCV 4 Practical work in Python, OpenCV 5.0, and PyTorch on the Raspberry Pi 5 (+ AI HAT / Hailo, Pi Camera, ESP32-CAM)"
+  },
+  {
+    "objectID": "index.html#course-at-a-glance",
+    "href": "index.html#course-at-a-glance",
+    "title": "Intelligent Vision Systems",
+    "section": "Course at a Glance",
+    "text": "Course at a Glance Course Intelligent Vision Systems (Applied Computer Vision) Programme BSES, 7th Semester, Section A Credit Hours 3 h/week (1.5 h theory + 1.5 h laboratory) Semester 31 August – 14 December 2026 (16 weekly sessions) · Fall 2026 Instructor Dr. Muhammad Kazim — Assistant Professor, Department of Intelligent Systems Meeting Mondays, 11:00 AM–2:00 PM Location E1-404 Lab Platform Raspberry Pi 5 (+ AI HAT / Hailo, Pi Camera, ESP32-CAM) Programming Python (OpenCV 5.0, PyTorch/TensorFlow, Ultralytics YOLO); Google Colab for training Contact muhammad.kazim@is.uol.edu.pk"
+  },
+  {
+    "objectID": "index.html#course-website-vs.-github-repository",
+    "href": "index.html#course-website-vs.-github-repository",
+    "title": "Intelligent Vision Systems",
+    "section": "Course Website vs. GitHub Repository",
+    "text": "Course Website vs. GitHub Repository This website is the primary place to browse the course: syllabus, schedule, labs, lectures, and other resources. The GitHub repository holds the downloadable files, starter code, notebooks, and datasets used in the course. View Course Code"
+  },
+  {
+    "objectID": "syllabus.html",
+    "href": "syllabus.html",
+    "title": "Syllabus",
+    "section": "",
+    "text": "7th Semester | BSES, Section A | Fall 2026 On this page Course Overview Prerequisites Instructor Course Description Learning Outcomes Textbooks & References Assessment & Grading Grade Scale Course Policies Late Work Collaboration & Academic Integrity AI Tools Attendance Accommodations & Well-being Weekly Topic Map Software & Hardware Syllabus — Intelligent Vision Systems 7th Semester | BSES, Section A | Fall 2026"
+  },
+  {
+    "objectID": "syllabus.html#course-overview",
+    "href": "syllabus.html#course-overview",
+    "title": "Syllabus",
+    "section": "Course Overview",
+    "text": "Course Overview Course Title Intelligent Vision Systems (Applied Computer Vision) Programme / Semester Bachelor of Science in Embedded Systems (BSES) — 7th Semester, Section A Semester Duration 31 August – 14 December 2026 (16 weekly sessions) Class Meeting Times 11:00 AM–2:00 PM, Monday (3 h = 1.5 h theory + 1.5 h laboratory) Location E1-404 Lab Prerequisites Python programming Basic linear algebra & probability Platform: Raspberry Pi 5 (+ AI HAT / Hailo, Pi Camera, ESP32-CAM); Python, OpenCV, PyTorch/TensorFlow, Ultralytics YOLO; Google Colab for training. Course Website: this site"
+  },
+  {
+    "objectID": "syllabus.html#instructor",
+    "href": "syllabus.html#instructor",
+    "title": "Syllabus",
+    "section": "Instructor",
+    "text": "Instructor Dr. Muhammad Kazim — Assistant Professor Department of Intelligent Systems, University of Lahore Preferred form of address: Please call me Kazim. Office: TBA Office hours: By appointment Email: muhammad.kazim@is.uol.edu.pk"
+  },
+  {
+    "objectID": "syllabus.html#course-description",
+    "href": "syllabus.html#course-description",
+    "title": "Syllabus",
+    "section": "Course Description",
+    "text": "Course Description Intelligent Vision Systems (Applied Computer Vision) is the capstone vision course for Embedded Systems students. It develops the complete machine-vision pipeline — from photons striking a sensor to a decision produced within the memory, power, and latency budget of a constrained device. The course begins with image formation and classical image processing, then moves through feature detection, multi-view geometry, and motion analysis, and finishes with modern deep-learning models for classification, detection, and segmentation. A recurring theme is deployment : taking an algorithm or a trained model and making it run in real time on the Raspberry Pi 5 , optionally accelerated with the AI HAT/Hailo NPU or fed by a networked ESP32-CAM. The course is project-driven: each 3-hour Monday session pairs 1.5 hours of theory with 1.5 hours of supervised laboratory work, and a capstone project asks every student to build and demonstrate a real-time vision application end-to-end on the Raspberry Pi 5. Learning Outcomes On successful completion, a student will be able to: CLO1. Explain the fundamentals of image formation, sensing, representation, colour, and processing. CLO2. Apply filtering, convolution, frequency-domain analysis, edge detection, and Hough methods. CLO3. Detect, describe, and match visual features and estimate geometric transforms robustly. CLO4. Apply camera geometry, calibration, stereo vision, and motion estimation for 3-D and dynamic scenes. CLO5. Implement classical recognition/detection (e.g. HOG, Haar, SIFT) and evaluate them. CLO6. Apply machine and deep learning to image classification, object detection, tracking, and segmentation. CLO7. Develop, deploy, and evaluate real-time computer-vision pipelines on embedded hardware (Raspberry Pi 5)."
+  },
+  {
+    "objectID": "syllabus.html#textbooks-and-references",
+    "href": "syllabus.html#textbooks-and-references",
+    "title": "Syllabus",
+    "section": "Textbooks & References",
+    "text": "Textbooks & References Use Title Author(s) · Edition Notes Primary Computer Vision: Algorithms and Applications R. Szeliski · 2nd ed. Free at szeliski.org/Book ; core reading for weeks 1–11 (image formation through stereo). Primary Digital Image Processing Gonzalez & Woods · 4th ed. Best treatment of weeks 2–9 (filtering, frequency domain, morphology, segmentation). Primary Deep Learning Goodfellow, Bengio & Courville Free at deeplearningbook.org ; reference for weeks 12–13. Practical OpenCV 5.0 documentation & 4→5 migration guide OpenCV team API reference for every lab; deep dive in week 14. Open university courses: Cornell CS5670 ( cs.cornell.edu/courses/cs5670 ) · UW CSE455 ( courses.cs.washington.edu/courses/cse455 ) · UMich EECS 498, Deep Learning for CV ( web.eecs.umich.edu/~justincj/teaching/eecs498 ) · Stanford CS231n ( cs231n.github.io ). Key research papers (implementation labs): Vaswani et al. (2017), “Attention Is All You Need” — arxiv.org/abs/1706.03762 (Lab 15: Transformer from scratch) · Ronneberger et al. (2015), “U-Net” — arxiv.org/abs/1505.04597 (Lab 13: U-Net from scratch)."
+  },
+  {
+    "objectID": "syllabus.html#assessment-and-grading",
+    "href": "syllabus.html#assessment-and-grading",
+    "title": "Syllabus",
+    "section": "Assessment & Grading",
+    "text": "Assessment & Grading Each 3-hour Monday session pairs a 1.5-hour theory lecture with a 1.5-hour supervised laboratory on the Raspberry Pi 5. Assessment Marks Coverage Final Exam 40 Cumulative; weighted toward recognition, deep learning & embedded deployment (weeks 10–16). Midterm Exam 20 Week 8 — image formation, processing, features, matching & RANSAC (weeks 1–8). Lab Project (capstone) 30 End-to-end vision system deployed on the Raspberry Pi 5 + demo & report. Quizzes / Assignments 10 Four assignments + periodic quizzes across the semester. Total 100 The Lab Project (30) is the capstone system demonstrated live on target hardware in Week 16; the four assignments and quizzes together carry 10 marks. Weekly lab deliverables are checkpoints toward the capstone and count within lab participation. Grade Scale A A− B+ B B− C+ C C− D F ≥90 86–89 82–85 78–81 74–77 70–73 66–69 62–65 50–61 <50 Adjust cut-offs to your institution’s regulations."
+  },
+  {
+    "objectID": "syllabus.html#course-policies",
+    "href": "syllabus.html#course-policies",
+    "title": "Syllabus",
+    "section": "Course Policies",
+    "text": "Course Policies Late Work Each student has a budget of 4 late days for the term, used in whole-day units, at most 2 per artefact. After the budget is spent, the maximum score drops 15% per day for up to 3 days, then reaches zero. Exams and the final presentation cannot use late days. Collaboration & Academic Integrity Discussing concepts is encouraged. The code and written answers you submit must be your own (or your team’s for the project). Cite any external code, dataset, or AI assistance you use. Copying solutions, sharing code between teams, or submitting generated text as your own analysis are integrity violations and are reported per university policy. AI Tools You may use AI assistants for debugging, boilerplate, and explanation. You may not use them to generate whole lab reports or exam answers. Add a one-line “AI use” note to each submission describing what you used them for. Attendance Lecture attendance is expected; labs are mandatory because equipment and check-offs happen in the room. Notify the instructor before a missed lab to arrange a make-up slot. Accommodations & Well-being Students with approved accommodations should share their letter in the first two weeks so arrangements can be made discreetly. If you are struggling, contact the instructor early — support is easier to arrange before a deadline than after."
+  },
+  {
+    "objectID": "syllabus.html#weekly-topic-map",
+    "href": "syllabus.html#weekly-topic-map",
+    "title": "Syllabus",
+    "section": "Weekly Topic Map",
+    "text": "Weekly Topic Map The full lecture-by-lecture breakdown with readings and deadlines is on the Schedule page; lab details are on the Labs page. Weeks Block Milestones 1–2 Introduction & the edge pipeline; image formation I & II; digital fundamentals Lab 1–2 (RPi 5 bring-up, OpenCV 5.0, camera stack) 3–4 Point operations, thresholding, spatial filtering I & II Lab 3–4 · Assignment 1 out/due 5 Frequency-domain processing & pyramids Lab 5 6–7 Restoration & morphology; edges/contours & local features Lab 6–7 · Assignment 2 out/due 8 Descriptors, matching & RANSAC Lab 8 · Midterm Exam (20) 9 Segmentation I & II Lab 9 · Project proposal due 10 Calibration & stereo Lab 10 11 Optical flow & tracking Lab 11 · Assignment 3 out 12 Classical recognition & neural networks Lab 12 · Assignment 3 due 13 CNNs, segmentation networks & reading research papers Lab 13 — U-Net from scratch · Assignment 4 out 14 Edge vision & the OpenCV 5.0 deep dive Lab 14 · Assignment 4 due 15 Vision transformers, advanced topics & review Lab 15 — Transformer from scratch · Project report due 16 Capstone demos & review Capstone demos · Final Exam (40, finals week)"
+  },
+  {
+    "objectID": "syllabus.html#software-and-hardware",
+    "href": "syllabus.html#software-and-hardware",
+    "title": "Syllabus",
+    "section": "Software & Hardware",
+    "text": "Software & Hardware Software: Python, OpenCV 5.0, PyTorch/TensorFlow, Ultralytics YOLO (incl. YOLO26); Google Colab for training. Hardware: Raspberry Pi 5 + AI HAT / Hailo NPU, Pi Camera, and an ESP32-CAM as a networked sensor — all labs and the capstone target this platform. Tools & platforms: Ultralytics YOLO ( docs.ultralytics.com ) · Raspberry Pi AI / Hailo ( raspberrypi.com/documentation/computers/ai.html ) · OpenCV 5.0 ( docs.opencv.org ) · Roboflow ( roboflow.com ) · Google Colab ( colab.research.google.com ). Model and tool versions move quickly — reconfirm YOLO26, OpenCV 5.0, Hailo and library versions before each offering. Setup guidance is on the Tutorials page."
+  },
+  {
+    "objectID": "schedule.html",
+    "href": "schedule.html",
+    "title": "Schedule",
+    "section": "",
+    "text": "BSES · 7th Semester · Section A · University of Lahore · Fall 2026"
+  },
+  {
+    "objectID": "labs.html",
+    "href": "labs.html",
+    "title": "Labs",
+    "section": "",
+    "text": "Fifteen hands-on labs on the Raspberry Pi 5 + a capstone project · BSES · 7th Semester · Section A · University of Lahore · Fall 2026 On this page Lab-by-lab Reading & Implementing Research Papers OpenCV 5.0 Deep Dive Capstone Project Milestones Grading rubric Advanced project bank Toolchain & Code Labs — Intelligent Vision Systems Fifteen hands-on labs on the Raspberry Pi 5 + a capstone project · BSES · 7th Semester · Section A · University of Lahore · Fall 2026 All labs run on the Raspberry Pi 5 . The first two labs bring up the embedded platform; Labs 3–8 build the classical-vision toolbox; Labs 9–12 build real, deployable systems; Labs 13 and 15 are research-paper implementation labs (U-Net and the Transformer, built from scratch); Lab 14 covers edge deployment — culminating in the capstone. Deliverable for every lab: the stated objective, tasks and deliverable are checked off in the same Monday session (1.5 h theory + 1.5 h lab, 11:00 AM–2:00 PM, E1-404 Lab). Weekly lab deliverables are checkpoints toward the capstone and count within lab participation; the Lab Project (capstone, 30 marks) is the end-to-end vision system deployed on the Raspberry Pi 5 and demonstrated live in Week 16."
+  },
+  {
+    "objectID": "labs.html#lab-list",
+    "href": "labs.html#lab-list",
+    "title": "Labs",
+    "section": "Lab-by-lab",
+    "text": "Lab-by-lab Week Lab Title & objective Tasks Deliverable 1 Lab 1 Raspberry Pi 5 & Embedded Systems I — Setup. Flash Raspberry Pi OS (64-bit); headless SSH & VNC; system update & Python virtual environment; GPIO and basic embedded I/O; overview of embedded-vision constraints (compute, memory, power). A booted, updated Pi with a working OpenCV/Python environment + a short setup report. 2 Lab 2 Raspberry Pi 5 & Embedded Systems II — Camera, I/O & OpenCV 5.0. Install & verify OpenCV 5.0 (note key OpenCV 4→5 changes); connect and configure the Pi camera (libcamera/picamera2); read/write images and video on the Pi; remote development workflow; measure capture FPS and latency. A live capture application on OpenCV 5.0 + an FPS/latency note. 3 Lab 3 CV Fundamentals I — Images, Video & Drawing. Load and save images; load and save videos; drawing functions (lines, shapes, text); basic operations (resize, crop, rotate, ROI). An image/video I/O utility with on-frame annotations. 4 Lab 4 CV Fundamentals II — Colour, Arithmetic & Thresholding. Arithmetic and bitwise operations; masks; the HSV colour space and colour detection; global/Otsu/adaptive threshold operations. An HSV colour detector + a thresholding app. 5 Lab 5 CV Fundamentals III — Contours & Motion. Find and draw contours; contour features (area, perimeter, bounding boxes, polygon approximation); background subtraction and frame differencing. A contour-based object counter + a motion detector. 6 Lab 6 Filtering, Edges & Morphology. Smoothing and sharpening filters; Sobel and Canny edges; morphological operations (open/close); histogram equalisation & CLAHE — all on live Pi video. A tunable, real-time processing pipeline. 7 Lab 7 Features & Matching. Harris/Shi–Tomasi corners; ORB/SIFT descriptors; brute-force & FLANN matching; Hough lines and circles. A feature-matching + shape-detection application. 8 Lab 8 Geometry — Homography, Panorama & Calibration. Estimate a homography with RANSAC; stitch a panorama; calibrate the Pi camera and undistort frames. A stitched panorama + a saved camera-intrinsics file. 9 Lab 9 Build a Real-World CV System. Plan the project and design its architecture; measure the size of an object in 2-D (using calibration); build a defect-recognition system; integrate a database (SQLite/MySQL) to log results. An end-to-end measuring / defect system logging to a database. 10 Lab 10 Stereo & Depth. Stereo calibration; disparity via block-matching/SGBM; build a depth map; (optional) monocular depth estimation. A depth/disparity map on a real scene. 11 Lab 11 Tracking & Analytics. Optical flow / KLT; tracking-by-detection with OC-SORT and Strong-SORT; object trajectory; speed estimation; people/vehicle line-crossing counting. A tracking + counting + speed application. 12 Lab 12 Deep Learning — Classification & YOLO Detection. Classify images with a pretrained model and train a custom classifier by transfer learning (Colab, free GPU); then detect objects on image/video/camera with YOLO, train a custom detector, and try SAHI (small objects) and pose. A trained custom classifier + a custom YOLO detector running on the Pi. 13 Lab 13 Paper Implementation I — U-Net from Scratch. Read “U-Net: Convolutional Networks for Biomedical Image Segmentation” (Ronneberger et al., 2015); understand the contracting/expanding paths and skip connections; implement the full architecture from scratch in PyTorch; train on a small segmentation dataset; evaluate with IoU/Dice and compare against a library U-Net. A from-scratch U-Net that segments a dataset + a one-page paper summary. 14 Lab 14 Modern Deployment with OpenCV 5.0 & Edge Runtimes. OpenCV 5.0 on the Pi: migrate an OpenCV 4 pipeline (deprecated APIs, moved modules), fix a CascadeClassifier call, and run YOLOv8n via ONNX in the new DNN engine with hardware acceleration. Then export to TFLite/ONNX, run on ONNX Runtime / Hailo, apply INT8 quantisation, and benchmark latency, throughput and power vs the CPU baseline. A migrated OpenCV 5 pipeline + YOLOv8n ONNX detection + a quantised model with a benchmark table. 15 Lab 15 Paper Implementation II — Transformer from Scratch. Read “Attention Is All You Need” (Vaswani et al., 2017); implement scaled dot-product attention, multi-head attention, positional encoding and the encoder/decoder blocks from scratch in PyTorch; train on a toy sequence task; connect the mechanism to Vision Transformers (ViT). A working from-scratch Transformer + a paper summary bridging to ViT. 16 Capstone Deployed Vision System on the Raspberry Pi 5. Integrate the semester’s skills into one complete, real-time system deployed on the Pi; demonstrate live with a short talk, Q&A and peer review. Live capstone demo, assessed as the Lab Project (30 marks)."
+  },
+  {
+    "objectID": "labs.html#capstone-project",
+    "href": "labs.html#capstone-project",
+    "title": "Labs",
+    "section": "Capstone Project",
+    "text": "Capstone Project Students build one integrated, real-time vision system deployed on the Raspberry Pi 5 , demonstrated live with a short talk, Q&A and peer review. Assessed as the Lab Project (30 marks) — the largest single component of the course grade. Milestones When Milestone Deliverable Week 9 Project proposal Problem, target hardware tier, dataset/data plan, success metric. Week 15 Project report due Written report: method, architecture, on-device results, discussion. Week 16 Capstone demo Live demonstration on Raspberry Pi 5 target hardware + short talk + Q&A + peer review. Grading rubric (Lab Project = 30 of 100 course marks) Criterion Weight Technical difficulty & correctness 30% Runs on the Raspberry Pi 5 in real time (or a justified budget) 25% Experimental rigour — baselines, ablations, honest metrics 20% Report clarity & reproducibility 15% Presentation & demo 10% Advanced project bank Every project must run on the Raspberry Pi 5, include a simple GUI or dashboard, and log results. Projects are grouped by theme; each can be scaled up (edge deployment, multi-camera, alerting) for a higher grade. Detection, counting & monitoring: real-time object detection (YOLOv7/v8/v11/YOLO26) · weapon detection · people entry/exit counting (smart occupancy) · intrusion / zone monitoring · PPE-compliance detection · animal detection · vehicle traffic monitoring · smart parking (slot occupancy). Recognition & classification: face-recognition attendance system · facial-emotion detection · age & gender detection · traffic-sign recognition (EfficientNet) · face-mask detection · driver-distraction classification (ResNet-50). Tracking & analytics: vehicle speed tracking (calibrated) · licence-plate detection + recognition (OCR / VLM) · object trajectory & multi-object tracking (OC-SORT / Strong-SORT) · measure object size in 2-D. Pose, gesture & safety: driver-drowsiness detection (EAR/MAR) · human-fitness / exercise-rep tracking (pose) · fall-detection + alert · hand-gesture recognition & control. Systems & IoT integration: AI accident detection with MQTT alerting · defect-recognition with database logging · Flask/Tkinter dashboards · edge deployment with quantisation & benchmarking. Challenge tier (bonus): a custom visual-classification feature, video-based detection monitoring, or a full end-to-end custom vision system — designed with the instructor."
+  },
+  {
+    "objectID": "labs.html#toolchain-and-code",
+    "href": "labs.html#toolchain-and-code",
+    "title": "Labs",
+    "section": "Toolchain & Code",
+    "text": "Toolchain & Code Platform: Raspberry Pi 5 (+ AI HAT / Hailo, Pi Camera, ESP32-CAM); Python, OpenCV 5.0, PyTorch/TensorFlow, Ultralytics YOLO (incl. YOLO26); Google Colab for training. Prerequisites: Python programming; basic linear algebra & probability. Tools & platforms: Ultralytics YOLO — docs.ultralytics.com · Raspberry Pi AI / Hailo — raspberrypi.com/documentation/computers/ai.html · OpenCV 5.0 (docs & 4→5 migration guide) — docs.opencv.org · Roboflow (labelling & datasets) — roboflow.com · Google Colab (free GPU training) — colab.research.google.com . Key research papers (implementation labs): Vaswani et al. (2017) — “Attention Is All You Need” — arxiv.org/abs/1706.03762 (Lab 15) · Ronneberger et al. (2015) — “U-Net” — arxiv.org/abs/1505.04597 (Lab 13). Tool setup walk-throughs are on the Tutorials page."
+  },
+  {
+    "objectID": "lectures/index.html",
+    "href": "lectures/index.html",
+    "title": "Lectures",
+    "section": "",
+    "text": "Lecture slides and supporting materials will be added here throughout the semester. Each lecture is available as an interactive presentation and as a PDF for downloading, printing, or taking notes."
+  },
+  {
+    "objectID": "code/index.html",
+    "href": "code/index.html",
+    "title": "Code & Demos",
+    "section": "",
+    "text": "Runnable Python/OpenCV/PyTorch samples for the Raspberry Pi 5, Hailo NPU, and ESP32-CAM"
+  },
+  {
+    "objectID": "assignments/index.html",
+    "href": "assignments/index.html",
+    "title": "Assignments",
+    "section": "",
+    "text": "Intelligent Vision Systems · BSES, 7th Semester, Section A · University of Lahore · Fall 2026"
+  },
+  {
+    "objectID": "tutorials/index.html",
+    "href": "tutorials/index.html",
+    "title": "Tutorials",
+    "section": "",
+    "text": "These tutorials cover the software and programming tools used throughout the course. They are designed for self-study and can be revisited whenever you need a refresher."
+  },
+  {
+    "objectID": "tutorials/index.html#recommended-order",
+    "href": "tutorials/index.html#recommended-order",
+    "title": "Tutorials",
+    "section": "Recommended order",
+    "text": "Recommended order Raspberry Pi 5 Setup Git and GitHub Linux, Python & AI-Ready Raspberry Pi OS Python and Conda Visual Studio Code NumPy for Computer Vision Getting Started with Pydantic Note that the course repository contains code, notebooks, assignments, and supporting files: github.com/<your-org>/intelligent-vision-systems (create and link) 01 — Raspberry Pi 5 Setup Install Raspberry Pi OS on a Raspberry Pi 5, complete first boot, and configure the desktop, panel, and menu for the lab. 02 — Git and GitHub Learn the Git workflow used to download, track, save, a"
+  },
+  {
+    "objectID": "tas.html",
+    "href": "tas.html",
+    "title": "Instructor & TAs",
+    "section": "",
+    "text": "Intelligent Vision Systems · BSES, 7th Semester, Section A · University of Lahore · Fall 2026 Instructor & Teaching Assistants Intelligent Vision Systems · BSES, 7th Semester, Section A · University of Lahore · Fall 2026 Course-related questions should be posted on the course discussion forum so that answers help other students too. Office hours are the place for individual help with concepts, assignments, labs, and programming questions. Note: TAs do not pre-grade work. Please do not ask whether a solution is correct or expect an answer; use office hours to ask about concepts or material you do not understand."
+  },
+  {
+    "objectID": "tas.html#instructor",
+    "href": "tas.html#instructor",
+    "title": "Instructor & TAs",
+    "section": "Instructor",
+    "text": "Instructor Name: Dr. Muhammad Kazim — Assistant Professor, Department of Intelligent Systems, University of Lahore Email: muhammad.kazim@is.uol.edu.pk Office: Department of Intelligent Systems, University of Lahore Office hours: By appointment"
+  },
+  {
+    "objectID": "tas.html#teaching-assistant-1",
+    "href": "tas.html#teaching-assistant-1",
+    "title": "Instructor & TAs",
+    "section": "Teaching Assistant 1",
+    "text": "Teaching Assistant 1 Name: (to be assigned) Email: (update) Office hours: (update) Office / lab location: Vision Lab"
+  },
+  {
+    "objectID": "tas.html#teaching-assistant-2",
+    "href": "tas.html#teaching-assistant-2",
+    "title": "Instructor & TAs",
+    "section": "Teaching Assistant 2",
+    "text": "Teaching Assistant 2 Name: (to be assigned) Email: (update) Office hours: (update) Office / lab location: Vision Lab"
+  }
+]

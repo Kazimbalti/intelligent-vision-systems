@@ -1,0 +1,15 @@
+# CPU / training tier dependencies.
+# On the Raspberry Pi, prefer the apt packages python3-opencv and
+# python3-picamera2 (create your venv with --system-site-packages so they are
+# visible). Hailo runtime (hailort / hailo-all) is installed via apt, NOT pip.
+
+opencv-python>=4.8
+numpy>=1.24
+
+# Training tier (run on a GPU machine or Google Colab):
+ultralytics>=8.2      # YOLOv8/YOLO11 training + export
+onnx>=1.15
+onnxruntime>=1.17
+
+# Optional helpers
+requests>=2.31        # used by ESP32-CAM stream ingest fallback

@@ -1,0 +1,35 @@
+[
+  {
+    "listing": "/tutorials/index.html",
+    "items": [
+      "/tutorials/01_raspberry_pi.html",
+      "/tutorials/02_git_github.html",
+      "/tutorials/03_linux_python_ai.html",
+      "/tutorials/04_python_conda.html",
+      "/tutorials/05_vscode.html",
+      "/tutorials/06_numpy.html",
+      "/tutorials/07_pydantic.html"
+    ]
+  },
+  {
+    "listing": "/lectures/index.html",
+    "items": [
+      "/lectures/01_intro.html",
+      "/lectures/02_image.html",
+      "/lectures/03_point_ops.html",
+      "/lectures/04_filtering.html",
+      "/lectures/05_frequency_pyramids.html",
+      "/lectures/06_restoration_morphology.html",
+      "/lectures/07_edges_features.html",
+      "/lectures/08_descriptors_ransac.html",
+      "/lectures/09_segmentation.html",
+      "/lectures/10_calibration_stereo.html",
+      "/lectures/11_flow_tracking.html",
+      "/lectures/12_recognition_nn.html",
+      "/lectures/13_cnn_papers.html",
+      "/lectures/14_edge_opencv5.html",
+      "/lectures/15_vit_review.html",
+      "/lectures/16_capstone.html"
+    ]
+  }
+]

@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.10.18">
+
+  <meta name="author" content="Dr. Muhammad Kazim">
+  <title>Intelligent Vision Systems – Lecture 05 — Frequency Domain &amp; Pyramids</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-e29227cb4367bc74b13779e945f9984f.css">
+  <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Lecture 05 — Frequency Domain &amp; Pyramids</h1>
+  <p class="subtitle">Lecture 5</p>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Dr. Muhammad Kazim
+</div>
+        <p class="quarto-title-affiliation">
+            Department of Intelligent Systems, University of Lahore
+          </p>
+    </div>
+</div>
+
+</section>
+<section id="this-lecture-05" class="slide level2">
+<h2>This Lecture</h2>
+<div class="columns">
+<div class="column" style="width:48%;">
+<p><strong>Part I — Frequency domain</strong></p>
+<ul>
+<li>1D/2D DFT &amp; FFT</li>
+<li>Reading a spectrum</li>
+<li>The convolution theorem</li>
+<li>Ideal / Butterworth / Gaussian filters</li>
+<li>Notch filtering &amp; ringing</li>
+</ul>
+</div><div class="column" style="width:48%;">
+<p><strong>Part II — Sampling &amp; pyramids</strong></p>
+<ul>
+<li>The 2D sampling theorem</li>
+<li>Aliasing &amp; anti-aliasing</li>
+<li>Gaussian pyramids</li>
+<li>Laplacian pyramids</li>
+<li>Coarse-to-fine processing</li>
+</ul>
+</div></div>
+<p>Same images, same filters as Lectures 3&ndash;4 &mdash; but now viewed as <strong>signals</strong>, which explains <em>why</em> those filters behave the way they do.</p>
+</section>
+<section id="spatial-to-frequency" class="slide level2">
+<h2>From Spatial to Frequency Domain</h2>
+<ul>
+<li>Any image can be written as a weighted sum of 2D sinusoids of different frequency, orientation, and phase</li>
+<li>Slowly-varying regions (sky, skin, a wall) &rarr; <strong>low</strong> spatial frequency</li>
+<li>Edges, texture, noise &rarr; <strong>high</strong> spatial frequency</li>
+<li>Filtering in the spatial domain (convolving with a kernel) has an exact equivalent in the frequency domain (multiplying by a mask) &mdash; the two views are the <strong>same operation</strong>, seen differently</li>
+</ul>
+</section>
+<section id="dft-1d" class="slide level2">
+<h2>The 1D Discrete Fourier Transform</h2>
+<p><span class="math display">\[
+F(u) = \sum_{x=0}^{N-1} f(x)\, e^{-j 2\pi u x / N}, \qquad u = 0,\dots,N-1
+\]</span></p>
+<ul>
+<li>\(F(u)\) is complex: magnitude \(|F(u)|\) (how much of frequency \(u\) is present) and phase \(\angle F(u)\) (where it is located)</li>
+<li>Inverse DFT reconstructs \(f(x)\) exactly from \(F(u)\) &mdash; no information is lost</li>
+<li>\(u=0\) is the <strong>DC term</strong> &mdash; the mean value of the signal</li>
+</ul>
+</section>
+<section id="dft-2d" class="slide level2">
+<h2>The 2D DFT</h2>
+<p><span class="math display">\[
+F(u,v) = \sum_{x=0}^{M-1}\sum_{y=0}^{N-1} f(x,y)\, e^{-j2\pi\left(\frac{ux}{M}+\frac{vy}{N}\right)}
+\]</span></p>
+<ul>
+<li>Separable in \(x\) and \(y\) &mdash; compute the 2D DFT as an FFT of every row, then an FFT of every column</li>
+<li>\((u,v)\) index 2D spatial frequency: distance from the origin = frequency magnitude, angle = orientation</li>
+<li>Images are real-valued, so the spectrum is conjugate-symmetric: \(F(-u,-v) = F^*(u,v)\)</li>
+</ul>
+</section>
+<section id="fft" class="slide level2">
+<h2>The FFT — Why We Never Compute the DFT Directly</h2>
+<ul>
+<li>Direct DFT evaluation: \(O(N^2)\) per dimension &mdash; for a 1080p frame, computationally infeasible in real time</li>
+<li><strong>Fast Fourier Transform (FFT)</strong> (Cooley&ndash;Tukey, 1965): exploits the recursive structure of the DFT to compute it in \(O(N \log N)\)</li>
+<li>Fastest when \(N\) is a power of two (or has small prime factors) &mdash; <code>np.fft.fft2</code>/<code>cv2.dft</code> pad or choose sizes accordingly for best performance</li>
+</ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">import numpy as np
+F = np.fft.fft2(gray)          # complex spectrum
+Fshift = np.fft.fftshift(F)    # move the DC term to the centre for display</code></pre></div></div>
+</section>
+<section id="reading-a-spectrum" class="slide level2">
+<h2>Reading a Spectrum</h2>
+<ul>
+<li>Display <strong>log magnitude</strong>, not raw magnitude &mdash; the DC term and a few low frequencies otherwise dwarf everything else on a linear scale: \(\;20\log_{10}(1+|F(u,v)|)\)</li>
+<li>After <code>fftshift</code>, the <strong>centre</strong> of the display is the DC term (low frequency); distance from centre = frequency magnitude</li>
+<li>A bright horizontal line in the spectrum &rarr; strong <strong>vertical</strong> structure in the image (and vice versa) &mdash; the spectrum orientation is rotated 90&deg; from the spatial-domain structure that causes it</li>
+<li>Isolated bright dots off-centre &rarr; a <strong>periodic</strong> pattern in the image (screen-door effect, scan-line interference, printer halftoning)</li>
+</ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">mag = 20 * np.log(np.abs(Fshift) + 1)
+mag_u8 = cv2.normalize(mag, None, 0, 255, cv2.NORM_MINMAX).astype(np.uint8)</code></pre></div></div>
+</section>
+<section id="convolution-theorem" class="slide level2">
+<h2>The Convolution Theorem</h2>
+<p>Convolution in the spatial domain is <strong>pointwise multiplication</strong> in the frequency domain:</p>
+<p><span class="math display">\[
+f * h \;\;\Longleftrightarrow\;\; F \cdot H
+\]</span></p>
+<ul>
+<li>\(\mathcal{F}\{f * h\} = \mathcal{F}\{f\}\cdot \mathcal{F}\{h\}\), and symmetrically \(\mathcal{F}\{f \cdot h\} = \mathcal{F}\{f\} * \mathcal{F}\{h\}\)</li>
+<li>This is <em>why</em> smoothing = removing high-frequency content, and sharpening = boosting it &mdash; it is exactly what the theorem predicts</li>
+<li>Practical payoff: for a large kernel \(h\) (radius &gt; ~15&ndash;20 px), it is often faster to FFT both \(f\) and \(h\), multiply, and inverse-FFT than to convolve directly in the spatial domain</li>
+</ul>
+</section>
+<section id="frequency-filters" class="slide level2">
+<h2>Designing Frequency-Domain Filters</h2>
+<p>A frequency filter is a mask \(H(u,v)\) multiplied onto the shifted spectrum:</p>
+<ol type="1">
+<li>Compute \(F = \text{fftshift}(\text{fft2}(f))\)</li>
+<li>Multiply: \(G = F \cdot H\)</li>
+<li>Invert: \(g = \text{real}(\text{ifft2}(\text{ifftshift}(G)))\)</li>
+</ol>
+<p>Three common shapes for \(H\), each available as low-pass, high-pass, or band-pass:</p>
+</section>
+<section id="ideal-filter" class="slide level2">
+<h2>Ideal Filters</h2>
+<p>A hard cutoff at radius \(D_0\) from the centre:</p>
+<p><span class="math display">\[
+H_{\text{lp}}(u,v) = \begin{cases} 1 & D(u,v) \le D_0 \\ 0 & D(u,v) &gt; D_0 \end{cases}
+\]</span></p>
+<ul>
+<li>Conceptually the simplest filter &mdash; and the worst-behaved in practice</li>
+<li>A sharp cutoff in frequency corresponds to a wide, oscillating <code>sinc</code>-shaped kernel in the spatial domain &rarr; produces visible <strong>ringing</strong> around edges (see the ringing slide below)</li>
+</ul>
+</section>
+<section id="butterworth-filter" class="slide level2">
+<h2>Butterworth Filters</h2>
+<p>A smooth roll-off controlled by order \(n\):</p>
+<p><span class="math display">\[
+H_{\text{lp}}(u,v) = \frac{1}{1 + \left(D(u,v)/D_0\right)^{2n}}
+\]</span></p>
+<ul>
+<li>\(n=1\): very gentle roll-off, minimal ringing, weak frequency separation</li>
+<li>Large \(n\): approaches the ideal filter's sharp cutoff (and its ringing)</li>
+<li>Good middle ground between the ideal filter (sharp, ringy) and the Gaussian filter (smooth, no sharp control) &mdash; \(n=2\) is a common default</li>
+</ul>
+</section>
+<section id="gaussian-frequency-filter" class="slide level2">
+<h2>Gaussian Frequency Filters</h2>
+<p><span class="math display">\[
+H_{\text{lp}}(u,v) = e^{-D(u,v)^2 / 2D_0^2}
+\]</span></p>
+<ul>
+<li>A Gaussian in the frequency domain has a Gaussian in the spatial domain too (the Gaussian is its own Fourier transform, up to scaling) &mdash; <strong>no ringing whatsoever</strong></li>
+<li>High-pass version: \(H_{\text{hp}} = 1 - H_{\text{lp}}\)</li>
+<li>This is the theoretical justification for why <code>cv2.GaussianBlur</code> (Lecture 4) is the default smoothing choice: it is the smoothest possible frequency cutoff</li>
+</ul>
+</section>
+<section id="band-pass-notch" class="slide level2">
+<h2>Band-Pass &amp; Notch Filtering</h2>
+<ul>
+<li><strong>Band-pass:</strong> combine a low-pass and a high-pass mask (\(H = H_{\text{lp},D_0} \cdot H_{\text{hp},D_1}\), \(D_1 &lt; D_0\)) to keep only a ring of mid frequencies &mdash; isolates texture at a specific scale</li>
+<li><strong>Band-reject / notch:</strong> zero out a small region of the spectrum at a specific \((u_0,v_0)\) (and its symmetric partner) to remove a <strong>periodic</strong> interference pattern &mdash; e.g. mains-frequency scan-line noise, a moir&eacute; pattern from a display or mesh</li>
+<li>Workflow: inspect the log-magnitude spectrum, find the tell-tale bright dot(s) away from the centre, null them (and their mirror image), inverse transform</li>
+</ul>
+</section>
+<section id="ringing" class="slide level2">
+<h2>Ringing (Gibbs Phenomenon)</h2>
+<ul>
+<li>A sharp cutoff in one domain produces oscillation in the other &mdash; this is the <strong>Gibbs phenomenon</strong>, the same effect that causes overshoot when approximating a square wave with a truncated Fourier series</li>
+<li>Visually: faint parallel &ldquo;echoes&rdquo; or halos parallel to strong edges after ideal low/high-pass filtering</li>
+<li><strong>Fix:</strong> use a smoothly-tapering filter (Butterworth with moderate order, or Gaussian) instead of a hard cutoff &mdash; the same lesson as choosing kernel shapes in Lecture 4</li>
+</ul>
+</section>
+<section id="frequency-pitfalls" class="slide level2">
+<h2>Practitioner Notes — Frequency Domain</h2>
+<ul>
+<li>FFT-based filtering pays off for <strong>large</strong> kernels; for the 3&times;3&ndash;15&times;15 kernels used in Lectures 3&ndash;4, direct spatial convolution is faster &mdash; don't reach for the FFT by default</li>
+<li>Always <code>fftshift</code> before visualising/designing a filter mask, and <code>ifftshift</code> before inverse-transforming &mdash; forgetting either silently corrupts the result</li>
+<li>Notch filtering requires the noise to be strictly periodic and visible as a compact spot in the spectrum; broadband noise (most sensor noise) will not respond to it</li>
+<li>On the Raspberry Pi 5, prefer spatial-domain filters for the live camera loop; use FFT analysis offline / for diagnosis (e.g. discovering a rolling-shutter or PWM-lighting artefact)</li>
+</ul>
+</section>
+<section id="sampling-theorem" class="slide level2">
+<h2>The 2D Sampling Theorem</h2>
+<p>A continuous signal band-limited to frequency \(f_{\max}\) can be reconstructed <strong>exactly</strong> from samples taken at or above the <strong>Nyquist rate</strong>:</p>
+<p><span class="math display">\[
+f_s \ge 2 f_{\max}
+\]</span></p>
+<ul>
+<li>In imaging: the sensor's pixel pitch sets \(f_s\); any scene detail finer than the Nyquist limit cannot be captured correctly</li>
+<li>Directly connects to Lecture 2: this is <em>why</em> a Bayer sensor needs an (often deliberately slightly soft) optical low-pass / anti-aliasing filter in front of it</li>
+</ul>
+</section>
+<section id="aliasing" class="slide level2">
+<h2>Aliasing</h2>
+<ul>
+<li>When \(f_s &lt; 2f_{\max}\), high frequencies masquerade as <strong>lower</strong>, incorrect frequencies in the sampled signal &mdash; they fold back ("alias") into the visible spectrum</li>
+<li>Classic visual symptoms: <strong>moir&eacute;</strong> patterns on fine fabric or mesh, jagged/staircased diagonal edges, wagon-wheel effect in video (temporal aliasing of a rotating spoke pattern)</li>
+<li>Downsampling an image (resizing smaller) is a new, coarser sampling of the same signal &mdash; it can introduce aliasing if done naively</li>
+</ul>
+</section>
+<section id="anti-aliasing" class="slide level2">
+<h2>Anti-Aliasing</h2>
+<p><strong>Rule:</strong> low-pass filter <em>before</em> you downsample, so that no content above the new Nyquist limit survives to fold back.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"># Wrong: naive nearest/area resize on a high-frequency image can alias
+small_bad = cv2.resize(img, (w // 4, h // 4), interpolation=cv2.INTER_NEAREST)
+
+# Right: blur to the new Nyquist limit, then resize (or use INTER_AREA, which
+# effectively does local averaging and is the safe default for shrinking)
+blurred = cv2.GaussianBlur(img, (5, 5), 0)
+small_ok = cv2.resize(blurred, (w // 4, h // 4), interpolation=cv2.INTER_AREA)</code></pre></div></div>
+<p>This exact pre-blur-then-subsample step is also the construction rule for a Gaussian pyramid, next.</p>
+</section>
+<section id="gaussian-pyramid" class="slide level2">
+<h2>The Gaussian Pyramid</h2>
+<p>A multi-resolution representation: repeatedly blur and downsample by 2&times;.</p>
+<p><span class="math display">\[
+G_0 = f, \qquad G_{l+1} = \operatorname{downsample}_2\!\big(G_l * G_\sigma\big)
+\]</span></p>
+<ul>
+<li>Each level is half the width and height of the level below &mdash; a stack of images from full resolution down to a few pixels</li>
+<li>The Gaussian pre-blur at every level is exactly the anti-aliasing step above &mdash; skip it and the pyramid aliases badly</li>
+<li>Used for multi-scale search (find a face/object at an unknown size by scanning every level), and for coarse-to-fine algorithms (below)</li>
+</ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">G1 = cv2.pyrDown(img)   # blur + downsample by 2, one pyramid level
+G2 = cv2.pyrDown(G1)</code></pre></div></div>
+</section>
+<section id="laplacian-pyramid" class="slide level2">
+<h2>The Laplacian Pyramid</h2>
+<p>Stores the <strong>detail lost</strong> between consecutive Gaussian-pyramid levels, enabling exact reconstruction:</p>
+<p><span class="math display">\[
+L_l = G_l - \operatorname{upsample}_2\!\big(G_{l+1}\big)
+\]</span></p>
+<ul>
+<li>Each \(L_l\) is a band-pass image: the detail present at level \(l\) but not at the coarser level \(l+1\) &mdash; conceptually a discretised, multi-scale version of the Laplacian-of-Gaussian from Lecture 4</li>
+<li>The original image is recovered exactly by adding the residuals back while upsampling: \(G_l = L_l + \operatorname{upsample}_2(G_{l+1})\)</li>
+<li>Classic application: seamless <strong>multi-band image blending</strong> (blend each frequency band separately, avoiding a visible seam at any single scale) — e.g. for panorama stitching in Lecture 8</li>
+</ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">up = cv2.pyrUp(G1, dstsize=(G0.shape[1], G0.shape[0]))
+L0 = cv2.subtract(G0, up)   # Laplacian residual at the finest level</code></pre></div></div>
+</section>
+<section id="coarse-to-fine" class="slide level2">
+<h2>Coarse-to-Fine Processing</h2>
+<ul>
+<li>Solve a hard problem at the <strong>coarsest</strong> pyramid level first (cheap, and large motions/displacements look small relative to the tiny image), then refine the estimate at each successively finer level</li>
+<li>This single idea underlies:
+<ul>
+<li><strong>Pyramidal Lucas&ndash;Kanade optical flow</strong> (Lecture 11) — track large motions that a single-scale KLT tracker would miss entirely</li>
+<li>Multi-scale template/object search — find candidates coarse, localise precisely fine</li>
+<li>Coarse-to-fine stereo matching — bound the disparity search range using the coarse level's estimate</li>
+</ul></li>
+<li>General pattern: <strong>estimate &rarr; warp/refine &rarr; move down one pyramid level &rarr; repeat</strong></li>
+</ul>
+</section>
+<section id="lab-5" class="slide level2">
+<h2>This Week&rsquo;s Lab — Lab 5: CV Fundamentals III</h2>
+<p><strong>Contours &amp; Motion</strong></p>
+<ul>
+<li>Find and draw contours; contour features (area, perimeter, bounding boxes, polygon approximation)</li>
+<li>Background subtraction and frame differencing (recall Lecture 3) &mdash; today's motion-detection output feeds directly into contour extraction</li>
+</ul>
+<p><strong>Deliverable:</strong> a contour-based object counter + a motion detector.</p>
+</section>
+<section id="key-takeaways-05" class="slide level2">
+<h2>Key Takeaways</h2>
+<ul>
+<li>Spatial filtering (Lecture 4) and frequency filtering are the <strong>same operation</strong> — the convolution theorem is the bridge, and it explains why Gaussian filters are smooth and ideal filters ring</li>
+<li>The Nyquist rate sets a hard limit on what a sensor or a downsampling step can capture correctly; anti-alias (pre-blur) before you subsample, always</li>
+<li>Gaussian and Laplacian pyramids give you multi-resolution image representations for free, built from a single repeated blur-and-downsample rule</li>
+<li>Coarse-to-fine is a general algorithmic strategy, not just a pyramid trick — you will reuse it directly for optical flow in Lecture 11</li>
+</ul>
+</section>
+<section id="further-reading-05" class="slide level2">
+<h2>Further Reading</h2>
+<ul>
+<li>Gonzalez &amp; Woods, <em>Digital Image Processing</em> 4e — Ch.4 (frequency-domain filtering)</li>
+<li>Szeliski, <em>Computer Vision</em> 2e — &sect;3.5 (pyramids and wavelets)</li>
+<li>Burt &amp; Adelson (1983), &ldquo;The Laplacian Pyramid as a Compact Image Code&rdquo;, IEEE Trans. Communications</li>
+</ul>
+</section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+<p>Intelligent Vision Systems; University of Lahore | Dr. Muhammad Kazim</p>
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="../site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
+  <script src="../site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="../site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="../site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="../site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="../site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': false,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'pdfMaxPagesPerSlide': 1,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\"><kbd>b</kbd> Toggle Chalkboard</a></li>\n<li class=\"slide-tool-item\" data-item=\"6\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\"><kbd>c</kbd> Toggle Notes Canvas</a></li>\n<li class=\"slide-tool-item\" data-item=\"7\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\"><kbd>d</kbd> Download Drawings</a></li>\n<li class=\"slide-tool-item\" data-item=\"8\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'chalkboard': {"buttons":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1600,
+
+        height: 900,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, RevealChalkboard, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>
