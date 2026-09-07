@@ -174,16 +174,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
 
   <ul>
-  <li><a href="#before-the-first-lab" id="toc-before-the-first-lab" class="nav-link active" data-scroll-target="#before-the-first-lab">Before the first lab</a></li>
-  <li><a href="#python-distribution" id="toc-python-distribution" class="nav-link" data-scroll-target="#python-distribution">1. Python distribution</a></li>
-  <li><a href="#package-managers" id="toc-package-managers" class="nav-link" data-scroll-target="#package-managers">2. Package managers</a></li>
-  <li><a href="#code-editor-ide" id="toc-code-editor-ide" class="nav-link" data-scroll-target="#code-editor-ide">3. Code editor / IDE</a></li>
-  <li><a href="#virtual-environments" id="toc-virtual-environments" class="nav-link" data-scroll-target="#virtual-environments">4. Virtual environments</a></li>
-  <li><a href="#version-control" id="toc-version-control" class="nav-link" data-scroll-target="#version-control">5. Version control — Git &amp; GitHub</a></li>
-  <li><a href="#containers-deployment" id="toc-containers-deployment" class="nav-link" data-scroll-target="#containers-deployment">6. Containers &amp; deployment — Docker &amp; WSL</a></li>
-  <li><a href="#api-terminal-tools" id="toc-api-terminal-tools" class="nav-link" data-scroll-target="#api-terminal-tools">7. API &amp; terminal tools</a></li>
-  <li><a href="#cloud-clis" id="toc-cloud-clis" class="nav-link" data-scroll-target="#cloud-clis">8. Cloud CLIs</a></li>
-  <li><a href="#extra-tools" id="toc-extra-tools" class="nav-link" data-scroll-target="#extra-tools">9. Extra tools</a></li>
+  <li><a href="#before-the-first-lab" id="toc-before-the-first-lab" class="nav-link active" data-scroll-target="#before-the-first-lab">Checklist</a></li>
+  <li><a href="#python-distribution" id="toc-python-distribution" class="nav-link" data-scroll-target="#python-distribution">Python Distributions (Any One)</a></li>
+  <li><a href="#package-managers" id="toc-package-managers" class="nav-link" data-scroll-target="#package-managers">Package Managers (Any One)</a></li>
+  <li><a href="#code-editor-ide" id="toc-code-editor-ide" class="nav-link" data-scroll-target="#code-editor-ide">Local IDE or Text Editor (Any One)</a>
+  <ul class="collapse">
+  <li><a href="#browser-based-online-ide" id="toc-browser-based-online-ide" class="nav-link" data-scroll-target="#browser-based-online-ide">Browser-based Online IDE (Optional)</a></li>
+  </ul></li>
+  <li><a href="#virtual-environments" id="toc-virtual-environments" class="nav-link" data-scroll-target="#virtual-environments">Working with virtual environment</a>
+  <ul class="collapse">
+  <li><a href="#venv" id="toc-venv" class="nav-link" data-scroll-target="#venv">venv</a></li>
+  <li><a href="#uv-venv" id="toc-uv-venv" class="nav-link" data-scroll-target="#uv-venv">uv</a></li>
+  </ul></li>
+  <li><a href="#version-control" id="toc-version-control" class="nav-link" data-scroll-target="#version-control">Version Control System</a></li>
+  <li><a href="#commands-used-in-class" id="toc-commands-used-in-class" class="nav-link" data-scroll-target="#commands-used-in-class">Commands used in Class</a></li>
+  <li><a href="#extra-tools" id="toc-extra-tools" class="nav-link" data-scroll-target="#extra-tools">Extra Tools</a>
+  <ul class="collapse">
+  <li><a href="#markdown" id="toc-markdown" class="nav-link" data-scroll-target="#markdown">Markdown</a></li>
+  <li><a href="#docker" id="toc-docker" class="nav-link" data-scroll-target="#docker">Docker</a></li>
+  <li><a href="#cloud-cli" id="toc-cloud-cli" class="nav-link" data-scroll-target="#cloud-cli">Cloud CLI</a></li>
+  <li><a href="#api-tool" id="toc-api-tool" class="nav-link" data-scroll-target="#api-tool">API Tool</a></li>
+  <li><a href="#warp-terminal" id="toc-warp-terminal" class="nav-link" data-scroll-target="#warp-terminal">Warp Terminal</a></li>
+  </ul></li>
   <li><a href="#full-setup-walkthrough" id="toc-full-setup-walkthrough" class="nav-link" data-scroll-target="#full-setup-walkthrough">Full setup walkthrough</a>
   <ul class="collapse">
   <li><a href="#step-1-install-a-conda-distribution" id="toc-step-1-install-a-conda-distribution" class="nav-link" data-scroll-target="#step-1-install-a-conda-distribution">Step 1 — Install a Conda distribution</a></li>
@@ -192,7 +204,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#step-4-open-the-project-in-your-ide" id="toc-step-4-open-the-project-in-your-ide" class="nav-link" data-scroll-target="#step-4-open-the-project-in-your-ide">Step 4 — Open the project in your IDE</a></li>
   <li><a href="#step-5-handy-editor-shortcuts" id="toc-step-5-handy-editor-shortcuts" class="nav-link" data-scroll-target="#step-5-handy-editor-shortcuts">Step 5 — Handy editor shortcuts</a></li>
   </ul></li>
-  <li><a href="#class-command-reference" id="toc-class-command-reference" class="nav-link" data-scroll-target="#class-command-reference">Class command reference</a></li>
   <li><a href="#verify-your-setup" id="toc-verify-your-setup" class="nav-link" data-scroll-target="#verify-your-setup">Verify your setup</a></li>
   <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps">Next steps</a></li>
   </ul>
@@ -230,7 +241,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>This is an at-a-glance list of the software you need on your own laptop before the course starts. Each item links to the tutorial that walks through it in full. Work top to bottom — later steps assume the earlier ones are done. The <a href="#full-setup-walkthrough">full setup walkthrough</a> at the end ties everything together into one sequence.</p>
+<p>The software you need on your own laptop before the course starts. <strong>Please be ready with all of these before the first lab session.</strong> Each section links to the tutorial that walks through it in full; the <a href="#full-setup-walkthrough">full setup walkthrough</a> at the end ties everything into one sequence.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -241,32 +252,29 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Have every non-optional item installed and verified <strong>before the first lab session</strong>. Setting up the Raspberry Pi 5 itself is a separate walkthrough — see <a href="../tutorials/01_raspberry_pi.html">Tutorial 01 — Raspberry Pi 5 Setup</a>.</p>
+<p>Where a section says <strong>(Any One)</strong>, install just one option — the one marked as the course default unless you have a reason to prefer another. Setting up the Raspberry Pi 5 itself is separate — see <a href="../tutorials/01_raspberry_pi.html">Tutorial 01 — Raspberry Pi 5 Setup</a>.</p>
 </div>
 </div>
 <section id="before-the-first-lab" class="level2">
-<h2 class="anchored" data-anchor-id="before-the-first-lab">Before the first lab</h2>
+<h2 class="anchored" data-anchor-id="before-the-first-lab">Checklist</h2>
 <ul class="task-list">
-<li><input type="checkbox" disabled=""> <strong>Python distribution</strong> — Miniconda (recommended) or Anaconda</li>
-<li><input type="checkbox" disabled=""> <strong>Course <code>cv</code> environment</strong> — created and the course requirements installed</li>
-<li><input type="checkbox" disabled=""> <strong>Code editor</strong> — Visual Studio Code, with the Python and Jupyter extensions</li>
-<li><input type="checkbox" disabled=""> <strong>Git</strong> — installed (on Windows this also gives you Git Bash)</li>
-<li><input type="checkbox" disabled=""> <strong>GitHub account</strong> — created, and the course repository cloned</li>
-<li><input type="checkbox" disabled=""> <em>(Optional)</em> <strong>Docker Desktop</strong> — plus WSL 2 on Windows</li>
-<li><input type="checkbox" disabled=""> <em>(Optional)</em> <strong><code>uv</code></strong> — a fast drop-in for <code>pip</code>/<code>venv</code></li>
-<li><input type="checkbox" disabled=""> <em>(Optional)</em> <strong>Postman</strong>, <strong>Warp</strong>, <strong>AWS CLI</strong> / <strong>gcloud CLI</strong> — for the deployment labs</li>
+<li><input type="checkbox" disabled=""> <strong>Python distribution</strong></li>
+<li><input type="checkbox" disabled=""> <strong>IDE</strong></li>
+<li><input type="checkbox" disabled=""> <strong>Git</strong> &rarr; <strong>Git Bash</strong></li>
+<li><input type="checkbox" disabled=""> <strong>Docker</strong></li>
+<li><input type="checkbox" disabled=""> <strong>Postman</strong> <em>(Optional)</em></li>
+<li><input type="checkbox" disabled=""> <strong>Warp</strong> <em>(Optional)</em></li>
+<li><input type="checkbox" disabled=""> <strong>AWS CLI</strong> <em>(Optional)</em></li>
 </ul>
 </section>
 <section id="python-distribution" class="level2">
-<h2 class="anchored" data-anchor-id="python-distribution">1. Python distribution</h2>
-<p>Pick <strong>one</strong>. This course manages packages with Conda, so a Conda distribution is the least-friction choice.</p>
+<h2 class="anchored" data-anchor-id="python-distribution">Python Distributions (Any One)</h2>
 <ul class="task-list">
-<li><input type="checkbox" disabled=""> <strong>Miniconda</strong> — minimal Conda installer, recommended — <a href="https://www.anaconda.com/docs/getting-started/miniconda/install">install guide</a></li>
-<li><input type="checkbox" disabled=""> <strong>Anaconda</strong> — Conda plus a large bundled package set — <a href="https://www.anaconda.com/download/success">download</a></li>
-<li><input type="checkbox" disabled=""> <strong>python.org build</strong> — only if you prefer plain <code>venv</code> + <code>pip</code> — <a href="https://www.python.org/downloads/">download</a></li>
-<li><input type="checkbox" disabled=""> <strong><code>uv</code></strong> — can also install and manage Python itself (<code>uv python install 3.12</code>); pair with <code>uv venv</code> instead of Conda — <a href="https://docs.astral.sh/uv/">docs</a></li>
+<li><input type="checkbox" disabled=""> <strong>Anaconda</strong> — Conda plus a large bundled package set; the least-friction choice for this course — <a href="https://www.anaconda.com/download/success">download</a> <em>(or <a href="https://www.anaconda.com/docs/getting-started/miniconda/install">Miniconda</a> for a minimal install)</em></li>
+<li><input type="checkbox" disabled=""> <strong>Python</strong> — the plain python.org build; only if you prefer <code>venv</code> + <code>pip</code> — <a href="https://www.python.org/downloads/">download</a></li>
+<li><input type="checkbox" disabled=""> <strong>uv</strong> — can also install and manage Python itself (<code>uv python install 3.12</code>) and pair with <code>uv venv</code> — <a href="https://docs.astral.sh/uv/">docs</a></li>
 </ul>
-<p>On Windows, let the installer add Conda to your <code>PATH</code>, or add these entries yourself (adjust the leading folder to your install — <code>anaconda3</code> for Anaconda, <code>miniconda3</code> for Miniconda):</p>
+<p><strong>Windows environment-variable <code>PATH</code>:</strong> let the installer add Conda to <code>PATH</code>, or add these entries yourself (use <code>anaconda3</code> for Anaconda, <code>miniconda3</code> for Miniconda):</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash">%USERPROFILE%\anaconda3
 %USERPROFILE%\anaconda3\Library\mingw-w64\bin
 %USERPROFILE%\anaconda3\Library\usr\bin
@@ -275,51 +283,61 @@ Note
 <p>Full walkthrough, including creating the course <code>cv</code> environment: <a href="../tutorials/04_python_conda.html">Tutorial 04 — Python and Conda</a>.</p>
 </section>
 <section id="package-managers" class="level2">
-<h2 class="anchored" data-anchor-id="package-managers">2. Package managers</h2>
-<p>Pick <strong>one</strong> to drive installs. This course uses <strong>pip</strong> inside a Conda environment for most packages.</p>
+<h2 class="anchored" data-anchor-id="package-managers">Package Managers (Any One)</h2>
 <ul class="task-list">
-<li><input type="checkbox" disabled=""> <strong>conda</strong> — creates the environment and installs the heavy binary packages (OpenCV, PyTorch). Used rarely, mostly for the environment itself.</li>
-<li><input type="checkbox" disabled=""> <strong>pip</strong> — the course default; used <em>inside</em> the activated <code>cv</code> environment for everything in <code>requirements.txt</code>.</li>
-<li><input type="checkbox" disabled=""> <em>(Optional)</em> <strong>uv</strong> — a much faster drop-in for <code>pip</code> and <code>venv</code>; <code>uv pip install -r requirements.txt</code> — <a href="https://docs.astral.sh/uv/">docs</a></li>
+<li><input type="checkbox" disabled=""> <strong>conda</strong> <em>(rarely)</em> — creates the environment and installs heavy binary packages (OpenCV, PyTorch).</li>
+<li><input type="checkbox" disabled=""> <strong>pip</strong> <em>(the course default)</em> — used <em>inside</em> the activated <code>cv</code> environment for everything in <code>requirements.txt</code>.</li>
+<li><input type="checkbox" disabled=""> <strong>uv</strong> <em>(Optional)</em> — a much faster drop-in for <code>pip</code> and <code>venv</code>; <code>uv pip install -r requirements.txt</code> — <a href="https://docs.astral.sh/uv/">refer to the uv docs</a></li>
 </ul>
 </section>
 <section id="code-editor-ide" class="level2">
-<h2 class="anchored" data-anchor-id="code-editor-ide">3. Code editor / IDE</h2>
-<p>Pick <strong>one</strong> local editor. The course uses <strong>VS Code</strong> in all demos; the others are fully supported alternatives.</p>
+<h2 class="anchored" data-anchor-id="code-editor-ide">Local IDE or Text Editor (Any One)</h2>
 <ul class="task-list">
-<li><input type="checkbox" disabled=""> <strong>Visual Studio Code</strong> — course default — <a href="https://code.visualstudio.com/">download</a>; then add the <strong>Python</strong> and <strong>Jupyter</strong> extensions</li>
-<li><input type="checkbox" disabled=""> <strong>PyCharm</strong> — Community (free) or Professional — <a href="https://www.jetbrains.com/pycharm/download/">download</a></li>
-<li><input type="checkbox" disabled=""> <strong>Cursor</strong> / <strong>Windsurf</strong> / <strong>Trae</strong> — VS Code-based editors with built-in AI (Cursor and Windsurf have paid tiers)</li>
+<li><input type="checkbox" disabled=""> <strong>VS Code</strong> <em>(the course default)</em> — <a href="https://code.visualstudio.com/">download</a>; then add the <strong>Python</strong> and <strong>Jupyter</strong> extensions</li>
+<li><input type="checkbox" disabled=""> <strong>Cursor</strong> <em>(paid)</em> — <a href="https://cursor.com/">cursor.com</a></li>
+<li><input type="checkbox" disabled=""> <strong>Windsurf</strong> <em>(paid)</em> — <a href="https://windsurf.com/">windsurf.com</a></li>
+<li><input type="checkbox" disabled=""> <strong>Trae</strong> — <a href="https://www.trae.ai/">trae.ai</a></li>
+<li><input type="checkbox" disabled=""> <strong>PyCharm</strong> — Community or Professional — <a href="https://www.jetbrains.com/pycharm/download/">download</a></li>
 </ul>
-<p><strong>Browser-based / online IDEs</strong> — optional, handy for a GPU or a second machine:</p>
+<p>Configuring VS Code to use the <code>cv</code> environment, notebooks, and the debugger: <a href="../tutorials/05_vscode.html">Tutorial 05 — Visual Studio Code</a>.</p>
+<section id="browser-based-online-ide" class="level3">
+<h3 class="anchored" data-anchor-id="browser-based-online-ide">Browser-based Online IDE (Optional)</h3>
 <ul class="task-list">
 <li><input type="checkbox" disabled=""> <strong>Lightning.ai</strong> — <a href="https://lightning.ai/">lightning.ai</a></li>
 <li><input type="checkbox" disabled=""> <strong>Replit</strong> — <a href="https://replit.com/">replit.com</a></li>
 <li><input type="checkbox" disabled=""> <strong>Firebase Studio</strong> — <a href="https://firebase.studio/">firebase.studio</a></li>
 </ul>
-<p>Configuring VS Code to use the <code>cv</code> environment, notebooks, and the debugger: <a href="../tutorials/05_vscode.html">Tutorial 05 — Visual Studio Code</a>.</p>
+</section>
 </section>
 <section id="virtual-environments" class="level2">
-<h2 class="anchored" data-anchor-id="virtual-environments">4. Virtual environments</h2>
+<h2 class="anchored" data-anchor-id="virtual-environments">Working with virtual environment</h2>
 <p>Every project gets its own isolated environment. Use whichever tool matches your Python distribution — <strong>conda</strong> is the course default.</p>
-<p><strong>conda</strong></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"># named environment (lives next to the conda install)
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"># creates the virtual env next to the conda install
 conda create -n cv python=3.12 -y
 conda activate cv
 conda deactivate
-conda remove -n cv --all        # delete it
+conda remove -n cv --all
 
-# or a path-based environment (lives in the project folder)
-conda create -p ./.venv python=3.12 -y
-conda activate ./.venv</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>venv</strong> (standard library)</p>
+# OR
+
+# creates the virtual env in the current folder
+conda create -p ./cv python=3.12 -y
+conda activate ./cv
+conda deactivate
+# delete the ./cv folder to remove it</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="venv" class="level3">
+<h3 class="anchored" data-anchor-id="venv">venv</h3>
+<p>The standard-library option — no Conda needed.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash">python -m venv myenv
 myenv\Scripts\activate           # Windows (cmd)
 .\myenv\Scripts\Activate.ps1     # Windows (PowerShell)
 source myenv/bin/activate        # macOS / Linux
 deactivate
 rmdir /s /q myenv                # delete it (Windows); rm -rf myenv elsewhere</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p><strong>uv</strong> (optional, fastest)</p>
+</section>
+<section id="uv-venv" class="level3">
+<h3 class="anchored" data-anchor-id="uv-venv">uv</h3>
+<p>The fastest option; cross-platform.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash">pip install uv                   # or: pipx install uv
 uv venv --python 3.12 myenv
 source myenv/bin/activate        # myenv\Scripts\activate on Windows
@@ -330,60 +348,79 @@ uv sync                          # reconcile the env with the lockfile</code></p
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash">set PATH=%USERPROFILE%\.local\bin;%PATH%
 $env:Path = "$env:USERPROFILE\.local\bin;$env:Path"</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
+</section>
 <section id="version-control" class="level2">
-<h2 class="anchored" data-anchor-id="version-control">5. Version control — Git &amp; GitHub</h2>
+<h2 class="anchored" data-anchor-id="version-control">Version Control System</h2>
 <ul class="task-list">
-<li><input type="checkbox" disabled=""> <strong>Git</strong> — <a href="https://git-scm.com/downloads">download</a>. On Windows the installer also provides <strong>Git Bash</strong>, the terminal used in the tutorials.</li>
-<li><input type="checkbox" disabled=""> <strong>GitHub account</strong> — <a href="https://github.com/signup">sign up</a> with your student email.</li>
-<li><input type="checkbox" disabled=""> <strong>Clone the course repository</strong> so you have the code, notebooks, and assignments locally.</li>
-<li><input type="checkbox" disabled=""> <em>(Optional)</em> <strong>GitHub Desktop</strong> — a GUI for Git — <a href="https://desktop.github.com/">download</a>.</li>
+<li><input type="checkbox" disabled=""> <strong>Git</strong> <em>(always used in the course)</em> — <a href="https://git-scm.com/downloads">download</a>. On Windows the installer also provides <strong>Git Bash</strong>, the terminal used in the tutorials.</li>
+<li><input type="checkbox" disabled=""> <strong>GitHub account</strong> — <a href="https://github.com/signup">sign up</a> with your student email, then clone the course repository.</li>
+<li><input type="checkbox" disabled=""> <strong>GitHub Desktop</strong> <em>(Optional)</em> — a GUI for Git — <a href="https://desktop.github.com/">download</a>.</li>
 </ul>
 <p>The Git workflow used throughout the course: <a href="../tutorials/02_git_github.html">Tutorial 02 — Git and GitHub</a>.</p>
 </section>
-<section id="containers-deployment" class="level2">
-<h2 class="anchored" data-anchor-id="containers-deployment">6. Containers &amp; deployment — Docker &amp; WSL</h2>
-<p>Needed for the deployment labs, where the vision pipeline is packaged into a reproducible container.</p>
-<ul class="task-list">
-<li><input type="checkbox" disabled=""> <strong>Docker Desktop</strong> — <a href="https://www.docker.com/products/docker-desktop/">download</a> · <a href="https://docs.docker.com/get-started/docker_cheatsheet.pdf">cheat sheet (PDF)</a> · <a href="https://docs.docker.com/get-started/">Docker basics</a></li>
-<li><input type="checkbox" disabled=""> <strong>WSL 2</strong> (Windows only) — the Linux backend Docker Desktop runs on. Install from an <strong>admin</strong> PowerShell, then reboot:</li>
-</ul>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash">wsl --install
-wsl --status
-wsl --list --verbose</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Check your CPU architecture first
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Windows: <strong>Settings → System → About → System type</strong>. <em>x64 / AMD64</em> means an Intel or AMD chip (the common case); <em>ARM64</em> means an ARM chip — download the ARM build of each installer. On the Raspberry Pi 5 everything is ARM64 (<code>aarch64</code>).</p>
-</div>
-</div>
-</section>
-<section id="api-terminal-tools" class="level2">
-<h2 class="anchored" data-anchor-id="api-terminal-tools">7. API &amp; terminal tools</h2>
-<ul class="task-list">
-<li><input type="checkbox" disabled=""> <em>(Optional)</em> <strong>Postman</strong> — send and inspect HTTP requests when testing an endpoint such as the ESP32-CAM stream or a model-serving API — <a href="https://www.postman.com/downloads/">postman.com</a></li>
-<li><input type="checkbox" disabled=""> <em>(Optional)</em> <strong>Warp</strong> — a modern terminal with history, blocks, and built-in AI — <a href="https://www.warp.dev/">warp.dev</a></li>
-</ul>
-</section>
-<section id="cloud-clis" class="level2">
-<h2 class="anchored" data-anchor-id="cloud-clis">8. Cloud CLIs</h2>
-<p>Optional, and only for the deployment labs that push a container or pull data from a cloud bucket. Install the one matching the provider you use.</p>
-<ul class="task-list">
-<li><input type="checkbox" disabled=""> <strong>AWS CLI</strong> — <a href="https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html">install</a>, then <code>aws configure</code> and check with <code>aws --version</code></li>
-<li><input type="checkbox" disabled=""> <strong>Google Cloud CLI (<code>gcloud</code>)</strong> — <a href="https://cloud.google.com/sdk/docs/install">install</a>, then <code>gcloud init</code> and check with <code>gcloud --version</code></li>
-</ul>
+<section id="commands-used-in-class" class="level2">
+<h2 class="anchored" data-anchor-id="commands-used-in-class">Commands used in Class</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"># creating a conda environment
+conda create -n cv python=3.12 -y
+
+# activate the conda environment
+conda activate cv
+
+# creating a conda env in a custom path
+# current directory:   conda create -p ./cv python=3.12
+# directory of choice: conda create -p C:/envs/cv python=3.12
+
+# activating a conda environment created with -p
+conda activate C:/envs/cv
+
+# creating requirements.txt
+pip freeze
+pip freeze &gt; requirements.txt
+pip list
+pip list --format=freeze &gt; req.txt
+
+# installing requirements from a file
+pip install -r requirements.txt</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="extra-tools" class="level2">
-<h2 class="anchored" data-anchor-id="extra-tools">9. Extra tools</h2>
+<h2 class="anchored" data-anchor-id="extra-tools">Extra Tools</h2>
+<section id="markdown" class="level3">
+<h3 class="anchored" data-anchor-id="markdown">Markdown</h3>
 <ul class="task-list">
-<li><input type="checkbox" disabled=""> <strong>Markdown</strong> — the format for READMEs, notebook prose, and lab reports — <a href="https://www.markdownguide.org/basic-syntax/">basic syntax</a></li>
+<li><input type="checkbox" disabled=""> The format for READMEs, notebook prose, and lab reports — <a href="https://www.markdownguide.org/basic-syntax/">Markdown basics</a></li>
 </ul>
+</section>
+<section id="docker" class="level3">
+<h3 class="anchored" data-anchor-id="docker">Docker</h3>
+<ul class="task-list">
+<li><input type="checkbox" disabled=""> <strong>Docker Desktop</strong> — <a href="https://www.docker.com/products/docker-desktop/">download</a> · <a href="https://docs.docker.com/get-started/docker_cheatsheet.pdf">Docker cheat sheet (PDF)</a> · <a href="https://docs.docker.com/get-started/">Docker basics</a></li>
+</ul>
+<p><strong>System check for Windows.</strong> <strong>Settings → System → About → System type</strong>: <em>x64 / AMD64</em> means an Intel or AMD chip (the common case); <em>ARM64</em> means an ARM chip, so download the ARM build of each installer. The Raspberry Pi 5 is ARM64 (<code>aarch64</code>).</p>
+<p><strong>WSL setup in Windows.</strong> Docker Desktop runs on WSL 2. From an <strong>admin</strong> PowerShell, then reboot:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash">wsl --install
+wsl --status
+wsl --list --verbose</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="cloud-cli" class="level3">
+<h3 class="anchored" data-anchor-id="cloud-cli">Cloud CLI</h3>
+<p>Optional, only for the deployment labs that push a container or pull data from a cloud bucket.</p>
+<ul class="task-list">
+<li><input type="checkbox" disabled=""> <strong>AWS CLI</strong> — <a href="https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html">install</a>, then <code>aws configure</code>; check with <code>aws --version</code></li>
+<li><input type="checkbox" disabled=""> <strong>GCP CLI (<code>gcloud</code>)</strong> — <a href="https://cloud.google.com/sdk/docs/install">install</a>, then <code>gcloud init</code>; check with <code>gcloud --version</code></li>
+</ul>
+</section>
+<section id="api-tool" class="level3">
+<h3 class="anchored" data-anchor-id="api-tool">API Tool</h3>
+<ul class="task-list">
+<li><input type="checkbox" disabled=""> <strong>Postman</strong> <em>(Optional)</em> — send and inspect HTTP requests when testing an endpoint such as the ESP32-CAM stream or a model-serving API — <a href="https://www.postman.com/downloads/">postman.com</a></li>
+</ul>
+</section>
+<section id="warp-terminal" class="level3">
+<h3 class="anchored" data-anchor-id="warp-terminal">Warp Terminal</h3>
+<ul class="task-list">
+<li><input type="checkbox" disabled=""> <strong>Warp</strong> <em>(Optional)</em> — a modern terminal with history, blocks, and built-in AI — <a href="https://www.warp.dev/">warp.dev</a></li>
+</ul>
+</section>
 </section>
 <section id="full-setup-walkthrough" class="level2">
 <h2 class="anchored" data-anchor-id="full-setup-walkthrough">Full setup walkthrough</h2>
@@ -391,13 +428,13 @@ Check your CPU architecture first
 <section id="step-1-install-a-conda-distribution" class="level3">
 <h3 class="anchored" data-anchor-id="step-1-install-a-conda-distribution">Step 1 — Install a Conda distribution</h3>
 <p>Install <strong>Miniconda</strong> (or Anaconda) from <a href="https://www.anaconda.com/download/success">anaconda.com</a> for your operating system. On Windows, tick the option to register Conda, or add the <a href="#python-distribution"><code>PATH</code> entries above</a> yourself. Confirm it works:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash">conda --version
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash">conda --version
 python --version</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="step-2-create-the-course-environment" class="level3">
 <h3 class="anchored" data-anchor-id="step-2-create-the-course-environment">Step 2 — Create the course environment</h3>
 <p>Create an isolated environment for the course and install its requirements. Use the <strong>exact Python version</strong> below so library versions line up with the tutorials.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash">conda create -n cv python=3.12 -y
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash">conda create -n cv python=3.12 -y
 conda activate cv
 
 conda install -y ipywidgets notebook          # Jupyter support
@@ -411,10 +448,10 @@ pip install -r requirements.txt               # from the cloned course repo</cod
 <li><input type="checkbox" disabled=""> Check for a GPU: <strong>Task Manager → Performance</strong>, or run <code>nvidia-smi</code> in a terminal.</li>
 <li><input type="checkbox" disabled=""> If present, install a CUDA-enabled PyTorch build into the active <code>cv</code> environment. Use the selector on <a href="https://pytorch.org/get-started/locally/">pytorch.org</a> to get the URL for your CUDA version:</li>
 </ul>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"># example: CUDA 12.4 wheels — check pytorch.org for the current tag
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"># example: CUDA 12.4 wheels — check pytorch.org for the current tag
 pip install --upgrade torch torchvision --index-url https://download.pytorch.org/whl/cu124</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Verify the GPU is visible to PyTorch:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash">python -c "import torch; print(torch.cuda.is_available(), torch.cuda.device_count())"</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash">python -c "import torch; print(torch.cuda.is_available(), torch.cuda.device_count())"</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><code>True 1</code> means the environment is GPU-ready. <code>False 0</code> is fine too — you will just run on CPU.</p>
 </section>
 <section id="step-4-open-the-project-in-your-ide" class="level3">
@@ -440,25 +477,6 @@ pip install --upgrade torch torchvision --index-url https://download.pytorch.org
 <li><strong>Parameter hints</strong> — <strong>Ctrl + Shift + Space</strong> in VS Code, <strong>Ctrl + P</strong> in PyCharm (cursor inside the parentheses).</li>
 </ul>
 </section>
-</section>
-<section id="class-command-reference" class="level2">
-<h2 class="anchored" data-anchor-id="class-command-reference">Class command reference</h2>
-<p>The Conda and pip commands used repeatedly in class.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"># create / activate a named environment
-conda create -n cv python=3.12 -y
-conda activate cv
-
-# environment in a specific folder (-p / --prefix)
-conda create -p ./envs/cv python=3.12 -y      # current directory
-conda create -p C:/envs/cv python=3.12 -y     # chosen path
-conda activate C:/envs/cv                      # activate a -p env by path
-
-# record the environment's packages
-pip freeze &gt; requirements.txt
-pip list --format=freeze &gt; requirements.txt   # alternative
-
-# install from a requirements file
-pip install -r requirements.txt</code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="verify-your-setup" class="level2">
 <h2 class="anchored" data-anchor-id="verify-your-setup">Verify your setup</h2>
