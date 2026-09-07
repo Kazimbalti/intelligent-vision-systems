@@ -621,6 +621,139 @@ Dr. Muhammad Kazim
 <p><img data-src="assets/01_intro/nmdvas_smoking.png" alt="Smoking detection key features" height="650"></p>
 </div>
 </section>
+<section id="what-is-computer-vision" class="slide level2 center" data-background-image="assets/01_intro/lec1_intro_01.png" data-background-opacity="0.20" style="text-align:center;">
+<h2>What Is Computer Vision?</h2>
+<p>From a working definition, to why the problem is fundamentally hard.</p>
+</section>
+<section id="whatiscv-aristotle" class="slide level2">
+<h2>A Definition, Starting with Aristotle</h2>
+<div class="image-center">
+<p><img data-src="assets/01_intro/lec1_intro_02.png" alt="Bust of Aristotle beside the quote: To know what is where by looking." height="600"></p>
+</div>
+<p>&ldquo;To know what is where by looking.&rdquo; &mdash; Aristotle (c. 300 BC)</p>
+</section>
+<section id="whatiscv-definition" class="slide level2">
+<h2>Computer Vision: A Working Definition</h2>
+<div class="image-center">
+<p><img data-src="assets/01_intro/lec1_intro_08.png" alt="The study of recovering useful properties of the world from one or more images with an algorithmic level of specification." style="width:90.0%"></p>
+</div>
+<p>The study of <strong>recovering useful properties of the world</strong> from <strong>one or more images</strong>, with an <strong>algorithmic</strong> level of specification.</p>
+</section>
+<section id="whatiscv-summer-project" class="slide level2">
+<h2>The 1966 MIT &ldquo;Summer Vision Project&rdquo;</h2>
+<div class="image-center">
+<p><img data-src="assets/01_intro/lec1_intro_09.png" alt="Scan of MIT Project MAC Vision Memo No. 100, The Summer Vision Project, Seymour Papert, July 1966." height="620"></p>
+</div>
+<p>Papert proposed to &ldquo;construct a significant part of a visual system&rdquo; over a single summer. Sixty years later, the problem is still open.</p>
+</section>
+<section id="whatiscv-hard" class="slide level2 center" style="text-align:center;">
+<h2>What Makes Computer Vision Hard?</h2>
+<div class="image-center">
+<p><img data-src="assets/01_intro/lec1_intro_11.png" alt="Text reading: What makes computer vision HARD?" style="width:80.0%"></p>
+</div>
+</section>
+<section id="whatiscv-just-numbers" class="slide level2">
+<h2>To a Computer, an Image Is Just Numbers</h2>
+<div class="image-center">
+<p><img data-src="assets/01_intro/lec1_intro_12.png" alt="Black-and-white photograph of the Toronto skyline reflected in water." style="width:92.0%"></p>
+</div>
+<p>We see a skyline. The computer receives only a grid of intensity values.</p>
+</section>
+<section id="whatiscv-pixel-grid" class="slide level2">
+<h2>What the Computer Actually Sees</h2>
+<div class="image-center">
+<p><img data-src="assets/01_intro/lec1_intro_13.png" alt="A close-up region of an image shown as a grid of pixel intensity values around 208-215." height="700"></p>
+</div>
+<p>A patch of &ldquo;sky&rdquo; is just numbers near 210 &mdash; no objects, edges, or meaning attached.</p>
+</section>
+<section id="whatiscv-scene-factors" class="slide level2">
+<h2>Many Scene Factors Collapse into One Pixel</h2>
+<div class="image-center">
+<p><img data-src="assets/01_intro/lec1_intro_14.png" alt="Pixel-value grid overlaid with the terms scene geometry, scene surface microstructure, and scene illumination." height="700"></p>
+</div>
+<p>Each measured value mixes <strong>scene geometry</strong>, <strong>surface microstructure</strong>, and <strong>illumination</strong> &mdash; and we must undo that mixing.</p>
+</section>
+<section id="whatiscv-inverse-1" class="slide level2">
+<h2>Vision Is an Inverse Problem</h2>
+<div class="image-center">
+<p><img data-src="assets/01_intro/lec1_intro_17.png" alt="Diagram: a 3D surface patch projecting down onto an image plane." height="560"></p>
+</div>
+<p>Image formation maps a 3D scene to a 2D image. Vision has to run that map backwards.</p>
+</section>
+<section id="whatiscv-inverse-2" class="slide level2">
+<h2>Infinitely Many Scenes Explain One Image</h2>
+<div class="image-center">
+<p><img data-src="assets/01_intro/lec1_intro_20.png" alt="Diagram: several different 3D surfaces that all project to the same shape on the image plane, labelled infinite number of possible shapes." height="600"></p>
+</div>
+<p>An <strong>infinite number of 3D shapes</strong> produce the same projected image. The problem is ill-posed without prior assumptions.</p>
+</section>
+<section id="whatiscv-anamorphic" class="slide level2">
+<h2>Perception Can Be Fooled: Anamorphic Art</h2>
+<div class="image-center">
+<p><img data-src="assets/01_intro/lec1_intro_21.png" alt="3D pavement street art of Lego minifigures arranged as a terracotta army, viewed from the correct angle." height="620"></p>
+</div>
+<p>&ldquo;3D Lego Terracotta Army&rdquo; by Leon Keer et al. &mdash; flat pavement painted to project as depth from one viewpoint.</p>
+</section>
+<section id="whatiscv-illusion-video-1" class="slide level2">
+<h2>Perspective Illusion</h2>
+<video class="video-js r-stretch" controls preload="auto" data-setup="{}" poster="assets/01_intro/lec1_intro_23.png">
+<source src="https://github.com/Kazimbalti/intelligent-vision-systems/releases/download/media-v1/lec1_intro_vid1.mp4" type="video/mp4">
+</video>
+</section>
+<section id="whatiscv-forced-perspective" class="slide level2">
+<h2>Forced Perspective</h2>
+<div class="image-center">
+<p><img data-src="assets/01_intro/lec1_intro_24.jpg" alt="Forced-perspective photograph on the Uyuni salt flat: a person appears to hold tiny people on an outstretched hand." height="620"></p>
+</div>
+<p>No depth cues on the salt flat, so the eye &mdash; and a camera &mdash; accept the wrong scene.</p>
+</section>
+<section id="whatiscv-illusion-video-2" class="slide level2">
+<h2>Illusions in the Wild</h2>
+<video class="video-js r-stretch" controls preload="auto" data-setup="{}" poster="assets/01_intro/lec1_intro_25.png">
+<source src="https://github.com/Kazimbalti/intelligent-vision-systems/releases/download/media-v1/lec1_intro_vid2.mp4" type="video/mp4">
+</video>
+</section>
+<section id="whatiscv-perception-abstraction" class="slide level2 center" style="text-align:center;">
+<h2>Perception Is Not Reality</h2>
+<div class="image-center">
+<p><img data-src="assets/01_intro/lec1_intro_26.png" alt="Text: Perception is not reality, but a generated abstraction." style="width:80.0%"></p>
+</div>
+<p>What we &ldquo;see&rdquo; is a model the visual system constructs &mdash; useful, but not a direct readout of the world.</p>
+</section>
+<section id="whatiscv-appearance-variation" class="slide level2 center" style="text-align:center;">
+<h2>Objects Vary Enormously in Appearance</h2>
+<div class="image-center">
+<p><img data-src="assets/01_intro/lec1_intro_27.png" alt="Text: Objects can highly vary in appearance." style="width:80.0%"></p>
+</div>
+</section>
+<section id="whatiscv-varying-scales" class="slide level2">
+<h2>Varying Scales</h2>
+<div class="image-center">
+<p><img data-src="assets/01_intro/lec1_intro_28.png" alt="An adult sumo wrestler facing a small child in a sumo stance." height="600"></p>
+</div>
+<p>The same category spans a huge range of sizes in the image.</p>
+</section>
+<section id="whatiscv-varying-instances" class="slide level2">
+<h2>Varying Instances</h2>
+<div class="image-center">
+<p><img data-src="assets/01_intro/lec1_intro_29.png" alt="A row of many different puppy breeds." height="560"></p>
+</div>
+<p>&ldquo;Dog&rdquo; covers wildly different shapes, colours, and textures.</p>
+</section>
+<section id="whatiscv-occlusion" class="slide level2">
+<h2>Occlusion</h2>
+<div class="image-center">
+<p><img data-src="assets/01_intro/lec1_intro_30.png" alt="A cat mostly hidden behind a table edge, only its ears and eyes visible." height="600"></p>
+</div>
+<p>Most of the object is missing from the image, yet we still recognise it.</p>
+</section>
+<section id="whatiscv-articulated" class="slide level2">
+<h2>Highly Articulated Objects</h2>
+<div class="image-center">
+<p><img data-src="assets/01_intro/lec1_intro_31.png" alt="A contortionist balanced on one hand in an extreme pose." height="600"></p>
+</div>
+<p>Bodies and other jointed objects deform into a vast space of configurations.</p>
+</section>
 <section id="course-structure" class="slide level2 small">
 <h2>Course Structure</h2>
 <div class="image-center">
