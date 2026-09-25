@@ -511,6 +511,237 @@ I(x, y) = \text{intensity at image location} (x,y)
 <li><p>Computer vision works in this extremely high dimensional space – but real images are not arbitrary arrays and they occupy a small, structured subset of this space.</p></li>
 </ul>
 </section>
+<section id="checkpoint-phone-computer-vision" class="slide level2">
+<h2>Checkpoint: What Did Your Phone Already Do Today?</h2>
+<p>Hands up for each one — which of these did your phone do today or this week?</p>
+<ol type="1">
+<li>Unlocked with your face — <em>FaceID / face unlock</em></li>
+<li>Blurred the background of a photo — <em>Portrait mode</em></li>
+<li>Read text off a bill, receipt, or QR code — <em>Text / code recognition</em></li>
+<li>Auto-grouped your photos into a &ldquo;People&rdquo; album — <em>Face clustering</em></li>
+<li>Stabilised a shaky video — <em>Frame-to-frame motion estimation</em></li>
+</ol>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p><strong>All five.</strong> Every one of these is a computer-vision task. By the end of this lecture you should be able to name the task, its input, its output, and roughly what it costs to run.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="history-classical-era" class="slide level2 small">
+<h2>A Short History of Computer Vision — The Classical Era</h2>
+<p><strong>1960s&ndash;2010 &nbsp;&mdash;&nbsp; the human designs the features</strong></p>
+<table class="caption-top">
+<thead>
+<tr class="header"><th style="text-align: left;">Year</th><th style="text-align: left;">Milestone</th><th style="text-align: left;">Why it matters</th></tr>
+</thead>
+<tbody>
+<tr class="odd"><td style="text-align: left;">1959</td><td style="text-align: left;">Hubel &amp; Wiesel map the visual cortex</td><td style="text-align: left;">Inspires convolution</td></tr>
+<tr class="even"><td style="text-align: left;">1963</td><td style="text-align: left;">Roberts&rsquo; Blocks World</td><td style="text-align: left;">First 3D scene from an image</td></tr>
+<tr class="odd"><td style="text-align: left;">1966</td><td style="text-align: left;">MIT &ldquo;Summer Vision Project&rdquo;</td><td style="text-align: left;">Vision assumed to be one summer&rsquo;s work</td></tr>
+<tr class="even"><td style="text-align: left;">1980</td><td style="text-align: left;">Neocognitron (Fukushima)</td><td style="text-align: left;">Direct ancestor of the CNN</td></tr>
+<tr class="odd"><td style="text-align: left;">1986</td><td style="text-align: left;">Canny edge detector</td><td style="text-align: left;">Still used today</td></tr>
+<tr class="even"><td style="text-align: left;">1999</td><td style="text-align: left;">SIFT</td><td style="text-align: left;">Scale-invariant keypoints</td></tr>
+<tr class="odd"><td style="text-align: left;">2001</td><td style="text-align: left;">Viola&ndash;Jones face detection</td><td style="text-align: left;">Real-time, ships in every camera</td></tr>
+<tr class="even"><td style="text-align: left;">2005</td><td style="text-align: left;">HOG + SVM</td><td style="text-align: left;">Pedestrian detection</td></tr>
+<tr class="odd"><td style="text-align: left;">2009</td><td style="text-align: left;">ImageNet released</td><td style="text-align: left;">14M labelled images</td></tr>
+</tbody>
+</table>
+<p>For fifty years, a person had to look at the problem and decide, by hand, what a &ldquo;feature&rdquo; was — an edge, a corner, a keypoint — before writing code to detect it.</p>
+</section>
+<section id="history-deep-era" class="slide level2 small">
+<h2>A Short History of Computer Vision — The Deep Era</h2>
+<p><strong>2012&ndash;present &nbsp;&mdash;&nbsp; the network learns the features</strong></p>
+<table class="caption-top">
+<thead>
+<tr class="header"><th style="text-align: left;">Year</th><th style="text-align: left;">Milestone</th><th style="text-align: left;">Why it matters</th></tr>
+</thead>
+<tbody>
+<tr class="odd"><td style="text-align: left;">2012</td><td style="text-align: left;">AlexNet</td><td style="text-align: left;">ReLU + dropout + GPU. Error 26% → 15%</td></tr>
+<tr class="even"><td style="text-align: left;">2014</td><td style="text-align: left;">VGG16 &middot; Inception</td><td style="text-align: left;">Depth by stacking small convolutions; multi-scale filters</td></tr>
+<tr class="odd"><td style="text-align: left;">2015</td><td style="text-align: left;">ResNet</td><td style="text-align: left;">Skip connections, 152 layers, beats human top-5</td></tr>
+<tr class="even"><td style="text-align: left;">2014&ndash;17</td><td style="text-align: left;">R-CNN &rarr; Fast &rarr; Faster</td><td style="text-align: left;">Two-stage detection</td></tr>
+<tr class="odd"><td style="text-align: left;">2016</td><td style="text-align: left;">YOLO / SSD</td><td style="text-align: left;">One stage — fast enough for video &amp; robotics</td></tr>
+<tr class="even"><td style="text-align: left;">2017</td><td style="text-align: left;">Mask R-CNN</td><td style="text-align: left;">Per-pixel instance segmentation</td></tr>
+<tr class="odd"><td style="text-align: left;">2019</td><td style="text-align: left;">Detectron2</td><td style="text-align: left;">Production detection library</td></tr>
+<tr class="even"><td style="text-align: left;">2020</td><td style="text-align: left;">ViT</td><td style="text-align: left;">Image as patch sequence — Transformer absorbs vision</td></tr>
+<tr class="odd"><td style="text-align: left;">2021</td><td style="text-align: left;">CLIP</td><td style="text-align: left;">Joint image + text embedding → zero-shot vision</td></tr>
+<tr class="even"><td style="text-align: left;">2022</td><td style="text-align: left;">Diffusion (Stable Diffusion, DALL&middot;E&nbsp;2)</td><td style="text-align: left;">Generative vision</td></tr>
+<tr class="odd"><td style="text-align: left;">2023</td><td style="text-align: left;">SAM</td><td style="text-align: left;">Segment anything, promptable</td></tr>
+<tr class="even"><td style="text-align: left;">2023&rarr;</td><td style="text-align: left;">VLMs</td><td style="text-align: left;">Vision + language in one model</td></tr>
+</tbody>
+</table>
+<p>After AlexNet in 2012, the feature itself became something a network <strong>learns from data</strong>, rather than something a human designs by hand. That shift is what the rest of this course builds on.</p>
+</section>
+<section id="checkpoint-timeline-quiz" class="slide level2">
+<h2>Checkpoint: Did You Actually Read the Timeline?</h2>
+<p>Fingers up — 1, 2, or 3. Everyone answers every question; wrong answers are the useful ones.</p>
+<ol type="1">
+<li><p><strong>What made 2012 the break point?</strong><br>
+1. A bigger dataset &nbsp;&nbsp; 2. ReLU + dropout + GPUs on a CNN &nbsp;&nbsp; 3. A new camera sensor</p></li>
+<li><p><strong>Before 2010, who decided what a &ldquo;feature&rdquo; was?</strong><br>
+1. The network, by training &nbsp;&nbsp; 2. A human, by hand &nbsp;&nbsp; 3. The dataset, automatically</p></li>
+<li><p><strong>Which came first?</strong><br>
+1. SIFT keypoints &nbsp;&nbsp; 2. YOLO detection &nbsp;&nbsp; 3. Mask R-CNN</p></li>
+<li><p><strong>Why is YOLO in every robotics stack?</strong><br>
+1. It is the most accurate &nbsp;&nbsp; 2. One stage — fast enough for live video &nbsp;&nbsp; 3. It needs no training data</p></li>
+</ol>
+</section>
+<section id="checkpoint-timeline-answers" class="slide level2">
+<h2>Checkpoint: Answers</h2>
+<ol type="1">
+<li><strong>2</strong> — ReLU, dropout, and GPUs made training a deep CNN (AlexNet) practical.</li>
+<li><strong>2</strong> — A human, by hand. SIFT, HOG, and Canny were all hand-designed detectors.</li>
+<li><strong>1</strong> — SIFT (1999) came well before YOLO (2016) or Mask R-CNN (2017).</li>
+<li><strong>2</strong> — One stage, fast enough for live video, which is exactly what a robot needs.</li>
+</ol>
+<p>If you missed one, that miss is exactly the classical-vs-deep distinction this lecture is sharpening.</p>
+</section>
+<section id="image-processing-vs-computer-vision" class="slide level2">
+<h2>Image Processing vs.&nbsp;Computer Vision</h2>
+<p>Both start from the same input — an image — but they aim at different outputs.</p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<h3 id="image-processing-column">Image Processing</h3>
+<p>Input: image &nbsp;→&nbsp; Output: <strong>an image</strong>, for human consumption.</p>
+<ul>
+<li>Image enhancement</li>
+<li>Image restoration</li>
+<li>Image compression</li>
+<li>Image registration</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<h3 id="computer-vision-column">Computer Vision</h3>
+<p>Input: image &nbsp;→&nbsp; Output: <strong>image attributes</strong>, for computer use.</p>
+<ul>
+<li>Image segmentation</li>
+<li>Recognition (feature extraction)</li>
+<li>Motion analysis &amp; tracking</li>
+<li>3D shape reconstruction</li>
+</ul>
+</div>
+</div>
+<p>This course sits mostly on the computer-vision side: we care about what an image tells us, not only how it looks.</p>
+</section>
+<section id="from-pixels-to-tasks" class="slide level2">
+<h2>From Pixels to Tasks</h2>
+<p>Every task in this course starts from the same object: a grid of numbers. The differences are in what we compute <strong>from</strong> that grid.</p>
+<ul>
+<li><strong>Classification</strong> — what is in this image?</li>
+<li><strong>Object detection</strong> — what is in this image, and where?</li>
+<li><strong>Semantic segmentation</strong> — which pixels belong to which category?</li>
+<li><strong>Object tracking</strong> — where did each object go, frame to frame?</li>
+<li><strong>Object counting</strong> — how many instances are present?</li>
+<li><strong>Pose estimation</strong> — how are the parts of an object arranged?</li>
+</ul>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p>All six tasks take the same input — a pixel array. They only differ in the shape of the output. Keep this in mind as we move from raw pixels toward algorithms.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="task-classification-detection" class="slide level2">
+<h2>Classification, Localization, and Detection</h2>
+<div class="image-center">
+<p><img data-src="assets/02_image/lec2_pptx_cls_loc_det.png" alt="Three panels: plain classification labelled CAT, classification with localization showing a red box around the cat, and object detection on a second image with boxes and labels for CAT, DOG, and DUCK." height="500"></p>
+</div>
+<ul>
+<li><strong>Classification</strong> assigns one label to the whole image.</li>
+<li><strong>Localization</strong> adds a bounding box for the labelled object.</li>
+<li><strong>Detection</strong> finds and labels every object instance in the scene.</li>
+</ul>
+</section>
+<section id="task-object-detection" class="slide level2">
+<h2>Object Detection in Practice</h2>
+<div class="image-center">
+<p><img data-src="assets/02_image/lec2_pptx_object_detection.png" alt="Street scene with bounding boxes and labels for cars, a truck, a traffic light, a person, a bicycle, and a bicyclist." height="560"></p>
+</div>
+<p>A real detector outputs a box, a class label, and a confidence score for every object it finds — often dozens of boxes per frame.</p>
+</section>
+<section id="task-segmentation" class="slide level2">
+<h2>Semantic Segmentation</h2>
+<div class="image-center">
+<p><img data-src="assets/02_image/lec2_pptx_segmentation.png" alt="A beach photo of three people flying a kite next to its semantic segmentation mask, where people, sky, sand, and the kite are each flat-coloured regions." height="420"></p>
+</div>
+<p>Instead of one label per image or one box per object, segmentation assigns a category to <strong>every pixel</strong> — the output is itself an image.</p>
+</section>
+<section id="task-tracking-counting" class="slide level2">
+<h2>Object Tracking and Counting</h2>
+<div class="columns image-center">
+<div class="column" style="width:50%;">
+<img data-src="assets/02_image/lec2_pptx_tracking.png" alt="Overhead view of pedestrians on a plaza, each enclosed by a tracking box with a trailing motion line." height="380">
+<p style="text-align:center;">Tracking: identity across frames</p>
+</div>
+<div class="column" style="width:50%;">
+<img data-src="assets/02_image/lec2_pptx_counting.png" alt="Chocolate candies on a conveyor, each boxed and numbered with a confidence score, with running in/out counts." height="380">
+<p style="text-align:center;">Counting: instances over time</p>
+</div>
+</div>
+<p>Tracking keeps a consistent ID for each object across frames; counting turns that into a running tally.</p>
+</section>
+<section id="task-pose-estimation" class="slide level2">
+<h2>Pose Estimation</h2>
+<div class="image-center">
+<p><img data-src="assets/02_image/lec2_pptx_pose.png" alt="A stick-figure skeleton next to a photo of a person with the same skeleton of joints overlaid on their body." height="560"></p>
+</div>
+<p>Pose estimation locates a fixed set of keypoints — joints — and connects them into a skeleton, describing the arrangement of an object's parts rather than its outline.</p>
+</section>
+<section id="cv-applications-by-domain" class="slide level2">
+<h2>Computer Vision Applications, by Domain</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<ul>
+<li><strong>Healthcare &amp; Medical</strong> — imaging analysis, tumor detection, retinal screening</li>
+<li><strong>Automotive &amp; Transportation</strong> — self-driving cars, driver assistance, traffic monitoring</li>
+<li><strong>Manufacturing &amp; Industrial</strong> — quality control, line automation, factory safety</li>
+<li><strong>Security &amp; Surveillance</strong> — facial recognition, crowd and intrusion monitoring</li>
+<li><strong>Retail &amp; E-commerce</strong> — visual product search, inventory counting, cashier-less stores</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<ul>
+<li><strong>Agriculture &amp; Food</strong> — crop monitoring, pest detection, quality inspection</li>
+<li><strong>Entertainment &amp; Media</strong> — augmented reality, motion capture, sports analytics</li>
+<li><strong>Finance &amp; Banking</strong> — document processing, check verification, fraud detection</li>
+<li><strong>Real Estate &amp; Construction</strong> — property valuation, construction and building inspection</li>
+<li><strong>Environmental &amp; Geospatial</strong> — climate monitoring, wildlife conservation, disaster assessment</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="tip-of-the-iceberg" class="slide level2">
+<h2>Computer Vision You Know Is Just the Tip of the Iceberg</h2>
+<div class="image-center">
+<p><img data-src="assets/02_image/lec2_pptx_iceberg.png" alt="An iceberg photo, annotated: the small visible tip above the waterline is labelled 'common customer-facing applications', while the much larger mass submerged below is labelled 'thousands of applications in the background'." height="520"></p>
+</div>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p>Underneath sits a much larger set of applications running quietly in the background — quality-control cameras on a factory line, satellite crop monitoring, medical-scan triage, and thousands more you never see running. Every one of them is built from the same six tasks you just learned.</p>
+</div>
+</div>
+</div>
+</section>
 <section id="images-in-python-grayscale-arrays" class="slide level2">
 <h2>Images in Python: Grayscale Arrays</h2>
 <p>For an <span class="math inline">\(N \times M\)</span> grayscale image <code>im</code>:</p>
@@ -588,6 +819,39 @@ I(x, y) = \text{intensity at image location} (x,y)
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb7-1"><a aria-label="1"></a>channel 0 = blue</span>
 <span id="cb7-2"><a aria-label="2"></a>channel 1 = green</span>
 <span id="cb7-3"><a aria-label="3"></a>channel 2 = red</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="predict-first-image-shape" class="slide level2">
+<h2>Predict First: What Does This Print?</h2>
+<p>A file <code>red_square.png</code> is a <strong>640 × 480</strong> image of a pure red square. Before you run it, predict the output:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb100"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb100-1"><a aria-label="1"></a>img <span class="op">=</span> cv2.imread(<span class="st">"red_square.png"</span>)</span>
+<span id="cb100-2"><a aria-label="2"></a><span class="bu">print</span>(img.shape)</span>
+<span id="cb100-3"><a aria-label="3"></a><span class="bu">print</span>(img[<span class="dv">0</span>, <span class="dv">0</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ol type="1">
+<li><code>(640, 480, 3)</code> then <code>[255 0 0]</code></li>
+<li><code>(480, 640, 3)</code> then <code>[255 0 0]</code></li>
+<li><code>(480, 640, 3)</code> then <code>[0 0 255]</code></li>
+<li><code>(3, 480, 640)</code> then <code>[255 0 0]</code></li>
+</ol>
+<p>Write your answer down, then turn the page.</p>
+</section>
+<section id="two-famous-traps" class="slide level2">
+<h2>Two Traps, Both Famous</h2>
+<p>The answer is <strong>option 3</strong>: <code>(480, 640, 3)</code> then <code>[0 0 255]</code>.</p>
+<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Important</strong></p>
+</div>
+<div class="callout-content">
+<p><strong>Rows before columns.</strong> NumPy indexes an image as <code>im[y, x]</code> — height first. A 640-wide, 480-tall image has shape <code>(480, 640, 3)</code>, not <code>(640, 480, 3)</code>. Every &ldquo;my output is rotated&rdquo; bug starts here.</p>
+<p><strong>OpenCV is BGR, not RGB.</strong> Pure red is stored as <code>[0, 0, 255]</code>. Hand a BGR array straight to Matplotlib and your red car turns blue.</p>
+</div>
+</div>
+</div>
+<p>Most cohorts split between options 2 and 3 — each gets one trap but not both.</p>
 </section>
 <section id="images-in-python-data-types" class="slide level2">
 <h2>Images in Python: Data Types</h2>
@@ -673,7 +937,7 @@ I(x, y) = \text{intensity at image location} (x,y)
 <section id="python-tool-refresher" class="slide level2">
 <h2>Python / Tool Refresher</h2>
 <p>Course tutorials are available here:</p>
-<p><a href="https://ariarobotics.github.io/cv/tutorials/" class="uri">https://ariarobotics.github.io/cv/tutorials/</a></p>
+<p><a href="https://kazimbalti.github.io/intelligent-vision-systems/tutorials/" class="uri">https://kazimbalti.github.io/intelligent-vision-systems/tutorials/</a></p>
 <p>Review as needed:</p>
 <ul>
 <li><strong>WSL + Ubuntu</strong> — recommended Linux environment for Windows users</li>
@@ -757,7 +1021,7 @@ I(x, y) = \text{intensity at image location} (x,y)
 <p>We use a dedicated Conda environment named:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb17-1"><a aria-label="1"></a>cv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The environment file is maintained in the course repository:</p>
-<p><a href="https://github.com/ariarobotics/cv/blob/main/code/cv-environment.yml" class="uri">https://github.com/ariarobotics/cv/blob/main/code/cv-environment.yml</a></p>
+<p><a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/code/cv-environment.yml" class="uri">https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/code/cv-environment.yml</a></p>
 <p>It defines the software stack used by the course, including:</p>
 <ul>
 <li>Python</li>
@@ -774,15 +1038,15 @@ I(x, y) = \text{intensity at image location} (x,y)
 <h2>Get the Environment File</h2>
 <h3 id="option-1-clone-the-course-repository">Option 1 — Clone the course repository</h3>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a aria-label="1"></a><span class="bu">cd</span> ~/cv_projects</span>
-<span id="cb18-2"><a aria-label="2"></a><span class="fu">git</span> clone https://github.com/ariarobotics/cv.git</span>
-<span id="cb18-3"><a aria-label="3"></a><span class="bu">cd</span> cv/code</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb18-2"><a aria-label="2"></a><span class="fu">git</span> clone https://github.com/Kazimbalti/intelligent-vision-systems.git</span>
+<span id="cb18-3"><a aria-label="3"></a><span class="bu">cd</span> intelligent-vision-systems/code</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>You should now see:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a aria-label="1"></a><span class="fu">ls</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>including:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode numberSource text number-lines code-with-copy"><code class="sourceCode"><span id="cb20-1"><a aria-label="1"></a>cv-environment.yml</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <h3 id="option-2-download-only-the-environment-file">Option 2 — Download only the environment file</h3>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a aria-label="1"></a><span class="ex">curl</span> <span class="at">-L</span> <span class="at">-o</span> cv-environment.yml <span class="dt">\</span></span>
-<span id="cb21-2"><a aria-label="2"></a>https://raw.githubusercontent.com/ariarobotics/cv/main/code/cv-environment.yml</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb21-2"><a aria-label="2"></a>https://raw.githubusercontent.com/Kazimbalti/intelligent-vision-systems/main/code/cv-environment.yml</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="create-the-cv-environment" class="slide level2">
 <h2>Create the <code>cv</code> Environment</h2>
@@ -839,6 +1103,19 @@ I(x, y) = \text{intensity at image location} (x,y)
 <span id="cb30-2"><a aria-label="2"></a><span class="bu">print</span>(sys.executable)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>The path should point into the <code>cv</code> Conda environment.</p>
 </section>
+<section id="what-is-opencv" class="slide level2">
+<h2>What Is OpenCV?</h2>
+<p>The world's most widely used computer-vision library, with roughly <strong>5.8&nbsp;million downloads per week</strong> on PyPI.</p>
+<ul>
+<li><strong>Image and video I/O</strong> — read/write/display images and videos; capture from webcam or file</li>
+<li><strong>Image processing</strong> — resize, rotate, flip, crop, color conversions (BGR, Gray, HSV, LAB), filters (blur, sharpen, edge detection)</li>
+<li><strong>Drawing and GUI</strong> — shapes, text, mouse and keyboard events</li>
+<li><strong>Feature and object recognition</strong> — edges, corners, keypoints (SIFT, ORB), feature matching, face/object detection</li>
+<li><strong>Tracking, motion, segmentation</strong> — built-in trackers, optical flow, GrabCut, watershed</li>
+<li><strong>3D vision and ML</strong> — camera calibration, stereo/depth, classical ML (SVM, k-NN), and running deep models (YOLO, ONNX)</li>
+</ul>
+<p>We will use a small slice of this in the course, starting today.</p>
+</section>
 <section id="our-first-computer-vision-program" class="slide level2">
 <h2>Our First Computer Vision Program</h2>
 <p>Create a file named:</p>
@@ -892,6 +1169,19 @@ I(x, y) = \text{intensity at image location} (x,y)
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a aria-label="1"></a>image_bgr <span class="op">=</span> cv2.imread(</span>
 <span id="cb35-2"><a aria-label="2"></a>    <span class="bu">str</span>(output_dir <span class="op">/</span> <span class="st">"sample_image.png"</span>)</span>
 <span id="cb35-3"><a aria-label="3"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Important</strong></p>
+</div>
+<div class="callout-content">
+<p>If <code>imread</code> is given a bad path, it does <strong>not</strong> raise an error — it quietly returns <code>None</code>, and the next line crashes somewhere else entirely. Always check the return value before using it.</p>
+</div>
+</div>
+</div>
 <p>Inspect it:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a aria-label="1"></a><span class="bu">print</span>(<span class="st">"Shape:"</span>, image_bgr.shape)</span>
 <span id="cb36-2"><a aria-label="2"></a><span class="bu">print</span>(<span class="st">"Data type:"</span>, image_bgr.dtype)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -967,6 +1257,116 @@ I(x, y) = \text{intensity at image location} (x,y)
 <span id="cb43-7"><a aria-label="7"></a>transform / analyze</span>
 <span id="cb43-8"><a aria-label="8"></a>  ↓</span>
 <span id="cb43-9"><a aria-label="9"></a>display or use the result</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="how-do-filters-work" class="slide level2">
+<h2>How Do Filters Work?</h2>
+<p><code>cv2.Canny</code> looked like a black box above. Under the hood it — like almost every classical image-processing operation — relies on <strong>convolution</strong>.</p>
+<div class="image-center">
+<p><img data-src="assets/02_image/lec2_pptx_filter_input.png" alt="A simple input image split in half, white on the left and black on the right, next to its pixel-value matrix of 1s on the left columns and 0s on the right columns." height="360"></p>
+</div>
+<ul>
+<li>A <strong>filter</strong> (or <strong>kernel</strong>) is a small grid of numbers, usually <span class="math inline">\(3\times3\)</span>.</li>
+<li>The kernel slides over the image. At every position, multiply each kernel weight by the pixel underneath it, then sum the nine products into a single output pixel.</li>
+<li>Repeating this at every position produces the entire output image.</li>
+</ul>
+</section>
+<section id="predict-the-filtered-output" class="slide level2">
+<h2>Predict First: What Does This Filter Do?</h2>
+<div class="image-center">
+<p><img data-src="assets/02_image/lec2_pptx_filter_laplacian_kernel.png" alt="The question 'What if we use this filter?' next to a 3 by 3 kernel: 0, -1, 0 on the top row, -1, 4, -1 in the middle row, 0, -1, 0 on the bottom row." height="230"></p>
+</div>
+<p>Slide this kernel over the black-and-white input image above. Where do you expect it to produce a large, non-zero output — and where should it produce exactly 0?</p>
+</section>
+<section id="reveal-the-filtered-output" class="slide level2">
+<h2>Reveal: The Filtered Output</h2>
+<div class="image-center">
+<p><img data-src="assets/02_image/lec2_pptx_filter_expected_output.png" alt="The expected output image: almost entirely black, except a thin bright vertical line exactly where the input image transitioned from white to black. Its pixel-value matrix is mostly 0s with a column of 1s marking that boundary." height="360"></p>
+</div>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p>Weights that sum to <strong>zero</strong> make a filter respond to <em>change</em> (an edge), not to absolute brightness — a flat, uniform patch always produces 0. That is why the whole output is black except a single bright seam exactly at the boundary.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="convolution-by-hand" class="slide level2">
+<h2>Worksheet: Do One Convolution by Hand</h2>
+<p>You will never have to do this again by hand — but after this, <code>filter2D</code> will never be a black box.</p>
+<div class="columns">
+<div class="column" style="width:55%;">
+<p><strong>Input patch (grayscale)</strong></p>
+<table class="caption-top">
+<tbody>
+<tr><td style="text-align: center;">10</td><td style="text-align: center;">10</td><td style="text-align: center;">10</td><td style="text-align: center;">90</td><td style="text-align: center;">90</td></tr>
+<tr><td style="text-align: center;">10</td><td style="text-align: center;">10</td><td style="text-align: center;">10</td><td style="text-align: center;">90</td><td style="text-align: center;">90</td></tr>
+<tr><td style="text-align: center;">10</td><td style="text-align: center;">10</td><td style="text-align: center;">10</td><td style="text-align: center;">90</td><td style="text-align: center;">90</td></tr>
+<tr><td style="text-align: center;">10</td><td style="text-align: center;">10</td><td style="text-align: center;">10</td><td style="text-align: center;">90</td><td style="text-align: center;">90</td></tr>
+<tr><td style="text-align: center;">10</td><td style="text-align: center;">10</td><td style="text-align: center;">10</td><td style="text-align: center;">90</td><td style="text-align: center;">90</td></tr>
+</tbody>
+</table>
+</div><div class="column" style="width:45%;">
+<p><strong>Kernel (Sobel-x)</strong></p>
+<table class="caption-top">
+<tbody>
+<tr><td style="text-align: center;">&minus;1</td><td style="text-align: center;">0</td><td style="text-align: center;">+1</td></tr>
+<tr><td style="text-align: center;">&minus;2</td><td style="text-align: center;">0</td><td style="text-align: center;">+2</td></tr>
+<tr><td style="text-align: center;">&minus;1</td><td style="text-align: center;">0</td><td style="text-align: center;">+1</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Multiply each kernel cell by the pixel underneath it, then add all nine up. Three <span class="math inline">\(3\times3\)</span> windows fit across this patch — compute the <strong>top row only</strong>, positions 1, 2, and 3.</p>
+<p><strong>Position 1</strong>, worked for you: <strong>0</strong>. Your output row — fill in positions 2 and 3.</p>
+</section>
+<section id="convolution-by-hand-questions" class="slide level2">
+<h2>Then Answer</h2>
+<ol type="1">
+<li>Why is position 1 zero when the pixels are clearly not zero?</li>
+<li>Which position gives the biggest number, and what is physically there?</li>
+<li>You get 160 and &minus;160 at two places. Stored as <code>uint8</code>, what happens to &minus;160?</li>
+<li>Rotate the kernel 90°. What does it detect now?</li>
+</ol>
+</section>
+<section id="kernel-gallery-shapes" class="slide level2">
+<h2>Different Kernels, Different Edges</h2>
+<div class="columns image-center">
+<div class="column" style="width:33%;">
+<img data-src="assets/02_image/lec2_pptx_filter_outline.png" alt="A circle, square, triangle and diamond on black; after convolving with a 3x3 kernel of -2 on-axis neighbours and 8 at the centre, only their outlines remain white." height="330">
+<p style="text-align:center;">Outline detection</p>
+</div><div class="column" style="width:34%;">
+<img data-src="assets/02_image/lec2_pptx_filter_sobel_left.png" alt="The same shapes after a Sobel kernel [-1 0 1; -2 0 2; -1 0 1]; only their left-facing edges survive." height="330">
+<p style="text-align:center;">Left-edge detection (Sobel)</p>
+</div><div class="column" style="width:33%;">
+<img data-src="assets/02_image/lec2_pptx_filter_prewitt_top.png" alt="The same shapes after a Prewitt kernel [-1 -1 -1; 0 0 0; 1 1 1]; only their top-facing edges survive." height="330">
+<p style="text-align:center;">Top-edge detection (Prewitt)</p>
+</div>
+</div>
+<p>Same operation, same 3×3 size — only the numbers change what the filter is sensitive to.</p>
+</section>
+<section id="kernel-gallery-laplace" class="slide level2">
+<h2>The Laplace Edge Detector</h2>
+<div class="image-center">
+<p><img data-src="assets/02_image/lec2_pptx_filter_laplace.png" alt="A portrait photo processed with two Laplacian kernels: kernel 1 (0,-1,0;-1,4,-1;0,-1,0) gives faint edges, kernel 2 (-1,-1,-1;-1,8,-1;-1,-1,-1) gives much brighter, denser edges." height="500"></p>
+</div>
+<ul>
+<li>Kernel 1 <code>[0,&minus;1,0; &minus;1,4,&minus;1; 0,&minus;1,0]</code> only looks at the four direct neighbours.</li>
+<li>Kernel 2 <code>[&minus;1,&minus;1,&minus;1; &minus;1,8,&minus;1; &minus;1,&minus;1,&minus;1]</code> also looks at the four diagonal neighbours, so it reacts more strongly.</li>
+</ul>
+</section>
+<section id="explore-filters-interactively" class="slide level2">
+<h2>Explore Filters Interactively</h2>
+<div class="image-center">
+<p><img data-src="assets/02_image/lec2_pptx_filter_setosa_preview.png" alt="Preview of the setosa.io 'Image Kernels Explained Visually' page: a grayscale input face photo, the sharpen kernel arithmetic for one pixel producing the value 192, and the resulting sharpened output face." height="330"></p>
+</div>
+<p>To build intuition beyond these static examples, try changing kernel values yourself and watch the output update live:</p>
+<p><a href="https://setosa.io/ev/image-kernels/" class="uri">https://setosa.io/ev/image-kernels/</a></p>
 </section>
 <section id="common-setup-problems" class="slide level2">
 <h2>Common Setup Problems</h2>

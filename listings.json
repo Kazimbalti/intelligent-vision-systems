@@ -2,6 +2,7 @@
   {
     "listing": "/tutorials/index.html",
     "items": [
+      "/tutorials/00_software_tools_checklist.html",
       "/tutorials/01_raspberry_pi.html",
       "/tutorials/02_git_github.html",
       "/tutorials/03_linux_python_ai.html",

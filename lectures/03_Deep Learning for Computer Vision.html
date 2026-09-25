@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"><head>
+<script src="../site_libs/quarto-contrib/videojs/video.min.js"></script>
+<link href="../site_libs/quarto-contrib/videojs/video-js.css" rel="stylesheet">
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-html/tabby.min.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -10,7 +12,7 @@
   <meta name="generator" content="quarto-1.10.18">
 
   <meta name="author" content="Dr. Muhammad Kazim">
-  <title>Intelligent Vision Systems – Lecture 03 — Point Operations &amp; Thresholding</title>
+  <title>Intelligent Vision Systems – Lecture 03 — Deep Learning for Computer Vision</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -200,8 +202,8 @@
   <div class="reveal">
     <div class="slides">
 
-<section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">Lecture 03 — Point Operations &amp; Thresholding</h1>
+<section id="title-slide" class="quarto-title-block center" data-background-image="assets/03_deep_learning/image1.jpeg" data-background-opacity="0.25">
+  <h1 class="title">Deep Learning for Computer Vision</h1>
   <p class="subtitle">Lecture 3</p>
 
 <div class="quarto-title-authors">
@@ -216,315 +218,421 @@ Dr. Muhammad Kazim
 </div>
 
 </section>
-<section id="this-lecture" class="slide level2">
-<h2>This Lecture</h2>
-<div class="columns">
-<div class="column" style="width:48%;">
-<p><strong>Part I — Point operations</strong></p>
-<ul>
-<li>Look-up tables (LUTs)</li>
-<li>Gamma and log maps</li>
-<li>Contrast stretching</li>
-<li>Histogram equalisation &amp; matching</li>
-<li>CLAHE</li>
-</ul>
-</div><div class="column" style="width:48%;">
-<p><strong>Part II — Thresholding &amp; arithmetic</strong></p>
-<ul>
-<li>Global, Otsu, adaptive, Sauvola thresholding</li>
-<li>Image arithmetic &amp; blending</li>
-<li>Alpha compositing</li>
-<li>Bitwise masks</li>
-<li>Frame differencing</li>
-</ul>
-</div></div>
-<p>Everything here is a <strong>pixel-wise</strong> operation: the output at \((x,y)\) depends only on the input at \((x,y)\) (plus, for adaptive methods, a small local neighbourhood). No spatial mixing yet — that is next lecture.</p>
+<section id="deep-learning-for-computer-vision" class="slide level2 center" data-background-color="#15171c" data-background-image="assets/03_deep_learning/image2.jpeg" data-background-size="cover" data-background-opacity="0.5">
+<div style="text-align:center; color:#fff;">
+<h2 style="color:#fff; font-size:2.6em; line-height:1.15; margin:0 auto 0.4em; max-width:75%; text-shadow:0 2px 12px rgba(0,0,0,0.55);">Deep Learning for Computer Vision</h2>
+<hr style="width:35%; margin:0 auto 0.6em; border:0; border-top:3px solid rgba(255,255,255,0.85);">
+<p style="color:#fff; font-size:1.2em; margin:0; text-shadow:0 2px 8px rgba(0,0,0,0.55);">Intelligent Vision</p>
+</div>
 </section>
-<section id="point-operations-defined" class="slide level2">
-<h2>Point Operations, Defined</h2>
-<p>A point operation (a.k.a. intensity transformation) applies a function \(T\) independently to every pixel:</p>
-<p><span class="math display">\[
-g(x,y) = T\big(f(x,y)\big)
-\]</span></p>
-<ul>
-<li>\(f\) = input image, \(g\) = output image, \(T\) = the transfer function / mapping</li>
-<li>For an 8-bit image, \(T\) is fully described by a table of 256 output values — a <strong>look-up table (LUT)</strong></li>
-<li>Building the LUT once and indexing into it is dramatically faster than evaluating \(T\) at every pixel</li>
-</ul>
-<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">import numpy as np, cv2
-
-lut = np.array([T(i) for i in range(256)], dtype=np.uint8)
-out = cv2.LUT(img, lut)          # vectorised, O(1) per pixel after the table is built</code></pre></div></div>
+<section id="language-has-transformed-the-way-that-we-interact-with-deep-learning" class="slide level2">
+<h2>Language has transformed the way that we interact with deep learning</h2>
+<p><img data-src="assets/03_deep_learning/image3.png" class="r-stretch"></p>
 </section>
-<section id="gamma-correction" class="slide level2">
-<h2>Gamma Correction</h2>
-<p>Power-law mapping, normalised to \([0,1]\):</p>
-<p><span class="math display">\[
-g = c\, f^{\gamma}
-\]</span></p>
-<ul>
-<li>\(\gamma &lt; 1\): brightens shadows, compresses highlights (common for dark/backlit scenes)</li>
-<li>\(\gamma &gt; 1\): darkens — used to <em>encode</em> images for display (monitors expect roughly \(\gamma \approx 2.2\) decoding, so cameras/encoders pre-apply \(\gamma \approx 1/2.2\))</li>
-<li>\(\gamma = 1\): identity</li>
-</ul>
-<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">def gamma_lut(gamma):
-    inv = 1.0 / gamma
-    table = ((np.arange(256) / 255.0) ** inv * 255).astype(np.uint8)
-    return table
-
-bright = cv2.LUT(img, gamma_lut(0.5))   # gamma &lt; 1 -&gt; brighter shadows</code></pre></div></div>
+<section id="slide-4" class="slide level2">
+<div style="display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.03fr) minmax(0,1.25fr); grid-template-rows:minmax(0,1.95fr) minmax(0,1fr); gap:14px; height:870px; margin-top:10px;">
+<img data-src="assets/03_deep_learning/image6.png" style="grid-column:1 / -1; justify-self:center; height:100%; width:auto; max-width:100%; object-fit:contain; margin:0; border-radius:6px;">
+<img data-src="assets/03_deep_learning/image4.jpeg" style="width:100%; height:100%; object-fit:cover; margin:0; border-radius:6px;">
+<img data-src="assets/03_deep_learning/image5.jpeg" style="width:100%; height:100%; object-fit:cover; margin:0; border-radius:6px;">
+<img data-src="assets/03_deep_learning/image7.jpeg" style="width:100%; height:100%; object-fit:cover; margin:0; border-radius:6px;">
+</div>
 </section>
-<section id="log-transform" class="slide level2">
-<h2>The Log Transform</h2>
-<p><span class="math display">\[
-g = c \log(1 + f)
-\]</span></p>
-<ul>
-<li>Compresses a very wide dynamic range (e.g. Fourier-spectrum magnitude, HDR radiance) into a displayable range</li>
-<li>Expands dark values, compresses bright ones — the opposite shape to \(\gamma &gt; 1\)</li>
-<li>Constant \(c\) is usually chosen so the maximum input maps to 255: \(c = 255 / \log(1+f_{\max})\)</li>
-<li>Classic use: visualising a DFT magnitude spectrum (see Lecture 5)</li>
-</ul>
+<section id="slide-4-2" class="slide level2">
+<h2>Slide 4</h2>
+<p><img data-src="assets/03_deep_learning/image8.png" class="r-stretch"></p>
 </section>
-<section id="contrast-stretching" class="slide level2">
-<h2>Contrast Stretching</h2>
-<p>Piecewise-linear mapping that expands a narrow intensity band to fill the full range:</p>
-<p><span class="math display">\[
-g = \frac{f - f_{\min}}{f_{\max} - f_{\min}} \times 255
-\]</span></p>
-<ul>
-<li>Simple <strong>min–max normalisation</strong>; sensitive to outliers (one hot pixel ruins the stretch)</li>
-<li>Robust variant: clip to the 1st/99th percentile before stretching</li>
-<li>OpenCV: <code>cv2.normalize(img, None, 0, 255, cv2.NORM_MINMAX)</code></li>
-<li>Piecewise-linear generalisation ("contrast stretching" in G&amp;W): pick control points \((r_1,s_1), (r_2,s_2)\) and interpolate linearly between them — lets you boost a mid-tone band without clipping</li>
-</ul>
+<section id="slide-5" class="slide level2">
+<h2>Slide 5</h2>
+<p><img data-src="assets/03_deep_learning/image9.png" class="r-stretch"></p>
 </section>
-<section id="histograms" class="slide level2">
-<h2>The Histogram</h2>
-<p>The histogram \(h(k)\) counts how many pixels take intensity \(k\); the normalised histogram is a probability mass function:</p>
-<p><span class="math display">\[
-p(k) = \frac{h(k)}{MN}, \qquad k = 0,\dots,255
-\]</span></p>
-<ul>
-<li>A narrow, off-centre histogram &rarr; low-contrast image</li>
-<li>A histogram with two separated modes &rarr; a foreground/background pair (useful for thresholding, later this lecture)</li>
-</ul>
-<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">hist = cv2.calcHist([gray], [0], None, [256], [0, 256])</code></pre></div></div>
+<section id="slide-7" class="slide level2">
+<p><img data-src="assets/03_deep_learning/image10.png" class="r-stretch"></p>
 </section>
-<section id="histogram-equalisation" class="slide level2">
-<h2>Histogram Equalisation</h2>
-<p><strong>Goal:</strong> redistribute intensities so the output histogram is approximately uniform &rarr; maximises global contrast.</p>
-<p>The mapping is the (scaled) cumulative distribution function (CDF) of the input:</p>
-<p><span class="math display">\[
-T(k) = 255 \sum_{j=0}^{k} p(j) = 255 \cdot \text{CDF}(k)
-\]</span></p>
-<ol type="1">
-<li>Compute the histogram \(h(k)\)</li>
-<li>Compute the CDF and scale it to \([0,255]\) — this <em>is</em> the LUT</li>
-<li>Apply the LUT to every pixel</li>
-</ol>
-<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">eq = cv2.equalizeHist(gray)   # grayscale only</code></pre></div></div>
-<p><strong>Pitfall:</strong> on colour images, equalising R, G, B independently shifts the hue. Equalise the <strong>luminance channel</strong> instead (e.g. Y in YCbCr, or V in HSV) and recombine.</p>
+<section id="slide-8" class="slide level2">
+<video class="r-stretch" controls playsinline preload="metadata" poster="assets/03_deep_learning/image11.png" style="width:100%; object-fit:contain; background:#fff;">
+<source src="assets/03_deep_learning/media1.mp4" type="video/mp4">
+</video>
 </section>
-<section id="histogram-matching" class="slide level2">
-<h2>Histogram Matching (Specification)</h2>
-<p>Generalises equalisation: instead of a uniform target, match a <strong>reference histogram</strong> (e.g. from a well-exposed reference frame).</p>
-<ol type="1">
-<li>Compute the CDF of the source image, \(\text{CDF}_f\)</li>
-<li>Compute the CDF of the reference/target histogram, \(\text{CDF}_z\)</li>
-<li>For each source level \(k\), find \(z\) such that \(\text{CDF}_z(z) \approx \text{CDF}_f(k)\) — this defines the mapping \(k \mapsto z\)</li>
-</ol>
-<p>Useful for <strong>colour/exposure consistency</strong> across a video sequence or a multi-camera rig — match every frame's histogram to a reference frame so downstream thresholds behave consistently.</p>
+<section id="what-is-deep-learning" class="slide level2">
+<h2>What is Deep Learning?</h2>
+<p><img data-src="assets/03_deep_learning/image12.png" class="r-stretch"></p>
 </section>
-<section id="clahe" class="slide level2">
-<h2>CLAHE — Contrast-Limited Adaptive Histogram Equalisation</h2>
-<p>Plain equalisation is <strong>global</strong>: one bright region can dominate and wash out detail elsewhere. CLAHE equalises <strong>locally</strong>, with a clip limit to control noise amplification.</p>
-<ol type="1">
-<li>Split the image into a grid of tiles (e.g. 8&times;8)</li>
-<li>Compute a histogram <strong>per tile</strong>; clip bins above a threshold and redistribute the clipped mass (this is the "contrast-limited" part — prevents flat regions from over-amplifying sensor noise)</li>
-<li>Equalise each tile independently</li>
-<li>Bilinearly interpolate the tile boundaries to avoid blocking artefacts</li>
-</ol>
-<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
-enhanced = clahe.apply(gray)</code></pre></div></div>
-<p><strong>Practitioner note:</strong> CLAHE on the L channel of Lab colour space is the standard recipe for uneven-lighting scenes (shadows, backlighting) on the Pi camera.</p>
+<section id="software-labs-tensorflow-and-pytorch" class="slide level2">
+<h2>Software Labs: TensorFlow and PyTorch</h2>
+<p><img data-src="assets/03_deep_learning/image13.png" class="r-stretch"></p>
 </section>
-<section id="point-ops-pitfalls" class="slide level2">
-<h2>Practitioner Notes — Point Operations</h2>
-<ul>
-<li><strong>Integer overflow:</strong> plain <code>img + 50</code> in NumPy wraps around (uint8 mod 256); use <code>cv2.add</code> / <code>cv2.convertScaleAbs</code>, which saturate at 0/255</li>
-<li><strong>Colour equalisation:</strong> never equalise R, G, B independently — work in a luma/chroma space</li>
-<li><strong>Gamma vs. exposure:</strong> gamma correction cannot recover detail that was clipped (over/under-exposed) at capture — fix exposure/gain first, correct tone second</li>
-<li><strong>CLAHE tile size:</strong> too small &rarr; noise amplification and blocking; too large &rarr; degenerates toward global equalisation. Start at 8&times;8 and tune per scene</li>
-<li>All of these are <span class="math inline">\(O(N)\)</span> per pixel — cheap enough to run every frame on the Raspberry Pi 5 CPU</li>
-</ul>
+<section id="why-deep-learning-and-why-now" class="slide level2">
+<h2>Why Deep Learning and Why Now?</h2>
+<p><img data-src="assets/03_deep_learning/image14.png" class="r-stretch"></p>
 </section>
-<section id="thresholding-intro" class="slide level2">
-<h2>Thresholding: Turning Intensity into a Decision</h2>
-<p>The simplest segmentation operator — a point operation whose output is binary:</p>
-<p><span class="math display">\[
-g(x,y) = \begin{cases} 255 & f(x,y) \ge T \\ 0 & f(x,y) &lt; T \end{cases}
-\]</span></p>
-<ul>
-<li>Works well when foreground and background occupy separated intensity ranges (bimodal histogram)</li>
-<li>The entire question is: <strong>how do we choose \(T\)?</strong> — fixed, global-optimal, or spatially varying</li>
-</ul>
+<section id="why-deep-learning" class="slide level2">
+<h2>Why Deep Learning?</h2>
+<p><img data-src="assets/03_deep_learning/image15.png" class="r-stretch"></p>
 </section>
-<section id="otsu" class="slide level2">
-<h2>Otsu&rsquo;s Method — Optimal Global Threshold</h2>
-<p>Chooses \(T\) automatically by treating the histogram as two classes (background/foreground) and picking the split that <strong>maximises between-class variance</strong> \(\sigma_B^2(T)\) (equivalently minimises within-class variance):</p>
-<p><span class="math display">\[
-\sigma_B^2(T) = \omega_0(T)\,\omega_1(T)\,\big[\mu_0(T) - \mu_1(T)\big]^2
-\]</span></p>
-<ul>
-<li>\(\omega_0, \omega_1\) — class probabilities (fraction of pixels below/above \(T\))</li>
-<li>\(\mu_0, \mu_1\) — class means</li>
-<li>Exhaustive search over all 256 candidate thresholds — cheap, exact, no parameters to tune</li>
-<li>Assumes a roughly <strong>bimodal</strong> histogram; degrades on scenes with uneven illumination or three-or-more intensity classes</li>
-</ul>
-<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">_, th = cv2.threshold(blurred, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)</code></pre></div></div>
+<section id="why-now" class="slide level2">
+<h2>Why Now?</h2>
+<p><img data-src="assets/03_deep_learning/image16.png" class="r-stretch"></p>
 </section>
-<section id="adaptive-threshold" class="slide level2">
-<h2>Adaptive Thresholding</h2>
-<p>Instead of one global \(T\), compute a <strong>local</strong> threshold per pixel from its neighbourhood:</p>
-<p><span class="math display">\[
-T(x,y) = \text{mean or Gaussian-weighted mean of the } b\times b \text{ window around } (x,y) \; - \; C
-\]</span></p>
-<ul>
-<li>Robust to gradual illumination gradients that break Otsu (a spotlight, a shadow gradient across the frame)</li>
-<li>Two flavours in OpenCV: <code>ADAPTIVE_THRESH_MEAN_C</code> and <code>ADAPTIVE_THRESH_GAUSSIAN_C</code></li>
-<li>Two knobs to tune: block size \(b\) (must be odd; too small &rarr; noisy, too large &rarr; behaves like global) and the constant \(C\) subtracted from the local mean</li>
-</ul>
-<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">th = cv2.adaptiveThreshold(blurred, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
-                            cv2.THRESH_BINARY, 21, 5)   # block=21, C=5</code></pre></div></div>
+<section id="the-perceptron" class="slide level2">
+<h2>The Perceptron</h2>
+<p><img data-src="assets/03_deep_learning/image17.png" class="r-stretch"></p>
 </section>
-<section id="sauvola" class="slide level2">
-<h2>Sauvola Thresholding</h2>
-<p>A refinement of adaptive mean thresholding, designed originally for document/text binarisation under uneven lighting:</p>
-<p><span class="math display">\[
-T(x,y) = m(x,y)\left[1 + k\left(\frac{s(x,y)}{R} - 1\right)\right]
-\]</span></p>
-<ul>
-<li>\(m(x,y)\), \(s(x,y)\) — local mean and standard deviation in a window</li>
-<li>\(R\) — dynamic range of the standard deviation (typically 128 for 8-bit), \(k\) — a tunable weight (typically 0.2&ndash;0.5)</li>
-<li>In low-variance (flat) regions, \(T\) drops toward \(m(1-k)\), suppressing background noise that plain adaptive thresholding would misclassify</li>
-<li>Not built into core OpenCV — implement via integral images for mean and mean-of-squares (fast, \(O(1)\) per pixel after the integral image is built), or use <code>scikit-image</code>&rsquo;s <code>threshold_sauvola</code></li>
-</ul>
+<section id="the-perceptron-forward-propagation" class="slide level2">
+<h2>The Perceptron: Forward Propagation</h2>
+<p><img data-src="assets/03_deep_learning/image18.png" class="r-stretch"></p>
 </section>
-<section id="thresholding-comparison" class="slide level2">
-<h2>Choosing a Thresholding Method</h2>
-<table class="caption-top">
-<thead>
-<tr class="header">
-<th>Method</th>
-<th>Best for</th>
-<th>Cost</th>
-<th>Weakness</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd"><td>Global (fixed \(T\))</td><td>Controlled, repeatable lighting</td><td>O(1)</td><td>Breaks the moment lighting changes</td></tr>
-<tr class="even"><td>Otsu</td><td>Bimodal histogram, uniform lighting</td><td>O(256)</td><td>One threshold for the whole frame</td></tr>
-<tr class="odd"><td>Adaptive (mean/Gaussian)</td><td>Gradual illumination gradients</td><td>O(N) w/ box filter</td><td>Two parameters to tune per scene</td></tr>
-<tr class="even"><td>Sauvola</td><td>Text/fine structure, strong local contrast</td><td>O(N) w/ integral images</td><td>More parameters; tuned for document images</td></tr>
-</tbody>
-</table>
-<p><strong>Rule of thumb for the Pi 5 labs:</strong> start with Otsu; switch to adaptive/Sauvola the moment you see a shadow or gradient across the frame.</p>
+<section id="the-perceptron-forward-propagation-2" class="slide level2">
+<h2>The Perceptron: Forward Propagation</h2>
+<p><img data-src="assets/03_deep_learning/image19.png" class="r-stretch"></p>
 </section>
-<section id="image-arithmetic" class="slide level2">
-<h2>Image Arithmetic</h2>
-<p>Pixel-wise operations between two (same-size) images:</p>
-<ul>
-<li><strong>Addition/subtraction:</strong> <code>cv2.add</code>, <code>cv2.subtract</code> — <em>saturating</em> (clip to [0,255]), unlike raw NumPy <code>+</code>/<code>-</code> which wraps</li>
-<li><strong>Weighted sum (blending):</strong> <span class="math inline">\(g = \alpha f_1 + (1-\alpha) f_2\)</span> via <code>cv2.addWeighted(f1, alpha, f2, 1-alpha, 0)</code></li>
-<li><strong>Absolute difference:</strong> <code>cv2.absdiff(f1, f2)</code> — the workhorse of frame differencing (below) and change detection</li>
-</ul>
+<section id="the-perceptron-forward-propagation-3" class="slide level2">
+<h2>The Perceptron: Forward Propagation</h2>
+<p><img data-src="assets/03_deep_learning/image20.png" class="r-stretch"></p>
 </section>
-<section id="alpha-compositing" class="slide level2">
-<h2>Alpha Compositing</h2>
-<p>Overlay a foreground image/graphic onto a background using a per-pixel opacity map \(\alpha(x,y) \in [0,1]\) (the <strong>alpha channel</strong>):</p>
-<p><span class="math display">\[
-g(x,y) = \alpha(x,y)\, f_{\text{fg}}(x,y) + \big(1-\alpha(x,y)\big)\, f_{\text{bg}}(x,y)
-\]</span></p>
-<ul>
-<li>Used for HUD overlays (bounding boxes, masks, heatmaps) that should blend rather than fully occlude the frame</li>
-<li>In OpenCV: build a float mask, broadcast-multiply, sum — or pack a 4th (BGRA) channel and composite manually</li>
-</ul>
+<section id="the-perceptron-forward-propagation-4" class="slide level2">
+<h2>The Perceptron: Forward Propagation</h2>
+<p><img data-src="assets/03_deep_learning/image21.png" class="r-stretch"></p>
 </section>
-<section id="bitwise-masks" class="slide level2">
-<h2>Bitwise Operations &amp; Masks</h2>
-<ul>
-<li><code>cv2.bitwise_and</code>, <code>_or</code>, <code>_xor</code>, <code>_not</code> — operate per bit/per pixel, typically with a binary mask as one operand</li>
-<li>Classic pattern: <strong>mask out</strong> a region of interest, or combine two binary masks (e.g. a colour mask AND a motion mask)</li>
-</ul>
-<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">masked = cv2.bitwise_and(frame, frame, mask=binary_mask)  # keep frame only where mask!=0
-combined = cv2.bitwise_and(color_mask, motion_mask)        # AND two conditions</code></pre></div></div>
-<p>This is exactly how Lab 4&rsquo;s HSV colour detector isolates a coloured object: threshold in HSV to get a mask, then <code>bitwise_and</code> it against the original frame.</p>
+<section id="common-activation-functions" class="slide level2">
+<h2>Common Activation Functions</h2>
+<p><img data-src="assets/03_deep_learning/image22.png" class="r-stretch"></p>
 </section>
-<section id="frame-differencing" class="slide level2">
-<h2>Frame Differencing — the Simplest Motion Detector</h2>
-<ol type="1">
-<li>Keep a reference/background frame \(B\) (the previous frame, or a running average)</li>
-<li>Compute \(D = |I_t - B|\) via <code>cv2.absdiff</code></li>
-<li>Threshold \(D\) (Otsu or a fixed value) to get a binary <strong>motion mask</strong></li>
-<li>Clean the mask with morphology (Lecture 6) and find contours (Lecture 5 lab) to localise moving objects</li>
-</ol>
-<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">diff = cv2.absdiff(gray_prev, gray_curr)
-_, motion_mask = cv2.threshold(diff, 25, 255, cv2.THRESH_BINARY)</code></pre></div></div>
-<p><strong>Limitation:</strong> sensitive to camera shake and lighting flicker; only detects the <em>edges</em> of a uniformly-coloured moving object (its interior looks unchanged). Background subtraction (MOG2/KNN, Lecture 11) fixes both.</p>
+<section id="importance-of-activation-functions" class="slide level2">
+<h2>Importance of Activation Functions</h2>
+<p><img data-src="assets/03_deep_learning/image23.png" class="r-stretch"></p>
 </section>
-<section id="code-walkthrough" class="slide level2">
-<h2>Code Walkthrough — <code>01_opencv_basics.py</code></h2>
-<p>This week&rsquo;s reference script (in the course repository) exercises exactly these operations end to end:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">def adjust_brightness_contrast(img, alpha=1.2, beta=20):
-    """alpha = contrast gain, beta = brightness offset. Safe (saturating)."""
-    return cv2.convertScaleAbs(img, alpha=alpha, beta=beta)
-
-img = cv2.imread(args.image)            # NOTE: OpenCV loads as BGR, not RGB
-gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-hsv  = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-annotated = adjust_brightness_contrast(img.copy(), alpha=1.15, beta=15)</code></pre></div></div>
-<ul>
-<li><code>cv2.convertScaleAbs(img, alpha, beta)</code> computes \(g = \text{saturate}(\alpha f + \beta)\) — a linear point operation, safely clipped</li>
-<li>Note the BGR-not-RGB gotcha: OpenCV&rsquo;s native channel order trips up almost everyone the first time</li>
-</ul>
+<section id="importance-of-activation-functions-2" class="slide level2">
+<h2>Importance of Activation Functions</h2>
+<p><img data-src="assets/03_deep_learning/image24.png" class="r-stretch"></p>
 </section>
-<section id="arithmetic-pitfalls" class="slide level2">
-<h2>Practitioner Notes — Arithmetic &amp; Masks</h2>
-<ul>
-<li><strong>Never</strong> subtract <code>uint8</code> arrays with raw NumPy when the result can go negative — it wraps (e.g. \(5 - 10 = 251\)). Cast to <code>int16</code>/<code>float32</code> first, or use <code>cv2.subtract</code>/<code>cv2.absdiff</code></li>
-<li>Masks must match the operand&rsquo;s size <strong>and</strong> be single-channel <code>uint8</code>; a common bug is passing a 3-channel mask</li>
-<li><code>addWeighted</code> assumes both inputs are the same dtype/size — resize/crop to match before blending</li>
-<li>On the Raspberry Pi 5, all of today&rsquo;s operations are vectorised NumPy/OpenCV calls — they run comfortably at full camera frame rate; the bottleneck is almost always capture I/O, not this arithmetic</li>
-</ul>
+<section id="importance-of-activation-functions-3" class="slide level2">
+<h2>Importance of Activation Functions</h2>
+<p><img data-src="assets/03_deep_learning/image25.png" class="r-stretch"></p>
 </section>
-<section id="lab-3" class="slide level2">
-<h2>This Week&rsquo;s Lab — Lab 3: CV Fundamentals I</h2>
-<p><strong>Images, Video &amp; Drawing</strong></p>
-<ul>
-<li>Load and save images; load and save videos</li>
-<li>Drawing functions (lines, shapes, text) — annotate frames the way <code>label_box()</code> does in <code>01_opencv_basics.py</code></li>
-<li>Basic operations: resize, crop, rotate, ROI extraction</li>
-</ul>
-<p><strong>Deliverable:</strong> an image/video I/O utility with on-frame annotations.</p>
+<section id="the-perceptron-example" class="slide level2">
+<h2>The Perceptron: Example</h2>
+<p><img data-src="assets/03_deep_learning/image26.png" class="r-stretch"></p>
 </section>
-<section id="key-takeaways" class="slide level2">
-<h2>Key Takeaways</h2>
-<ul>
-<li>Point operations map \(f(x,y) \to g(x,y)\) independently per pixel — build them once as a LUT, apply in \(O(1)\)</li>
-<li>Histogram equalisation/CLAHE fix <em>contrast</em>; gamma/log fix <em>tone</em>; know which problem you actually have</li>
-<li>Thresholding turns intensity into a decision — Otsu for uniform lighting, adaptive/Sauvola when lighting varies across the frame</li>
-<li>Saturating arithmetic (<code>cv2.add</code>/<code>subtract</code>/<code>absdiff</code>) avoids silent wraparound bugs that raw NumPy will happily produce</li>
-<li>Frame differencing is the simplest motion cue — good enough for Lab 5, replaced by background subtraction once we need robustness (Lecture 11)</li>
-</ul>
+<section id="the-perceptron-example-2" class="slide level2">
+<h2>The Perceptron: Example</h2>
+<p><img data-src="assets/03_deep_learning/image27.png" class="r-stretch"></p>
 </section>
-<section id="further-reading" class="slide level2">
-<h2>Further Reading</h2>
-<ul>
-<li>Gonzalez &amp; Woods, <em>Digital Image Processing</em> 4e — &sect;3.1&ndash;3.3 (intensity transformations, histogram processing)</li>
-<li>OpenCV docs: <em>Image Thresholding</em>, <em>Histograms</em>, <em>Arithmetic Operations on Images</em></li>
-<li>Sauvola &amp; Pietik&auml;inen (2000), &ldquo;Adaptive document image binarization&rdquo;, <em>Pattern Recognition</em></li>
-</ul>
+<section id="the-perceptron-example-3" class="slide level2">
+<h2>The Perceptron: Example</h2>
+<p><img data-src="assets/03_deep_learning/image28.png" class="r-stretch"></p>
+</section>
+<section id="the-perceptron-example-4" class="slide level2">
+<h2>The Perceptron: Example</h2>
+<p><img data-src="assets/03_deep_learning/image29.png" class="r-stretch"></p>
+</section>
+<section id="building-neural-networks-with-perceptrons" class="slide level2">
+<h2>Building Neural Networks with Perceptrons</h2>
+<p><img data-src="assets/03_deep_learning/image30.png" class="r-stretch"></p>
+</section>
+<section id="the-perceptron-simplified" class="slide level2">
+<h2>The Perceptron: Simplified</h2>
+<p><img data-src="assets/03_deep_learning/image31.png" class="r-stretch"></p>
+</section>
+<section id="the-perceptron-simplified-2" class="slide level2">
+<h2>The Perceptron: Simplified</h2>
+<p><img data-src="assets/03_deep_learning/image32.png" class="r-stretch"></p>
+</section>
+<section id="multi-output-perceptron" class="slide level2">
+<h2>Multi Output Perceptron</h2>
+<p><img data-src="assets/03_deep_learning/image33.png" class="r-stretch"></p>
+</section>
+<section id="slide-31" class="slide level2">
+<p><img data-src="assets/03_deep_learning/image34.png" class="r-stretch"></p>
+</section>
+<section id="slide-32" class="slide level2">
+<p><img data-src="assets/03_deep_learning/image35.png" class="r-stretch"></p>
+</section>
+<section id="dense-layer-from-scratch" class="slide level2">
+<h2>Dense layer from scratch</h2>
+<p><img data-src="assets/03_deep_learning/image36.png" class="r-stretch"></p>
+</section>
+<section id="multi-output-perceptron-2" class="slide level2">
+<h2>Multi Output Perceptron</h2>
+<p><img data-src="assets/03_deep_learning/image37.png" class="r-stretch"></p>
+</section>
+<section id="single-layer-neural-network" class="slide level2">
+<h2>Single Layer Neural Network</h2>
+<p><img data-src="assets/03_deep_learning/image38.png" class="r-stretch"></p>
+</section>
+<section id="single-layer-neural-network-2" class="slide level2">
+<h2>Single Layer Neural Network</h2>
+<p><img data-src="assets/03_deep_learning/image39.png" class="r-stretch"></p>
+</section>
+<section id="slide-37" class="slide level2">
+<p><img data-src="assets/03_deep_learning/image40.png" class="r-stretch"></p>
+</section>
+<section id="multi-output-perceptron-3" class="slide level2">
+<h2>Multi Output Perceptron</h2>
+<p><img data-src="assets/03_deep_learning/image41.png" class="r-stretch"></p>
+</section>
+<section id="deep-neural-network" class="slide level2">
+<h2>Deep Neural Network</h2>
+<p><img data-src="assets/03_deep_learning/image42.png" class="r-stretch"></p>
+</section>
+<section id="deep-neural-network-2" class="slide level2">
+<h2>Deep Neural Network</h2>
+<p><img data-src="assets/03_deep_learning/image43.png" class="r-stretch"></p>
+</section>
+<section id="applying-neural-networks" class="slide level2">
+<h2>Applying Neural Networks</h2>
+<p><img data-src="assets/03_deep_learning/image44.png" class="r-stretch"></p>
+</section>
+<section id="example-problem" class="slide level2">
+<h2>Example Problem</h2>
+<p><img data-src="assets/03_deep_learning/image45.png" class="r-stretch"></p>
+</section>
+<section id="example-problem-will-i-pass-this-class" class="slide level2">
+<h2>Example Problem: Will I pass this class?</h2>
+<p><img data-src="assets/03_deep_learning/image46.png" class="r-stretch"></p>
+</section>
+<section id="example-problem-will-i-pass-this-class-2" class="slide level2">
+<h2>Example Problem: Will I pass this class?</h2>
+<p><img data-src="assets/03_deep_learning/image47.png" class="r-stretch"></p>
+</section>
+<section id="example-problem-will-i-pass-this-class-3" class="slide level2">
+<h2>Example Problem: Will I pass this class?</h2>
+<p><img data-src="assets/03_deep_learning/image48.png" class="r-stretch"></p>
+</section>
+<section id="example-problem-will-i-pass-this-class-4" class="slide level2">
+<h2>Example Problem: Will I pass this class?</h2>
+<p><img data-src="assets/03_deep_learning/image49.png" class="r-stretch"></p>
+</section>
+<section id="quantifying-loss" class="slide level2">
+<h2>Quantifying Loss</h2>
+<p><img data-src="assets/03_deep_learning/image50.png" class="r-stretch"></p>
+</section>
+<section id="empirical-loss" class="slide level2">
+<h2>Empirical Loss</h2>
+<p><img data-src="assets/03_deep_learning/image51.png" class="r-stretch"></p>
+</section>
+<section id="binary-cross-entropy-loss" class="slide level2">
+<h2>Binary Cross Entropy Loss</h2>
+<p><img data-src="assets/03_deep_learning/image52.png" class="r-stretch"></p>
+</section>
+<section id="mean-squared-error-loss" class="slide level2">
+<h2>Mean Squared Error Loss</h2>
+<p><img data-src="assets/03_deep_learning/image53.png" class="r-stretch"></p>
+</section>
+<section id="training-neural-networks" class="slide level2">
+<h2>Training Neural Networks</h2>
+<p><img data-src="assets/03_deep_learning/image54.png" class="r-stretch"></p>
+</section>
+<section id="loss-optimization" class="slide level2">
+<h2>Loss Optimization</h2>
+<p><img data-src="assets/03_deep_learning/image55.png" class="r-stretch"></p>
+</section>
+<section id="loss-optimization-2" class="slide level2">
+<h2>Loss Optimization</h2>
+<p><img data-src="assets/03_deep_learning/image56.png" class="r-stretch"></p>
+</section>
+<section id="loss-optimization-3" class="slide level2">
+<h2>Loss Optimization</h2>
+<p><img data-src="assets/03_deep_learning/image57.png" class="r-stretch"></p>
+</section>
+<section id="loss-optimization-4" class="slide level2">
+<h2>Loss Optimization</h2>
+<p><img data-src="assets/03_deep_learning/image58.png" class="r-stretch"></p>
+</section>
+<section id="loss-optimization-5" class="slide level2">
+<h2>Loss Optimization</h2>
+<p><img data-src="assets/03_deep_learning/image59.png" class="r-stretch"></p>
+</section>
+<section id="loss-optimization-6" class="slide level2">
+<h2>Loss Optimization</h2>
+<p><img data-src="assets/03_deep_learning/image60.png" class="r-stretch"></p>
+</section>
+<section id="gradient-descent" class="slide level2">
+<h2>Gradient Descent</h2>
+<p><img data-src="assets/03_deep_learning/image61.png" class="r-stretch"></p>
+</section>
+<section id="gradient-descent-2" class="slide level2">
+<h2>Gradient Descent</h2>
+<p><img data-src="assets/03_deep_learning/image62.png" class="r-stretch"></p>
+</section>
+<section id="gradient-descent-3" class="slide level2">
+<h2>Gradient Descent</h2>
+<p><img data-src="assets/03_deep_learning/image63.png" class="r-stretch"></p>
+</section>
+<section id="gradient-descent-4" class="slide level2">
+<h2>Gradient Descent</h2>
+<p><img data-src="assets/03_deep_learning/image64.png" class="r-stretch"></p>
+</section>
+<section id="computing-gradients-backpropagation" class="slide level2">
+<h2>Computing Gradients: Backpropagation</h2>
+<p><img data-src="assets/03_deep_learning/image65.png" class="r-stretch"></p>
+</section>
+<section id="computing-gradients-backpropagation-2" class="slide level2">
+<h2>Computing Gradients: Backpropagation</h2>
+<p><img data-src="assets/03_deep_learning/image66.png" class="r-stretch"></p>
+</section>
+<section id="computing-gradients-backpropagation-3" class="slide level2">
+<h2>Computing Gradients: Backpropagation</h2>
+<p><img data-src="assets/03_deep_learning/image67.png" class="r-stretch"></p>
+</section>
+<section id="computing-gradients-backpropagation-4" class="slide level2">
+<h2>Computing Gradients: Backpropagation</h2>
+<p><img data-src="assets/03_deep_learning/image68.png" class="r-stretch"></p>
+</section>
+<section id="computing-gradients-backpropagation-5" class="slide level2">
+<h2>Computing Gradients: Backpropagation</h2>
+<p><img data-src="assets/03_deep_learning/image69.png" class="r-stretch"></p>
+</section>
+<section id="computing-gradients-backpropagation-6" class="slide level2">
+<h2>Computing Gradients: Backpropagation</h2>
+<p><img data-src="assets/03_deep_learning/image70.png" class="r-stretch"></p>
+</section>
+<section id="neural-networks-in-practice-optimization" class="slide level2">
+<h2>Neural Networks in Practice: Optimization</h2>
+<p><img data-src="assets/03_deep_learning/image71.png" class="r-stretch"></p>
+</section>
+<section id="training-neural-networks-is-difficult" class="slide level2">
+<h2>Training Neural Networks is Difficult</h2>
+<p><img data-src="assets/03_deep_learning/image72.png" class="r-stretch"></p>
+</section>
+<section id="loss-functions-can-be-difficult-to-optimize" class="slide level2">
+<h2>Loss Functions Can Be Difficult to Optimize</h2>
+<p><img data-src="assets/03_deep_learning/image73.png" class="r-stretch"></p>
+</section>
+<section id="loss-functions-can-be-difficult-to-optimize-2" class="slide level2">
+<h2>Loss Functions Can Be Difficult to Optimize</h2>
+<p><img data-src="assets/03_deep_learning/image74.png" class="r-stretch"></p>
+</section>
+<section id="setting-the-learning-rate" class="slide level2">
+<h2>Setting the Learning Rate</h2>
+<p><img data-src="assets/03_deep_learning/image75.png" class="r-stretch"></p>
+</section>
+<section id="setting-the-learning-rate-2" class="slide level2">
+<h2>Setting the Learning Rate</h2>
+<p><img data-src="assets/03_deep_learning/image76.png" class="r-stretch"></p>
+</section>
+<section id="setting-the-learning-rate-3" class="slide level2">
+<h2>Setting the Learning Rate</h2>
+<p><img data-src="assets/03_deep_learning/image77.png" class="r-stretch"></p>
+</section>
+<section id="howtodealwiththis" class="slide level2">
+<h2>Howtodealwiththis?</h2>
+<p><img data-src="assets/03_deep_learning/image78.png" class="r-stretch"></p>
+</section>
+<section id="how-to-deal-with-this" class="slide level2">
+<h2>How to deal with this?</h2>
+<p><img data-src="assets/03_deep_learning/image79.png" class="r-stretch"></p>
+</section>
+<section id="adaptive-learning-rates" class="slide level2">
+<h2>Adaptive Learning Rates</h2>
+<p><img data-src="assets/03_deep_learning/image80.png" class="r-stretch"></p>
+</section>
+<section id="gradient-descent-algorithms" class="slide level2">
+<h2>Gradient Descent Algorithms</h2>
+<p><img data-src="assets/03_deep_learning/image81.png" class="r-stretch"></p>
+</section>
+<section id="putting-it-all-together" class="slide level2">
+<h2>Putting it all together</h2>
+<p><img data-src="assets/03_deep_learning/image82.png" class="r-stretch"></p>
+</section>
+<section id="neural-networks-in-practice-mini-batches" class="slide level2">
+<h2>Neural Networks in Practice: Mini-batches</h2>
+<p><img data-src="assets/03_deep_learning/image83.png" class="r-stretch"></p>
+</section>
+<section id="gradient-descent-5" class="slide level2">
+<h2>Gradient Descent</h2>
+<p><img data-src="assets/03_deep_learning/image84.png" class="r-stretch"></p>
+</section>
+<section id="gradient-descent-6" class="slide level2">
+<h2>Gradient Descent</h2>
+<p><img data-src="assets/03_deep_learning/image85.png" class="r-stretch"></p>
+</section>
+<section id="stochastic-gradient-descent" class="slide level2">
+<h2>Stochastic Gradient Descent</h2>
+<p><img data-src="assets/03_deep_learning/image86.png" class="r-stretch"></p>
+</section>
+<section id="stochastic-gradient-descent-2" class="slide level2">
+<h2>Stochastic Gradient Descent</h2>
+<p><img data-src="assets/03_deep_learning/image87.png" class="r-stretch"></p>
+</section>
+<section id="stochastic-gradient-descent-3" class="slide level2">
+<h2>Stochastic Gradient Descent</h2>
+<p><img data-src="assets/03_deep_learning/image88.png" class="r-stretch"></p>
+</section>
+<section id="stochastic-gradient-descent-4" class="slide level2">
+<h2>Stochastic Gradient Descent</h2>
+<p><img data-src="assets/03_deep_learning/image89.png" class="r-stretch"></p>
+</section>
+<section id="mini-batches-while-training" class="slide level2">
+<h2>Mini-batches while training</h2>
+<p><img data-src="assets/03_deep_learning/image90.png" class="r-stretch"></p>
+</section>
+<section id="mini-batches-while-training-2" class="slide level2">
+<h2>Mini-batches while training</h2>
+<p><img data-src="assets/03_deep_learning/image91.png" class="r-stretch"></p>
+</section>
+<section id="neural-networks-in-practice-overfitting" class="slide level2">
+<h2>Neural Networks in Practice: Overfitting</h2>
+<p><img data-src="assets/03_deep_learning/image92.png" class="r-stretch"></p>
+</section>
+<section id="the-problem-of-overfitting" class="slide level2">
+<h2>The Problem of Overfitting</h2>
+<p><img data-src="assets/03_deep_learning/image93.png" class="r-stretch"></p>
+</section>
+<section id="regularization" class="slide level2">
+<h2>Regularization</h2>
+<p><img data-src="assets/03_deep_learning/image94.png" class="r-stretch"></p>
+</section>
+<section id="regularization-2" class="slide level2">
+<h2>Regularization</h2>
+<p><img data-src="assets/03_deep_learning/image95.png" class="r-stretch"></p>
+</section>
+<section id="regularization-i-dropout" class="slide level2">
+<h2>Regularization I: Dropout</h2>
+<p><img data-src="assets/03_deep_learning/image96.png" class="r-stretch"></p>
+</section>
+<section id="regularization-i-dropout-2" class="slide level2">
+<h2>Regularization I: Dropout</h2>
+<p><img data-src="assets/03_deep_learning/image97.png" class="r-stretch"></p>
+</section>
+<section id="regularization-i-dropout-3" class="slide level2">
+<h2>Regularization I: Dropout</h2>
+<p><img data-src="assets/03_deep_learning/image98.png" class="r-stretch"></p>
+</section>
+<section id="regularization-2-early-stopping" class="slide level2">
+<h2>Regularization 2: Early Stopping</h2>
+<p><img data-src="assets/03_deep_learning/image99.png" class="r-stretch"></p>
+</section>
+<section id="regularization-2-early-stopping-2" class="slide level2">
+<h2>Regularization 2: Early Stopping</h2>
+<p><img data-src="assets/03_deep_learning/image100.png" class="r-stretch"></p>
+</section>
+<section id="regularization-2-early-stopping-3" class="slide level2">
+<h2>Regularization 2: Early Stopping</h2>
+<p><img data-src="assets/03_deep_learning/image101.png" class="r-stretch"></p>
+</section>
+<section id="regularization-2-early-stopping-4" class="slide level2">
+<h2>Regularization 2: Early Stopping</h2>
+<p><img data-src="assets/03_deep_learning/image102.png" class="r-stretch"></p>
+</section>
+<section id="regularization-2-early-stopping-5" class="slide level2">
+<h2>Regularization 2: Early Stopping</h2>
+<p><img data-src="assets/03_deep_learning/image103.png" class="r-stretch"></p>
+</section>
+<section id="regularization-2-early-stopping-6" class="slide level2">
+<h2>Regularization 2: Early Stopping</h2>
+<p><img data-src="assets/03_deep_learning/image104.png" class="r-stretch"></p>
+</section>
+<section id="regularization-2-early-stopping-7" class="slide level2">
+<h2>Regularization 2: Early Stopping</h2>
+<p><img data-src="assets/03_deep_learning/image105.png" class="r-stretch"></p>
+</section>
+<section id="regularization-2-early-stopping-8" class="slide level2">
+<h2>Regularization 2: Early Stopping</h2>
+<p><img data-src="assets/03_deep_learning/image106.png" class="r-stretch"></p>
+</section>
+<section id="core-foundation-review" class="slide level2">
+<h2>Core Foundation Review</h2>
+<p><img data-src="assets/03_deep_learning/image107.png" class="r-stretch"></p>
 </section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
