@@ -6,3 +6,6 @@
 
 # Media embedded in the published site must be regular files (GitHub Pages does not serve LFS)
 lectures/assets/** !filter !diff !merge binary
+lectures/pdf/** !filter !diff !merge binary
+# Over GitHub's 100 MB file limit, so it must stay in LFS
+lectures/assets/01_intro/Projects_demo.mp4 filter=lfs diff=lfs merge=lfs -text
