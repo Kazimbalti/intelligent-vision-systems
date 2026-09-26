@@ -1,0 +1,12 @@
+# Lab 4 — Computer Vision in Practice (companion to Lecture 4)
+# Python 3.10–3.12.  Install:  pip install -r requirements.txt
+opencv-python
+numpy
+matplotlib
+pillow
+torch
+transformers
+num2words        # needed by the SmolVLM2 processor (notebook 06)
+supervision
+rfdetr
+jupyter

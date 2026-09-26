@@ -168,6 +168,7 @@ window.Quarto = {
    
   <ul>
   <li><a href="#lab-list" id="toc-lab-list" class="nav-link" data-scroll-target="#lab-list">Lab-by-lab</a></li>
+  <li><a href="#lab-4-demos" id="toc-lab-4-demos" class="nav-link" data-scroll-target="#lab-4-demos">Lab 4 Demos &amp; Examples</a></li>
   <li><a href="#research-papers" id="toc-research-papers" class="nav-link" data-scroll-target="#research-papers">Reading &amp; Implementing Research Papers</a></li>
   <li><a href="#opencv5-deep-dive" id="toc-opencv5-deep-dive" class="nav-link" data-scroll-target="#opencv5-deep-dive">OpenCV 5.0 Deep Dive</a></li>
   <li><a href="#capstone-project" id="toc-capstone-project" class="nav-link" data-scroll-target="#capstone-project">Capstone Project</a>
@@ -231,10 +232,10 @@ window.Quarto = {
 </tr>
 <tr class="even">
 <td style="text-align:center;">4</td>
-<td><strong>Lab 4</strong></td>
-<td><strong>CV Fundamentals II &mdash; Colour, Arithmetic &amp; Thresholding.</strong></td>
-<td>Arithmetic and bitwise operations; masks; the HSV colour space and colour detection; global/Otsu/adaptive threshold operations.</td>
-<td>An HSV colour detector + a thresholding app.</td>
+<td><strong><a href="#lab-4-demos">Lab 4</a></strong></td>
+<td><strong>Computer Vision in Practice &mdash; From Pixels to Understanding.</strong> Hands-on companion to <a href="lectures/04_Computer_Vision.html">Lecture&nbsp;4</a>.</td>
+<td>Five notebooks, one per lecture demo: (4A) an image is just numbers &mdash; pixels, RGB &amp; grayscale arrays; (4B) image classification with ResNet-50; (4C) object detection with RF-DETR &amp; the confidence threshold; (4D) instance segmentation, masks &amp; background blur/replace; (4E) image understanding &mdash; captioning &amp; visual question answering with a vision-language model (SmolVLM2).</td>
+<td>The five notebooks run end-to-end + answers to each notebook&rsquo;s &ldquo;Your turn&rdquo; tasks.</td>
 </tr>
 <tr class="odd">
 <td style="text-align:center;">5</td>
@@ -323,6 +324,62 @@ window.Quarto = {
 </tbody>
 </table>
 </div>
+</section>
+
+<section id="lab-4-demos" class="level2">
+<h2 class="anchored" data-anchor-id="lab-4-demos">Lab 4 &mdash; Computer Vision in Practice (Demos &amp; Examples)</h2>
+<p>Lab 4 is the hands-on half of <a href="lectures/04_Computer_Vision.html"><strong>Lecture 4 &mdash; Computer Vision: How computers see the world around us</strong></a> (<a href="lectures/pdf/04_Computer_Vision.pdf">PDF</a>). Each notebook is one of the lecture&rsquo;s <strong>&#9654;&#xFE0E; DEMO</strong> slides, and together they climb the same ladder: <strong>pixels &rarr; classify &rarr; detect &rarr; segment &rarr; understand</strong>. All five work on the same photo, so you can watch one scene go from raw numbers to a conversation about what is happening in it.</p>
+<div class="d-flex gap-4 flex-wrap align-items-start mb-3">
+<img src="LAB/Lab_4/demo.jpg" alt="The shared Lab 4 demo photo: a baby and a cat playing with a colourful ball" style="width:240px; max-width:100%; border-radius:6px;">
+<div style="flex:1; min-width:260px;">
+<p class="mb-2"><strong>How to run:</strong> click <em>Colab</em> (free GPU, nothing to install), uncomment the <code>!pip install</code> line in the first code cell and run all cells &mdash; the notebook fetches <code>demo.jpg</code> itself. To run locally or on the Raspberry&nbsp;Pi&nbsp;5, install <a href="LAB/Lab_4/requirements.txt"><code>requirements.txt</code></a> and open the notebooks in Jupyter (see the <a href="https://github.com/Kazimbalti/intelligent-vision-systems/tree/main/LAB/Lab_4">Lab 4 README</a>).</p>
+<p class="mb-0"><strong>Deliverable:</strong> every notebook ends with three <em>&ldquo;Your turn&rdquo;</em> tasks (use your own photos). Submit the five notebooks with code, outputs and a short answer to each task.</p>
+</div>
+</div>
+<div class="table-responsive">
+<table class="caption-top table">
+<colgroup><col style="width: 6%"><col style="width: 42%"><col style="width: 20%"><col style="width: 14%"><col style="width: 18%"></colgroup>
+<thead><tr class="header"><th style="text-align:center;">Part</th><th>Demo &amp; what you do</th><th>Lecture 4 section</th><th>Model</th><th>Notebook</th></tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align:center;"><strong>4A</strong></td>
+<td><strong>An image really is just numbers</strong><br><small>Open a photo, inspect its <code>(H, W, 3)</code> array, zoom to a patch, print every pixel&rsquo;s (R, G, B) values, then convert to grayscale (0&ndash;255).</small></td>
+<td>2 &middot; How Images Are Represented<br><a href="lectures/04_Computer_Vision.html#/demo-an-image-really-is-just-numbers">demo slide 17</a></td>
+<td>OpenCV + NumPy</td>
+<td style="white-space:nowrap;"><a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_4/02-image-as-numbers.ipynb">Colab</a> &middot; <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_4/02-image-as-numbers.ipynb">View</a> &middot; <a href="LAB/Lab_4/02-image-as-numbers.ipynb" download>Download</a></td>
+</tr>
+<tr class="even">
+<td style="text-align:center;"><strong>4B</strong></td>
+<td><strong>Classify a photo</strong><br><small>Top-5 labels with confidences; crop to one object or drop colour and watch the prediction change &mdash; and see why one label is not enough.</small></td>
+<td>3 &middot; Image Classification<br><a href="lectures/04_Computer_Vision.html#/demo-classify-a-photo">demo slide 25</a></td>
+<td>ResNet-50 (ImageNet)</td>
+<td style="white-space:nowrap;"><a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_4/03-image-classification.ipynb">Colab</a> &middot; <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_4/03-image-classification.ipynb">View</a> &middot; <a href="LAB/Lab_4/03-image-classification.ipynb" download>Download</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align:center;"><strong>4C</strong></td>
+<td><strong>Detect objects</strong><br><small>One pass &rarr; a box + label + confidence for every object; draw them with <code>supervision</code>; compare thresholds 0.2 vs 0.7.</small></td>
+<td>4 &middot; Object Detection<br><a href="lectures/04_Computer_Vision.html#/demo-detect-objects">demo slide 32</a></td>
+<td>RF-DETR Small (COCO)</td>
+<td style="white-space:nowrap;"><a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_4/04-object-detection.ipynb">Colab</a> &middot; <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_4/04-object-detection.ipynb">View</a> &middot; <a href="LAB/Lab_4/04-object-detection.ipynb" download>Download</a></td>
+</tr>
+<tr class="even">
+<td style="text-align:center;"><strong>4D</strong></td>
+<td><strong>Paint the pixels</strong><br><small>Per-object masks, box vs. mask, then use the mask to blur (&ldquo;portrait mode&rdquo;) or replace the background.</small></td>
+<td>5 &middot; Object Segmentation<br><a href="lectures/04_Computer_Vision.html#/demo-paint-the-pixels">demo slide 39</a></td>
+<td>RF-DETR Seg Small (COCO)</td>
+<td style="white-space:nowrap;"><a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_4/05-object-segmentation.ipynb">Colab</a> &middot; <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_4/05-object-segmentation.ipynb">View</a> &middot; <a href="LAB/Lab_4/05-object-segmentation.ipynb" download>Download</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align:center;"><strong>4E</strong></td>
+<td><strong>Ask the image a question</strong><br><small>Caption the scene, answer questions (VQA), reason about relationships &mdash; and probe where understanding still breaks.</small></td>
+<td>6 &middot; Image Understanding<br><a href="lectures/04_Computer_Vision.html#/demo-ask-the-image-a-question">demo slide 46</a></td>
+<td>SmolVLM2-500M (VLM)</td>
+<td style="white-space:nowrap;"><a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_4/06-image-understanding.ipynb">Colab</a> &middot; <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_4/06-image-understanding.ipynb">View</a> &middot; <a href="LAB/Lab_4/06-image-understanding.ipynb" download>Download</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><small>Model weights download on first run (ResNet-50 &asymp; 100&nbsp;MB, RF-DETR &asymp; 100&ndash;150&nbsp;MB each, SmolVLM2 &asymp; 1&nbsp;GB). Parts 4A&ndash;4D run on a laptop CPU or the Pi&nbsp;5; 4E is best on Colab or a laptop.</small></p>
 </section>
 
 <section id="research-papers" class="level2">
