@@ -169,6 +169,7 @@ window.Quarto = {
   <ul>
   <li><a href="#lab-list" id="toc-lab-list" class="nav-link" data-scroll-target="#lab-list">Lab-by-lab</a></li>
   <li><a href="#lab-4-demos" id="toc-lab-4-demos" class="nav-link" data-scroll-target="#lab-4-demos">Lab 4 Demos &amp; Examples</a></li>
+  <li><a href="#lab-5-lane-lines" id="toc-lab-5-lane-lines" class="nav-link" data-scroll-target="#lab-5-lane-lines">Lab 5 Lane Lines (SDC)</a></li>
   <li><a href="#research-papers" id="toc-research-papers" class="nav-link" data-scroll-target="#research-papers">Reading &amp; Implementing Research Papers</a></li>
   <li><a href="#opencv5-deep-dive" id="toc-opencv5-deep-dive" class="nav-link" data-scroll-target="#opencv5-deep-dive">OpenCV 5.0 Deep Dive</a></li>
   <li><a href="#capstone-project" id="toc-capstone-project" class="nav-link" data-scroll-target="#capstone-project">Capstone Project</a>
@@ -239,10 +240,10 @@ window.Quarto = {
 </tr>
 <tr class="odd">
 <td style="text-align:center;">5</td>
-<td><strong>Lab 5</strong></td>
-<td><strong>CV Fundamentals III &mdash; Contours &amp; Motion.</strong></td>
-<td>Find and draw contours; contour features (area, perimeter, bounding boxes, polygon approximation); background subtraction and frame differencing.</td>
-<td>A contour-based object counter + a motion detector.</td>
+<td><strong><a href="#lab-5-lane-lines">Lab 5</a></strong></td>
+<td><strong>Self-Driving Car Vision &mdash; Finding Lane Lines.</strong> Hands-on companion to <a href="lectures/05_SDC_Lane_Finding.html">Lecture&nbsp;5 Part&nbsp;II</a>.</td>
+<td>Four notebooks, one per pipeline stage: (5A) colour selection in RGB and HLS; (5B) region-of-interest masks; (5C) image gradients &amp; Canny edges; (5D) the Hough transform from scratch and with <code>cv2.HoughLinesP</code>. Then (5E) the full lane-finding pipeline on images and video &mdash; Assignment&nbsp;2.</td>
+<td>Notebooks 5A&ndash;5D with answers to each &ldquo;Your turn&rdquo; task; 5E submitted as Assignment&nbsp;2.</td>
 </tr>
 <tr class="even">
 <td style="text-align:center;">6</td>
@@ -381,6 +382,58 @@ window.Quarto = {
 </table>
 </div>
 <p><small>Model weights download on first run (ResNet-50 &asymp; 100&nbsp;MB, RF-DETR &asymp; 100&ndash;150&nbsp;MB each, SmolVLM2 &asymp; 1&nbsp;GB). Parts 4A&ndash;4D run on a laptop CPU or the Pi&nbsp;5; 4E is best on Colab or a laptop.</small></p>
+</section>
+
+<section id="lab-5-lane-lines" class="level2">
+<style>#lab-5-lane-lines tr[id]{scroll-margin-top:90px}#lab-5-lane-lines tr:target td{background:#fff4cc;transition:background .6s}</style>
+<h2 class="anchored" data-anchor-id="lab-5-lane-lines">Lab 5 &mdash; Self-Driving Car Vision: Finding Lane Lines</h2>
+<p>Lab 5 is the hands-on half of <a href="lectures/05_SDC_Lane_Finding.html"><strong>Lecture 5 (Part II) &mdash; Computer Vision for Self-Driving Cars</strong></a> (<a href="lectures/pdf/05_SDC_Lane_Finding.pdf">PDF</a>). The notebooks follow the lecture one step at a time and build a single pipeline: <strong>colour &rarr; region &rarr; edges &rarr; lines &rarr; lanes &rarr; video</strong>. Notebook 5E is <a href="assignments/index.html#assignment-2"><strong>Assignment 2</strong></a>. Adapted and updated from the <em>Finding Lane Lines</em> lesson and Project 1 of the Udacity Self-Driving Car Engineer Nanodegree.</p>
+<div class="d-flex gap-4 flex-wrap align-items-start mb-3">
+<img src="lectures/assets/05_sdc_lane_lines/lane_demo_poster.jpg" alt="Lane lines detected on a highway frame" style="width:280px; max-width:100%; border-radius:6px;">
+<div style="flex:1; min-width:260px;">
+<p class="mb-2"><strong>How to run:</strong> click <em>Colab</em> and run all cells (uncomment the <code>!pip install</code> line on a fresh runtime) &mdash; each notebook downloads the images it needs, and the project notebook fetches the test videos from the <a href="https://github.com/udacity/CarND-LaneLines-P1">Udacity project repository</a>. Locally or on the Raspberry&nbsp;Pi&nbsp;5: install <a href="LAB/Lab_5/requirements.txt"><code>requirements.txt</code></a> and open the notebooks in Jupyter (see the <a href="https://github.com/Kazimbalti/intelligent-vision-systems/tree/main/LAB/Lab_5">Lab 5 README</a>). No GPU or model downloads needed; tested with OpenCV 5.0.</p>
+<p class="mb-0"><strong>Deliverable:</strong> notebooks 5A&ndash;5D each end with three <em>&ldquo;Your turn&rdquo;</em> tasks &mdash; submit them with code, outputs and short answers. Notebook 5E is submitted as Assignment 2 (with your two output videos and the <a href="LAB/Lab_5/writeup_template.md">write-up</a>).</p>
+</div>
+</div>
+<div class="table-responsive">
+<table class="caption-top table">
+<colgroup><col style="width: 6%"><col style="width: 50%"><col style="width: 22%"><col style="width: 22%"></colgroup>
+<thead><tr class="header"><th style="text-align:center;">Part</th><th>What you do</th><th>Lecture 5 Part II section</th><th>Notebook</th></tr></thead>
+<tbody>
+<tr id="lab-5a" class="odd">
+<td style="text-align:center;"><strong>5A</strong></td>
+<td><strong>Colour selection</strong><br><small>Read <code>test.jpg</code> as an array, black out pixels below RGB thresholds (the Udacity quiz), then see yellow lines vanish under RGB and recover them with an HLS white + yellow mask.</small></td>
+<td>2 &middot; Colour selection<br><a href="lectures/05_SDC_Lane_Finding.html#/demo-colour-selection">lecture slide</a></td>
+<td style="white-space:nowrap;"><a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_5/01-color-selection.ipynb">Colab</a> &middot; <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_5/01-color-selection.ipynb">View</a> &middot; <a href="LAB/Lab_5/01-color-selection.ipynb" download>Download</a></td>
+</tr>
+<tr id="lab-5b" class="even">
+<td style="text-align:center;"><strong>5B</strong></td>
+<td><strong>Region of interest masking</strong><br><small>Build a triangular mask with <code>np.polyfit</code> + <code>np.meshgrid</code>, combine colour <em>and</em> region, then generalise to any polygon with <code>cv2.fillPoly</code>.</small></td>
+<td>3 &middot; Region masking<br><a href="lectures/05_SDC_Lane_Finding.html#/coding-up-a-region-of-interest-mask">lecture slide</a></td>
+<td style="white-space:nowrap;"><a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_5/02-region-masking.ipynb">Colab</a> &middot; <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_5/02-region-masking.ipynb">View</a> &middot; <a href="LAB/Lab_5/02-region-masking.ipynb" download>Download</a></td>
+</tr>
+<tr id="lab-5c" class="odd">
+<td style="text-align:center;"><strong>5C</strong></td>
+<td><strong>Canny edge detection</strong><br><small>Plot a cross-section and its derivative, compute Sobel gradients, then tune Gaussian blur and the Canny low/high thresholds (ratio 1:2 &ndash; 1:3).</small></td>
+<td>4 &middot; Canny edge detection<br><a href="lectures/05_SDC_Lane_Finding.html#/demo-canny-thresholds">lecture slide</a></td>
+<td style="white-space:nowrap;"><a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_5/03-canny-edges.ipynb">Colab</a> &middot; <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_5/03-canny-edges.ipynb">View</a> &middot; <a href="LAB/Lab_5/03-canny-edges.ipynb" download>Download</a></td>
+</tr>
+<tr id="lab-5d" class="even">
+<td style="text-align:center;"><strong>5D</strong></td>
+<td><strong>Hough transform</strong><br><small>Code a Hough accumulator from scratch on toy points, then use <code>cv2.HoughLinesP</code> with a quadrilateral mask to keep only the lane lines.</small></td>
+<td>5 &middot; Hough transform<br><a href="lectures/05_SDC_Lane_Finding.html#/demo-hough-space">lecture slide</a></td>
+<td style="white-space:nowrap;"><a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_5/04-hough-lines.ipynb">Colab</a> &middot; <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_5/04-hough-lines.ipynb">View</a> &middot; <a href="LAB/Lab_5/04-hough-lines.ipynb" download>Download</a></td>
+</tr>
+<tr id="lab-5e" class="odd">
+<td style="text-align:center;"><strong>5E</strong></td>
+<td><strong>Assignment 2 &mdash; lane-finding project</strong><br><small>The full pipeline on six test images and two videos: average + extrapolate to one line per lane, smooth across frames, write up the shortcomings. <a href="assignments/index.html#assignment-2">Hand-out &amp; rubric</a>.</small></td>
+<td>6&ndash;7 &middot; Pipeline &amp; Assignment 2<br><a href="lectures/05_SDC_Lane_Finding.html#/assignment-2-finding-lane-lines">lecture slide</a></td>
+<td style="white-space:nowrap;"><a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_5/05-lane-finding-project.ipynb">Colab</a> &middot; <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_5/05-lane-finding-project.ipynb">View</a> &middot; <a href="LAB/Lab_5/05-lane-finding-project.ipynb" download>Download</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><small>Test images and videos &copy; Udacity, Inc. (<a href="https://github.com/udacity/CarND-LaneLines-P1">CarND-LaneLines-P1</a>, MIT licence).</small></p>
 </section>
 
 <section id="research-papers" class="level2">

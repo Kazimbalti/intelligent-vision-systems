@@ -1,0 +1,9 @@
+# Lab 5 — Self-Driving Car Vision: Finding Lane Lines (companion to Lecture 5 Part II)
+# Python 3.10–3.12.  Install:  pip install -r requirements.txt
+opencv-python        # tested with OpenCV 5.0 (4.x works too)
+numpy
+matplotlib
+imageio              # video read/write for the project (notebook 05)
+imageio-ffmpeg
+ipywidgets           # optional sliders in notebook 01
+jupyter

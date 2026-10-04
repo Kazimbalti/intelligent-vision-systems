@@ -21,3 +21,10 @@ node_modules/
 # Local scratch / temp
 *.tmp
 .quarto/
+
+# Instructor-only solutions (kept local, never published)
+lectures/Lecture_5/Assignment_2_solution/
+# Outputs produced when students run the Lab 5 project notebook
+LAB/Lab_5/test_videos/
+LAB/Lab_5/test_videos_output/
+LAB/Lab_5/test_images_output/

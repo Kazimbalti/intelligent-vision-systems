@@ -176,8 +176,8 @@ ul.task-list li input[type="checkbox"] {
 <td>Out Week 3 &middot; due Week 4</td>
 </tr>
 <tr class="even">
-<td><strong>Assignment 2</strong><br>Filtering &amp; features</td>
-<td>Implement and compare smoothing/edge filters and a feature matcher (ORB/SIFT); report robustness to noise and rotation.</td>
+<td><strong><a href="#assignment-2">Assignment 2</a></strong><br>Finding lane lines</td>
+<td>Build a self-driving-car lane-finding pipeline &mdash; colour selection, Gaussian blur, Canny edges, region mask and Hough lines &mdash; then average and extrapolate to one line per lane on six test images and two videos, and write up its shortcomings (<a href="../lectures/05_SDC_Lane_Finding.html">Lecture 5 Part II</a>, <a href="../labs.html#lab-5-lane-lines">Lab 5</a>).</td>
 <td>Out Week 6 &middot; due Week 7</td>
 </tr>
 <tr class="odd">
@@ -196,6 +196,40 @@ ul.task-list li input[type="checkbox"] {
 
 <p><strong>Quizzes:</strong> short in-class quizzes at the start of selected sessions test the previous week's theory (best scores counted).</p>
 <p>Assignment hand-outs, starter files, and rubrics will be posted here as each one goes out.</p>
+
+<section id="assignment-2" class="level2">
+<h2 class="anchored" data-anchor-id="assignment-2">Assignment 2 &mdash; Finding Lane Lines on the Road</h2>
+<p><strong>Out:</strong> Week 6 (Mon 5 Oct 2026) &middot; <strong>Due:</strong> before the Week 7 session (Mon 12 Oct 2026) &middot; individual &middot; companion to <a href="../lectures/05_SDC_Lane_Finding.html">Lecture 5 Part II &mdash; Computer Vision for Self-Driving Cars</a> (<a href="../lectures/pdf/05_SDC_Lane_Finding.pdf">PDF</a>) and <a href="../labs.html#lab-5-lane-lines">Lab 5</a>.</p>
+<p>Write a pipeline that identifies the lane lines on the road, first in six test images and then in two video streams. Adapted from Project 1 of the Udacity Self-Driving Car Engineer Nanodegree (<a href="https://github.com/udacity/CarND-LaneLines-P1">udacity/CarND-LaneLines-P1</a>, MIT licence).</p>
+<p><a class="btn btn-primary btn-sm" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_5/05-lane-finding-project.ipynb">Open the starter notebook in Colab</a> <a class="btn btn-outline-secondary btn-sm" href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_5/05-lane-finding-project.ipynb">View on GitHub</a> <a class="btn btn-outline-secondary btn-sm" href="../LAB/Lab_5/05-lane-finding-project.ipynb" download>Download notebook</a> <a class="btn btn-outline-secondary btn-sm" href="../LAB/Lab_5/writeup_template.md">Write-up template</a></p>
+<h3 class="anchored">Tasks &amp; marks</h3>
+<div class="table-responsive">
+<table class="caption-top table">
+<thead><tr class="header"><th style="width:8%">Part</th><th>Task</th><th style="width:10%">Marks</th></tr></thead>
+<tbody>
+<tr class="odd"><td>1</td><td><strong>Pipeline.</strong> Implement <code>process_image()</code> from the lecture tools (grayscale, Gaussian blur, Canny, region of interest, Hough lines, overlay) and run it on all six test images; show intermediate results for one image.</td><td>30</td></tr>
+<tr class="even"><td>2</td><td><strong>One line per lane.</strong> Rewrite <code>draw_lines()</code> to separate segments by slope, average them and extrapolate a single solid line for the left and right lane from the bottom of the image towards the horizon.</td><td>30</td></tr>
+<tr class="odd"><td>3</td><td><strong>Video.</strong> Process <code>solidWhiteRight.mp4</code> and <code>solidYellowLeft.mp4</code>; the lines must stay on the lanes for the whole clip with little jitter (e.g. smooth slope/intercept across frames, reuse the last good line when none is found).</td><td>20</td></tr>
+<tr class="even"><td>4</td><td><strong>Write-up.</strong> Describe the pipeline and your parameter choices with evidence, list honest shortcomings, and suggest improvements.</td><td>20</td></tr>
+<tr class="odd"><td>&#9733;</td><td><strong>Bonus.</strong> Make the pipeline work on <code>challenge.mp4</code> (curve, shadows, bright concrete, 1280&times;720).</td><td>+10</td></tr>
+</tbody>
+</table>
+</div>
+<h3 class="anchored">What to submit</h3>
+<ol type="1">
+<li><code>05-lane-finding-project.ipynb</code> with all cells run and outputs visible.</li>
+<li>Your output videos: <code>test_videos_output/solidWhiteRight.mp4</code> and <code>test_videos_output/solidYellowLeft.mp4</code> (and <code>challenge.mp4</code> if attempted).</li>
+<li>The write-up (last notebook cell or <code>writeup.md</code> based on the <a href="../LAB/Lab_5/writeup_template.md">template</a>).</li>
+</ol>
+<h3 class="anchored">Marking guide</h3>
+<ul>
+<li><strong>Excellent (85&ndash;100%)</strong> &mdash; one stable, well-placed line per lane on every image and throughout both videos; resolution-independent region; parameter choices justified with intermediate images; insightful, specific shortcomings and improvements.</li>
+<li><strong>Good (65&ndash;84%)</strong> &mdash; lanes found on all images and most video frames, with occasional jitter or a short drop-out; reasonable write-up.</li>
+<li><strong>Satisfactory (40&ndash;64%)</strong> &mdash; working pipeline, but lines are segmented or unstable on video, or the write-up is generic.</li>
+<li><strong>Insufficient (&lt;40%)</strong> &mdash; pipeline incomplete or does not run.</li>
+</ul>
+<p><strong>Academic integrity:</strong> many solutions to this Udacity project are online. Write your own code and be ready to explain any line of it in a short viva; code you cannot explain earns no marks. Cite any external source you used.</p>
+</section>
 
 
 
