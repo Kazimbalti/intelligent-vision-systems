@@ -170,6 +170,7 @@ window.Quarto = {
   <li><a href="#lab-list" id="toc-lab-list" class="nav-link" data-scroll-target="#lab-list">Lab-by-lab</a></li>
   <li><a href="#lab-4-demos" id="toc-lab-4-demos" class="nav-link" data-scroll-target="#lab-4-demos">Lab 4 Demos &amp; Examples</a></li>
   <li><a href="#lab-5-lane-lines" id="toc-lab-5-lane-lines" class="nav-link" data-scroll-target="#lab-5-lane-lines">Lab 5 Lane Lines (SDC)</a></li>
+  <li><a href="#lab-5-leaderboard" id="toc-lab-5-leaderboard" class="nav-link" data-scroll-target="#lab-5-leaderboard">Lab 5 Leaderboard</a></li>
   <li><a href="#research-papers" id="toc-research-papers" class="nav-link" data-scroll-target="#research-papers">Reading &amp; Implementing Research Papers</a></li>
   <li><a href="#opencv5-deep-dive" id="toc-opencv5-deep-dive" class="nav-link" data-scroll-target="#opencv5-deep-dive">OpenCV 5.0 Deep Dive</a></li>
   <li><a href="#capstone-project" id="toc-capstone-project" class="nav-link" data-scroll-target="#capstone-project">Capstone Project</a>
@@ -242,7 +243,7 @@ window.Quarto = {
 <td style="text-align:center;">5</td>
 <td><strong><a href="#lab-5-lane-lines">Lab 5</a></strong></td>
 <td><strong>Self-Driving Car Vision &mdash; Finding Lane Lines.</strong> Hands-on companion to <a href="lectures/05_SDC_Lane_Finding.html">Lecture&nbsp;5 Part&nbsp;II</a>.</td>
-<td>Four notebooks, one per pipeline stage: (5A) colour selection in RGB and HLS; (5B) region-of-interest masks; (5C) image gradients &amp; Canny edges; (5D) the Hough transform from scratch and with <code>cv2.HoughLinesP</code>. Then (5E) the full lane-finding pipeline on images and video &mdash; Assignment&nbsp;2.</td>
+<td>Four notebooks, one per pipeline stage: (5A) colour selection in RGB and HLS; (5B) region-of-interest masks; (5C) image gradients &amp; Canny edges; (5D) the Hough transform from scratch and with <code>cv2.HoughLinesP</code>. Then (5E) the full lane-finding pipeline on images and video &mdash; Assignment&nbsp;2; (5F) a pair-programming bug hunt; (5G) a class <a href="#lab-5-leaderboard">leaderboard</a>. Notebooks 5A&ndash;5D have built-in &#x2705; auto-checks.</td>
 <td>Notebooks 5A&ndash;5D with answers to each &ldquo;Your turn&rdquo; task; 5E submitted as Assignment&nbsp;2.</td>
 </tr>
 <tr class="even">
@@ -392,6 +393,7 @@ window.Quarto = {
 <img src="lectures/assets/05_sdc_lane_lines/lane_demo_poster.jpg" alt="Lane lines detected on a highway frame" style="width:280px; max-width:100%; border-radius:6px;">
 <div style="flex:1; min-width:260px;">
 <p class="mb-2"><strong>How to run:</strong> click <em>Colab</em> and run all cells (uncomment the <code>!pip install</code> line on a fresh runtime) &mdash; each notebook downloads the images it needs, and the project notebook fetches the test videos from the <a href="https://github.com/udacity/CarND-LaneLines-P1">Udacity project repository</a>. Locally or on the Raspberry&nbsp;Pi&nbsp;5: install <a href="LAB/Lab_5/requirements.txt"><code>requirements.txt</code></a> and open the notebooks in Jupyter (see the <a href="https://github.com/Kazimbalti/intelligent-vision-systems/tree/main/LAB/Lab_5">Lab 5 README</a>). No GPU or model downloads needed; tested with OpenCV 5.0.</p>
+<p class="mb-2"><strong>Auto-checks:</strong> after each quiz in 5A&ndash;5D a &#x2705; check cell tells you whether your result is good enough, or gives a &#x1F4A1; hint &mdash; never the answer &mdash; so pairs can check themselves without waiting for the TA.</p>
 <p class="mb-0"><strong>Deliverable:</strong> notebooks 5A&ndash;5D each end with three <em>&ldquo;Your turn&rdquo;</em> tasks &mdash; submit them with code, outputs and short answers. Notebook 5E is submitted as Assignment 2 (with your two output videos and the <a href="LAB/Lab_5/writeup_template.md">write-up</a>).</p>
 </div>
 </div>
@@ -430,10 +432,60 @@ window.Quarto = {
 <td>6&ndash;7 &middot; Pipeline &amp; Assignment 2<br><a href="lectures/05_SDC_Lane_Finding.html#/assignment-2-finding-lane-lines">lecture slide</a></td>
 <td style="white-space:nowrap;"><a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_5/05-lane-finding-project.ipynb">Colab</a> &middot; <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_5/05-lane-finding-project.ipynb">View</a> &middot; <a href="LAB/Lab_5/05-lane-finding-project.ipynb" download>Download</a></td>
 </tr>
+<tr id="lab-5f" class="even">
+<td style="text-align:center;"><strong>5F</strong></td>
+<td><strong>Bug hunt &#x1F41E; (pairs)</strong><br><small>Eight planted classic bugs &mdash; BGR vs RGB, array aliasing, PNG 0&ndash;1 values, even blur kernel, float polygon, <code>HoughLinesP</code> returning <code>None</code>, swapped slope sign, divide-by-zero. Predict, run, fix; each bug has its own check and the scoreboard counts to 8/8.</small></td>
+<td>Common pitfalls<br><a href="lectures/05_SDC_Lane_Finding.html#/common-pitfalls">lecture slide</a></td>
+<td style="white-space:nowrap;"><a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_5/06-bug-hunt.ipynb">Colab</a> &middot; <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_5/06-bug-hunt.ipynb">View</a> &middot; <a href="LAB/Lab_5/06-bug-hunt.ipynb" download>Download</a></td>
+</tr>
+<tr id="lab-5g" class="odd">
+<td style="text-align:center;"><strong>5G</strong></td>
+<td><strong>Leaderboard &#x1F3C1;</strong><br><small>Score your <code>lane_lines()</code> on 92 labelled frames (46 clean + 46 degraded by night, shadows, haze, noise, glare, faded paint), see your worst frames, and submit to the <a href="#lab-5-leaderboard">class leaderboard</a>.</small></td>
+<td>Pipeline &amp; Assignment 2<br><a href="lectures/05_SDC_Lane_Finding.html#/assignment-2-finding-lane-lines">lecture slide</a></td>
+<td style="white-space:nowrap;"><a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_5/07-leaderboard.ipynb">Colab</a> &middot; <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_5/07-leaderboard.ipynb">View</a> &middot; <a href="LAB/Lab_5/07-leaderboard.ipynb" download>Download</a></td>
+</tr>
 </tbody>
 </table>
 </div>
 <p><small>Test images and videos &copy; Udacity, Inc. (<a href="https://github.com/udacity/CarND-LaneLines-P1">CarND-LaneLines-P1</a>, MIT licence).</small></p>
+</section>
+
+<section id="lab-5-leaderboard" class="level2">
+<h2 class="anchored" data-anchor-id="lab-5-leaderboard">Lab 5 Leaderboard &mdash; Lane Finding &#x1F3C1;</h2>
+<p>Teams score their lane finder with <a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_5/07-leaderboard.ipynb">07-leaderboard.ipynb</a> on <strong>92 frames</strong>: 46 clean frames from the Udacity videos and test images, and 46 <strong>hard</strong> copies degraded by night, tree shadows, haze, sensor noise, glare or faded paint. A lane is correct when it is within 20&nbsp;px of the label on average. Ranking: overall accuracy, then mean error, then speed. Send the line your notebook prints to the TA to appear here.</p>
+<div class="table-responsive">
+<table class="caption-top table" id="lb-table">
+<thead><tr class="header"><th style="text-align:center;">#</th><th>Team</th><th style="text-align:right;">Overall</th><th style="text-align:right;">Clean</th><th style="text-align:right;">Hard</th><th style="text-align:right;">Mean error</th><th style="text-align:right;">Speed</th></tr></thead>
+<tbody><tr><td colspan="7"><small>Loading the leaderboard&hellip;</small></td></tr></tbody>
+</table>
+</div>
+<p><small id="lb-note"></small></p>
+<script>
+(function () {
+  var tb = document.querySelector("#lb-table tbody");
+  var esc = function (t) { return String(t).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
+  fetch("LAB/Lab_5/leaderboard/leaderboard.json", { cache: "no-store" })
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      var e = d.entries.slice().sort(function (a, b) {
+        return (b.accuracy - a.accuracy) || (a.mean_error_px - b.mean_error_px) || (b.fps - a.fps);
+      });
+      var rank = 0, medals = ["&#x1F947;", "&#x1F948;", "&#x1F949;"];
+      tb.innerHTML = e.map(function (x) {
+        var r = x.reference ? "&ndash;" : (++rank <= 3 ? medals[rank - 1] : rank);
+        return '<tr' + (x.reference ? ' style="color:#5b6b7b;font-style:italic;"' : '') + '><td style="text-align:center;">' + r +
+          '</td><td>' + esc(x.team) + '</td><td style="text-align:right;"><strong>' + Number(x.accuracy).toFixed(1) + '%</strong></td>' +
+          '<td style="text-align:right;">' + Number(x.clean).toFixed(1) + '%</td><td style="text-align:right;">' + Number(x.hard).toFixed(1) +
+          '%</td><td style="text-align:right;">' + Number(x.mean_error_px).toFixed(1) + ' px</td><td style="text-align:right;">' +
+          Math.round(x.fps) + ' fps</td></tr>';
+      }).join("");
+      document.getElementById("lb-note").textContent = "Updated " + d.updated + ". Grey rows are instructor reference entries (not ranked). " + d.note;
+    })
+    .catch(function () {
+      tb.innerHTML = '<tr><td colspan="7"><small>Leaderboard unavailable here &mdash; open this page on the course website.</small></td></tr>';
+    });
+})();
+</script>
 </section>
 
 <section id="research-papers" class="level2">

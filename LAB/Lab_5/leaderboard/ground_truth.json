@@ -1,0 +1,1709 @@
+{
+ "description": "Lab 5 lane-line leaderboard: 46 clean frames (40 from the two Udacity videos + 6 test images) and 46 'hard' copies, each degraded by one condition (night, shadows, haze, noise, glare, faded paint). Each lane is a straight line from the bottom row to 60% of the image height, (x_bottom, y_bottom, x_top, y_top). Labels made with the instructor reference pipeline on the clean frames (temporally smoothed for video) and checked by eye; degradations do not move the lanes.",
+ "eval_rows_from": 0.65,
+ "tolerance_px": 20,
+ "frames": [
+  {
+   "file": "frames/swr_015.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    151.6,
+    539,
+    450.9,
+    324
+   ],
+   "right": [
+    849.3,
+    539,
+    508.6,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/swr_025.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    151.3,
+    539,
+    455.2,
+    324
+   ],
+   "right": [
+    846.3,
+    539,
+    508.7,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/swr_036.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    153.3,
+    539,
+    456.2,
+    324
+   ],
+   "right": [
+    844.8,
+    539,
+    508.5,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/swr_046.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    152.1,
+    539,
+    450.9,
+    324
+   ],
+   "right": [
+    843.6,
+    539,
+    511.3,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/swr_057.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    146.5,
+    539,
+    449.0,
+    324
+   ],
+   "right": [
+    844.1,
+    539,
+    508.9,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/swr_067.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    141.7,
+    539,
+    450.1,
+    324
+   ],
+   "right": [
+    834.2,
+    539,
+    508.0,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/swr_078.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    133.4,
+    539,
+    448.6,
+    324
+   ],
+   "right": [
+    829.9,
+    539,
+    505.7,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/swr_089.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    126.5,
+    539,
+    449.1,
+    324
+   ],
+   "right": [
+    819.0,
+    539,
+    507.7,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/swr_099.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    126.8,
+    539,
+    452.8,
+    324
+   ],
+   "right": [
+    818.7,
+    539,
+    514.3,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/swr_110.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    137.5,
+    539,
+    455.7,
+    324
+   ],
+   "right": [
+    828.1,
+    539,
+    514.6,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/swr_120.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    139.1,
+    539,
+    452.3,
+    324
+   ],
+   "right": [
+    837.4,
+    539,
+    513.2,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/swr_131.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    147.7,
+    539,
+    457.2,
+    324
+   ],
+   "right": [
+    847.0,
+    539,
+    511.2,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/swr_141.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    155.2,
+    539,
+    455.8,
+    324
+   ],
+   "right": [
+    851.0,
+    539,
+    512.8,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/swr_152.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    160.3,
+    539,
+    455.8,
+    324
+   ],
+   "right": [
+    857.2,
+    539,
+    514.9,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/swr_163.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    166.7,
+    539,
+    455.6,
+    324
+   ],
+   "right": [
+    871.8,
+    539,
+    516.6,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/swr_173.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    180.9,
+    539,
+    460.9,
+    324
+   ],
+   "right": [
+    876.7,
+    539,
+    511.4,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/swr_184.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    188.9,
+    539,
+    457.2,
+    324
+   ],
+   "right": [
+    878.6,
+    539,
+    514.5,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/swr_194.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    185.6,
+    539,
+    458.1,
+    324
+   ],
+   "right": [
+    884.0,
+    539,
+    516.0,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/swr_205.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    185.3,
+    539,
+    456.1,
+    324
+   ],
+   "right": [
+    887.8,
+    539,
+    515.4,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/swr_216.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    186.7,
+    539,
+    455.6,
+    324
+   ],
+   "right": [
+    890.2,
+    539,
+    509.9,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/syl_015.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    138.6,
+    539,
+    462.2,
+    324
+   ],
+   "right": [
+    846.6,
+    539,
+    513.0,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/syl_049.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    156.3,
+    539,
+    448.8,
+    324
+   ],
+   "right": [
+    868.2,
+    539,
+    515.5,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/syl_084.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    147.8,
+    539,
+    451.8,
+    324
+   ],
+   "right": [
+    845.7,
+    539,
+    509.6,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/syl_119.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    149.9,
+    539,
+    456.9,
+    324
+   ],
+   "right": [
+    843.3,
+    539,
+    508.4,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/syl_154.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    154.5,
+    539,
+    459.1,
+    324
+   ],
+   "right": [
+    853.3,
+    539,
+    507.0,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/syl_188.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    185.8,
+    539,
+    462.4,
+    324
+   ],
+   "right": [
+    887.0,
+    539,
+    502.0,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/syl_223.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    165.8,
+    539,
+    458.3,
+    324
+   ],
+   "right": [
+    859.9,
+    539,
+    498.8,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/syl_258.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    161.2,
+    539,
+    459.3,
+    324
+   ],
+   "right": [
+    852.7,
+    539,
+    500.1,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/syl_293.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    164.6,
+    539,
+    462.2,
+    324
+   ],
+   "right": [
+    858.6,
+    539,
+    491.1,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/syl_328.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    155.3,
+    539,
+    456.6,
+    324
+   ],
+   "right": [
+    856.0,
+    539,
+    498.4,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/syl_362.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    149.5,
+    539,
+    458.3,
+    324
+   ],
+   "right": [
+    854.7,
+    539,
+    497.7,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/syl_397.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    144.4,
+    539,
+    454.2,
+    324
+   ],
+   "right": [
+    841.2,
+    539,
+    496.3,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/syl_432.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    146.2,
+    539,
+    458.7,
+    324
+   ],
+   "right": [
+    839.5,
+    539,
+    502.9,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/syl_467.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    139.4,
+    539,
+    456.1,
+    324
+   ],
+   "right": [
+    851.7,
+    539,
+    500.1,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/syl_502.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    150.4,
+    539,
+    456.1,
+    324
+   ],
+   "right": [
+    848.0,
+    539,
+    508.7,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/syl_536.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    150.1,
+    539,
+    462.8,
+    324
+   ],
+   "right": [
+    847.7,
+    539,
+    503.0,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/syl_571.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    167.4,
+    539,
+    461.7,
+    324
+   ],
+   "right": [
+    870.5,
+    539,
+    509.0,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/syl_606.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    183.0,
+    539,
+    467.4,
+    324
+   ],
+   "right": [
+    881.7,
+    539,
+    505.9,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/syl_641.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    189.2,
+    539,
+    459.0,
+    324
+   ],
+   "right": [
+    877.0,
+    539,
+    501.6,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/syl_676.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    162.3,
+    539,
+    461.8,
+    324
+   ],
+   "right": [
+    863.9,
+    539,
+    505.3,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/img_solidWhiteCurve.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    191.0,
+    539,
+    461.0,
+    324
+   ],
+   "right": [
+    885.4,
+    539,
+    510.0,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/img_solidWhiteRight.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    151.1,
+    539,
+    454.4,
+    324
+   ],
+   "right": [
+    841.6,
+    539,
+    509.9,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/img_solidYellowCurve.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    166.5,
+    539,
+    460.5,
+    324
+   ],
+   "right": [
+    860.3,
+    539,
+    496.1,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/img_solidYellowCurve2.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    169.1,
+    539,
+    458.1,
+    324
+   ],
+   "right": [
+    861.4,
+    539,
+    499.3,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/img_solidYellowLeft.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    145.7,
+    539,
+    459.2,
+    324
+   ],
+   "right": [
+    853.9,
+    539,
+    501.3,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/img_whiteCarLaneSwitch.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    188.2,
+    539,
+    462.7,
+    324
+   ],
+   "right": [
+    876.5,
+    539,
+    495.6,
+    324
+   ],
+   "set": "clean"
+  },
+  {
+   "file": "frames/hard_swr_015_night.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    151.6,
+    539,
+    450.9,
+    324
+   ],
+   "right": [
+    849.3,
+    539,
+    508.6,
+    324
+   ],
+   "set": "hard",
+   "condition": "night"
+  },
+  {
+   "file": "frames/hard_swr_025_shadows.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    151.3,
+    539,
+    455.2,
+    324
+   ],
+   "right": [
+    846.3,
+    539,
+    508.7,
+    324
+   ],
+   "set": "hard",
+   "condition": "shadows"
+  },
+  {
+   "file": "frames/hard_swr_036_haze.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    153.3,
+    539,
+    456.2,
+    324
+   ],
+   "right": [
+    844.8,
+    539,
+    508.5,
+    324
+   ],
+   "set": "hard",
+   "condition": "haze"
+  },
+  {
+   "file": "frames/hard_swr_046_noise.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    152.1,
+    539,
+    450.9,
+    324
+   ],
+   "right": [
+    843.6,
+    539,
+    511.3,
+    324
+   ],
+   "set": "hard",
+   "condition": "noise"
+  },
+  {
+   "file": "frames/hard_swr_057_glare.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    146.5,
+    539,
+    449.0,
+    324
+   ],
+   "right": [
+    844.1,
+    539,
+    508.9,
+    324
+   ],
+   "set": "hard",
+   "condition": "glare"
+  },
+  {
+   "file": "frames/hard_swr_067_faded.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    141.7,
+    539,
+    450.1,
+    324
+   ],
+   "right": [
+    834.2,
+    539,
+    508.0,
+    324
+   ],
+   "set": "hard",
+   "condition": "faded"
+  },
+  {
+   "file": "frames/hard_swr_078_night.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    133.4,
+    539,
+    448.6,
+    324
+   ],
+   "right": [
+    829.9,
+    539,
+    505.7,
+    324
+   ],
+   "set": "hard",
+   "condition": "night"
+  },
+  {
+   "file": "frames/hard_swr_089_shadows.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    126.5,
+    539,
+    449.1,
+    324
+   ],
+   "right": [
+    819.0,
+    539,
+    507.7,
+    324
+   ],
+   "set": "hard",
+   "condition": "shadows"
+  },
+  {
+   "file": "frames/hard_swr_099_haze.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    126.8,
+    539,
+    452.8,
+    324
+   ],
+   "right": [
+    818.7,
+    539,
+    514.3,
+    324
+   ],
+   "set": "hard",
+   "condition": "haze"
+  },
+  {
+   "file": "frames/hard_swr_110_noise.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    137.5,
+    539,
+    455.7,
+    324
+   ],
+   "right": [
+    828.1,
+    539,
+    514.6,
+    324
+   ],
+   "set": "hard",
+   "condition": "noise"
+  },
+  {
+   "file": "frames/hard_swr_120_glare.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    139.1,
+    539,
+    452.3,
+    324
+   ],
+   "right": [
+    837.4,
+    539,
+    513.2,
+    324
+   ],
+   "set": "hard",
+   "condition": "glare"
+  },
+  {
+   "file": "frames/hard_swr_131_faded.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    147.7,
+    539,
+    457.2,
+    324
+   ],
+   "right": [
+    847.0,
+    539,
+    511.2,
+    324
+   ],
+   "set": "hard",
+   "condition": "faded"
+  },
+  {
+   "file": "frames/hard_swr_141_night.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    155.2,
+    539,
+    455.8,
+    324
+   ],
+   "right": [
+    851.0,
+    539,
+    512.8,
+    324
+   ],
+   "set": "hard",
+   "condition": "night"
+  },
+  {
+   "file": "frames/hard_swr_152_shadows.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    160.3,
+    539,
+    455.8,
+    324
+   ],
+   "right": [
+    857.2,
+    539,
+    514.9,
+    324
+   ],
+   "set": "hard",
+   "condition": "shadows"
+  },
+  {
+   "file": "frames/hard_swr_163_haze.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    166.7,
+    539,
+    455.6,
+    324
+   ],
+   "right": [
+    871.8,
+    539,
+    516.6,
+    324
+   ],
+   "set": "hard",
+   "condition": "haze"
+  },
+  {
+   "file": "frames/hard_swr_173_noise.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    180.9,
+    539,
+    460.9,
+    324
+   ],
+   "right": [
+    876.7,
+    539,
+    511.4,
+    324
+   ],
+   "set": "hard",
+   "condition": "noise"
+  },
+  {
+   "file": "frames/hard_swr_184_glare.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    188.9,
+    539,
+    457.2,
+    324
+   ],
+   "right": [
+    878.6,
+    539,
+    514.5,
+    324
+   ],
+   "set": "hard",
+   "condition": "glare"
+  },
+  {
+   "file": "frames/hard_swr_194_faded.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    185.6,
+    539,
+    458.1,
+    324
+   ],
+   "right": [
+    884.0,
+    539,
+    516.0,
+    324
+   ],
+   "set": "hard",
+   "condition": "faded"
+  },
+  {
+   "file": "frames/hard_swr_205_night.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    185.3,
+    539,
+    456.1,
+    324
+   ],
+   "right": [
+    887.8,
+    539,
+    515.4,
+    324
+   ],
+   "set": "hard",
+   "condition": "night"
+  },
+  {
+   "file": "frames/hard_swr_216_shadows.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    186.7,
+    539,
+    455.6,
+    324
+   ],
+   "right": [
+    890.2,
+    539,
+    509.9,
+    324
+   ],
+   "set": "hard",
+   "condition": "shadows"
+  },
+  {
+   "file": "frames/hard_syl_015_haze.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    138.6,
+    539,
+    462.2,
+    324
+   ],
+   "right": [
+    846.6,
+    539,
+    513.0,
+    324
+   ],
+   "set": "hard",
+   "condition": "haze"
+  },
+  {
+   "file": "frames/hard_syl_049_noise.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    156.3,
+    539,
+    448.8,
+    324
+   ],
+   "right": [
+    868.2,
+    539,
+    515.5,
+    324
+   ],
+   "set": "hard",
+   "condition": "noise"
+  },
+  {
+   "file": "frames/hard_syl_084_glare.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    147.8,
+    539,
+    451.8,
+    324
+   ],
+   "right": [
+    845.7,
+    539,
+    509.6,
+    324
+   ],
+   "set": "hard",
+   "condition": "glare"
+  },
+  {
+   "file": "frames/hard_syl_119_faded.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    149.9,
+    539,
+    456.9,
+    324
+   ],
+   "right": [
+    843.3,
+    539,
+    508.4,
+    324
+   ],
+   "set": "hard",
+   "condition": "faded"
+  },
+  {
+   "file": "frames/hard_syl_154_night.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    154.5,
+    539,
+    459.1,
+    324
+   ],
+   "right": [
+    853.3,
+    539,
+    507.0,
+    324
+   ],
+   "set": "hard",
+   "condition": "night"
+  },
+  {
+   "file": "frames/hard_syl_188_shadows.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    185.8,
+    539,
+    462.4,
+    324
+   ],
+   "right": [
+    887.0,
+    539,
+    502.0,
+    324
+   ],
+   "set": "hard",
+   "condition": "shadows"
+  },
+  {
+   "file": "frames/hard_syl_223_haze.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    165.8,
+    539,
+    458.3,
+    324
+   ],
+   "right": [
+    859.9,
+    539,
+    498.8,
+    324
+   ],
+   "set": "hard",
+   "condition": "haze"
+  },
+  {
+   "file": "frames/hard_syl_258_noise.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    161.2,
+    539,
+    459.3,
+    324
+   ],
+   "right": [
+    852.7,
+    539,
+    500.1,
+    324
+   ],
+   "set": "hard",
+   "condition": "noise"
+  },
+  {
+   "file": "frames/hard_syl_293_glare.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    164.6,
+    539,
+    462.2,
+    324
+   ],
+   "right": [
+    858.6,
+    539,
+    491.1,
+    324
+   ],
+   "set": "hard",
+   "condition": "glare"
+  },
+  {
+   "file": "frames/hard_syl_328_faded.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    155.3,
+    539,
+    456.6,
+    324
+   ],
+   "right": [
+    856.0,
+    539,
+    498.4,
+    324
+   ],
+   "set": "hard",
+   "condition": "faded"
+  },
+  {
+   "file": "frames/hard_syl_362_night.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    149.5,
+    539,
+    458.3,
+    324
+   ],
+   "right": [
+    854.7,
+    539,
+    497.7,
+    324
+   ],
+   "set": "hard",
+   "condition": "night"
+  },
+  {
+   "file": "frames/hard_syl_397_shadows.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    144.4,
+    539,
+    454.2,
+    324
+   ],
+   "right": [
+    841.2,
+    539,
+    496.3,
+    324
+   ],
+   "set": "hard",
+   "condition": "shadows"
+  },
+  {
+   "file": "frames/hard_syl_432_haze.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    146.2,
+    539,
+    458.7,
+    324
+   ],
+   "right": [
+    839.5,
+    539,
+    502.9,
+    324
+   ],
+   "set": "hard",
+   "condition": "haze"
+  },
+  {
+   "file": "frames/hard_syl_467_noise.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    139.4,
+    539,
+    456.1,
+    324
+   ],
+   "right": [
+    851.7,
+    539,
+    500.1,
+    324
+   ],
+   "set": "hard",
+   "condition": "noise"
+  },
+  {
+   "file": "frames/hard_syl_502_glare.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    150.4,
+    539,
+    456.1,
+    324
+   ],
+   "right": [
+    848.0,
+    539,
+    508.7,
+    324
+   ],
+   "set": "hard",
+   "condition": "glare"
+  },
+  {
+   "file": "frames/hard_syl_536_faded.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    150.1,
+    539,
+    462.8,
+    324
+   ],
+   "right": [
+    847.7,
+    539,
+    503.0,
+    324
+   ],
+   "set": "hard",
+   "condition": "faded"
+  },
+  {
+   "file": "frames/hard_syl_571_night.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    167.4,
+    539,
+    461.7,
+    324
+   ],
+   "right": [
+    870.5,
+    539,
+    509.0,
+    324
+   ],
+   "set": "hard",
+   "condition": "night"
+  },
+  {
+   "file": "frames/hard_syl_606_shadows.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    183.0,
+    539,
+    467.4,
+    324
+   ],
+   "right": [
+    881.7,
+    539,
+    505.9,
+    324
+   ],
+   "set": "hard",
+   "condition": "shadows"
+  },
+  {
+   "file": "frames/hard_syl_641_haze.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    189.2,
+    539,
+    459.0,
+    324
+   ],
+   "right": [
+    877.0,
+    539,
+    501.6,
+    324
+   ],
+   "set": "hard",
+   "condition": "haze"
+  },
+  {
+   "file": "frames/hard_syl_676_noise.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    162.3,
+    539,
+    461.8,
+    324
+   ],
+   "right": [
+    863.9,
+    539,
+    505.3,
+    324
+   ],
+   "set": "hard",
+   "condition": "noise"
+  },
+  {
+   "file": "frames/hard_img_solidWhiteCurve_glare.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    191.0,
+    539,
+    461.0,
+    324
+   ],
+   "right": [
+    885.4,
+    539,
+    510.0,
+    324
+   ],
+   "set": "hard",
+   "condition": "glare"
+  },
+  {
+   "file": "frames/hard_img_solidWhiteRight_faded.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    151.1,
+    539,
+    454.4,
+    324
+   ],
+   "right": [
+    841.6,
+    539,
+    509.9,
+    324
+   ],
+   "set": "hard",
+   "condition": "faded"
+  },
+  {
+   "file": "frames/hard_img_solidYellowCurve_night.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    166.5,
+    539,
+    460.5,
+    324
+   ],
+   "right": [
+    860.3,
+    539,
+    496.1,
+    324
+   ],
+   "set": "hard",
+   "condition": "night"
+  },
+  {
+   "file": "frames/hard_img_solidYellowCurve2_shadows.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    169.1,
+    539,
+    458.1,
+    324
+   ],
+   "right": [
+    861.4,
+    539,
+    499.3,
+    324
+   ],
+   "set": "hard",
+   "condition": "shadows"
+  },
+  {
+   "file": "frames/hard_img_solidYellowLeft_haze.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    145.7,
+    539,
+    459.2,
+    324
+   ],
+   "right": [
+    853.9,
+    539,
+    501.3,
+    324
+   ],
+   "set": "hard",
+   "condition": "haze"
+  },
+  {
+   "file": "frames/hard_img_whiteCarLaneSwitch_noise.jpg",
+   "w": 960,
+   "h": 540,
+   "left": [
+    188.2,
+    539,
+    462.7,
+    324
+   ],
+   "right": [
+    876.5,
+    539,
+    495.6,
+    324
+   ],
+   "set": "hard",
+   "condition": "noise"
+  }
+ ]
+}

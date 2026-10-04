@@ -1,0 +1,8 @@
+{
+ "updated": "2026-10-04",
+ "note": "Scores from 07-leaderboard.ipynb on 92 frames (46 clean + 46 hard). Ranked by overall accuracy, then mean error, then speed. Speed is measured on each team's own machine, so treat it as a rough guide.",
+ "entries": [
+  {"team": "Lab baseline (instructor)", "accuracy": 95.1, "clean": 100.0, "hard": 90.2, "mean_error_px": 7.2, "fps": 202.5, "reference": true},
+  {"team": "Example: fixed HLS colour thresholds", "accuracy": 73.9, "clean": 94.6, "hard": 53.3, "mean_error_px": 27.5, "fps": 143.3, "reference": true}
+ ]
+}
