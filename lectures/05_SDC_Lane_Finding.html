@@ -209,16 +209,16 @@
   .reveal .small { font-size: 0.72em; }
   .reveal .tiny { font-size: 0.55em; }
   .reveal .center-text { text-align: center; }
-  .reveal .grid2 { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 34px; align-items: start; }
+  .reveal .grid2 { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 22px; align-items: start; }
   .reveal .grid2.wide-left { grid-template-columns: minmax(0,1.35fr) minmax(0,1fr); }
   .reveal .grid2.wide-right { grid-template-columns: minmax(0,1fr) minmax(0,1.35fr); }
-  .reveal .grid3 { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 24px; align-items: start; }
+  .reveal .grid3 { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; align-items: start; }
   .reveal .grid4 { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 18px; align-items: start; }
   .reveal img.fig { display: block; max-width: 100%; max-height: 780px; margin: 0 auto; border-radius: 6px; }
-  .reveal img.fig.h520 { max-height: 660px; }
-  .reveal img.fig.h420 { max-height: 540px; }
-  .reveal img.fig.h340 { max-height: 430px; }
-  .reveal .cap { font-size: 0.55em; color: var(--muted); text-align: center; margin-top: 0.35em; }
+  .reveal img.fig.h520 { max-height: 700px; }
+  .reveal img.fig.h420 { max-height: 600px; }
+  .reveal img.fig.h340 { max-height: 500px; }
+  .reveal .cap { font-size: 0.6em; color: var(--muted); text-align: center; margin-top: 0.35em; }
   .reveal .card { background: var(--soft); border-radius: 10px; padding: 0.55em 0.75em; border-left: 6px solid var(--navy); }
   .reveal .card h3 { margin-top: 0; }
   .reveal .card p, .reveal .card li { font-size: 0.78em; }
@@ -235,9 +235,9 @@
   .reveal table.simple th { background: var(--navy); color: #fff; padding: 0.35em 0.55em; text-align: left; }
   .reveal table.simple td { border-bottom: 1px solid #d8e0ea; padding: 0.32em 0.55em; vertical-align: top; }
   .reveal table.simple tr:nth-child(even) td { background: #f6f9fc; }
-  .reveal pre { width: 100%; box-shadow: none; margin: 0.2em 0; font-size: 0.5em; line-height: 1.35; }
+  .reveal pre { width: 100%; box-shadow: none; margin: 0.2em 0; font-size: 0.57em; line-height: 1.32; }
   .reveal pre code { max-height: 760px; padding: 0.7em 0.9em; border-radius: 8px; background: #f6f8fa; color: #24292f; border: 1px solid #d8dee4; }
-  .reveal pre.code-sm { font-size: 0.43em; }
+  .reveal pre.code-sm { font-size: 0.47em; }
   .reveal code { font-family: var(--r-code-font); }
   .reveal p code, .reveal li code, .reveal td code { background: #eef1f4; padding: 0.05em 0.3em; border-radius: 4px; font-size: 0.88em; color: #8a1538; }
   /* light highlight.js theme */
@@ -286,6 +286,20 @@
   .reveal .badge { display: inline-block; background: var(--navy); color: #fff; border-radius: 999px; padding: 0.05em 0.6em; font-size: 0.55em; font-weight: 700; vertical-align: middle; }
   .reveal .badge.new { background: #ea580c; }
   .reveal .pill { display: inline-block; border: 2px solid var(--navy); color: var(--navy); border-radius: 999px; padding: 0.05em 0.55em; font-size: 0.6em; font-weight: 700; margin: 0.1em; }
+
+  /* larger-image layouts */
+  .reveal .grid2.img-wide { grid-template-columns: minmax(0,1.75fr) minmax(0,1fr); }
+  .reveal .grid2.img-wide-r { grid-template-columns: minmax(0,1fr) minmax(0,1.75fr); }
+  .reveal img.fig.h600 { max-height: 640px; }
+  .reveal .grid2 img.fig, .reveal .grid3 img.fig { width: 100%; object-fit: contain; }
+  .reveal img.fig.full { max-height: 720px; width: 100%; object-fit: contain; }
+  .reveal .slides img.fig, .reveal .slides img.zoomable { cursor: zoom-in; }
+  .reveal .zoom-hint { position: absolute; right: 18px; bottom: 6px; font-size: 0.42em; color: #8a99aa; }
+  /* click-to-zoom lightbox */
+  #lb { position: fixed; inset: 0; z-index: 9999; background: rgba(10,16,24,0.92); display: none; align-items: center; justify-content: center; cursor: zoom-out; }
+  #lb.on { display: flex; }
+  #lb img { max-width: 96vw; max-height: 92vh; object-fit: contain; border-radius: 6px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); background: #fff; }
+  #lb p { position: fixed; bottom: 1.2vh; left: 0; right: 0; text-align: center; color: #dbe7f5; font: 15px "Source Sans Pro", sans-serif; margin: 0; }
   </style>
 </head>
 <body class="quarto-light">
@@ -365,7 +379,7 @@
 <div class="st">⑥ Pipeline<small>lines → lanes → video</small></div><div class="ar">→</div>
 <div class="st">⑦ Beyond<small>curves &amp; deep learning</small></div>
 </div>
-<img class="fig h520" src="assets/05_sdc_lane_lines/g_pipeline_steps.jpg" alt="The six stages of the lane-finding pipeline">
+<img class="fig" src="assets/05_sdc_lane_lines/g_pipeline_steps.jpg" alt="The six stages of the lane-finding pipeline" style="max-height:540px;">
 <p class="cap">The pipeline you will have built by the end of the lab (generated with the reference solution on a Udacity test image).</p>
 </section>
 
@@ -424,8 +438,8 @@
 
 <section id="quiz-which-features-identify-lane-lines" class="slide level2" data-menu-title="Quiz: features of lane lines">
 <h2>Quiz: what makes a lane line a lane line?</h2>
-<div class="grid2 wide-right">
-<div><img class="fig h420" src="assets/05_sdc_lane_lines/road_white_lane.jpg" alt="Highway with white lane lines"></div>
+<div class="grid2 wide-left">
+<div><img class="fig h600" src="assets/05_sdc_lane_lines/road_white_lane.jpg" alt="Highway with white lane lines"></div>
 <div class="quiz">
 <p class="q">Quiz question</p>
 <p class="small">Which of these features could be useful in identifying lane lines on the road?</p>
@@ -446,8 +460,8 @@
 
 <section id="colour-selection-the-idea" class="slide level2" data-menu-title="Colour selection: the idea">
 <h2>Identifying lane lines by colour</h2>
-<div class="grid2 wide-left">
-<div><img class="fig h520" src="assets/05_sdc_lane_lines/road_white_label.jpg" alt="White lane line labelled"></div>
+<div class="grid2 img-wide">
+<div><img class="fig h600" src="assets/05_sdc_lane_lines/road_white_label.jpg" alt="White lane line labelled"></div>
 <div>
 <p class="small">The lane lines here are <b>white</b>. So what is “white” to a computer?</p>
 <ul class="small">
@@ -471,7 +485,7 @@
 <section id="quiz-pure-white" class="slide level2" data-menu-title="Quiz: pure white">
 <h2>Quiz: what is pure white?</h2>
 <div class="grid2 wide-left">
-<div><img class="fig h420" src="assets/05_sdc_lane_lines/pure_white.jpg" alt="Pure white = [?, ?, ?]"></div>
+<div><img class="fig h600" src="assets/05_sdc_lane_lines/pure_white.jpg" alt="Pure white = [?, ?, ?]"></div>
 <div class="quiz">
 <p class="q">Quiz question</p>
 <p class="small">What colour is <b>pure white</b> in our combined [R, G, B] image?</p>
@@ -504,7 +518,7 @@ xsize = image.shape[1]
 color_select = np.copy(image)
 </code></pre>
 <div>
-<img class="fig h340" src="assets/05_sdc_lane_lines/test.jpg" alt="test.jpg">
+<img class="fig h420" src="assets/05_sdc_lane_lines/test.jpg" alt="test.jpg">
 <p class="warn" style="margin-top:0.6em;"><b>Always copy!</b> <code>a = b</code> does not copy a NumPy array — both names point to the <i>same</i> data, so blacking out pixels in one destroys the other.</p>
 <p class="note"><b>Watch the dtype:</b> <code>mpimg.imread</code> gives <code>uint8</code> 0–255 for <code>.jpg</code> but <code>float32</code> 0–1 for <code>.png</code>.</p>
 </div>
@@ -558,15 +572,15 @@ plt.show()
 <section id="quiz-colour-selection-answer" class="slide level2" data-menu-title="Quiz answer: colour selection">
 <h2>Quiz: retain the lane lines, drop everything else</h2>
 <div class="grid2">
-<div><img class="fig h340" src="assets/05_sdc_lane_lines/test_large.jpg" alt="Original image"><p class="cap">Original</p></div>
-<div><img class="fig h340" src="assets/05_sdc_lane_lines/color_select_large.jpg" alt="Colour selection result"><p class="cap">Colour selection applied</p></div>
+<div><img class="fig h420" src="assets/05_sdc_lane_lines/test_large.jpg" alt="Original image"><p class="cap">Original</p></div>
+<div><img class="fig h420" src="assets/05_sdc_lane_lines/color_select_large.jpg" alt="Colour selection result"><p class="cap">Colour selection applied</p></div>
 </div>
 <div class="answer fragment"><b>Answer:</b> start with guesses, then refine — with <code>red_threshold = green_threshold = blue_threshold = 200</code> the lane lines are clearly visible and almost everything else is black. But some pixels around the periphery (horizon, cars, signs) survive, so it is still hard to extract the lines <i>automatically</i> …</div>
 </section>
 
 <section id="why-rgb-thresholds-break" class="slide level2" data-menu-title="Why RGB thresholds break">
 <h2>Why fixed RGB thresholds break <span class="badge new">improved</span></h2>
-<img class="fig h340" src="assets/05_sdc_lane_lines/g_rgb_vs_hls.jpg" alt="RGB threshold loses the yellow line; HLS keeps both">
+<img class="fig h420" src="assets/05_sdc_lane_lines/g_rgb_vs_hls.jpg" alt="RGB threshold loses the yellow line; HLS keeps both">
 <div class="grid2" style="margin-top:0.4em;">
 <div class="card"><h3>The problem</h3><ul class="tight"><li><b>Yellow</b> paint has high R and G but <b>low B</b> → RGB ≥ 200 throws it away.</li><li><b>Shadows</b>, dusk and dirty paint push white below 200.</li></ul></div>
 <div class="card"><h3>The fix (from Part I!)</h3><p>Use a colour space that separates <b>brightness</b> from <b>hue</b>: in <b>HLS</b>, white = high <i>L</i>; yellow = hue ≈ 30–70° with high <i>S</i>.</p>
@@ -589,10 +603,9 @@ mask   = cv2.bitwise_or(white, yellow)
 
 <section id="region-masking-the-idea" class="slide level2" data-menu-title="Region masking: the idea">
 <h2>Only look where the lane can be</h2>
-<div class="grid3">
-<div><img class="fig" src="assets/05_sdc_lane_lines/region_road.jpg" alt="Road image"><p class="cap">The camera is fixed to the car …</p></div>
-<div><img class="fig" src="assets/05_sdc_lane_lines/region_triangle.jpg" alt="Triangle region drawn"><p class="cap">… so the lane is always inside this region</p></div>
-<div><img class="fig" src="assets/05_sdc_lane_lines/region_masked.jpg" alt="Everything outside masked"><p class="cap">Mask out everything else</p></div>
+<div class="grid2">
+<div><img class="fig h420" src="assets/05_sdc_lane_lines/region_triangle.jpg" alt="Triangle region drawn"><p class="cap">The camera is fixed to the car, so the lane is always inside this region …</p></div>
+<div><img class="fig h420" src="assets/05_sdc_lane_lines/region_masked.jpg" alt="Everything outside masked"><p class="cap">… so we mask out everything else</p></div>
 </div>
 <p class="small" style="margin-top:0.6em;">We assume the <b>front-facing camera is mounted in a fixed position</b>. Then the lane lines always appear in the same general region, and we only consider pixels for colour selection <b>inside</b> it. Here a <b>triangle</b> (simplest case); later a <b>quadrilateral</b>; in principle <b>any polygon</b>.</p>
 </section>
@@ -653,7 +666,12 @@ color_select[color_thresholds | ~region_thresholds] = [0, 0, 0]
 # Paint pixels red where BOTH the colour and region selections are met
 line_image[~color_thresholds &amp; region_thresholds] = [255, 0, 0]
 </code></pre>
-<div class="grid3" style="margin-top:0.4em;">
+<p class="small">A pixel is a lane pixel only if it passes the colour test <b>and</b> lies inside the region: <code>~color_thresholds &amp; region_thresholds</code>.</p>
+</section>
+
+<section id="combining-colour-and-region-result" class="slide level2" data-menu-title="Colour + region: result">
+<h2>Colour + region: the result</h2>
+<div class="grid3" style="margin-top:0.6em;">
 <div><img class="fig" src="assets/05_sdc_lane_lines/test_large.jpg" alt="Original"><p class="cap">Original</p></div>
 <div><img class="fig" src="assets/05_sdc_lane_lines/region_color_selected.jpg" alt="Region and colour selection"><p class="cap">Region + colour selection</p></div>
 <div><img class="fig" src="assets/05_sdc_lane_lines/region_lines_red.jpg" alt="Lines identified in red"><p class="cap">Lane pixels identified</p></div>
@@ -670,7 +688,7 @@ line_image[~color_thresholds &amp; region_thresholds] = [255, 0, 0]
 </div>
 <div>
 <div class="answer fragment"><b>Answer:</b> <code>left_bottom = [0, 539]</code>, <code>right_bottom = [900, 539]</code>, <code>apex = [475, 320]</code> — a triangle that hugs the lane and cuts off the horizon.</div>
-<img class="fig h340 fragment" src="assets/05_sdc_lane_lines/region_lines_red.jpg" alt="Result" style="margin-top:0.5em;">
+<img class="fig h420 fragment" src="assets/05_sdc_lane_lines/region_lines_red.jpg" alt="Result" style="margin-top:0.5em;">
 </div>
 </div>
 </section>
@@ -678,7 +696,7 @@ line_image[~color_thresholds &amp; region_thresholds] = [255, 0, 0]
 <section id="any-polygon-with-fillpoly" class="slide level2" data-menu-title="Any polygon with cv2.fillPoly">
 <h2>In practice: any polygon with <code>cv2.fillPoly</code> <span class="badge new">improved</span></h2>
 <div class="grid2 wide-left">
-<pre><code class="python" data-trim data-noescape>
+<pre class="code-sm"><code class="python" data-trim data-noescape>
 def region_of_interest(img, vertices):
     mask = np.zeros_like(img)                      # black canvas
     fill = (255,) * img.shape[2] if img.ndim == 3 else 255
@@ -705,8 +723,8 @@ masked = region_of_interest(image, vertices)
 
 <section id="finding-lines-of-any-colour" class="slide level2" data-menu-title="Finding lines of any colour">
 <h2>So … are we ready to drive?</h2>
-<div class="grid2 wide-right">
-<div><img class="fig h420" src="assets/05_sdc_lane_lines/lines_any_color.jpg" alt="Lane lines found"></div>
+<div class="grid2">
+<div><img class="fig h600" src="assets/05_sdc_lane_lines/lines_any_color.jpg" alt="Lane lines found"></div>
 <div>
 <p>We found the lane lines — simple, right? Ready to upload to the car and drive autonomously? <b>Not quite yet.</b></p>
 <ul class="small">
@@ -739,8 +757,8 @@ masked = region_of_interest(image, vertices)
 <section id="images-are-functions" class="slide level2" data-menu-title="Images are functions">
 <h2>An image is a function, so we can differentiate it</h2>
 <div class="grid2">
-<div><img class="fig h340" src="assets/05_sdc_lane_lines/image_function.jpg" alt="f(x, y) = pixel value"></div>
-<div><img class="fig" src="assets/05_sdc_lane_lines/derivative.jpg" alt="df/dx = change in pixel value" style="max-height:160px;">
+<div><img class="fig" src="assets/05_sdc_lane_lines/image_function.jpg" alt="f(x, y) = pixel value" style="max-height:330px;"></div>
+<div><img class="fig" src="assets/05_sdc_lane_lines/derivative.jpg" alt="df/dx = change in pixel value" style="max-height:110px;">
 <ul class="small" style="margin-top:0.5em;">
 <li>A grayscale image is a function <b>\(f(x, y)\)</b> = pixel value.</li>
 <li>Its <b>derivative</b> measures change: small derivative = small change, big derivative = big change.</li>
@@ -750,15 +768,15 @@ masked = region_of_interest(image, vertices)
 </div>
 <div class="card" style="margin-top:0.5em;">
 <p style="font-size:0.8em; margin:0;">\[ \nabla f = \left(\frac{\partial f}{\partial x},\; \frac{\partial f}{\partial y}\right) \qquad |\nabla f| = \sqrt{\left(\tfrac{\partial f}{\partial x}\right)^2 + \left(\tfrac{\partial f}{\partial y}\right)^2} \qquad \theta = \operatorname{atan2}\!\left(\tfrac{\partial f}{\partial y}, \tfrac{\partial f}{\partial x}\right) \]</p>
-<p class="tiny muted center-text" style="margin:0;">Magnitude = edge <b>strength</b>; direction θ is <b>perpendicular</b> to the edge. In practice the derivatives are estimated with small kernels such as <b>Sobel</b> (Part I).</p>
+<p class="tiny muted center-text" style="margin:0;">Magnitude = edge <b>strength</b>; direction θ is <b>perpendicular</b> to the edge; estimated with <b>Sobel</b> kernels (Part I).</p>
 </div>
 </section>
 
 <section id="the-gradient-image" class="slide level2" data-menu-title="The gradient image">
 <h2>The gradient image: thick edges</h2>
 <div class="grid2">
-<div><img class="fig h340" src="assets/05_sdc_lane_lines/gradient_original.jpg" alt="Original image"><p class="cap">Original image</p></div>
-<div><img class="fig h340" src="assets/05_sdc_lane_lines/gradient_image.jpg" alt="Gradient image"><p class="cap">Gradient image — brightness = strength of the gradient</p></div>
+<div><img class="fig h420" src="assets/05_sdc_lane_lines/gradient_original.jpg" alt="Original image"><p class="cap">Original image</p></div>
+<div><img class="fig h420" src="assets/05_sdc_lane_lines/gradient_image.jpg" alt="Gradient image"><p class="cap">Gradient image — brightness = strength of the gradient</p></div>
 </div>
 <p class="small" style="margin-top:0.5em;">Rapid changes in brightness are where we find the edges. Computing the gradient gives <b>thick</b> edges, though …</p>
 </section>
@@ -775,7 +793,7 @@ masked = region_of_interest(image, vertices)
 
 <section id="the-four-stages-of-canny" class="slide level2" data-menu-title="The four stages of Canny">
 <h2>Under the hood: the four stages of Canny <span class="badge new">new</span></h2>
-<div class="grid2 wide-right">
+<div class="grid2 img-wide-r">
 <div>
 <ol class="small">
 <li><b>Smooth</b> with a Gaussian to suppress noise:
@@ -786,14 +804,14 @@ masked = region_of_interest(image, vertices)
 <ul class="tight"><li>&gt; <code>high</code> → strong edge ✔</li><li>&lt; <code>low</code> → rejected ✘</li><li>in between → kept <b>only if connected</b> to a strong edge</li></ul></li>
 </ol>
 </div>
-<div><img class="fig h520" src="assets/05_sdc_lane_lines/g_canny_steps.jpg" alt="Gaussian, gradient magnitude, NMS, hysteresis"></div>
+<div><img class="fig h600" src="assets/05_sdc_lane_lines/g_canny_steps.jpg" alt="Gaussian, gradient magnitude, NMS, hysteresis"></div>
 </div>
 </section>
 
 <section id="quiz-where-are-the-edges" class="slide level2" data-menu-title="Quiz: where are the edges?">
 <h2>Quiz: where are the strong edges?</h2>
-<div class="grid2 wide-left">
-<div><img class="fig h420" src="assets/05_sdc_lane_lines/cross_section.jpg" alt="Cross section with points A to F"></div>
+<div class="grid2 img-wide">
+<div><img class="fig h600" src="assets/05_sdc_lane_lines/cross_section.jpg" alt="Cross section with points A to F"></div>
 <div class="quiz">
 <p class="q">Quiz question</p>
 <p class="small">The red line shows where we took a <b>cross-section</b> through the image. The wiggles in the blue line are the changes in intensity along it. At which letters do you expect <b>strong edges</b>?</p>
@@ -862,7 +880,7 @@ edges = cv2.Canny(blur_gray, low_threshold, high_threshold)
 
 plt.imshow(edges, cmap='Greys_r')
 </code></pre>
-<div><img class="fig h420" src="assets/05_sdc_lane_lines/exit_ramp_edges_tuned.jpg" alt="Tuned Canny result"><p class="cap">Lane lines kept, most other clutter removed</p></div>
+<div><img class="fig h600" src="assets/05_sdc_lane_lines/exit_ramp_edges_tuned.jpg" alt="Tuned Canny result"><p class="cap">Lane lines kept, most other clutter removed</p></div>
 </div>
 </section>
 
@@ -902,16 +920,16 @@ plt.imshow(edges, cmap='Greys_r')
 <section id="image-space-vs-hough-space" class="slide level2" data-menu-title="Image space vs Hough space">
 <h2>A line in image space is a <i>point</i> in Hough space</h2>
 <div class="grid2">
-<div><img class="fig h420" src="assets/05_sdc_lane_lines/hough_y_mx_b.jpg" alt="y = mx + b"></div>
-<div><img class="fig h420" src="assets/05_sdc_lane_lines/hough_point.jpg" alt="Line in image space, point in Hough space"></div>
+<div><img class="fig h600" src="assets/05_sdc_lane_lines/hough_y_mx_b.jpg" alt="y = mx + b"></div>
+<div><img class="fig h600" src="assets/05_sdc_lane_lines/hough_point.jpg" alt="Line in image space, point in Hough space"></div>
 </div>
 <p class="small" style="margin-top:0.5em;">A line \(y = m_0x + b_0\) is fully described by two numbers, \((m_0, b_0)\). Plot <b>m</b> horizontally and <b>b</b> vertically: the whole line becomes <b>a single point</b>. The Hough transform is just the conversion from image space to Hough space.</p>
 </section>
 
 <section id="hough-quiz-1" class="slide level2" data-menu-title="Hough quiz 1">
 <h2>Hough quiz 1 of 5</h2>
-<div class="grid2 wide-left">
-<div><img class="fig h420" src="assets/05_sdc_lane_lines/hough_q1.jpg" alt="Two parallel lines; options A-D"></div>
+<div class="grid2 img-wide">
+<div><img class="fig h600" src="assets/05_sdc_lane_lines/hough_q1.jpg" alt="Two parallel lines; options A-D"></div>
 <div class="quiz"><p class="q">Question</p>
 <p class="small">If a line is a point in Hough space, what will <b>two parallel lines</b> in image space be?</p>
 <div class="answer fragment"><b>C</b> — two points <b>one above the other</b>: parallel lines share the <b>same slope m</b> but have <b>different intercepts b</b>.</div></div>
@@ -920,8 +938,8 @@ plt.imshow(edges, cmap='Greys_r')
 
 <section id="hough-quiz-2" class="slide level2" data-menu-title="Hough quiz 2">
 <h2>Hough quiz 2 of 5</h2>
-<div class="grid2 wide-left">
-<div><img class="fig h420" src="assets/05_sdc_lane_lines/hough_q2.jpg" alt="One point; options A-D"></div>
+<div class="grid2 img-wide">
+<div><img class="fig h600" src="assets/05_sdc_lane_lines/hough_q2.jpg" alt="One point; options A-D"></div>
 <div class="quiz"><p class="q">Question</p>
 <p class="small">What does a <b>point</b> \((x_0, y_0)\) in image space correspond to in Hough space?</p>
 <div class="answer fragment"><b>A — a line.</b> Many lines pass through one point, but only those whose (m, b) satisfy \(b = y_0 - x_0\,m\): a straight line in (m, b) space.</div></div>
@@ -930,8 +948,8 @@ plt.imshow(edges, cmap='Greys_r')
 
 <section id="hough-quiz-3" class="slide level2" data-menu-title="Hough quiz 3">
 <h2>Hough quiz 3 of 5</h2>
-<div class="grid2 wide-left">
-<div><img class="fig h420" src="assets/05_sdc_lane_lines/hough_q3.jpg" alt="Two points; options A-D"></div>
+<div class="grid2 img-wide">
+<div><img class="fig h600" src="assets/05_sdc_lane_lines/hough_q3.jpg" alt="Two points; options A-D"></div>
 <div class="quiz"><p class="q">Question</p>
 <p class="small">What is the representation in Hough space of <b>two points</b> in image space?</p>
 <div class="answer fragment"><b>C — two lines that intersect.</b> Each point gives one line in Hough space.</div></div>
@@ -940,8 +958,8 @@ plt.imshow(edges, cmap='Greys_r')
 
 <section id="hough-quiz-4" class="slide level2" data-menu-title="Hough quiz 4">
 <h2>Hough quiz 4 of 5</h2>
-<div class="grid2 wide-left">
-<div><img class="fig h420" src="assets/05_sdc_lane_lines/hough_q4.jpg" alt="Intersection in Hough space; options A-D"></div>
+<div class="grid2 img-wide">
+<div><img class="fig h600" src="assets/05_sdc_lane_lines/hough_q4.jpg" alt="Intersection in Hough space; options A-D"></div>
 <div class="quiz"><p class="q">Question</p>
 <p class="small">What does the <b>intersection point</b> \((m_0, b_0)\) of the two lines in Hough space correspond to in image space?</p>
 <div class="answer fragment"><b>A — the line that passes through both</b> \((x_1, y_1)\) and \((x_2, y_2)\). That is the key insight: <b>intersections in Hough space = lines in image space.</b></div></div>
@@ -950,8 +968,8 @@ plt.imshow(edges, cmap='Greys_r')
 
 <section id="voting-in-a-grid" class="slide level2" data-menu-title="Voting in a grid">
 <h2>Strategy: let every edge pixel vote</h2>
-<div class="grid2 wide-left">
-<div><img class="fig h420" src="assets/05_sdc_lane_lines/hough_grid.jpg" alt="Hough space divided into a grid"></div>
+<div class="grid2 img-wide">
+<div><img class="fig h600" src="assets/05_sdc_lane_lines/hough_grid.jpg" alt="Hough space divided into a grid"></div>
 <div>
 <ol class="small">
 <li>Run <b>Canny</b> to get all edge points.</li>
@@ -967,19 +985,19 @@ plt.imshow(edges, cmap='Greys_r')
 <section id="polar-coordinates" class="slide level2" data-menu-title="Polar coordinates (ρ, θ)">
 <h2>The fix: polar coordinates (ρ, θ)</h2>
 <div class="grid2">
-<div><img class="fig h420" src="assets/05_sdc_lane_lines/hough_polar.jpg" alt="rho and theta"></div>
-<div><img class="fig h420" src="assets/05_sdc_lane_lines/hough_sinusoids.jpg" alt="Points become sinusoids"></div>
+<div><img class="fig" style="max-height:440px;" src="assets/05_sdc_lane_lines/hough_polar.jpg" alt="rho and theta"></div>
+<div><img class="fig" style="max-height:440px;" src="assets/05_sdc_lane_lines/hough_sinusoids.jpg" alt="Points become sinusoids"></div>
 </div>
 <div class="card" style="margin-top:0.4em;">
-<p style="font-size:0.8em; margin:0;">\[ \rho = x\cos\theta + y\sin\theta \qquad \rho:\text{ perpendicular distance from the origin},\quad \theta:\text{ angle of the line's normal} \]</p>
+<p style="font-size:0.8em; margin:0;">\[ \rho = x\cos\theta + y\sin\theta \qquad \rho:\text{ distance from origin},\quad \theta:\text{ angle of the normal} \]</p>
 <p class="tiny muted center-text" style="margin:0;">Every line — including vertical ones — has a finite (ρ, θ). Each <b>point</b> in image space now becomes a <b>sinusoid</b>; a line of points becomes many sinusoids that <b>intersect at one (ρ, θ)</b>.</p>
 </div>
 </section>
 
 <section id="hough-quiz-5" class="slide level2" data-menu-title="Hough quiz 5">
 <h2>Hough quiz 5 of 5</h2>
-<div class="grid2 wide-left">
-<div><img class="fig h420" src="assets/05_sdc_lane_lines/hough_q5.jpg" alt="Square of points; options A-D"></div>
+<div class="grid2 img-wide">
+<div><img class="fig h600" src="assets/05_sdc_lane_lines/hough_q5.jpg" alt="Square of points; options A-D"></div>
 <div class="quiz"><p class="q">Question</p>
 <p class="small">What happens if we run a Hough transform on an image of a <b>square</b>? What will the plot in Hough space look like?</p>
 <div class="answer fragment"><b>C</b> — a square has <b>four</b> sides, so the bundles of sinusoids meet at <b>four</b> intersection points: two pairs of parallel sides at <b>θ ≈ 0° and θ ≈ 90°</b>.</div></div>
@@ -1007,7 +1025,7 @@ plt.imshow(edges, cmap='Greys_r')
 
 <section id="hough-on-a-real-road" class="slide level2" data-menu-title="Hough on a real road">
 <h2>On a real road: two peaks = two lane lines <span class="badge new">new</span></h2>
-<img class="fig h520" src="assets/05_sdc_lane_lines/g_hough_accumulator.jpg" alt="Hough accumulator for the road image">
+<img class="fig full" src="assets/05_sdc_lane_lines/g_hough_accumulator.jpg" style="max-height:640px;" alt="Hough accumulator for the road image">
 <p class="small">The masked Canny edges of <code>exit-ramp.jpg</code> voted into a (θ, ρ) accumulator (log scale). The two brightest cells are the left and right lane lines — everything else in the image left only a faint trace.</p>
 </section>
 
@@ -1063,7 +1081,7 @@ color_edges = np.dstack((edges, edges, edges))
 combo = cv2.addWeighted(color_edges, 0.8, line_image, 1, 0)
 plt.imshow(combo)
 </code></pre>
-<div><img class="fig h420" src="assets/05_sdc_lane_lines/hough_result_raw.jpg" alt="Lots of line segments detected"><p class="cap">Lots of line segments! The parameters are far too permissive, and we have not masked a region yet.</p></div>
+<div><img class="fig h600" src="assets/05_sdc_lane_lines/hough_result_raw.jpg" alt="Lots of line segments detected"><p class="cap">Lots of line segments! The parameters are far too permissive, and we have not masked a region yet.</p></div>
 </div>
 </section>
 
@@ -1098,12 +1116,12 @@ plt.imshow(combo)
 <div class="st">Hough<small><code>HoughLinesP</code></small></div><div class="ar">→</div>
 <div class="st on">Average &amp; extrapolate<small>one line per side</small></div>
 </div>
-<img class="fig h520" src="assets/05_sdc_lane_lines/g_pipeline_steps.jpg" alt="Pipeline stages">
+<img class="fig full" src="assets/05_sdc_lane_lines/g_pipeline_steps.jpg" alt="Pipeline stages" style="max-height:600px;">
 </section>
 
 <section id="from-segments-to-two-lanes" class="slide level2" data-menu-title="From segments to two lanes">
 <h2>From many segments to <b>two</b> lane lines</h2>
-<img class="fig h340" src="assets/05_sdc_lane_lines/g_average_extrapolate.jpg" alt="Raw segments vs averaged lines">
+<img class="fig h420" src="assets/05_sdc_lane_lines/g_average_extrapolate.jpg" alt="Raw segments vs averaged lines">
 <div class="grid2" style="margin-top:0.4em;">
 <div class="card"><h3>1 · Split by slope</h3>
 <p>For each segment \(m = \frac{y_2 - y_1}{x_2 - x_1}\). Because <b>y points down</b>, the <b>left</b> lane has \(m &lt; 0\) and the <b>right</b> lane \(m &gt; 0\). Drop near-horizontal segments (\(|m| &lt; 0.4\)).</p></div>
@@ -1253,7 +1271,7 @@ writer.close()
 
 <section id="where-the-simple-pipeline-breaks" class="slide level2" data-menu-title="Where the simple pipeline breaks">
 <h2>Where the simple pipeline breaks</h2>
-<img class="fig h340" src="assets/05_sdc_lane_lines/g_challenge_fail.jpg" alt="Challenge video failure case">
+<img class="fig h420" src="assets/05_sdc_lane_lines/g_challenge_fail.jpg" alt="Challenge video failure case">
 <div class="grid2" style="margin-top:0.4em;">
 <ul class="small tight">
 <li><b>Curves</b>: a straight-line model cannot follow a bend.</li>
@@ -1279,7 +1297,7 @@ writer.close()
 <section id="advanced-lane-finding" class="slide level2" data-menu-title="Advanced lane finding">
 <h2>The next step: advanced lane finding <span class="badge new">new</span></h2>
 <div class="grid2 wide-right">
-<div><img class="fig h420" src="assets/05_images_colour_filters/slide20.jpg" alt="Advanced lane finding with curvature (from Part I)"><p class="cap">Seen in Part I: curved lane, radius of curvature and centre offset</p></div>
+<div><img class="fig h600" src="assets/05_images_colour_filters/slide20.jpg" alt="Advanced lane finding with curvature (from Part I)"><p class="cap">Seen in Part I: curved lane, radius of curvature and centre offset</p></div>
 <div>
 <ol class="small tight">
 <li><b>Camera calibration</b> (chessboard) → remove lens distortion <span class="muted">(Lecture 10)</span></li>
@@ -1559,7 +1577,7 @@ writer.close()
         height: 900,
 
         // Factor of the display size that should remain empty around the content
-        margin: 0.1,
+        margin: 0.04,
 
         math: {
           mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
@@ -1879,7 +1897,28 @@ writer.close()
       line(60, 340, 330, 90, 8); draw();
     }
 
-    function init() { colourDemo(); cannyDemo(); houghDemo(); }
+
+    /* 4. click any slide image to view it full screen */
+    function lightbox() {
+      var box = document.createElement("div"); box.id = "lb";
+      box.innerHTML = '<img alt=""><p>Click anywhere or press Esc to close</p>';
+      document.body.appendChild(box);
+      var big = box.querySelector("img");
+      function close() { box.classList.remove("on"); big.removeAttribute("src"); }
+      box.addEventListener("click", close);
+      document.addEventListener("keydown", function (e) {
+        if (box.classList.contains("on") && (e.key === "Escape" || e.key === "Esc")) { e.stopImmediatePropagation(); e.preventDefault(); close(); }
+      }, true);
+      document.querySelector(".reveal .slides").addEventListener("click", function (e) {
+        var t = e.target;
+        if (t.tagName !== "IMG" || t.closest("a")) return;
+        if (document.documentElement.classList.contains("print-pdf")) return;
+        big.src = t.currentSrc || t.src || t.getAttribute("data-src");
+        big.alt = t.alt || "";
+        box.classList.add("on");
+      });
+    }
+    function init() { colourDemo(); cannyDemo(); houghDemo(); lightbox(); }
     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init); else init();
   })();
   </script>
