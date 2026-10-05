@@ -13,6 +13,7 @@
 
   <meta name="author" content="Dr. Muhammad Kazim">
   <title>Intelligent Vision Systems – Lecture 05 — Computer Vision: Images, Colour Spaces &amp; Filters</title>
+  <meta name="description" content="Lecture 5 Part I: images as numbers and tensors, colour spaces (RGB/BGR, HSV, LAB, YCbCr, CMYK), convolution filters (averaging, Gaussian, median), edges, shapes and contours, feature extraction and ORB matching, and deep-learning-based computer vision, with live OpenCV demos.">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -198,7 +199,131 @@
     }
   </style>
   <style type="text/css">
-  /* ---- "Filters" section opener (scoped to .filters-hero) ---- */
+  /* ---- Lecture 5: house style shared by Part I and Part II (navy #28568a, white slides) ---- */
+  .reveal .slides > section.slide { font-size: 1.24em; }
+  .reveal { --navy: #28568a; --navy-d: #1c3f66; --ink: #1f2933; --muted: #5b6b7b; --soft: #eef3f9; --ok: #1f7a4d; --warn: #9a3412; }
+  .reveal h2 { color: var(--navy); font-size: 1.45em; margin-bottom: 0.45em; }
+  .reveal h3 { color: var(--navy); font-size: 1.05em; margin: 0.2em 0 0.35em; }
+  .reveal .kicker { color: var(--navy); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.55em; margin: 0 0 0.2em; }
+  .reveal .muted { color: var(--muted); }
+  .reveal .small { font-size: 0.72em; }
+  .reveal .tiny { font-size: 0.55em; }
+  .reveal .center-text { text-align: center; }
+  .reveal .grid2 { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 22px; align-items: start; }
+  .reveal .grid2.wide-left { grid-template-columns: minmax(0,1.35fr) minmax(0,1fr); }
+  .reveal .grid2.wide-right { grid-template-columns: minmax(0,1fr) minmax(0,1.35fr); }
+  .reveal .grid3 { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; align-items: start; }
+  .reveal .grid4 { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 18px; align-items: start; }
+  .reveal img.fig { display: block; max-width: 100%; max-height: 780px; margin: 0 auto; border-radius: 6px; }
+  .reveal img.fig.h520 { max-height: 700px; }
+  .reveal img.fig.h420 { max-height: 600px; }
+  .reveal img.fig.h340 { max-height: 500px; }
+  .reveal .cap { font-size: 0.6em; color: var(--muted); text-align: center; margin-top: 0.35em; }
+  .reveal .card { background: var(--soft); border-radius: 10px; padding: 0.55em 0.75em; border-left: 6px solid var(--navy); }
+  .reveal .card h3 { margin-top: 0; }
+  .reveal .card p, .reveal .card li { font-size: 0.78em; }
+  .reveal .note { background: #eef6ff; border-left: 6px solid #2a76dd; border-radius: 8px; padding: 0.45em 0.8em; font-size: 0.72em; }
+  .reveal .warn { background: #fff4ec; border-left: 6px solid #ea580c; border-radius: 8px; padding: 0.45em 0.8em; font-size: 0.72em; }
+  .reveal .quiz { background: #fffbea; border: 2px solid #f2c94c; border-radius: 10px; padding: 0.5em 0.85em; }
+  .reveal .quiz .q { font-weight: 700; color: #7a5b00; font-size: 0.6em; letter-spacing: 0.08em; text-transform: uppercase; }
+  .reveal .answer { background: #e9f7ef; border-left: 6px solid var(--ok); border-radius: 8px; padding: 0.4em 0.8em; font-size: 0.75em; margin-top: 0.5em; }
+  .reveal .answer b:first-child { color: var(--ok); }
+  .reveal ul.tight li, .reveal ol.tight li { margin-top: 0.15em; margin-bottom: 0.1em; }
+  .reveal .slide ul, .reveal .slide ol { font-size: 0.86em; }
+  .reveal .card ul, .reveal .card ol { font-size: 1em; }
+  .reveal table.simple { font-size: 0.62em; border-collapse: collapse; width: 100%; }
+  .reveal table.simple th { background: var(--navy); color: #fff; padding: 0.35em 0.55em; text-align: left; }
+  .reveal table.simple td { border-bottom: 1px solid #d8e0ea; padding: 0.32em 0.55em; vertical-align: top; }
+  .reveal table.simple tr:nth-child(even) td { background: #f6f9fc; }
+  .reveal pre { width: 100%; box-shadow: none; margin: 0.2em 0; font-size: 0.57em; line-height: 1.32; }
+  .reveal pre code { max-height: 760px; padding: 0.7em 0.9em; border-radius: 8px; background: #f6f8fa; color: #24292f; border: 1px solid #d8dee4; }
+  .reveal pre.code-sm { font-size: 0.47em; }
+  .reveal code { font-family: var(--r-code-font); }
+  .reveal p code, .reveal li code, .reveal td code { background: #eef1f4; padding: 0.05em 0.3em; border-radius: 4px; font-size: 0.88em; color: #8a1538; }
+  /* light highlight.js theme */
+  .reveal .hljs-keyword, .reveal .hljs-built_in, .reveal .hljs-literal { color: #cf222e; }
+  .reveal .hljs-string { color: #0a3069; }
+  .reveal .hljs-comment { color: #6e7781; font-style: italic; }
+  .reveal .hljs-number { color: #0550ae; }
+  .reveal .hljs-title, .reveal .hljs-title.function_ { color: #8250df; }
+  .reveal .hljs-params { color: #24292f; }
+  .reveal .hljs-meta { color: #953800; }
+  /* section dividers */
+  .reveal .sec-num { font-size: 3.2em; font-weight: 800; color: rgba(255,255,255,0.25); line-height: 1; margin: 0; }
+  .reveal .sec-title { color: #fff; font-size: 2.3em; font-weight: 700; line-height: 1.12; margin: 0.1em 0 0.25em; }
+  .reveal .sec-sub { color: #dbe7f5; font-size: 1.0em; margin: 0; }
+  /* title slide */
+  .reveal .title-wrap { display: grid; grid-template-columns: 1.35fr 1fr; gap: 40px; align-items: center; height: 100%; }
+  .reveal .t-kicker { color: var(--navy); font-weight: 800; letter-spacing: 0.08em; font-size: 0.75em; margin: 0; }
+  .reveal .t-main { color: var(--navy); font-size: 2.05em; font-weight: 800; line-height: 1.02; margin: 0.08em 0 0.12em; }
+  .reveal .t-sub { color: #1f2933; font-size: 1.15em; margin: 0 0 0.9em; }
+  .reveal .t-rule { width: 54px; height: 5px; background: var(--navy); margin: 0.4em 0 0.5em; }
+  .reveal .pixgrid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; }
+  .reveal .pixgrid span { aspect-ratio: 1; border-radius: 3px; }
+  /* roadmap pipeline */
+  .reveal .pipe { display: flex; align-items: stretch; gap: 10px; margin: 0.5em 0; }
+  .reveal .pipe .st { flex: 1; background: var(--soft); border: 2px solid var(--navy); border-radius: 10px; padding: 0.4em 0.3em; text-align: center; font-size: 0.6em; font-weight: 600; color: var(--navy-d); }
+  .reveal .pipe .st small { display: block; font-weight: 400; color: var(--muted); font-size: 0.85em; margin-top: 0.25em; }
+  .reveal .pipe .ar { align-self: center; color: var(--navy); font-size: 0.9em; font-weight: 700; }
+  .reveal .pipe .st.on { background: var(--navy); color: #fff; }
+  .reveal .pipe .st.on small { color: #dbe7f5; }
+  /* lab buttons (same as Lecture 4) */
+  .reveal .lab-link { z-index: 6; background: #28568a; color: #fff; font-weight: 600; font-size: 0.6em;
+    padding: 0.35em 0.9em; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.25); text-decoration: none; }
+  .reveal .lab-link:hover { background: #1c3f66; color: #fff; }
+  .reveal .btnrow { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 0.5em; }
+  .reveal .btnrow a, .reveal .btnrow button { position: static; display: inline-block; }
+  .reveal a.lab-link.alt { background: #fff; color: var(--navy); border: 2px solid var(--navy); box-shadow: none; }
+  /* interactive demos */
+  .reveal .demo-box { background: #f6f9fc; border: 1px solid #d8e0ea; border-radius: 10px; padding: 0.5em 0.7em; }
+  .reveal .demo-box label { font-size: 0.55em; color: var(--ink); display: flex; align-items: center; gap: 10px; margin: 0.3em 0; }
+  .reveal .demo-box input[type=range] { flex: 1; }
+  .reveal .demo-box .val { font-family: var(--r-code-font); min-width: 2.6em; text-align: right; color: var(--navy); font-weight: 700; }
+  .reveal .slides canvas { display: block; max-width: 100%; border-radius: 6px; background: #fff; }
+  .reveal button.dbtn { font-size: 0.5em; padding: 0.3em 0.8em; border-radius: 6px; border: 2px solid var(--navy); background: #fff; color: var(--navy); cursor: pointer; font-weight: 600; }
+  .reveal button.dbtn:hover { background: var(--navy); color: #fff; }
+  .reveal .demo-msg { font-size: 0.5em; color: var(--warn); }
+  .reveal .badge { display: inline-block; background: var(--navy); color: #fff; border-radius: 999px; padding: 0.05em 0.6em; font-size: 0.55em; font-weight: 700; vertical-align: middle; }
+  .reveal .badge.new { background: #ea580c; }
+  .reveal .pill { display: inline-block; border: 2px solid var(--navy); color: var(--navy); border-radius: 999px; padding: 0.05em 0.55em; font-size: 0.6em; font-weight: 700; margin: 0.1em; }
+
+  .reveal svg.stack-svg { display:block; width:100%; height:auto; max-height:650px; margin:0 auto; }
+  /* larger-image layouts */
+  .reveal .grid2.img-wide { grid-template-columns: minmax(0,1.75fr) minmax(0,1fr); }
+  .reveal .grid2.img-wide-r { grid-template-columns: minmax(0,1fr) minmax(0,1.75fr); }
+  .reveal img.fig.h600 { max-height: 640px; }
+  .reveal .grid2 img.fig, .reveal .grid3 img.fig { width: 100%; object-fit: contain; }
+  .reveal img.fig.full { max-height: 720px; width: 100%; object-fit: contain; }
+  .reveal .slides img.fig, .reveal .slides img.zoomable { cursor: zoom-in; }
+  .reveal .zoom-hint { position: absolute; right: 18px; bottom: 6px; font-size: 0.42em; color: #8a99aa; }
+  /* click-to-zoom lightbox */
+  #lb { position: fixed; inset: 0; z-index: 9999; background: rgba(10,16,24,0.92); display: none; align-items: center; justify-content: center; cursor: zoom-out; }
+  #lb.on { display: flex; }
+  #lb img { max-width: 96vw; max-height: 92vh; object-fit: contain; border-radius: 6px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); background: #fff; }
+  #lb p { position: fixed; bottom: 1.2vh; left: 0; right: 0; text-align: center; color: #dbe7f5; font: 15px "Source Sans Pro", sans-serif; margin: 0; }
+
+  /* ---- Part I additions ---- */
+  /* convolution diagram */
+  .reveal .conv { display: flex; align-items: center; gap: 16px; }
+  .reveal .cv-block { text-align: center; }
+  .reveal .cv-t { font-size: 0.5em; color: var(--muted); margin: 0 0 6px; }
+  .reveal .cv-grid { display: grid; gap: 4px; font-family: var(--r-code-font); font-weight: 700; }
+  .reveal .cv-grid.g5 { grid-template-columns: repeat(5, 2.4em); font-size: 0.55em; }
+  .reveal .cv-grid.g3 { grid-template-columns: repeat(3, 2.4em); font-size: 0.55em; }
+  .reveal .cv-grid span { background: #eef1f4; color: var(--ink); border-radius: 4px; padding: 0.35em 0; text-align: center; }
+  .reveal .cv-grid span.hi { background: #dbe7f5; color: var(--navy-d); }
+  .reveal .cv-grid span.c { background: var(--navy); color: #fff; }
+  .reveal .cv-grid.k span { background: #fff4ec; color: #9a3412; }
+  .reveal .cv-grid.o span { background: #f6f9fc; }
+  .reveal .cv-grid.o span.c { background: #1f7a4d; color: #fff; }
+  .reveal .cv-op { font-size: 1.1em; color: var(--navy); font-weight: 700; }
+  .reveal .pipe .st { min-width: 0; }
+  /* kernel playground inputs */
+  .reveal .kp-k { display: grid; grid-template-columns: repeat(3, 4.2em); gap: 6px; margin-bottom: 0.4em; }
+  .reveal .kp-k input { font: 700 0.5em var(--r-code-font); text-align: center; padding: 0.35em 0; border: 2px solid #d8e0ea; border-radius: 6px; color: var(--navy-d); width: 100%; }
+  .reveal .demo-box input[type=number] { font: 0.9em var(--r-code-font); }
+  .reveal .btnrow .dbtn { margin: 0; }
+  /* "Filters" section opener */
   .reveal .filters-hero { text-align: left; }
   .reveal .filters-hero .fh-kicker { color: #9fc1e6; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; font-size: 0.5em; margin: 0.4em 0 0; }
   .reveal .filters-hero h2.fh-title { color: #fff; font-size: 3.1em; font-weight: 800; line-height: 1; margin: 0.05em 0 0.15em; letter-spacing: -0.01em; }
@@ -221,71 +346,414 @@
   <div class="reveal">
     <div class="slides">
 
-<section id="computer-vision-lecture-5" class="slide level2" data-menu-title="Computer Vision — Lecture 5">
-<img data-src="assets/05_images_colour_filters/slide01.jpg" class="r-stretch quarto-figure-center" style="max-width:100%; object-fit:contain;" alt="Computer Vision — Lecture 5">
+<section id="computer-vision-lecture-5" class="slide level2" data-menu-title="Lecture 5 (Part I) — Images, Colour Spaces &amp; Filters">
+<div class="title-wrap">
+<div>
+<p class="t-kicker">LECTURE 5 · PART I</p>
+<p class="t-main">Computer Vision</p>
+<p class="t-sub">Images, Colour Spaces, Filters &amp; Features</p>
+<p class="muted" style="font-size:0.62em; margin:0;">With practical implementation in OpenCV · from pixels to deep learning</p>
+<div class="t-rule"></div>
+<p style="font-size:0.66em; font-weight:700; margin:0;">Dr. Muhammad Kazim</p>
+<p class="muted" style="font-size:0.56em; margin:0;">Department of Intelligent Systems<br>University of Lahore</p>
+</div>
+<div>
+<img src="assets/05_images_colour_filters/g_title_strip.jpg" alt="One road image as RGB, grayscale, LAB b* channel and Sobel edges" style="width:100%; border-radius:10px; box-shadow:0 6px 24px rgba(0,0,0,0.18); margin:0;">
+<div class="pixgrid" style="margin-top:18px;">
+<span style="background:#b3c4d8"></span><span style="background:#d6dfe9"></span><span style="background:#4f75a3"></span><span style="background:#7a96ba"></span><span style="background:#95acc8"></span><span style="background:#b3c4d8"></span><span style="background:#d6dfe9"></span><span style="background:#4f75a3"></span>
+<span style="background:#d6dfe9"></span><span style="background:#4f75a3"></span><span style="background:#7a96ba"></span><span style="background:#95acc8"></span><span style="background:#b3c4d8"></span><span style="background:#d6dfe9"></span><span style="background:#4f75a3"></span><span style="background:#7a96ba"></span>
+</div>
+</div>
+</div>
+<aside class="notes">Part I builds the toolbox: how an image is stored, how colour can be described in different spaces, how filters work, how edges/contours/features are extracted, and how deep learning replaces hand-designed rules. Part II then applies the toolbox to lane finding for self-driving cars.</aside>
 </section>
-<section id="human-vs-artificial-intelligence" class="slide level2" data-menu-title="Human vs Artificial Intelligence">
-<img data-src="assets/05_images_colour_filters/slide02.jpg" class="r-stretch quarto-figure-center" style="max-width:100%; object-fit:contain;" alt="Human vs Artificial Intelligence">
+
+<section id="learning-outcomes" class="slide level2" data-menu-title="Learning outcomes">
+<h2>Learning outcomes</h2>
+<p class="small muted">By the end of this lecture you should be able to:</p>
+<ol>
+<li>Explain how a computer stores an image: <b>pixels</b>, <code>uint8</code> values 0–255 and <b>H × W × C</b> arrays (tensors).</li>
+<li>Convert between <b>colour spaces</b> (RGB/BGR, HSV, LAB, YCbCr) and pick the right one for a task.</li>
+<li>Explain <b>convolution</b> with a kernel and compute an averaging filter <b>by hand</b>.</li>
+<li>Choose between <b>averaging, Gaussian and median</b> blur for a given type of noise.</li>
+<li>Find <b>edges</b> (Sobel, Laplacian, Canny), <b>contours</b> and simple <b>shapes</b> with OpenCV.</li>
+<li>Explain <b>features</b> (keypoints + descriptors), match them with <b>ORB</b>, and contrast hand-crafted with <b>learned</b> (deep) features.</li>
+</ol>
 </section>
-<section id="vision-transformer-vit-an-image-as-patches" class="slide level2" data-menu-title="Vision Transformer (ViT): an image as patches">
-<img data-src="assets/05_images_colour_filters/slide03.jpg" class="r-stretch quarto-figure-center" style="max-width:100%; object-fit:contain;" alt="Vision Transformer (ViT): an image as patches">
+
+<section id="roadmap" class="slide level2" data-menu-title="Roadmap">
+<h2>Roadmap: from pixels to deep learning</h2>
+<div class="pipe">
+<div class="st">① Seeing<small>human vs machine</small></div><div class="ar">→</div>
+<div class="st">② Pixels<small>images are numbers</small></div><div class="ar">→</div>
+<div class="st">③ Colour<small>colour spaces</small></div><div class="ar">→</div>
+<div class="st">④ Filters<small>kernels &amp; blur</small></div><div class="ar">→</div>
+<div class="st">⑤ Edges<small>shapes &amp; contours</small></div><div class="ar">→</div>
+<div class="st">⑥ Features<small>keypoints &amp; matching</small></div><div class="ar">→</div>
+<div class="st">⑦ Deep learning<small>learned features, ViT</small></div>
+</div>
+<div class="grid3" style="margin-top:0.6em;">
+<div><img class="fig" src="assets/05_images_colour_filters/g_pixel_grid.jpg" alt="An image patch as numbers" style="max-height:330px;"><p class="cap">② every pixel is a number</p></div>
+<div><img class="fig" src="assets/05_images_colour_filters/g_edges.jpg" alt="Edge detectors" style="max-height:330px;"><p class="cap">④–⑤ filters reveal edges and shapes</p></div>
+<div><img class="fig" src="assets/05_images_colour_filters/g_orb_match.jpg" alt="ORB feature matching" style="max-height:330px;"><p class="cap">⑥ features find the same object again</p></div>
+</div>
 </section>
-<section id="vit-patches-become-numbers" class="slide level2" data-menu-title="ViT: patches become numbers">
-<img data-src="assets/05_images_colour_filters/slide04.jpg" class="r-stretch quarto-figure-center" style="max-width:100%; object-fit:contain;" alt="ViT: patches become numbers">
+
+<!-- ============================ SECTION 1 ============================ -->
+<section id="human-vs-computer-vision" class="slide level2 center" data-background-color="#28568a" data-menu-title="1 · Human vs computer vision">
+<p class="sec-num">01</p>
+<p class="sec-title">Human vs computer vision</p>
+<p class="sec-sub">We see a mountain. What does the computer see?</p>
 </section>
-<section id="vit-8x8-patches-64-tokens" class="slide level2" data-menu-title="ViT: 8×8 patches → 64 tokens">
-<img data-src="assets/05_images_colour_filters/slide05.jpg" class="r-stretch quarto-figure-center" style="max-width:100%; object-fit:contain;" alt="ViT: 8×8 patches → 64 tokens">
+
+<section id="human-vs-artificial-intelligence" class="slide level2" data-menu-title="Human vs artificial intelligence">
+<h2>Natural vs artificial intelligence</h2>
+<div class="grid2 img-wide">
+<div><img class="fig h600" src="assets/05_images_colour_filters/p_human_vs_ai.jpg" alt="Human natural intelligence vs computer artificial intelligence"></div>
+<div>
+<div class="card"><h3>Natural intelligence</h3>
+<ul class="tight"><li>Biological — present from birth</li><li>Understands, imagines, feels</li><li>Learns from a <b>few</b> experiences</li></ul></div>
+<div class="card" style="margin-top:0.5em; border-left-color:#ea580c;"><h3>Artificial intelligence</h3>
+<ul class="tight"><li>Built by humans</li><li>Follows <b>algorithms</b> (programs)</li><li>Learns from <b>lots of data</b></li></ul></div>
+<p class="note" style="margin-top:0.6em;">Computer vision is the part of AI that turns <b>pixels</b> into <b>understanding</b>: what is in the image, where it is, and what is happening.</p>
+</div>
+</div>
 </section>
-<section id="vit-the-patch-grid" class="slide level2" data-menu-title="ViT: the patch grid">
-<img data-src="assets/05_images_colour_filters/slide06.jpg" class="r-stretch quarto-figure-center" style="max-width:100%; object-fit:contain;" alt="ViT: the patch grid">
-</section>
-<section id="from-noise-to-an-image-with-a-transformer" class="slide level2" data-menu-title="From noise to an image with a Transformer">
-<img data-src="assets/05_images_colour_filters/slide07.jpg" class="r-stretch quarto-figure-center" style="max-width:100%; object-fit:contain;" alt="From noise to an image with a Transformer">
-</section>
-<section id="zoom-in-an-image-is-made-of-pixels" class="slide level2" data-menu-title="Zoom in: an image is made of pixels">
-<img data-src="assets/05_images_colour_filters/slide08.jpg" class="r-stretch quarto-figure-center" style="max-width:100%; object-fit:contain;" alt="Zoom in: an image is made of pixels">
-</section>
-<section id="grayscale-intensity-0-to-255" class="slide level2" data-menu-title="Grayscale intensity: 0 to 255">
-<img data-src="assets/05_images_colour_filters/slide09.jpg" class="r-stretch quarto-figure-center" style="max-width:100%; object-fit:contain;" alt="Grayscale intensity: 0 to 255">
-</section>
-<section id="an-image-is-a-grid-of-numbers" class="slide level2" data-menu-title="An image is a grid of numbers">
-<img data-src="assets/05_images_colour_filters/slide10.jpg" class="r-stretch quarto-figure-center" style="max-width:100%; object-fit:contain;" alt="An image is a grid of numbers">
-</section>
-<section id="colour-images-r-g-and-b-channels" class="slide level2" data-menu-title="Colour images: R, G and B channels">
-<img data-src="assets/05_images_colour_filters/slide11.jpg" class="r-stretch quarto-figure-center" style="max-width:100%; object-fit:contain;" alt="Colour images: R, G and B channels">
-</section>
-<section id="256-x-256-x-256" class="slide level2" data-menu-title="256 × 256 × 256">
-<img data-src="assets/05_images_colour_filters/slide12.jpg" class="r-stretch quarto-figure-center" style="max-width:100%; object-fit:contain;" alt="256 × 256 × 256">
-</section>
-<section id="16-777-216-colours" class="slide level2" data-menu-title="16,777,216 colours">
-<img data-src="assets/05_images_colour_filters/slide13.jpg" class="r-stretch quarto-figure-center" style="max-width:100%; object-fit:contain;" alt="16,777,216 colours">
-</section>
-<section id="understanding-images-as-tensors" class="slide level2" data-menu-title="Understanding images as tensors">
-<img data-src="assets/05_images_colour_filters/slide14.jpg" class="r-stretch quarto-figure-center" style="max-width:100%; object-fit:contain;" alt="Understanding images as tensors">
-</section>
+
 <section id="human-vision-vs-computer-vision" class="slide level2" data-menu-title="Human vision vs computer vision">
-<img data-src="assets/05_images_colour_filters/slide15.jpg" class="r-stretch quarto-figure-center" style="max-width:100%; object-fit:contain;" alt="Human vision vs computer vision">
+<h2>Human vision vs computer vision</h2>
+<img class="fig" src="assets/05_images_colour_filters/p_human_vs_cv.jpg" alt="Human vision sees a mountain ridge; computer vision sees data" style="max-height:520px;">
+<div class="grid2" style="margin-top:0.5em;">
+<p class="small" style="margin:0;"><b>You</b> see a green ridge, mist and mountains — instantly and without effort — your brain has learned to see over a lifetime.</p>
+<p class="small" style="margin:0;"><b>The computer</b> receives only a <b>grid of numbers</b>. Every task — classify, detect, segment, track — starts from those numbers.</p>
+</div>
 </section>
+
+<!-- ============================ SECTION 2 ============================ -->
+<section id="images-are-numbers" class="slide level2 center" data-background-color="#1c3f66" data-background-image="assets/05_images_colour_filters/p_numbers_eye.jpg" data-background-opacity="0.28" data-menu-title="2 · Images are numbers">
+<p class="sec-num">02</p>
+<p class="sec-title">Images are numbers</p>
+<p class="sec-sub">Pixels, intensity, colour channels and tensors</p>
+</section>
+
+<section id="zoom-in-pixels" class="slide level2" data-menu-title="Zoom in: pixels">
+<h2>Zoom in: an image is made of pixels</h2>
+<div class="grid2 img-wide">
+<div><img class="fig h600" src="assets/05_images_colour_filters/p_pixel_zoom.jpg" alt="Zooming into a mountain photo reveals square pixels"></div>
+<div>
+<ul>
+<li>A digital image is a <b>grid of tiny squares</b> called <b>pixels</b> (<i>picture elements</i>).</li>
+<li>Each pixel stores <b>one value</b> (grayscale) or <b>three values</b> (colour).</li>
+<li><b>Resolution</b> = width × height.<br><span class="small">Full HD: 1920 × 1080 = <b>2,073,600</b> pixels.</span></li>
+<li>Zoom in far enough and the smooth mountain becomes visible squares.</li>
+</ul>
+</div>
+</div>
+</section>
+
+<section id="grayscale-intensity" class="slide level2" data-menu-title="Grayscale intensity: 0 to 255">
+<h2>Grayscale intensity: 0 to 255</h2>
+<img class="fig" src="assets/05_images_colour_filters/p_gray_levels.jpg" alt="Gray levels 0, 50, 100, 150, 200, 255" style="max-height:400px;">
+<div class="grid2" style="margin-top:0.6em;">
+<div class="card"><h3>Why 0–255?</h3>
+<p>Each pixel uses <b>8 bits</b> = 2<sup>8</sup> = <b>256</b> levels. <b>0 = black</b>, <b>255 = white</b>, everything else is a shade of gray. In NumPy the type is <code>uint8</code>.</p></div>
+<div class="warn"><b>Overflow trap.</b> <code>uint8</code> wraps around: <code>np.uint8(250) + 10</code> → <b>4</b>. OpenCV saturates instead: <code>cv2.add</code> gives <b>255</b>. Convert to <code>float32</code> before doing arithmetic.</div>
+</div>
+</section>
+
+<section id="an-image-is-a-grid-of-numbers" class="slide level2" data-menu-title="An image is a grid of numbers">
+<h2>A real image patch, as numbers</h2>
+<img class="fig" src="assets/05_images_colour_filters/g_pixel_grid.jpg" alt="Grayscale road image with a small patch shown as pixel values" style="max-height:440px;">
+<div class="grid2 wide-left" style="margin-top:0.4em;">
+<pre><code class="python" data-trim>
+import cv2
+img = cv2.imread("road.jpg", cv2.IMREAD_GRAYSCALE)
+print(img.shape, img.dtype)   # (847, 1344) uint8
+print(img[606, 452])          # row (y) first, then column (x)
+patch = img[606:633:3, 452:494:3]
+</code></pre>
+<p class="note">The red box covers road and lane paint. Road pixels are about <b>80</b>; the paint jumps to about <b>200</b>. A sudden jump like this is an <b>edge</b> — that is exactly what the filters in section 4 will find.</p>
+</div>
+</section>
+
+<section id="colour-images-rgb-channels" class="slide level2" data-menu-title="Colour images: R, G and B channels">
+<h2>Colour images: three channels</h2>
+<div class="grid2 img-wide">
+<div><img class="fig" src="assets/05_images_colour_filters/g_rgb_split.jpg" alt="Road image split into red, green and blue channels" style="max-height:600px;"></div>
+<div>
+<img class="fig" src="assets/05_images_colour_filters/p_rgb_cubes.jpg" alt="Red, green and blue planes stacked" style="max-height:230px;">
+<ul class="tight small" style="margin-top:0.5em;">
+<li>A colour pixel = <b>(R, G, B)</b>, three 8-bit numbers.</li>
+<li>Each channel is a grayscale image on its own.</li>
+<li>The <b>yellow</b> line is bright in R and G but <b>dark in B</b> — yellow = red + green.</li>
+<li>OpenCV stores channels in <b>B, G, R</b> order!</li>
+</ul>
+</div>
+</div>
+</section>
+
+<section id="colours-256-cubed" class="slide level2" data-menu-title="256 × 256 × 256 = 16,777,216 colours">
+<h2>256 × 256 × 256 = 16,777,216 colours</h2>
+<div class="grid2 img-wide">
+<div><img class="fig h600" src="assets/05_images_colour_filters/p_16m_colours.jpg" alt="16,777,216 colours"></div>
+<div>
+<p class="small">3 channels × 8 bits = <b>24-bit “true colour”</b>, enough for more shades than the eye can tell apart.</p>
+<div class="card"><h3>How big is one frame?</h3>
+<p>1920 × 1080 × 3 bytes = <b>6,220,800 bytes ≈ 6.2 MB</b></p>
+<p>Video at 30 fps → <b>≈ 187 MB every second</b>, uncompressed.</p></div>
+<p class="note" style="margin-top:0.6em;">That is why images and video are <b>compressed</b> (JPEG, H.264) — and why compression uses the <b>YCbCr</b> colour space you will meet shortly.</p>
+</div>
+</div>
+</section>
+
+<section id="images-as-tensors" class="slide level2" data-menu-title="Understanding images as tensors">
+<h2>Images as tensors</h2>
+<div class="grid2 img-wide">
+<div><img class="fig h600" src="assets/05_images_colour_filters/p_tensors.jpg" alt="Understanding images as tensors: grayscale grid, colour channels, 3D stack"></div>
+<div>
+<p class="small">A <b>tensor</b> is an n-dimensional array. Libraries disagree on the order of the axes:</p>
+<table class="simple">
+<tr><th>Library</th><th>Shape</th><th>Values</th></tr>
+<tr><td>OpenCV / NumPy</td><td>(H, W, C), <b>BGR</b></td><td><code>uint8</code> 0–255</td></tr>
+<tr><td>Matplotlib / PIL</td><td>(H, W, C), RGB</td><td><code>uint8</code></td></tr>
+<tr><td>PyTorch</td><td>(N, C, H, W)</td><td><code>float32</code> 0–1</td></tr>
+</table>
+<pre class="code-sm"><code class="python" data-trim>
+rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+t = torch.from_numpy(rgb)      # (H, W, 3)
+t = t.permute(2, 0, 1) / 255.  # (3, H, W)
+batch = t.unsqueeze(0)         # (1, 3, H, W)
+</code></pre>
+</div>
+</div>
+</section>
+
+<section id="quiz-images-as-numbers" class="slide level2" data-menu-title="Quiz: images as numbers">
+<h2>Quiz: images as numbers</h2>
+<div class="grid3">
+<div class="quiz"><p class="q">Question 1</p><p class="small"><code>img.shape</code> returns <code>(480, 640, 3)</code>. How <b>wide</b> is the image?</p>
+<div class="answer fragment"><b>640 px.</b> NumPy shape is (rows = height, columns = width, channels).</div></div>
+<div class="quiz"><p class="q">Question 2</p><p class="small">How many bytes does one uncompressed <b>4K</b> RGB frame (3840 × 2160) need?</p>
+<div class="answer fragment"><b>24,883,200 bytes ≈ 24.9 MB</b> = 3840 × 2160 × 3.</div></div>
+<div class="quiz"><p class="q">Question 3</p><p class="small">A pixel reads <code>(0, 255, 255)</code> in OpenCV. What colour is it?</p>
+<div class="answer fragment"><b>Yellow.</b> OpenCV order is B, G, R → R = 255, G = 255, B = 0.</div></div>
+</div>
+</section>
+
+<!-- ============================ SECTION 3 ============================ -->
+<section id="colour-spaces" class="slide level2 center" data-background-color="#28568a" data-menu-title="3 · Colour spaces">
+<p class="sec-num">03</p>
+<p class="sec-title">Colour spaces</p>
+<p class="sec-sub">One image, many ways to describe its colours</p>
+</section>
+
 <section id="colour-spaces-one-image-many-descriptions" class="slide level2" data-menu-title="Colour spaces: one image, many descriptions">
-<img data-src="assets/05_images_colour_filters/slide16.jpg" class="r-stretch quarto-figure-center" style="max-width:100%; object-fit:contain;" alt="Colour spaces: one image, many descriptions">
+<h2>Same image, different descriptions</h2>
+<div class="grid2 img-wide">
+<div><img class="fig h600" src="assets/05_images_colour_filters/p_colour_spaces.jpg" alt="One mountain image shown in RGB, BGR, HSV, CMYK, LAB, Gray and YCrCb"></div>
+<div>
+<p class="small">A <b>colour space</b> is a coordinate system for colour. Converting changes the <b>numbers</b>, not the <b>information</b>.</p>
+<p class="small">We switch spaces to <b>separate</b> what we care about:</p>
+<ul class="tight small">
+<li><b>HSV / HLS</b> — colour (hue) apart from brightness</li>
+<li><b>LAB</b> — distances match human perception</li>
+<li><b>YCbCr</b> — brightness apart from colour, for compression</li>
+<li><b>Gray</b> — one channel, when colour does not matter</li>
+</ul>
+<pre class="code-sm"><code class="python" data-trim>
+hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+lab = cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
+</code></pre>
+</div>
+</div>
 </section>
+
+<section id="opencv-bgr-gotcha" class="slide level2" data-menu-title="RGB vs BGR in OpenCV">
+<h2>OpenCV’s first gotcha: BGR, not RGB</h2>
+<img class="fig" src="assets/05_images_colour_filters/g_bgr_rgb.jpg" alt="The same image displayed correctly and with red and blue swapped" style="max-height:340px;">
+<div class="grid2" style="margin-top:0.6em;">
+<pre><code class="python" data-trim>
+img = cv2.imread("road.jpg")  # B, G, R
+plt.imshow(img)               # wrong colours
+
+rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+plt.imshow(rgb)               # correct
+</code></pre>
+<p class="note">OpenCV uses BGR for historical reasons: it was the common byte order of camera drivers and Windows bitmaps when the library was written. Everything else (Matplotlib, PIL, PyTorch models) expects <b>RGB</b>. Convert once, at the boundary.</p>
+</div>
+</section>
+
+<section id="every-space-channel-by-channel" class="slide level2" data-menu-title="Colour spaces channel by channel">
+<h2>Every space, channel by channel</h2>
+<div class="grid2 img-wide">
+<div><img class="fig" src="assets/05_images_colour_filters/g_colour_spaces_grid.jpg" alt="HSV, LAB and YCrCb channels of a road image" style="max-height:700px;"></div>
+<div>
+<p class="small">The same road in three colour spaces. Things to notice:</p>
+<ul class="tight small">
+<li><b>V, L* and Y</b> all look like a grayscale photo — they hold the brightness.</li>
+<li><b>H</b> (hue) is flat across the whole road: hue ignores how bright things are.</li>
+<li><b>S</b> (saturation) makes the colourful yellow line stand out against the gray road.</li>
+<li><b>b*</b> and <b>Cr/Cb</b> separate yellow and blue: sky dark, yellow line bright.</li>
+</ul>
+<p class="tiny muted">Channels with a small range (H, a*, b*, Cr, Cb) are stretched to 0–255 for display.</p>
+</div>
+</div>
+</section>
+
 <section id="hsv" class="slide level2" data-menu-title="HSV">
-<img data-src="assets/05_images_colour_filters/slide17.jpg" class="r-stretch quarto-figure-center" style="max-width:100%; object-fit:contain;" alt="HSV">
+<h2>HSV: hue, saturation, value</h2>
+<div class="grid2">
+<div><img class="fig" src="assets/05_images_colour_filters/p_hsv_cylinder.jpg" alt="HSV cylinder with hue angle, saturation radius and value height" style="max-height:440px; width:100%; object-fit:contain;"></div>
+<div>
+<ul>
+<li><b>H — hue</b>: the colour itself, an <b>angle</b> around the cylinder (red → yellow → green → blue → red).</li>
+<li><b>S — saturation</b>: how <b>pure</b> the colour is (0 = gray, max = vivid).</li>
+<li><b>V — value</b>: how <b>bright</b> it is (0 = black).</li>
+</ul>
+<div class="warn"><b>OpenCV scaling:</b> H is 0–<b>179</b> (degrees ÷ 2, so it fits in a <code>uint8</code>); S and V are 0–255.</div>
+<p class="note" style="margin-top:0.5em;">Why it helps: a yellow line in <b>shadow</b> changes V a lot but H very little, so thresholding H is much more robust than thresholding RGB.</p>
+</div>
+</div>
 </section>
-<section id="cmyk" class="slide level2" data-menu-title="CMYK">
-<img data-src="assets/05_images_colour_filters/slide18.jpg" class="r-stretch quarto-figure-center" style="max-width:100%; object-fit:contain;" alt="CMYK">
+
+<section id="hsv-in-practice" class="slide level2" data-menu-title="HSV in practice: select lane paint">
+<h2>HSV in practice: select the lane paint</h2>
+<img class="fig" src="assets/05_images_colour_filters/g_hsv_mask.jpg" alt="Original road, HSV mask of yellow and white, masked result" style="max-height:330px;">
+<div class="grid2 wide-left" style="margin-top:0.5em;">
+<pre><code class="python" data-trim>
+hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+# bounds are (H, S, V)
+yellow = cv2.inRange(hsv, (15, 80, 120), (35, 255, 255))
+white  = cv2.inRange(hsv, (0, 0, 200), (179, 40, 255))
+mask   = cv2.bitwise_or(yellow, white)
+result = cv2.bitwise_and(img, img, mask=mask)
+</code></pre>
+<p class="warn"><b>Look closely:</b> the dry grass is yellow too, so colour alone is not enough. In Part II we add a <b>region-of-interest</b> mask to keep only the road.</p>
+</div>
 </section>
+
+<section id="hsv-explorer" class="slide level2" data-menu-title="Live demo: HSV threshold explorer">
+<p class="kicker">Live demo</p>
+<h2>HSV threshold explorer</h2>
+<div class="grid2 img-wide">
+<div><canvas id="hsv-canvas" width="672" height="424" style="width:100%;"></canvas></div>
+<div class="demo-box">
+<label>H min <input type="range" id="hsv-h0" min="0" max="179" value="15"><span class="val" id="hsv-h0v">15</span></label>
+<label>H max <input type="range" id="hsv-h1" min="0" max="179" value="35"><span class="val" id="hsv-h1v">35</span></label>
+<label>S min <input type="range" id="hsv-s0" min="0" max="255" value="80"><span class="val" id="hsv-s0v">80</span></label>
+<label>S max <input type="range" id="hsv-s1" min="0" max="255" value="255"><span class="val" id="hsv-s1v">255</span></label>
+<label>V min <input type="range" id="hsv-v0" min="0" max="255" value="120"><span class="val" id="hsv-v0v">120</span></label>
+<div class="btnrow">
+<button class="dbtn" data-hsv="15,35,80,255,120">yellow paint</button>
+<button class="dbtn" data-hsv="0,179,0,40,200">white paint</button>
+<button class="dbtn" data-hsv="95,115,60,255,120">blue sky</button>
+<button class="dbtn" data-hsv="30,90,40,255,20">green trees</button>
+</div>
+<label style="margin-top:0.6em;"><input type="checkbox" id="hsv-show"> show the mask only</label>
+<p class="tiny muted" style="margin:0.4em 0 0;">Selected: <b id="hsv-kept">–</b> of the pixels. H uses OpenCV’s 0–179 scale.</p>
+<p class="demo-msg" id="hsv-msg"></p>
+</div>
+</div>
+</section>
+
 <section id="lab-colour-space" class="slide level2" data-menu-title="LAB colour space">
-<img data-src="assets/05_images_colour_filters/slide19.jpg" class="r-stretch quarto-figure-center" style="max-width:100%; object-fit:contain;" alt="LAB colour space">
+<h2>LAB: a colour space built around human perception</h2>
+<div class="grid2">
+<div><img class="fig" src="assets/05_images_colour_filters/p_lab_sphere.jpg" alt="LAB colour sphere: L* white to black, a* green to red, b* blue to yellow" style="max-height:440px; width:100%; object-fit:contain;"></div>
+<div>
+<ul>
+<li><b>L*</b> — lightness, black (0) → white (100)</li>
+<li><b>a*</b> — green (−) ↔ red (+)</li>
+<li><b>b*</b> — blue (−) ↔ yellow (+)</li>
+</ul>
+<p class="small"><b>Perceptually uniform:</b> the same distance in LAB looks like the same colour difference to a person (ΔE). Used for colour matching, printing quality checks and robust segmentation.</p>
+<div class="warn"><b>OpenCV 8-bit scaling:</b> L* × 255/100, and a*, b* are shifted by +128 (so 128 = neutral gray).</div>
+</div>
+</div>
 </section>
-<section id="lane-finding-using-lab-colour-space" class="slide level2" data-menu-title="Lane finding using LAB colour space">
-<img data-src="assets/05_images_colour_filters/slide20.jpg" class="r-stretch quarto-figure-center" style="max-width:100%; object-fit:contain;" alt="Lane finding using LAB colour space">
+
+<section id="why-colour-spaces-matter" class="slide level2" data-menu-title="Why it matters: the yellow lane">
+<h2>Why it matters: finding a yellow line</h2>
+<img class="fig" src="assets/05_images_colour_filters/g_yellow_lane.jpg" alt="Original, grayscale, HLS S and LAB b* channels of a road with a yellow line" style="max-height:330px;">
+<div class="grid3" style="margin-top:0.6em;">
+<div class="card"><h3>Grayscale</h3><p>Yellow paint ends up a similar gray to the road: <b>low contrast</b>, easy to miss in shadow.</p></div>
+<div class="card"><h3>HLS S channel</h3><p>Saturated paint is bright, gray asphalt is dark — but the grass is bright too.</p></div>
+<div class="card" style="border-left-color:#1f7a4d;"><h3>LAB b* channel</h3><p>Yellow is large positive b*: the line <b>pops out</b> and the sky turns dark.</p></div>
+</div>
 </section>
+
+<section id="lane-finding-using-lab" class="slide level2" data-menu-title="Lane finding using LAB colour space">
+<h2>Application: lane finding with LAB</h2>
+<div class="grid2 img-wide">
+<div><img class="fig h600" src="assets/05_images_colour_filters/p_lab_lanes.jpg" alt="Lane area painted green on a highway, with curvature and centre offset"></div>
+<div>
+<p class="small">An advanced lane finder thresholds the <b>LAB b*</b> channel for yellow paint and the <b>L*</b> channel for white paint, fits curves to the lane pixels, and reports:</p>
+<ul class="tight small"><li>radius of curvature (here 365 m)</li><li>how far the car is from the lane centre</li></ul>
+<p class="note">In <a href="05_SDC_Lane_Finding.html">Part II</a> you build the simpler version step by step: colour selection → region mask → Canny → Hough lines.</p>
+</div>
+</div>
+</section>
+
 <section id="ycbcr" class="slide level2" data-menu-title="YCbCr">
-<img data-src="assets/05_images_colour_filters/slide21.jpg" class="r-stretch quarto-figure-center" style="max-width:100%; object-fit:contain;" alt="YCbCr">
+<h2>YCbCr: brightness plus two colour differences</h2>
+<div class="grid2 img-wide">
+<div><img class="fig h600" src="assets/05_images_colour_filters/p_ycbcr.jpg" alt="Y brightness, Cb blue difference, Cr red difference"></div>
+<div>
+<ul class="small">
+<li><b>Y</b> (luma) = 0.299 R + 0.587 G + 0.114 B — the eye is most sensitive to green.</li>
+<li><b>Cb</b> = blue − Y, <b>Cr</b> = red − Y (colour differences). OpenCV order: <b>Y, Cr, Cb</b>.</li>
+</ul>
+<div class="card"><h3>Where it is used</h3>
+<ul class="tight"><li><b>JPEG and video</b>: the eye sees less colour detail than brightness detail, so Cb and Cr are stored at lower resolution (4:2:0).</li>
+<li><b>Skin detection</b>: skin tones form a tight cluster in Cb–Cr.</li></ul></div>
+
+</div>
+</div>
 </section>
-<section id="filters" class="slide level2 filters-hero" data-background-color="#1c3f66" data-menu-title="Filters">
-<p class="fh-kicker">Lecture 5 &middot; Part I &middot; Image processing</p>
+
+<section id="cmyk" class="slide level2" data-menu-title="CMYK">
+<h2>CMYK: colour for printers</h2>
+<div class="grid2">
+<div><img class="fig" src="assets/05_images_colour_filters/p_cmyk.jpg" alt="Subtractive mixing of cyan, magenta and yellow" style="max-height:520px; width:100%; object-fit:contain;"></div>
+<div>
+<ul>
+<li><b>Subtractive</b>: inks absorb light. Cyan + magenta + yellow → (almost) black.</li>
+<li><b>K</b> = key (black) ink: a real black, cheaper and sharper text.</li>
+<li>Screens <b>emit</b> light → RGB is additive. Paper <b>reflects</b> light → CMYK.</li>
+</ul>
+<p class="note">CMYK is a <b>printing</b> space. OpenCV has no CMYK conversion and you will rarely use it in a vision pipeline — but you should recognise it.</p>
+</div>
+</div>
+</section>
+
+<section id="colour-spaces-summary" class="slide level2" data-menu-title="Colour spaces: when to use which">
+<h2>Colour spaces: when to use which</h2>
+<table class="simple" style="font-size:0.78em;">
+<tr><th>Space</th><th>Channels</th><th>Good for</th><th>OpenCV</th></tr>
+<tr><td><b>RGB / BGR</b></td><td>red, green, blue</td><td>display, storage, deep-learning input</td><td><code>cv2.COLOR_BGR2RGB</code></td></tr>
+<tr><td><b>Gray</b></td><td>intensity</td><td>edges, features, speed (1 channel instead of 3)</td><td><code>cv2.COLOR_BGR2GRAY</code></td></tr>
+<tr><td><b>HSV / HLS</b></td><td>hue, saturation, value / lightness</td><td>colour thresholding, robust to shadows</td><td><code>cv2.COLOR_BGR2HSV</code> · <code>HLS</code></td></tr>
+<tr><td><b>LAB</b></td><td>lightness, green–red, blue–yellow</td><td>perceptual colour difference, yellow/blue separation</td><td><code>cv2.COLOR_BGR2LAB</code></td></tr>
+<tr><td><b>YCbCr</b></td><td>luma, blue diff., red diff.</td><td>compression (JPEG, video), skin detection</td><td><code>cv2.COLOR_BGR2YCrCb</code></td></tr>
+<tr><td><b>CMYK</b></td><td>cyan, magenta, yellow, key</td><td>printing only</td><td>—</td></tr>
+</table>
+</section>
+
+<section id="quiz-colour-spaces" class="slide level2" data-menu-title="Quiz: colour spaces">
+<h2>Quiz: colour spaces</h2>
+<div class="grid3">
+<div class="quiz"><p class="q">Question 1</p><p class="small">Why is OpenCV’s hue range <b>0–179</b> and not 0–359?</p>
+<div class="answer fragment">An 8-bit channel holds at most 255, so the 360° hue angle is <b>halved</b>.</div></div>
+<div class="quiz"><p class="q">Question 2</p><p class="small">You must find a <b>yellow</b> line that is partly in <b>shadow</b>. Which channels would you try?</p>
+<div class="answer fragment"><b>H (+ S)</b> in HSV/HLS, or <b>b*</b> in LAB — they describe colour separately from brightness.</div></div>
+<div class="quiz"><p class="q">Question 3</p><p class="small">Why does JPEG convert images to <b>YCbCr</b> before compressing?</p>
+<div class="answer fragment">The eye sees fine detail in <b>brightness (Y)</b> more than in colour, so Cb and Cr can be stored at lower resolution.</div></div>
+</div>
+</section>
+
+<!-- ============================ SECTION 4 ============================ -->
+<section id="filters" class="slide level2 filters-hero" data-background-color="#1c3f66" data-menu-title="4 · Filters">
+<p class="fh-kicker">04 · Lecture 5 · Part I · Image processing</p>
 <h2 class="fh-title">Filters</h2>
 <p class="fh-sub">Slide a small <b>kernel</b> over every pixel and replace it with a weighted sum of its neighbours.
 Same image, different kernel, very different result.</p>
@@ -317,42 +785,655 @@ Same image, different kernel, very different result.</p>
 </figure>
 </div>
 </section>
+
 <section id="types-of-image-filters" class="slide level2" data-menu-title="Types of image filters">
-<img data-src="assets/05_images_colour_filters/slide23.jpg" class="r-stretch quarto-figure-center" style="max-width:100%; object-fit:contain;" alt="Types of image filters">
+<h2>Types of image filters</h2>
+<img class="fig" src="assets/05_images_colour_filters/p_filter_types.jpg" alt="Blur, averaging, sharpen, contrast, edge detect, colour filter and median denoise on one landscape" style="max-height:560px;">
+<div class="grid2" style="margin-top:0.4em;">
+<p class="small" style="margin:0;"><b>Neighbourhood filters</b> (this lecture) look at a pixel <b>and its neighbours</b>: blur, sharpen, edges, median.</p>
+<p class="small" style="margin:0;"><b>Point operations</b> look at <b>one pixel at a time</b>: contrast, brightness, colour tone (Lecture 3).</p>
+</div>
 </section>
-<section id="averaging-filter" class="slide level2" data-menu-title="Averaging filter">
-<img data-src="assets/05_images_colour_filters/slide24.jpg" class="r-stretch quarto-figure-center" style="max-width:100%; object-fit:contain;" alt="Averaging filter">
+
+<section id="how-a-filter-works" class="slide level2" data-menu-title="How a filter works: convolution">
+<h2>How a filter works: convolution</h2>
+<div class="grid2 wide-left">
+<div>
+<div class="conv">
+<div class="cv-block"><p class="cv-t">input image <i>f</i></p>
+<div class="cv-grid g5">
+<span>10</span><span>10</span><span>10</span><span>10</span><span>10</span>
+<span>10</span><span class="hi">10</span><span class="hi">10</span><span class="hi">10</span><span>10</span>
+<span>10</span><span class="hi">10</span><span class="hi c">100</span><span class="hi">10</span><span>10</span>
+<span>10</span><span class="hi">10</span><span class="hi">10</span><span class="hi">10</span><span>10</span>
+<span>10</span><span>10</span><span>10</span><span>10</span><span>10</span>
+</div></div>
+<div class="cv-op">⊗</div>
+<div class="cv-block"><p class="cv-t">kernel <i>w</i> (box, ÷ 9)</p>
+<div class="cv-grid g3 k"><span>1</span><span>1</span><span>1</span><span>1</span><span>1</span><span>1</span><span>1</span><span>1</span><span>1</span></div></div>
+<div class="cv-op">=</div>
+<div class="cv-block"><p class="cv-t">output <i>g</i></p>
+<div class="cv-grid g3 o"><span>&nbsp;</span><span>&nbsp;</span><span>&nbsp;</span><span>&nbsp;</span><span class="c">20</span><span>&nbsp;</span><span>&nbsp;</span><span>&nbsp;</span><span>&nbsp;</span></div></div>
+</div>
+<p class="small" style="margin-top:0.6em;">(8 × 10 + 100) ÷ 9 = 180 ÷ 9 = <b>20</b>. The bright spike is spread out and dimmed: that is blurring.</p>
+</div>
+<div>
+<ol class="small">
+<li>Place the kernel over a pixel.</li>
+<li>Multiply each neighbour by the kernel weight under it.</li>
+<li>Add them up → the new value of the centre pixel.</li>
+<li>Slide to the next pixel and repeat — <b>for every pixel</b>.</li>
+</ol>
+<p class="small">\[ g(x,y) = \sum_{i=-k}^{k}\sum_{j=-k}^{k} w(i,j)\, f(x+i,\, y+j) \]</p>
+<p class="tiny muted">Strictly, this is <i>correlation</i>; convolution flips the kernel first. For symmetric kernels they are identical. At the borders OpenCV reflects the image (<code>BORDER_REFLECT_101</code>).</p>
+<pre><code class="python" data-trim>
+k = np.ones((3, 3), np.float32) / 9
+out = cv2.filter2D(img, -1, k)  # any kernel
+</code></pre>
+</div>
+</div>
 </section>
-<section id="averaging-sum-the-neighbourhood" class="slide level2" data-menu-title="Averaging: sum the neighbourhood">
-<img data-src="assets/05_images_colour_filters/slide25.jpg" class="r-stretch quarto-figure-center" style="max-width:100%; object-fit:contain;" alt="Averaging: sum the neighbourhood">
+
+<section id="averaging-filter-by-hand" class="slide level2" data-menu-title="Averaging filter by hand">
+<h2>The averaging filter, worked by hand</h2>
+<div class="grid3">
+<div><img class="fig" src="assets/05_images_colour_filters/p_avg_1.jpg" alt="A white cross of 255 on black zeros, 3x3 window on the centre"><p class="cap">① a white cross (255) on black (0); 3 × 3 window on the centre</p></div>
+<div><img class="fig" src="assets/05_images_colour_filters/p_avg_2.jpg" alt="Adding the nine values gives 1275"><p class="cap">② add the 9 values: 5 × 255 = <b>1275</b></p></div>
+<div><img class="fig" src="assets/05_images_colour_filters/p_avg_3.jpg" alt="1275 divided by 9 is 142"><p class="cap">③ divide by 9: 1275 ÷ 9 = 141.7 → <b>142</b></p></div>
+</div>
+<p class="note" style="margin-top:0.6em;">The centre drops from 255 to <b>142</b>, and the black pixels next to the line become gray. Repeat everywhere: the sharp cross becomes a soft, wider blur. Averaging removes <b>noise</b> — but also <b>detail</b>.</p>
 </section>
-<section id="averaging-1275-9-142" class="slide level2" data-menu-title="Averaging: 1275 ÷ 9 = 142">
-<img data-src="assets/05_images_colour_filters/slide26.jpg" class="r-stretch quarto-figure-center" style="max-width:100%; object-fit:contain;" alt="Averaging: 1275 ÷ 9 = 142">
+
+<section id="kernel-size-matters" class="slide level2" data-menu-title="Kernel size matters">
+<h2>Kernel size matters</h2>
+<img class="fig" src="assets/05_images_colour_filters/g_kernel_sizes.jpg" alt="Box blur with 3x3, 9x9 and 21x21 kernels" style="max-height:330px;">
+<div class="grid2 wide-left" style="margin-top:0.6em;">
+<pre><code class="python" data-trim>
+for k in (3, 9, 21):
+    out = cv2.blur(img, (k, k))     # k x k box filter
+</code></pre>
+<ul class="tight small" style="margin:0;">
+<li>Bigger kernel → <b>more smoothing</b>, more detail lost.</li>
+<li>Sizes are <b>odd</b> (3, 5, 7…) so there is a centre pixel.</li>
+<li>Cost grows with k² — use the smallest size that works.</li>
+</ul>
+</div>
 </section>
+
 <section id="gaussian-blur" class="slide level2" data-menu-title="Gaussian blur">
-<img data-src="assets/05_images_colour_filters/slide27.jpg" class="r-stretch quarto-figure-center" style="max-width:100%; object-fit:contain;" alt="Gaussian blur">
+<h2>Gaussian blur: closer neighbours count more</h2>
+<div class="grid2">
+<div><img class="fig" src="assets/05_images_colour_filters/p_gaussian_harbour.jpg" alt="Harbour photo: Gaussian blurred half and original half" style="max-height:470px; width:100%; object-fit:contain;"></div>
+<div>
+<p class="small">Instead of equal weights, use a bell curve:</p>
+<p class="small">\[ G(x,y) = \frac{1}{2\pi\sigma^2}\, e^{-\frac{x^2+y^2}{2\sigma^2}} \]</p>
+<div class="grid2" style="align-items:center; gap:14px;">
+<div class="cv-grid g3 k" style="font-size:0.6em;"><span>1</span><span>2</span><span>1</span><span>2</span><span>4</span><span>2</span><span>1</span><span>2</span><span>1</span></div>
+<p class="tiny" style="margin:0;">3 × 3 Gaussian kernel, ÷ 16.<br>Centre weight 4, corners 1.</p>
+</div>
+<ul class="tight small">
+<li><b>σ</b> (sigma) controls the strength of the blur.</li>
+<li>Smoother and more natural than a box filter, with no “blocky” artefacts.</li>
+<li>Standard first step before edge detection.</li>
+</ul>
+<pre><code class="python" data-trim>
+out = cv2.GaussianBlur(img, (5, 5), 0)   # sigma 0 → from size
+</code></pre>
+</div>
+</div>
 </section>
+
 <section id="median-blur" class="slide level2" data-menu-title="Median blur">
-<img data-src="assets/05_images_colour_filters/slide28.jpg" class="r-stretch quarto-figure-center" style="max-width:100%; object-fit:contain;" alt="Median blur">
+<h2>Median blur: take the middle value</h2>
+<div class="grid2">
+<div><img class="fig" src="assets/05_images_colour_filters/p_median_grid.jpg" alt="Pixel grid with a white patch of 255 values; the 3x3 neighbourhood values sorted with the median highlighted" style="max-height:520px; width:100%; object-fit:contain;"></div>
+<div>
+<ol class="small">
+<li>Collect the 9 values in the 3 × 3 window.</li>
+<li><b>Sort</b> them.</li>
+<li>Take the <b>middle</b> (5th) value: here <b>28</b>.</li>
+</ol>
+<ul class="tight small">
+<li><b>Non-linear</b>: no kernel weights, no sum.</li>
+<li>One extreme value (a 255 speck) can never become the answer → <b>perfect for salt-and-pepper noise</b>.</li>
+<li><b>Keeps edges sharp</b>, because the output is always a value that really occurs in the window.</li>
+</ul>
+<pre><code class="python" data-trim>
+out = cv2.medianBlur(img, 5)   # kernel size must be odd
+</code></pre>
+</div>
+</div>
 </section>
-<section id="edge-detectors" class="slide level2" data-menu-title="Edge detectors">
-<img data-src="assets/05_images_colour_filters/slide29.jpg" class="r-stretch quarto-figure-center" style="max-width:100%; object-fit:contain;" alt="Edge detectors">
+
+<section id="which-blur-for-which-noise" class="slide level2" data-menu-title="Which blur for which noise?">
+<h2>Which blur for which noise?</h2>
+<img class="fig" src="assets/05_images_colour_filters/g_noise_vs_blur.jpg" alt="Gaussian noise and salt-and-pepper noise cleaned by averaging, Gaussian and median filters" style="max-height:560px;">
+<div class="grid2" style="margin-top:0.4em;">
+<p class="small" style="margin:0;"><b>Gaussian noise</b> (every pixel a bit off) → <b>Gaussian blur</b> averages it away.</p>
+<p class="small" style="margin:0;"><b>Salt &amp; pepper</b> (a few pixels completely wrong) → <b>median</b> ignores the outliers.</p>
+</div>
 </section>
-<section id="edge-detectors-in-opencv" class="slide level2" data-menu-title="Edge detectors in OpenCV">
-<img data-src="assets/05_images_colour_filters/slide30.jpg" class="r-stretch quarto-figure-center" style="max-width:100%; object-fit:contain;" alt="Edge detectors in OpenCV">
+
+<section id="kernel-playground" class="slide level2" data-menu-title="Live demo: kernel playground">
+<p class="kicker">Live demo</p>
+<h2>Kernel playground: design your own filter</h2>
+<canvas id="kp-canvas" width="960" height="302" style="width:100%; max-height:470px; object-fit:contain;"></canvas>
+<div class="demo-box" style="margin-top:0.4em;">
+<div class="grid2" style="grid-template-columns: auto 1fr; align-items:center; gap:24px;">
+<div>
+<div class="kp-k" id="kp-k">
+<input value="0"><input value="0"><input value="0"><input value="0"><input value="1"><input value="0"><input value="0"><input value="0"><input value="0">
+</div>
+<label>÷ <input type="number" id="kp-div" value="1" style="width:4em;"> <input type="checkbox" id="kp-abs"> |abs| for edges</label>
+</div>
+<div>
+<div class="btnrow">
+<button class="dbtn" data-k="0,0,0,0,1,0,0,0,0" data-d="1">identity</button>
+<button class="dbtn" data-k="1,1,1,1,1,1,1,1,1" data-d="9">box blur</button>
+<button class="dbtn" data-k="1,2,1,2,4,2,1,2,1" data-d="16">Gaussian</button>
+<button class="dbtn" data-k="0,-1,0,-1,5,-1,0,-1,0" data-d="1">sharpen</button>
+<button class="dbtn" data-k="-1,0,1,-2,0,2,-1,0,1" data-d="1" data-abs="1">Sobel x</button>
+<button class="dbtn" data-k="-1,-2,-1,0,0,0,1,2,1" data-d="1" data-abs="1">Sobel y</button>
+<button class="dbtn" data-k="0,1,0,1,-4,1,0,1,0" data-d="1" data-abs="1">Laplacian</button>
+<button class="dbtn" data-k="-2,-1,0,-1,1,1,0,1,2" data-d="1">emboss</button>
+</div>
+<p class="tiny muted" style="margin:0.5em 0 0;">Left: input · right: output. Edit any number and the output updates. Try: what happens if the weights do not add up to the divisor?</p>
+<p class="demo-msg" id="kp-msg"></p>
+</div>
+</div>
+</div>
 </section>
+
+<section id="quiz-filters" class="slide level2" data-menu-title="Quiz: filters">
+<h2>Quiz: filters by hand</h2>
+<div class="grid2">
+<div>
+<p class="small">A 3 × 3 neighbourhood:</p>
+<div class="cv-grid g3" style="max-width:280px; font-size:0.7em;"><span>10</span><span>12</span><span>11</span><span>13</span><span class="c">250</span><span>12</span><span>10</span><span>11</span><span>13</span></div>
+<p class="small muted" style="margin-top:0.5em;">The centre 250 is a noise speck.</p>
+</div>
+<div class="quiz">
+<p class="q">Quiz question</p>
+<ol class="small">
+<li>What does a <b>3 × 3 averaging</b> filter output for the centre?</li>
+<li>What does a <b>3 × 3 median</b> filter output?</li>
+<li>Which one removed the speck?</li>
+</ol>
+<div class="answer fragment">① sum = 342 → 342 ÷ 9 = <b>38</b> (the speck is smeared into its neighbours)<br>② sorted: 10 10 11 11 <b>12</b> 12 13 13 250 → <b>12</b><br>③ the <b>median</b> — the outlier never reaches the middle.</div>
+</div>
+</div>
+</section>
+
+<!-- ============================ SECTION 5 ============================ -->
+<section id="edges-shapes-contours" class="slide level2 center" data-background-color="#28568a" data-menu-title="5 · Edges, shapes &amp; contours">
+<p class="sec-num">05</p>
+<p class="sec-title">Edges, shapes &amp; contours</p>
+<p class="sec-sub">From brightness changes to object outlines</p>
+</section>
+
+<section id="edges-are-derivatives" class="slide level2" data-menu-title="An edge is a big change in brightness">
+<h2>An edge is a big change in brightness</h2>
+<div class="grid2">
+<div>
+<p class="small">Remember the lane-line patch: <b>81, 79, 113, 168, 200</b>. Edges are where the image changes fast — the <b>derivative</b> (gradient) is large.</p>
+<div class="grid2" style="gap:16px;">
+<div><p class="tiny" style="margin:0 0 4px;"><b>Sobel x</b> — finds vertical edges</p><div class="cv-grid g3 k" style="font-size:0.6em;"><span>−1</span><span>0</span><span>1</span><span>−2</span><span>0</span><span>2</span><span>−1</span><span>0</span><span>1</span></div></div>
+<div><p class="tiny" style="margin:0 0 4px;"><b>Sobel y</b> — finds horizontal edges</p><div class="cv-grid g3 k" style="font-size:0.6em;"><span>−1</span><span>−2</span><span>−1</span><span>0</span><span>0</span><span>0</span><span>1</span><span>2</span><span>1</span></div></div>
+</div>
+<p class="small" style="margin-top:0.6em;">\[ |\nabla f| = \sqrt{G_x^2 + G_y^2}, \qquad \theta = \arctan\frac{G_y}{G_x} \]</p>
+</div>
+<div class="card">
+<h3>Three classic edge detectors</h3>
+<ul class="tight">
+<li><b>Sobel</b> — first derivative in x and y; gives strength <i>and</i> direction.</li>
+<li><b>Laplacian</b> — second derivative; finds edges in all directions at once, but very sensitive to noise.</li>
+<li><b>Canny</b> — blur → Sobel → thin the edges → keep strong edges plus weak ones connected to them. Clean, one-pixel-wide edges. (Full details in <a href="05_SDC_Lane_Finding.html#/canny-edge-detection">Part II</a>.)</li>
+</ul>
+</div>
+</div>
+</section>
+
+<section id="edge-detectors" class="slide level2" data-menu-title="Edge detectors compared">
+<h2>Edge detectors compared</h2>
+<div class="grid2 img-wide">
+<div><img class="fig" src="assets/05_images_colour_filters/g_edges.jpg" alt="Tower Bridge: original, Sobel x, Sobel y, magnitude, Laplacian and Canny" style="max-height:700px;"></div>
+<div>
+<pre class="code-sm"><code class="python" data-trim>
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+gray = cv2.GaussianBlur(gray, (3, 3), 0)
+
+sx  = cv2.Sobel(gray, cv2.CV_64F, 1, 0, ksize=3)
+sy  = cv2.Sobel(gray, cv2.CV_64F, 0, 1, ksize=3)
+mag = cv2.magnitude(sx, sy)
+
+lap = cv2.Laplacian(gray, cv2.CV_64F)
+can = cv2.Canny(gray, 80, 180)
+</code></pre>
+<p class="warn" style="margin-top:0.5em;">Use <code>CV_64F</code>, not <code>uint8</code>: a dark→bright edge is positive and bright→dark is <b>negative</b>; <code>uint8</code> would clip it to 0 and lose half of the edges.</p>
+</div>
+</div>
+</section>
+
 <section id="shapes" class="slide level2" data-menu-title="Shapes">
-<img data-src="assets/05_images_colour_filters/slide31.jpg" class="r-stretch quarto-figure-center" style="max-width:100%; object-fit:contain;" alt="Shapes">
+<h2>From edges to shapes</h2>
+<div class="grid2 img-wide">
+<div><img class="fig h600" src="assets/05_images_colour_filters/p_exit_shapes.jpg" alt="EXIT sign: original, Canny edges, dilated edges, detected octagon with 8 points"></div>
+<div>
+<p class="small">The classic shape pipeline:</p>
+<div class="pipe" style="flex-direction:column; gap:6px;">
+<div class="st">gray + Gaussian blur</div>
+<div class="st">Canny edges</div>
+<div class="st">dilate — close small gaps</div>
+<div class="st">findContours — outlines</div>
+<div class="st on">approxPolyDP — count corners</div>
+</div>
+<p class="small" style="margin-top:0.5em;">The EXIT sign has <b>8 corners</b> → octagon. The trackbars set the two Canny thresholds and the minimum area.</p>
+</div>
+</div>
 </section>
-<section id="contours" class="slide level2" data-menu-title="Contours">
-<img data-src="assets/05_images_colour_filters/slide32.jpg" class="r-stretch quarto-figure-center" style="max-width:100%; object-fit:contain;" alt="Contours">
+
+<section id="contours-and-shape-classification" class="slide level2" data-menu-title="Contours &amp; shape classification">
+<h2>Contours: classify a shape by counting its corners</h2>
+<img class="fig" src="assets/05_images_colour_filters/g_shapes_contours.jpg" alt="Input shapes, binary mask and labelled contours with their corner counts" style="max-height:300px;">
+<div class="grid2 wide-left" style="margin-top:0.5em;">
+<pre><code class="python" data-trim>
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+_, mask = cv2.threshold(gray, 200, 255, cv2.THRESH_BINARY_INV)
+cnts, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL,
+                           cv2.CHAIN_APPROX_SIMPLE)
+for c in cnts:
+    peri   = cv2.arcLength(c, True)
+    approx = cv2.approxPolyDP(c, 0.02 * peri, True)
+    corners = len(approx)        # 3 triangle, 4 square/rect, ...
+    x, y, w, h = cv2.boundingRect(approx)
+</code></pre>
+<div>
+<p class="small">A <b>contour</b> is the list of boundary points of a white region in a binary mask.</p>
+<ul class="tight small">
+<li><code>approxPolyDP</code> simplifies the outline to a polygon; ε = 2% of the perimeter.</li>
+<li>4 corners: square if w ≈ h, else rectangle.</li>
+<li>Many corners → circle or ellipse.</li>
+</ul>
+</div>
+</div>
 </section>
-<section id="cleaning-a-mask-before-counting-objects" class="slide level2" data-menu-title="Cleaning a mask before counting objects">
-<img data-src="assets/05_images_colour_filters/slide33.jpg" class="r-stretch quarto-figure-center" style="max-width:100%; object-fit:contain;" alt="Cleaning a mask before counting objects">
+
+<section id="contours-step-by-step" class="slide level2" data-menu-title="Contours step by step">
+<h2>Contours step by step</h2>
+<div class="grid2 img-wide">
+<div><img class="fig" src="assets/05_images_colour_filters/p_contours.jpg" alt="Six stages: original, blurred gray, Canny, dilated, contour with corner points, result" style="max-height:560px;"></div>
+<div>
+<p class="small">Top row → bottom row:</p>
+<ol class="tight small">
+<li>original image</li>
+<li>gray + blur</li>
+<li>Canny edges</li>
+<li>dilated edges (gaps closed)</li>
+<li>contour with its <b>corner points</b> — small specks are also found</li>
+<li>final result: only contours <b>larger than a minimum area</b> are kept</li>
+</ol>
+</div>
+</div>
 </section>
-<section id="contour-features-points-and-area" class="slide level2" data-menu-title="Contour features: points and area">
-<img data-src="assets/05_images_colour_filters/slide34.jpg" class="r-stretch quarto-figure-center" style="max-width:100%; object-fit:contain;" alt="Contour features: points and area">
+
+<section id="cleaning-a-mask" class="slide level2" data-menu-title="Cleaning a mask before counting objects">
+<h2>Clean the mask before you count</h2>
+<img class="fig" src="assets/05_images_colour_filters/p_mask_cleaning.jpg" alt="Coloured objects, noisy mask, cleaned mask and 5 counted objects" style="max-height:360px;">
+<div class="grid2 wide-left" style="margin-top:0.5em;">
+<pre><code class="python" data-trim>
+k = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
+mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN,  k)  # remove specks
+mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, k)  # fill holes
+n = len(cv2.findContours(mask, cv2.RETR_EXTERNAL,
+                         cv2.CHAIN_APPROX_SIMPLE)[0])
+</code></pre>
+<div>
+<p class="small"><b>Without cleanup:</b> 20 “objects” — every speck of noise and every split piece count as separate objects.</p>
+<p class="small"><b>With morphology:</b> 5 objects, the correct count. <b>Opening</b> removes specks; <b>closing</b> fills small holes.</p>
+</div>
+</div>
 </section>
+
+<section id="contour-features" class="slide level2" data-menu-title="Contour features: points and area">
+<h2>Contour features: points and area</h2>
+<div class="grid2 img-wide">
+<div><img class="fig h600" src="assets/05_images_colour_filters/p_contour_features.jpg" alt="Three objects with green contours labelled with their number of points and area"></div>
+<div>
+<pre class="code-sm"><code class="python" data-trim>
+for c in cnts:
+    area = cv2.contourArea(c)
+    if area &lt; 1000:   # ignore noise
+        continue
+    peri   = cv2.arcLength(c, True)
+    approx = cv2.approxPolyDP(c, 0.02 * peri, True)
+    cv2.drawContours(img, [c], -1, (0, 255, 0), 3)
+    txt = f"Points: {len(approx)}  Area: {int(area)}"
+    cv2.putText(img, txt, (x, y), font, 1, red, 2)
+</code></pre>
+<p class="note" style="margin-top:0.5em;">Area and corner count are simple <b>features</b>: numbers that describe an object. They work for clean shapes — but can they tell two different <b>logos</b> apart? →</p>
+</div>
+</div>
+</section>
+
+<section id="quiz-edges-shapes" class="slide level2" data-menu-title="Quiz: edges &amp; shapes">
+<h2>Quiz: edges &amp; shapes</h2>
+<div class="grid3">
+<div class="quiz"><p class="q">Question 1</p><p class="small">Why do we usually <b>blur</b> before detecting edges?</p>
+<div class="answer fragment">Derivatives amplify <b>noise</b>; a Gaussian blur removes it first, so we only get real edges.</div></div>
+<div class="quiz"><p class="q">Question 2</p><p class="small">How many points should <code>approxPolyDP</code> return for a <b>STOP sign</b>?</p>
+<div class="answer fragment"><b>8</b> — a STOP sign is an octagon (like the EXIT sign).</div></div>
+<div class="quiz"><p class="q">Question 3</p><p class="small">Your object counter reports 37 objects for 5 coins. What is the most likely fix?</p>
+<div class="answer fragment">Clean the mask with <b>morphological opening</b> and ignore contours below a <b>minimum area</b>.</div></div>
+</div>
+</section>
+
+<!-- ============================ SECTION 6 ============================ -->
+<section id="feature-extraction" class="slide level2 center" data-background-color="#28568a" data-menu-title="6 · Feature extraction">
+<p class="sec-num">06</p>
+<p class="sec-title">Feature extraction</p>
+<p class="sec-sub">When shapes are not enough</p>
+</section>
+
+<section id="shapes-are-not-enough" class="slide level2" data-menu-title="Shapes aren’t enough">
+<h2>Shapes aren’t enough to find a specific logo</h2>
+<div class="grid2">
+<div><img class="fig" src="assets/05_images_colour_filters/p_logos.jpg" alt="Hundreds of company logos" style="max-height:440px;"><p class="cap">Hundreds of logos — most are circles, rectangles or words.</p></div>
+<div><img class="fig" src="assets/05_images_colour_filters/p_logos_shapes.jpg" alt="Shape detection finds a box around every logo" style="max-height:440px;"><p class="cap">A shape detector boxes <b>every</b> logo — it cannot say <i>which</i> one is which.</p></div>
+</div>
+<p class="note" style="margin-top:0.5em;">To recognise one particular object we need <b>distinctive local patterns</b> — corners, textures, letter shapes — that appear on that object and nowhere else. These are <b>features</b>.</p>
+</section>
+
+<section id="shape-vs-feature-based-detection" class="slide level2" data-menu-title="Shape-based vs feature-based detection">
+<h2>Shape-based vs feature-based detection</h2>
+<div class="grid2 img-wide">
+<div><img class="fig h600" src="assets/05_images_colour_filters/p_shape_vs_feature.jpg" alt="Graph rising from shape-based detection to feature-based detection"></div>
+<div>
+<table class="simple">
+<tr><th></th><th>Shape-based</th><th>Feature-based</th></tr>
+<tr><td>Looks at</td><td>outline, corners, area</td><td>many small, distinctive patches</td></tr>
+<tr><td>Finds</td><td>“a square”, “an octagon”</td><td>“<b>this</b> logo”, “<b>this</b> face”</td></tr>
+<tr><td>Rotation / scale</td><td>fragile</td><td>robust (with the right descriptor)</td></tr>
+<tr><td>Occlusion</td><td>fails if the outline breaks</td><td>works with some features hidden</td></tr>
+</table>
+</div>
+</div>
+</section>
+
+<section id="features-in-action-faces" class="slide level2" data-menu-title="Features in action: faces">
+<h2>Features in action: face landmarks</h2>
+<div class="grid3">
+<img class="fig" src="assets/05_images_colour_filters/p_face_1.jpg" alt="Dense face landmarks on a smiling man" style="max-height:360px;">
+<img class="fig" src="assets/05_images_colour_filters/p_face_2.jpg" alt="Face landmarks on a father and child" style="max-height:360px;">
+<img class="fig" src="assets/05_images_colour_filters/p_face_3.jpg" alt="Face landmarks on a woman" style="max-height:360px;">
+</div>
+<p class="small" style="margin-top:0.6em;">Hundreds of <b>landmarks</b> — eye corners, lip contours, nose, jaw line — are found and tracked in real time (here at 32 fps). They work across poses, expressions, ages and skin tones, and drive face filters, driver-drowsiness alerts and avatar animation.</p>
+</section>
+
+<section id="keypoints-and-descriptors" class="slide level2" data-menu-title="Keypoints &amp; descriptors">
+<h2>What is a feature? A keypoint plus a descriptor</h2>
+<img class="fig" src="assets/05_images_colour_filters/g_keypoints.jpg" alt="Shi-Tomasi corners and ORB keypoints on Tower Bridge" style="max-height:360px;">
+<div class="grid3" style="margin-top:0.5em;">
+<div class="card"><h3>① Keypoint — <i>where</i></h3><p>A point that can be found again: <b>corners</b> are good, edges are ambiguous, flat areas are useless. ORB also stores a <b>size</b> and an <b>orientation</b>.</p></div>
+<div class="card"><h3>② Descriptor — <i>what</i></h3><p>A vector that summarises the patch around the keypoint. ORB uses <b>256 bits</b>; SIFT uses 128 numbers.</p></div>
+<div class="card"><h3>Good features are …</h3><p><b>repeatable</b>, <b>distinctive</b>, and <b>invariant</b> to rotation, scale and lighting.</p></div>
+</div>
+</section>
+
+<section id="feature-descriptor" class="slide level2" data-menu-title="Feature descriptor">
+<h2>Features describe the whole scene</h2>
+<div class="grid2 img-wide">
+<div><img class="fig h600" src="assets/05_images_colour_filters/p_descriptor.jpg" alt="Keypoints drawn as circles on a night image of Earth, and descriptors shown as coloured points"></div>
+<div>
+<p class="small">Each yellow circle is a keypoint; its size is the scale at which it was found. Below, every keypoint becomes a <b>descriptor</b> — a point in a high-dimensional space.</p>
+<p class="small">Classic detectors and descriptors:</p>
+<ul class="tight small">
+<li><b>Harris</b> (1988) — corners</li>
+<li><b>SIFT</b> (2004) — scale and rotation invariant; free in OpenCV since its patent expired in 2020</li>
+<li><b>ORB</b> (2011) — fast, binary, free: the default choice on a Raspberry Pi</li>
+</ul>
+</div>
+</div>
+</section>
+
+<section id="matching-like-fingerprints" class="slide level2" data-menu-title="Matching: like fingerprints">
+<h2>Matching features works like fingerprint matching</h2>
+<div class="grid3">
+<div><img class="fig" src="assets/05_images_colour_filters/p_fp_1.jpg" alt="Fingerprint with marked points next to a database fingerprint" style="max-height:330px;"><p class="cap">① find distinctive points (minutiae)</p></div>
+<div><img class="fig" src="assets/05_images_colour_filters/p_fp_2.jpg" alt="Lines connecting matching points of two fingerprints" style="max-height:330px;"><p class="cap">② compare their descriptions with the database</p></div>
+<div><img class="fig" src="assets/05_images_colour_filters/p_fp_3.jpg" alt="100% match" style="max-height:330px;"><p class="cap">③ enough consistent matches → <b>same finger</b></p></div>
+</div>
+<p class="note" style="margin-top:0.5em;">Image matching does the same: compare descriptors, keep the nearest neighbours, and check that the matches agree on one geometric transformation.</p>
+</section>
+
+<section id="orb-matching" class="slide level2" data-menu-title="ORB feature matching in OpenCV">
+<h2>ORB feature matching in OpenCV</h2>
+<img class="fig" src="assets/05_images_colour_filters/g_orb_match.jpg" alt="ORB matches between Tower Bridge and a rotated, scaled copy" style="max-height:380px;">
+<div class="grid2 wide-left" style="margin-top:0.4em;">
+<pre class="code-sm"><code class="python" data-trim>
+orb = cv2.ORB_create(1500)
+k1, d1 = orb.detectAndCompute(gray1, None)
+k2, d2 = orb.detectAndCompute(gray2, None)
+
+bf   = cv2.BFMatcher(cv2.NORM_HAMMING)
+good = [m for m, n in bf.knnMatch(d1, d2, k=2)
+        if m.distance &lt; 0.75 * n.distance]  # ratio test
+H, inl = cv2.findHomography(pts1, pts2, cv2.RANSAC, 5.0)
+</code></pre>
+<div>
+<p class="small">The right image is <b>rotated 25°</b> and <b>scaled to 75%</b>. Still:</p>
+<ul class="tight small">
+<li>1500 keypoints per image</li>
+<li><b>541</b> pass the ratio test</li>
+<li><b>534</b> agree on one transformation (RANSAC)</li>
+</ul>
+
+</div>
+</div>
+</section>
+
+<section id="orb-classroom-demo" class="slide level2" data-menu-title="Matching a rotated image">
+<h2>Classroom demo: matching survives rotation</h2>
+<div class="grid2 img-wide">
+<div><img class="fig h600" src="assets/05_images_colour_filters/p_orb_dog.jpg" alt="ORB matches between a dog photo and a rotated copy"></div>
+<div>
+<p class="small">The same ORB pipeline on a photo and a rotated copy of it. Most green lines connect the <b>same</b> point on the dog — the ear, the eye, the nose.</p>
+<p class="small">A few lines cross the image: these are <b>wrong matches</b> (outliers). That is why we use the ratio test and RANSAC.</p>
+<p class="note">Applications: panorama stitching, visual odometry and SLAM, augmented reality, object instance recognition.</p>
+</div>
+</div>
+</section>
+
+<section id="hand-crafted-vs-learned-features" class="slide level2" data-menu-title="Hand-crafted vs learned features">
+<h2>Hand-crafted vs learned features</h2>
+<div class="grid2">
+<div><img class="fig" src="assets/05_images_colour_filters/p_bench_corners.jpg" alt="Corners detected on a garden bench" style="max-height:420px;"><p class="cap"><b>Hand-crafted:</b> a corner detector designed by people finds bench corners and leaf tips.</p></div>
+<div><img class="fig" src="assets/05_images_colour_filters/p_deep_heatmap.jpg" alt="Feature activation map from a pretrained CNN overlaid on the bench image" style="max-height:420px;"><p class="cap"><b>Learned:</b> a pretrained CNN’s feature map — the network decided for itself which patterns matter.</p></div>
+</div>
+<p class="note" style="margin-top:0.5em;">Hand-crafted features (Harris, SIFT, ORB) follow rules we wrote. Deep networks <b>learn</b> their features from millions of examples — which brings us to the last section.</p>
+</section>
+
+<section id="quiz-features" class="slide level2" data-menu-title="Quiz: features">
+<h2>Quiz: features</h2>
+<div class="grid3">
+<div class="quiz"><p class="q">Question 1</p><p class="small">Why is a <b>corner</b> a better keypoint than a point on a straight <b>edge</b>?</p>
+<div class="answer fragment">Along an edge every point looks the same (it can slide). A corner changes in <b>every</b> direction, so it can be located exactly.</div></div>
+<div class="quiz"><p class="q">Question 2</p><p class="small">What is the difference between a <b>keypoint</b> and a <b>descriptor</b>?</p>
+<div class="answer fragment">Keypoint = <b>where</b> (x, y, scale, angle). Descriptor = <b>what</b> the patch looks like (a vector we can compare).</div></div>
+<div class="quiz"><p class="q">Question 3</p><p class="small">Why do we use <code>NORM_HAMMING</code> to match ORB descriptors?</p>
+<div class="answer fragment">ORB descriptors are <b>binary</b> strings; Hamming distance (count of differing bits) is the right, very fast measure.</div></div>
+</div>
+</section>
+
+<!-- ============================ SECTION 7 ============================ -->
+<section id="deep-learning-based-cv" class="slide level2 center" data-background-color="#28568a" data-menu-title="7 · Deep-learning-based CV">
+<p class="sec-num">07</p>
+<p class="sec-title">Deep-learning-based computer vision</p>
+<p class="sec-sub">Let the machine learn the features</p>
+</section>
+
+<section id="machine-learns-itself" class="slide level2" data-menu-title="The machine learns itself">
+<h2>From writing rules to learning them</h2>
+<div class="grid2 img-wide">
+<div><img class="fig h600" src="assets/05_images_colour_filters/p_machine_learns.jpg" alt="Code next to a brain labelled Machine with a progress bar: machine is learning itself"></div>
+<div>
+<div class="card"><h3>Classical computer vision</h3><p>A person chooses the colour space, the thresholds, the kernels and the features. Everything in sections 2–6 of this lecture.</p></div>
+<div class="card" style="margin-top:0.5em; border-left-color:#ea580c;"><h3>Deep learning</h3><p>We provide <b>labelled examples</b>; the network learns its own kernels and features by trial and error.</p></div>
+</div>
+</div>
+</section>
+
+<section id="perform-a-task-without-programming" class="slide level2" data-menu-title="Perform a task without programming">
+<h2>Performing a task without explicit programming</h2>
+<div class="grid2">
+<div><img class="fig" src="assets/05_images_colour_filters/p_without_programming.jpg" alt="Perform a task without programming" style="max-height:420px;"></div>
+<div><img class="fig" src="assets/05_images_colour_filters/p_dataset.jpg" alt="A dataset of labelled images feeding a neural network" style="max-height:420px;"></div>
+</div>
+<p class="small" style="margin-top:0.5em;">Machine learning is the “field of study that gives computers the ability to learn without being explicitly programmed” (definition often attributed to Arthur Samuel, 1959). For vision, the program is replaced by a <b>dataset</b>: thousands of images of cars, dogs, bicycles, STOP signs and faces, each with its label.</p>
+</section>
+
+<section id="how-a-network-learns" class="slide level2" data-menu-title="How a network learns">
+<h2>How a network learns: predict, compare, adjust</h2>
+<div class="grid2 img-wide">
+<div><img class="fig h600" src="assets/05_images_colour_filters/p_dl_training.jpg" alt="Four steps: network processes input, predicts dog (wrong), feedback adjusts weights, network predicts again"></div>
+<div>
+<ol class="small">
+<li><b>Forward pass</b>: the cat image flows through the layers.</li>
+<li>The network predicts “<b>dog</b>” — <span style="color:#b91c1c;">wrong</span>.</li>
+<li>The <b>loss</b> measures the error; <b>back-propagation</b> sends it backwards and every weight is nudged a little.</li>
+<li>Predict again. Repeat over millions of images.</li>
+</ol>
+<img class="fig" src="assets/05_images_colour_filters/p_dl_correct.jpg" alt="After training the network predicts cat correctly" style="max-height:200px;">
+<p class="cap">After training: “<b>CAT</b> (correct!)”</p>
+</div>
+</div>
+</section>
+
+<section id="digits-are-numbers" class="slide level2" data-menu-title="Recognising digits: 784 numbers in">
+<h2>Recognising handwritten digits: still just numbers</h2>
+<div class="grid2">
+<div><img class="fig" src="assets/05_images_colour_filters/p_mnist.jpg" alt="A handwritten 9 fed as 784 inputs into a network with 10 outputs" style="max-height:600px;"></div>
+<div>
+<ul>
+<li>Input: a 28 × 28 grayscale image = <b>784 numbers</b> (section 2!).</li>
+<li>Hidden layers combine pixels into <b>strokes</b>, then strokes into <b>loops and lines</b>.</li>
+<li>Output: <b>10 neurons</b>, one per digit 0–9; the brightest wins — here “<b>9</b>”.</li>
+</ul>
+<div class="card" style="margin-top:0.5em;"><h3>The link to today</h3>
+<p>A <b>convolutional</b> network (CNN) learns <b>3 × 3 kernels</b> just like the ones in section 4. Its first layer typically ends up with Sobel-like edge detectors and blob detectors — learned, not designed.</p></div>
+</div>
+</div>
+</section>
+
+<section id="vit-image-as-patches" class="slide level2" data-menu-title="Vision Transformer: an image as patches">
+<h2>Vision Transformer (ViT): an image as patches</h2>
+<div class="grid2">
+<div><img class="fig" src="assets/05_images_colour_filters/p_vit_patches.jpg" alt="A kitten image divided into a grid of patches; one patch becomes a grid of numbers" style="max-height:330px;"><p class="cap">split the image into patches; each patch is a block of numbers</p></div>
+<div><img class="fig" src="assets/05_images_colour_filters/p_vit_8x8.jpg" alt="8 by 8 patches give 64 patches" style="max-height:330px;"><p class="cap">8 × 8 grid → <b>64 patches</b></p></div>
+</div>
+<p class="small" style="margin-top:0.5em;">Transformers were built for <b>words</b>. ViT (Dosovitskiy et al., 2021, <i>“An Image is Worth 16×16 Words”</i>) treats each image <b>patch as a word</b>: flatten it, map it to a vector (a <b>token</b>), add its position, and let self-attention relate every patch to every other patch.</p>
+</section>
+
+<section id="vit-patches-become-tokens" class="slide level2" data-menu-title="ViT: patches become tokens">
+<h2>ViT: patches become numbers, numbers become tokens</h2>
+<div class="grid2">
+<div><img class="fig" src="assets/05_images_colour_filters/p_vit_numbers.jpg" alt="Each patch shown as red, green and blue number grids" style="max-height:360px;"><p class="cap">every patch = R, G, B numbers (section 2 again)</p></div>
+<div><img class="fig" src="assets/05_images_colour_filters/p_vit_tokens.jpg" alt="The patch grid as a sequence of tokens with an embedding vector" style="max-height:360px;"><p class="cap">each patch → one embedding vector (token)</p></div>
+</div>
+<div class="note" style="margin-top:0.5em;">A 224 × 224 RGB image with 16 × 16 patches → 14 × 14 = <b>196 tokens</b>, each made from 16 × 16 × 3 = <b>768 numbers</b>.</div>
+</section>
+
+<section id="noise-to-image" class="slide level2" data-menu-title="From noise to an image">
+<h2>Running filters backwards: from noise to an image</h2>
+<img class="fig" src="assets/05_images_colour_filters/p_noise_to_image.jpg" alt="Random noise passes through a transformer and becomes a landscape image" style="max-height:440px;">
+<p class="small" style="margin-top:0.5em;">In section 4 we <b>removed</b> noise. <b>Generative models</b> (diffusion models with transformer backbones) learn to do this so well that they can start from <b>pure noise</b> and remove it step by step, until an image appears that matches a text prompt.</p>
+</section>
+
+<section id="classical-vs-deep" class="slide level2" data-menu-title="Classical vs deep-learning CV">
+<h2>Classical vs deep-learning computer vision</h2>
+<table class="simple" style="font-size:0.74em;">
+<tr><th></th><th>Classical (sections 2–6)</th><th>Deep learning (section 7)</th></tr>
+<tr><td>Features</td><td>designed by people: colour thresholds, kernels, ORB</td><td>learned from data</td></tr>
+<tr><td>Data needed</td><td>a few images to tune parameters</td><td>thousands to millions of labelled images</td></tr>
+<tr><td>Compute</td><td>tiny — runs on a microcontroller</td><td>a GPU to train; often an accelerator to run</td></tr>
+<tr><td>Explainable?</td><td>yes — every step can be inspected</td><td>harder — feature maps, attention maps</td></tr>
+<tr><td>Robustness</td><td>breaks when conditions change (light, weather)</td><td>generalises well if the training data is diverse</td></tr>
+<tr><td>Today</td><td>pre-processing, measurement, embedded systems</td><td>classification, detection, segmentation, generation</td></tr>
+</table>
+<p class="note" style="margin-top:0.6em;">Real systems use <b>both</b>: classical pre-processing (colour conversion, resizing, normalisation) feeds every deep network.</p>
+</section>
+
+<!-- ============================ WRAP-UP ============================ -->
+<section id="key-takeaways" class="slide level2" data-menu-title="Key takeaways">
+<h2>Key takeaways</h2>
+<div class="grid3">
+<div class="card"><h3>② Images are numbers</h3><p>H × W × C arrays of <code>uint8</code> 0–255. OpenCV uses <b>BGR</b>.</p></div>
+<div class="card"><h3>③ Colour spaces</h3><p>Same information, different axes. HSV/LAB separate colour from brightness.</p></div>
+<div class="card"><h3>④ Filters</h3><p>A kernel slides over every pixel. Gaussian for Gaussian noise, median for salt &amp; pepper.</p></div>
+<div class="card"><h3>⑤ Edges &amp; shapes</h3><p>Edges = large gradients. Contours + <code>approxPolyDP</code> count corners.</p></div>
+<div class="card"><h3>⑥ Features</h3><p>Keypoint (where) + descriptor (what). Match with ratio test + RANSAC.</p></div>
+<div class="card"><h3>⑦ Deep learning</h3><p>Networks learn the kernels and features themselves. ViT turns patches into tokens.</p></div>
+</div>
+</section>
+
+<section id="opencv-cheat-sheet" class="slide level2" data-menu-title="OpenCV cheat sheet">
+<h2>OpenCV cheat sheet for Part I</h2>
+<div class="grid2">
+<pre style="font-size:0.53em;"><code class="python" data-trim>
+img  = cv2.imread("img.jpg")        # BGR
+rgb  = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+hsv  = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+mask = cv2.inRange(hsv, lower, upper)
+out  = cv2.bitwise_and(img, img, mask=mask)
+
+box  = cv2.blur(img, (5, 5))
+gaus = cv2.GaussianBlur(img, (5, 5), 0)
+med  = cv2.medianBlur(img, 5)
+any_ = cv2.filter2D(img, -1, kernel)
+</code></pre>
+<pre style="font-size:0.53em;"><code class="python" data-trim>
+sx   = cv2.Sobel(gray, cv2.CV_64F, 1, 0, ksize=3)
+lap  = cv2.Laplacian(gray, cv2.CV_64F)
+edge = cv2.Canny(gray, 50, 150)
+
+k    = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5, 5))
+mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, k)
+cnts, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL,
+                           cv2.CHAIN_APPROX_SIMPLE)
+peri   = cv2.arcLength(c, True)
+approx = cv2.approxPolyDP(c, 0.02 * peri, True)
+
+orb = cv2.ORB_create()
+kp, des = orb.detectAndCompute(gray, None)
+</code></pre>
+</div>
+</section>
+
+<section id="labs-and-resources" class="slide level2" data-menu-title="Labs &amp; resources">
+<h2>Practice &amp; resources</h2>
+<div class="grid2">
+<div class="card"><h3>Practise in the labs (Colab-ready)</h3>
+<ul class="tight">
+<li><a href="../labs.html#lab-4a">Lab 4A · An image really is just numbers</a></li>
+<li><a href="../labs.html#lab-5a">Lab 5A · Colour selection</a></li>
+<li><a href="../labs.html#lab-5c">Lab 5C · Canny edge detection</a></li>
+<li><a href="05_SDC_Lane_Finding.html">Lecture 5 Part II · Finding lane lines</a></li>
+</ul>
+<p class="tiny muted">Your turn: take a photo of objects on your desk, count them with threshold → morphology → contours, then match one object between two photos with ORB.</p></div>
+<div class="card"><h3>Further reading</h3>
+<ul class="tight">
+<li>Szeliski, <i>Computer Vision: Algorithms and Applications</i> 2e — ch. 3 (image processing), ch. 7 (feature detection &amp; matching)</li>
+<li>OpenCV tutorials: <a href="https://docs.opencv.org/4.x/df/d9d/tutorial_py_colorspaces.html">colour spaces</a> · <a href="https://docs.opencv.org/4.x/d4/d13/tutorial_py_filtering.html">smoothing</a> · <a href="https://docs.opencv.org/4.x/d4/d73/tutorial_py_contours_begin.html">contours</a> · <a href="https://docs.opencv.org/4.x/d1/d89/tutorial_py_orb.html">ORB</a></li>
+<li>Dosovitskiy et al., <a href="https://arxiv.org/abs/2010.11929"><i>An Image is Worth 16×16 Words</i></a>, ICLR 2021</li>
+</ul></div>
+</div>
+</section>
+
+<section id="questions" class="slide level2 center" data-background-color="#28568a" data-menu-title="Questions">
+<p class="sec-title" style="text-align:center;">Questions?</p>
+<p class="sec-sub" style="text-align:center;">Next: <a href="05_SDC_Lane_Finding.html" style="color:#ffd166;">Part II — Computer Vision for Self-Driving Cars</a></p>
+</section>
+
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">
@@ -375,6 +1456,7 @@ Same image, different kernel, very different result.</p>
   <script src="../site_libs/revealjs/plugin/search/search.js"></script>
   <script src="../site_libs/revealjs/plugin/zoom/zoom.js"></script>
   <script src="../site_libs/revealjs/plugin/math/math.js"></script>
+  <script src="../site_libs/revealjs/plugin/highlight/highlight.js"></script>
   <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
 
   <script>
@@ -542,7 +1624,7 @@ Same image, different kernel, very different result.</p>
         height: 900,
 
         // Factor of the display size that should remain empty around the content
-        margin: 0.1,
+        margin: 0.04,
 
         math: {
           mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
@@ -565,6 +1647,7 @@ Same image, different kernel, very different result.</p>
         plugins: [QuartoLineHighlight, PdfExport, RevealMenu, RevealChalkboard, QuartoSupport,
 
           RevealMath,
+          RevealHighlight,
           RevealNotes,
           RevealSearch,
           RevealZoom
@@ -741,4 +1824,118 @@ Same image, different kernel, very different result.</p>
       </script>
 
 
+  <script>
+  /* ---- Lecture 5 Part I live demos ---- */
+  (function () {
+    function $(id) { return document.getElementById(id); }
+    function loadPixels(src, w, h, ctx, msg, cb) {
+      var img = new Image();
+      img.onload = function () {
+        ctx.drawImage(img, 0, 0, w, h);
+        try { cb(ctx.getImageData(0, 0, w, h)); }
+        catch (e) { $(msg).textContent = "Live demo needs the page served over http(s) — open it from the course website."; }
+      };
+      img.src = src;
+    }
+
+    /* 1. HSV threshold explorer (OpenCV scaling: H 0-179, S,V 0-255) */
+    function hsvDemo() {
+      var cv = $("hsv-canvas"); if (!cv) return;
+      var W = cv.width, H = cv.height, ctx = cv.getContext("2d"), src = null, hsv = null;
+      var ids = ["hsv-h0", "hsv-h1", "hsv-s0", "hsv-s1", "hsv-v0"];
+      loadPixels("assets/05_images_colour_filters/g_demo_hsv.jpg", W, H, ctx, "hsv-msg", function (d) {
+        src = d; hsv = new Uint8Array(W * H * 3);
+        for (var i = 0, p = 0; i < d.data.length; i += 4, p += 3) {
+          var r = d.data[i] / 255, g = d.data[i + 1] / 255, b = d.data[i + 2] / 255;
+          var mx = Math.max(r, g, b), mn = Math.min(r, g, b), df = mx - mn, h = 0;
+          if (df > 0) {
+            if (mx === r) h = 60 * (((g - b) / df) % 6); else if (mx === g) h = 60 * ((b - r) / df + 2); else h = 60 * ((r - g) / df + 4);
+          }
+          if (h < 0) h += 360;
+          hsv[p] = Math.round(h / 2) % 180; hsv[p + 1] = mx === 0 ? 0 : Math.round(255 * df / mx); hsv[p + 2] = Math.round(255 * mx);
+        }
+        render();
+      });
+      function render() {
+        if (!src) return;
+        var v = ids.map(function (id) { var x = +$(id).value; $(id + "v").textContent = x; return x; });
+        var only = $("hsv-show").checked, out = ctx.createImageData(W, H), s = src.data, o = out.data, kept = 0;
+        for (var i = 0, p = 0; i < s.length; i += 4, p += 3) {
+          var h = hsv[p], sat = hsv[p + 1], val = hsv[p + 2];
+          var inH = v[0] <= v[1] ? (h >= v[0] && h <= v[1]) : (h >= v[0] || h <= v[1]);
+          var ok = inH && sat >= v[2] && sat <= v[3] && val >= v[4];
+          if (ok) kept++;
+          if (only) { var m = ok ? 255 : 0; o[i] = o[i + 1] = o[i + 2] = m; }
+          else if (ok) { o[i] = s[i]; o[i + 1] = s[i + 1]; o[i + 2] = s[i + 2]; }
+          else { var gy = (s[i] * 0.299 + s[i + 1] * 0.587 + s[i + 2] * 0.114) * 0.35; o[i] = o[i + 1] = o[i + 2] = gy; }
+          o[i + 3] = 255;
+        }
+        ctx.putImageData(out, 0, 0);
+        $("hsv-kept").textContent = (100 * kept / (W * H)).toFixed(1) + "%";
+      }
+      ids.concat(["hsv-show"]).forEach(function (id) { $(id).addEventListener("input", render); });
+      document.querySelectorAll("[data-hsv]").forEach(function (b) {
+        b.addEventListener("click", function () {
+          var v = b.getAttribute("data-hsv").split(",");
+          ids.forEach(function (id, k) { $(id).value = v[k]; }); render();
+        });
+      });
+    }
+
+    /* 2. 3x3 kernel playground */
+    function kernelDemo() {
+      var cv = $("kp-canvas"); if (!cv) return;
+      var W = 480, H = 302, ctx = cv.getContext("2d"), src = null;
+      var cells = Array.prototype.slice.call(document.querySelectorAll("#kp-k input"));
+      loadPixels("assets/05_images_colour_filters/g_demo_src.jpg", W, H, ctx, "kp-msg", function (d) { src = d; render(); });
+      function render() {
+        if (!src) return;
+        var k = cells.map(function (c) { var x = parseFloat(c.value); return isNaN(x) ? 0 : x; });
+        var div = parseFloat($("kp-div").value) || 1, ab = $("kp-abs").checked;
+        var out = ctx.createImageData(W, H), s = src.data, o = out.data;
+        for (var y = 0; y < H; y++) for (var x = 0; x < W; x++) {
+          var acc = [0, 0, 0], n = 0;
+          for (var j = -1; j <= 1; j++) for (var i = -1; i <= 1; i++, n++) {
+            var yy = Math.min(H - 1, Math.max(0, y + j)), xx = Math.min(W - 1, Math.max(0, x + i)), q = (yy * W + xx) * 4, w = k[n];
+            if (w) { acc[0] += w * s[q]; acc[1] += w * s[q + 1]; acc[2] += w * s[q + 2]; }
+          }
+          var p = (y * W + x) * 4;
+          for (var c = 0; c < 3; c++) { var v = acc[c] / div; if (ab) v = Math.abs(v); o[p + c] = v < 0 ? 0 : v > 255 ? 255 : v; }
+          o[p + 3] = 255;
+        }
+        ctx.putImageData(src, 0, 0); ctx.putImageData(out, W, 0);
+      }
+      cells.concat([$("kp-div"), $("kp-abs")]).forEach(function (el) { el.addEventListener("input", render); });
+      document.querySelectorAll("[data-k]").forEach(function (b) {
+        b.addEventListener("click", function () {
+          b.getAttribute("data-k").split(",").forEach(function (v, n) { cells[n].value = v; });
+          $("kp-div").value = b.getAttribute("data-d"); $("kp-abs").checked = b.hasAttribute("data-abs"); render();
+        });
+      });
+    }
+
+    /* 3. click any slide image to view it full screen */
+    function lightbox() {
+      var box = document.createElement("div"); box.id = "lb";
+      box.innerHTML = '<img alt=""><p>Click anywhere or press Esc to close</p>';
+      document.body.appendChild(box);
+      var big = box.querySelector("img");
+      function close() { box.classList.remove("on"); big.removeAttribute("src"); }
+      box.addEventListener("click", close);
+      document.addEventListener("keydown", function (e) {
+        if (box.classList.contains("on") && (e.key === "Escape" || e.key === "Esc")) { e.stopImmediatePropagation(); e.preventDefault(); close(); }
+      }, true);
+      document.querySelector(".reveal .slides").addEventListener("click", function (e) {
+        var t = e.target;
+        if (t.tagName !== "IMG" || t.closest("a")) return;
+        if (document.documentElement.classList.contains("print-pdf")) return;
+        big.src = t.currentSrc || t.src || t.getAttribute("data-src");
+        big.alt = t.alt || "";
+        box.classList.add("on");
+      });
+    }
+    function init() { hsvDemo(); kernelDemo(); lightbox(); }
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init); else init();
+  })();
+  </script>
 </body></html>
