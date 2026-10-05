@@ -197,6 +197,25 @@
       margin-right: 0;
     }
   </style>
+  <style type="text/css">
+  /* ---- "Filters" section opener (scoped to .filters-hero) ---- */
+  .reveal .filters-hero { text-align: left; }
+  .reveal .filters-hero .fh-kicker { color: #9fc1e6; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; font-size: 0.5em; margin: 0.4em 0 0; }
+  .reveal .filters-hero h2.fh-title { color: #fff; font-size: 3.1em; font-weight: 800; line-height: 1; margin: 0.05em 0 0.15em; letter-spacing: -0.01em; }
+  .reveal .filters-hero .fh-sub { color: #dbe7f5; font-size: 0.78em; line-height: 1.4; max-width: 1250px; margin: 0 0 1.1em; }
+  .reveal .filters-hero .fh-sub b { color: #ffd166; }
+  .reveal .filters-hero .fh-row { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 18px; }
+  .reveal .filters-hero .fh-card { margin: 0; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.35); display: flex; flex-direction: column; }
+  .reveal .filters-hero .fh-card img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; margin: 0; max-height: none; }
+  .reveal .filters-hero figcaption { padding: 0.45em 0.6em 0.2em; font-size: 0.5em; color: #1f2933; line-height: 1.25; }
+  .reveal .filters-hero figcaption b { display: block; color: #28568a; font-size: 1.22em; }
+  .reveal .filters-hero figcaption span { color: #5b6b7b; }
+  .reveal .filters-hero .fh-kwrap { display: flex; align-items: center; gap: 10px; padding: 0.25em 0.6em 0.6em; margin-top: auto; }
+  .reveal .filters-hero .fh-k { display: grid; grid-template-columns: repeat(3, 1.9em); gap: 3px; font-family: var(--r-code-font, monospace); font-size: 0.46em; }
+  .reveal .filters-hero .fh-k span { background: #eef3f9; color: #1c3f66; text-align: center; padding: 0.25em 0; border-radius: 3px; font-weight: 700; }
+  .reveal .filters-hero .fh-k.fh-med { display: block; background: #eef3f9; color: #1c3f66; padding: 0.4em 0.7em; border-radius: 4px; font-weight: 700; text-align: center; line-height: 1.3; }
+  .reveal .filters-hero .fh-kwrap small { font-size: 0.44em; color: #5b6b7b; }
+  </style>
 </head>
 <body class="quarto-light">
   <div class="reveal">
@@ -265,8 +284,38 @@
 <section id="ycbcr" class="slide level2" data-menu-title="YCbCr">
 <img data-src="assets/05_images_colour_filters/slide21.jpg" class="r-stretch quarto-figure-center" style="max-width:100%; object-fit:contain;" alt="YCbCr">
 </section>
-<section id="filters" class="slide level2" data-menu-title="Filters">
-<img data-src="assets/05_images_colour_filters/slide22.jpg" class="r-stretch quarto-figure-center" style="max-width:100%; object-fit:contain;" alt="Filters">
+<section id="filters" class="slide level2 filters-hero" data-background-color="#1c3f66" data-menu-title="Filters">
+<p class="fh-kicker">Lecture 5 &middot; Part I &middot; Image processing</p>
+<h2 class="fh-title">Filters</h2>
+<p class="fh-sub">Slide a small <b>kernel</b> over every pixel and replace it with a weighted sum of its neighbours.
+Same image, different kernel, very different result.</p>
+<div class="fh-row">
+<figure class="fh-card">
+<img data-src="assets/05_images_colour_filters/filt_original.jpg" alt="Original: the input image">
+<figcaption><b>Original</b><span>the input image</span></figcaption>
+<div class="fh-kwrap"><div class="fh-k"><span>0</span><span>0</span><span>0</span><span>0</span><span>1</span><span>0</span><span>0</span><span>0</span><span>0</span></div><small>identity</small></div>
+</figure>
+<figure class="fh-card">
+<img data-src="assets/05_images_colour_filters/filt_gaussian.jpg" alt="Gaussian blur: smooth noise &amp; detail">
+<figcaption><b>Gaussian blur</b><span>smooth noise &amp; detail</span></figcaption>
+<div class="fh-kwrap"><div class="fh-k"><span>1</span><span>2</span><span>1</span><span>2</span><span>4</span><span>2</span><span>1</span><span>2</span><span>1</span></div><small>&divide; 16</small></div>
+</figure>
+<figure class="fh-card">
+<img data-src="assets/05_images_colour_filters/filt_sharpen.jpg" alt="Sharpen: boost edges &amp; detail">
+<figcaption><b>Sharpen</b><span>boost edges &amp; detail</span></figcaption>
+<div class="fh-kwrap"><div class="fh-k"><span>0</span><span>&minus;1</span><span>0</span><span>&minus;1</span><span>5</span><span>&minus;1</span><span>0</span><span>&minus;1</span><span>0</span></div><small>centre &minus; neighbours</small></div>
+</figure>
+<figure class="fh-card">
+<img data-src="assets/05_images_colour_filters/filt_median.jpg" alt="Median: remove salt-and-pepper noise">
+<figcaption><b>Median</b><span>remove salt-and-pepper noise</span></figcaption>
+<div class="fh-kwrap"><div class="fh-k fh-med">median<br>of 5&times;5</div><small>non-linear</small></div>
+</figure>
+<figure class="fh-card">
+<img data-src="assets/05_images_colour_filters/filt_sobel.jpg" alt="Sobel edges: find where brightness jumps">
+<figcaption><b>Sobel edges</b><span>find where brightness jumps</span></figcaption>
+<div class="fh-kwrap"><div class="fh-k"><span>&minus;1</span><span>0</span><span>1</span><span>&minus;2</span><span>0</span><span>2</span><span>&minus;1</span><span>0</span><span>1</span></div><small>x-gradient</small></div>
+</figure>
+</div>
 </section>
 <section id="types-of-image-filters" class="slide level2" data-menu-title="Types of image filters">
 <img data-src="assets/05_images_colour_filters/slide23.jpg" class="r-stretch quarto-figure-center" style="max-width:100%; object-fit:contain;" alt="Types of image filters">
