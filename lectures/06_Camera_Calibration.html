@@ -303,6 +303,18 @@
   #lb p { position: fixed; bottom: 1.2vh; left: 0; right: 0; text-align: center; color: #dbe7f5; font: 15px "Source Sans Pro", sans-serif; margin: 0; }
 
   /* Lecture 6 additions */
+  .reveal .plain { background: #effaf3; border-left: 6px solid #1f7a4d; border-radius: 8px; padding: 0.35em 0.8em; font-size: 0.62em; margin: 0.5em 0 0; }
+  .reveal .plain b:first-child { color: #1f7a4d; }
+  .reveal .lab-link.colab::before { content: ""; }
+  .reveal .labgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 18px; }
+  .reveal .labgrid a { display: flex; align-items: center; gap: 10px; text-decoration: none; background: var(--soft); border-radius: 8px; padding: 0.3em 0.6em; font-size: 0.55em; color: var(--ink); }
+  .reveal .labgrid a:hover { background: #dfe9f5; }
+  .reveal .labgrid a b { background: var(--navy); color: #fff; border-radius: 6px; padding: 0.05em 0.45em; min-width: 2.2em; text-align: center; }
+  .reveal .labgrid a.vid b { background: #ea580c; }
+  .reveal .steps3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin-top: 0.4em; }
+  .reveal .steps3 .card { text-align: center; }
+  .reveal .steps3 .big { font-size: 2.2em; line-height: 1; margin: 0.1em 0 0.2em; }
+  .reveal .gloss td:first-child { font-weight: 700; color: var(--navy); white-space: nowrap; }
   .reveal .vids { gap: 16px; }
   .reveal .vids a { display: flex; gap: 12px; align-items: center; background: var(--soft); border-radius: 10px; padding: 8px; text-decoration: none; color: var(--ink); }
   .reveal .vids a:hover { background: #dfe9f5; }
@@ -401,6 +413,32 @@
 <p class="cap">The whole lecture in one picture: real world → (lens) → distorted image → (calibration) → corrected image (Udacity).</p>
 </section>
 
+<section id="calibration-in-one-minute" class="slide level2" data-menu-title="Calibration in one minute">
+<p class="kicker">The big picture first</p>
+<h2>Camera calibration in one minute</h2>
+<div class="steps3">
+<div class="card"><p class="big">♟️</p><h3>1 · Show a known shape</h3><p>Hold a printed <b>chessboard</b> in front of the camera. We know <i>exactly</i> where every corner is on the paper.</p></div>
+<div class="card" style="border-left-color:#ea580c;"><p class="big">📷</p><h3>2 · See where it lands</h3><p>Find the corners in the picture. Because of the lens and the viewpoint they are <b>not</b> where a perfect camera would put them.</p></div>
+<div class="card" style="border-left-color:#1f7a4d;"><p class="big">🧮</p><h3>3 · Solve for the numbers</h3><p>Find the few numbers (<b>focal length</b>, <b>image centre</b>, <b>lens distortion</b>) that explain the difference. Do it once, use it forever.</p></div>
+</div>
+<p class="plain" style="font-size:0.7em; margin-top:0.8em;"><b>Analogy:</b> an eye doctor shows you a chart whose letters she knows, sees how you read it, and writes your <b>prescription</b>. The chessboard is the chart, the camera is the eye, and <b>K + dist</b> is the camera's prescription. Afterwards we "put the glasses on": every image is corrected, and pixels can be turned into millimetres.</p>
+</section>
+
+<section id="key-words" class="slide level2" data-menu-title="Key words in plain English">
+<h2>Key words in plain English</h2>
+<table class="simple gloss">
+<tr><th>Word</th><th>Means</th><th>Everyday picture</th></tr>
+<tr><td>Intrinsics, K</td><td>numbers <i>inside</i> the camera: focal length f<sub>x</sub>, f<sub>y</sub> and image centre c<sub>x</sub>, c<sub>y</sub> (in pixels)</td><td>the camera's ID card</td></tr>
+<tr><td>Extrinsics, [R | t]</td><td>where the camera <b>is</b> (t) and where it <b>looks</b> (R)</td><td>your GPS position + which way you face</td></tr>
+<tr><td>Distortion, dist</td><td>how much the lens bends lines near the edges: k1, k2, k3 (radial), p1, p2 (tangential)</td><td>looking through a peephole or a glass of water</td></tr>
+<tr><td>Object points</td><td>where the board corners <b>really</b> are (mm, Z = 0)</td><td>the answer sheet</td></tr>
+<tr><td>Image points</td><td>where the corners <b>appear</b> in the photo (pixels)</td><td>the student's answers</td></tr>
+<tr><td>Reprojection error</td><td>distance between where the model <i>predicts</i> a corner and where it was <i>found</i></td><td>how far a dart lands from the bullseye</td></tr>
+<tr><td>Undistort</td><td>re-draw the image as a perfect pinhole camera would have taken it</td><td>putting the glasses on</td></tr>
+<tr><td>Homography / perspective transform</td><td>a 3 × 3 recipe that re-draws a <b>flat</b> thing as seen from another angle</td><td>photographing a poster straight-on</td></tr>
+</table>
+</section>
+
 <!-- ============================ SECTION 1 ============================ -->
 <section id="why-calibrate" class="slide level2 center" data-background-color="#28568a" data-menu-title="1 · Why calibrate?">
 <p class="sec-num">01</p>
@@ -437,6 +475,7 @@
 <h2>Is it visible on a real dash-cam? <span class="badge new">new</span></h2>
 <img class="fig full" src="assets/06_camera_calibration/g_road_undist.jpg" alt="Raw dash-cam frame, undistorted frame and their difference">
 <p class="cap">A frame from the Udacity <i>Advanced Lane Lines</i> camera before and after undistortion (we calibrate this camera in Lab 6D). The difference image shows the correction is <b>largest near the image border</b>: exactly where the lane lines and nearby cars are.</p>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/04-road-camera-birdseye.ipynb" style="right:24px; top:6px;" title="Open notebook 6D in Google Colab">&#9654;&#xFE0E; Lab 6D in Colab</a>
 </section>
 
 <section id="quiz-why-correct" class="slide level2" data-menu-title="Quiz: why correct distortion?">
@@ -551,6 +590,7 @@
 </ul>
 </div>
 </div>
+<p class="plain"><b>In plain words:</b> a camera is a box with a hole. Far things make small pictures (divide by Z), and a single photo cannot tell how far away something is.</p>
 </section>
 
 <section id="intrinsic-matrix" class="slide level2" data-menu-title="Intrinsic matrix K">
@@ -572,6 +612,7 @@
 <p class="muted">Datasheet values are only a <i>starting guess</i>. Calibration measures the real ones.</p>
 </div>
 </div>
+<p class="plain"><b>In plain words:</b> K turns "how far left/up the ray points" into a pixel position. f says how much the camera zooms; (c<sub>x</sub>, c<sub>y</sub>) is the pixel straight in front of the lens.</p>
 </section>
 
 <section id="calc-intrinsics" class="slide level2" data-menu-title="Calculator: K from a datasheet">
@@ -613,6 +654,7 @@
 </ul>
 </div>
 </div>
+<p class="plain"><b>In plain words:</b> first move the world so the camera is at the origin looking along Z (R, t), then let K turn it into pixels.</p>
 </section>
 
 <section id="demo-pinhole" class="slide level2" data-menu-title="Live demo: pinhole projection">
@@ -630,6 +672,7 @@
 <p class="tiny muted">A 1 m cube on a floor grid of 1 m squares; the camera looks at the cube. Change f: the image zooms (FOV changes). Move Z: size ∝ 1/Z. Add k1 &lt; 0: straight edges bow outwards.</p>
 </div>
 </div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/01-pinhole-and-distortion.ipynb" style="right:24px; top:6px;" title="Open notebook 6A in Google Colab">&#9654;&#xFE0E; Lab 6A in Colab</a>
 </section>
 
 <section id="quiz-projection" class="slide level2" data-menu-title="Quiz: project a point">
@@ -656,6 +699,7 @@ print(uv.reshape(-1, 2))   # [[740. 310.] [740. 310.]]
 </code></pre>
 </div>
 </div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/01-pinhole-and-distortion.ipynb" style="right:24px; top:6px;" title="Open notebook 6A in Google Colab">&#9654;&#xFE0E; Lab 6A in Colab</a>
 </section>
 
 <section id="image-formation-steps" class="slide level2" data-menu-title="Image formation: the full chain">
@@ -672,6 +716,12 @@ print(uv.reshape(-1, 2))   # [[740. 310.] [740. 310.]]
 <div class="warn">Udacity's notes write <i>r</i> as the distance from the <b>distortion centre</b> (≈ image centre). In OpenCV it is <i>r² = x'² + y'²</i> in normalised coordinates.</div>
 </div>
 <p class="cap" style="margin-top:0.6em;">Watch: <a href="https://www.youtube.com/watch?v=ND2fa08vxkY">Camera Intrinsics and Extrinsics: 5 Minutes with Cyrill</a> (Cyrill Stachniss, Uni Bonn).</p>
+</section>
+
+<section id="remember-pinhole" class="slide level2" data-menu-title="Remember: The pinhole model">
+<p class="kicker">Remember</p>
+<h2>The pinhole model: the 3 things to remember</h2>
+<ol class="tight" style="font-size:1em;"><li>A camera divides by depth: <b>x = f·X/Z</b>. Far things are small, and depth is lost.</li><li><b>K</b> (f<sub>x</sub>, f<sub>y</sub>, c<sub>x</sub>, c<sub>y</sub>) = the camera itself. <b>[R | t]</b> = where it stands and looks.</li><li>In OpenCV: <code>cv2.projectPoints(X, rvec, tvec, K, dist)</code> does the whole chain.</li></ol>
 </section>
 
 <!-- ============================ SECTION 3 ============================ -->
@@ -708,6 +758,7 @@ print(uv.reshape(-1, 2))   # [[740. 310.] [740. 310.]]
 </ul>
 </div>
 </div>
+<p class="plain"><b>In plain words:</b> the lens squeezes (barrel) or stretches (pincushion) the picture more and more the further you go from the centre.</p>
 </section>
 
 <section id="tangential-distortion" class="slide level2" data-menu-title="Tangential distortion">
@@ -756,6 +807,28 @@ print(uv.reshape(-1, 2))   # [[740. 310.] [740. 310.]]
 </ul>
 </div>
 </div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/01-pinhole-and-distortion.ipynb" style="right:24px; top:6px;" title="Open notebook 6A in Google Colab">&#9654;&#xFE0E; Lab 6A in Colab</a>
+</section>
+
+<section id="distortion-worked-example" class="slide level2" data-menu-title="Distortion: a worked example">
+<h2>Distortion with real numbers (you can do this by hand)</h2>
+<div class="grid2">
+<div class="card">
+<h3>A point near the edge</h3>
+<p>Normalised point <b>(x, y) = (0.8, 0.0)</b>, so r² = 0.64. Lens: <b>k1 = −0.2</b>, all others 0 (a mild barrel).</p>
+<p>factor = 1 + k1·r² = 1 − 0.2 × 0.64 = <b>0.872</b></p>
+<p>x<sub>d</sub> = 0.8 × 0.872 = <b>0.698</b>: the point moves <b>13 % towards the centre</b>.</p>
+<p>With f<sub>x</sub> = 800 px that is (0.8 − 0.698) × 800 ≈ <b>82 pixels</b>!</p>
+</div>
+<div class="card" style="border-left-color:#1f7a4d;">
+<h3>A point near the centre</h3>
+<p><b>(x, y) = (0.1, 0.0)</b>, so r² = 0.01.</p>
+<p>factor = 1 − 0.2 × 0.01 = <b>0.998</b></p>
+<p>x<sub>d</sub> = 0.0998: it moves only <b>0.0002</b>, about <b>0.2 pixels</b>.</p>
+<p class="muted">That is why the centre of a photo looks fine and the edges bend: the effect grows with r².</p>
+</div>
+</div>
+<p class="plain"><b>Take-away:</b> distortion is tiny in the middle and huge at the edges, so calibration photos <b>must</b> have the board near the edges and corners.</p>
 </section>
 
 <section id="demo-distortion" class="slide level2" data-menu-title="Live demo: lens distortion explorer">
@@ -775,6 +848,7 @@ print(uv.reshape(-1, 2))   # [[740. 310.] [740. 310.]]
 <pre><code id="ds-vec" class="nohighlight" style="font-size:0.95em;"></code></pre>
 </div>
 </div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/01-pinhole-and-distortion.ipynb" style="right:24px; top:6px;" title="Open notebook 6A in Google Colab">&#9654;&#xFE0E; Lab 6A in Colab</a>
 </section>
 
 <section id="quiz-distortion-type" class="slide level2" data-menu-title="Quiz: which distortion?">
@@ -794,6 +868,12 @@ print(uv.reshape(-1, 2))   # [[740. 310.] [740. 310.]]
 </div>
 </section>
 
+<section id="remember-distortion" class="slide level2" data-menu-title="Remember: Lens distortion">
+<p class="kicker">Remember</p>
+<h2>Lens distortion: the 3 things to remember</h2>
+<ol class="tight" style="font-size:1em;"><li>Real lenses bend lines, mostly <b>radially</b>: barrel (k1 &lt; 0) or pincushion (k1 &gt; 0).</li><li>OpenCV describes it with 5 numbers: <code>[k1, k2, p1, p2, k3]</code>.</li><li>It is small in the centre and large at the edges (it grows with r²).</li></ol>
+</section>
+
 <!-- ============================ SECTION 4 ============================ -->
 <section id="camera-types" class="slide level2 center" data-background-color="#28568a" data-menu-title="4 · Types of cameras">
 <p class="sec-num">04</p>
@@ -803,7 +883,7 @@ print(uv.reshape(-1, 2))   # [[740. 310.] [740. 310.]]
 
 <section id="camera-types-overview" class="slide level2" data-menu-title="Camera types overview">
 <h2>Camera types you will meet</h2>
-<table class="simple">
+<table class="simple" style="font-size:0.56em;">
 <tr><th>Camera</th><th>Typical FOV</th><th>Model to calibrate with</th><th>OpenCV</th><th>Examples</th></tr>
 <tr><td><b>Standard / narrow lens</b></td><td>40–70°</td><td>pinhole + radial/tangential (k1, k2, p1, p2)</td><td><code>cv2.calibrateCamera</code></td><td>Pi Cam v2/3, webcams, phone main camera</td></tr>
 <tr><td><b>Wide-angle</b></td><td>90–120°</td><td>pinhole + k3, or <code>CALIB_RATIONAL_MODEL</code> (k4–k6)</td><td><code>cv2.calibrateCamera</code></td><td>Pi Cam 3 Wide, GoPro (linear mode), dash-cams</td></tr>
@@ -815,6 +895,7 @@ print(uv.reshape(-1, 2))   # [[740. 310.] [740. 310.]]
 <tr><td><b>Event camera</b></td><td>~ 60–90°</td><td>pinhole; board shown as a blinking screen</td><td>reconstruct frames → OpenCV</td><td>Prophesee, DAVIS</td></tr>
 </table>
 <p class="tiny muted" style="margin-top:0.5em;">The more the field of view grows, the more the simple pinhole + polynomial model breaks down: at 90° off-axis, tan θ → ∞.</p>
+<p class="plain"><b>In plain words:</b> the wider the lens sees, the more it bends lines, and the more special the maths. Normal lens → standard model; very wide → fisheye model.</p>
 </section>
 
 <section id="projection-models" class="slide level2" data-menu-title="Projection models">
@@ -927,6 +1008,7 @@ print(uv.reshape(-1, 2))   # [[740. 310.] [740. 310.]]
 <div class="answer fragment"><b>nx = 8, ny = 6.</b> The board has 9 × 7 squares → 8 × 6 inner corners. This is the <code>patternSize</code> you pass to OpenCV.</div>
 </div>
 </div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/02-finding-corners.ipynb" style="right:24px; top:6px;" title="Open notebook 6B in Google Colab">&#9654;&#xFE0E; Lab 6B in Colab</a>
 </section>
 
 <section id="finding-corners" class="slide level2" data-menu-title="Finding corners">
@@ -937,6 +1019,7 @@ gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)              # cv2.imread gives BGR
 ret, corners = cv2.findChessboardCorners(gray, (8, 6), None)
 img = cv2.drawChessboardCorners(img, (8, 6), corners, ret)  # coloured rows; first corner = (0,0,0)
 </code></pre>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/02-finding-corners.ipynb" style="right:24px; top:6px;" title="Open notebook 6B in Google Colab">&#9654;&#xFE0E; Lab 6B in Colab</a>
 </section>
 
 <section id="object-points" class="slide level2" data-menu-title="Object points">
@@ -962,6 +1045,7 @@ imgpoints = []   # 2-D points in the image
 <p class="note">Units of <code>objp</code> = units of <code>tvec</code>. In <b>squares</b> K and dist are still correct, but distances come out in squares. Multiply by the square size to get mm.</p>
 </div>
 </div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/02-finding-corners.ipynb" style="right:24px; top:6px;" title="Open notebook 6B in Google Colab">&#9654;&#xFE0E; Lab 6B in Colab</a>
 </section>
 
 <section id="subpixel-corners" class="slide level2" data-menu-title="Sub-pixel corners">
@@ -985,6 +1069,7 @@ ret, corners = cv2.findChessboardCornersSB(
 <p class="tiny muted">Window (11, 11) means a 23 × 23 search area: keep it smaller than one square in the image.</p>
 </div>
 </div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/02-finding-corners.ipynb" style="right:24px; top:6px;" title="Open notebook 6B in Google Colab">&#9654;&#xFE0E; Lab 6B in Colab</a>
 </section>
 
 <section id="calibration-loop" class="slide level2" data-menu-title="Calibration: the loop">
@@ -1046,6 +1131,7 @@ print(dist)  # [[-0.233  0.062  0.000  0.000 -0.008]]
 </ul>
 </div>
 </div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/03-calibrate-and-undistort.ipynb" style="right:24px; top:6px;" title="Open notebook 6C in Google Colab">&#9654;&#xFE0E; Lab 6C in Colab</a>
 </section>
 
 <section id="zhang-method" class="slide level2" data-menu-title="Zhang's method">
@@ -1066,11 +1152,13 @@ print(dist)  # [[-0.233  0.062  0.000  0.000 -0.008]]
 <p class="tiny muted">Watch: <a href="https://www.youtube.com/watch?v=-9He7Nu3u8s">Camera Calibration using Zhang's Method</a> and <a href="https://www.youtube.com/watch?v=26nV4oDLiqc">Intrinsic Camera Calibration</a> (Cyrill Stachniss).</p>
 </div>
 </div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/13-zhang-method-from-scratch.ipynb" style="right:24px; top:6px;" title="Open notebook 6M in Google Colab">&#9654;&#xFE0E; Lab 6M in Colab</a>
+<p class="plain"><b>In plain words:</b> every tilted photo of the flat board gives two clues about K. Three photos give enough clues to solve K; then a computer polishes all numbers together.</p>
 </section>
 
 <section id="reprojection-error" class="slide level2" data-menu-title="Reprojection error">
 <h2>Is the calibration any good? Reprojection error</h2>
-<img class="fig full" src="assets/06_camera_calibration/g_reproj.jpg" alt="Per-view reprojection error bar chart and residual scatter" style="max-height:400px;">
+<img class="fig full" src="assets/06_camera_calibration/g_reproj.jpg" alt="Per-view reprojection error bar chart and residual scatter" style="max-height:310px;">
 <div class="grid2" style="margin-top:0.4em;">
 <div>
 \[ E_{RMS} = \sqrt{\tfrac{1}{N}\sum_i \lVert \mathbf{x}_i - \hat{\mathbf{x}}_i(K, \text{dist}, R_j, \mathbf{t}_j)\rVert^2} \]
@@ -1084,6 +1172,8 @@ print(dist)  # [[-0.233  0.062  0.000  0.000 -0.008]]
 </ul>
 </div>
 </div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/03-calibrate-and-undistort.ipynb" style="right:24px; top:6px;" title="Open notebook 6C in Google Colab">&#9654;&#xFE0E; Lab 6C in Colab</a>
+<p class="plain"><b>In plain words:</b> put the board back into the picture using the model and measure how far the predicted corners are from the real ones. Small = the model explains the photos well.</p>
 </section>
 
 <section id="per-view-error-code" class="slide level2" data-menu-title="Per-view error: code">
@@ -1125,6 +1215,7 @@ np.savez("camera.npz", K=mtx, dist=dist)
 # (Udacity used pickle: wide_dist_pickle.p)
 </code></pre>
 </div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/03-calibrate-and-undistort.ipynb" style="right:24px; top:6px;" title="Open notebook 6C in Google Colab">&#9654;&#xFE0E; Lab 6C in Colab</a>
 </section>
 
 <section id="pose-coverage" class="slide level2" data-menu-title="Good calibration images">
@@ -1164,6 +1255,7 @@ np.savez("camera.npz", K=mtx, dist=dist)
 <p class="tiny muted">Bars follow ROS <code>camera_calibration</code>: the spread of the board's centre (X, Y), apparent size and skew over the accepted samples. Samples too similar to an earlier one are rejected.</p>
 </div>
 </div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/09-pi-camera-in-15-minutes.ipynb" style="right:24px; top:6px;" title="Open notebook 6I in Google Colab">&#9654;&#xFE0E; Lab 6I in Colab</a>
 </section>
 
 <section id="ros-camera-calibration" class="slide level2" data-menu-title="ROS 2 camera_calibration">
@@ -1217,6 +1309,7 @@ ros2 run camera_calibration cameracalibrator \
 <p class="note">Straight lines on the board are straight again: the calibration worked.</p>
 </div>
 </div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/03-calibrate-and-undistort.ipynb" style="right:24px; top:6px;" title="Open notebook 6C in Google Colab">&#9654;&#xFE0E; Lab 6C in Colab</a>
 </section>
 
 <section id="quiz-cal-undistort" class="slide level2" data-menu-title="Quiz: cal_undistort">
@@ -1252,6 +1345,7 @@ def cal_undistort(img, objpoints, imgpoints):
 <p>In practice calibrate <b>once</b>, save mtx and dist, and only call <code>undistort</code> per frame. Lab 6C has an auto-check.</p>
 </div>
 </div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/03-calibrate-and-undistort.ipynb" style="right:24px; top:6px;" title="Open notebook 6C in Google Colab">&#9654;&#xFE0E; Lab 6C in Colab</a>
 </section>
 
 <section id="optimal-new-camera-matrix" class="slide level2" data-menu-title="getOptimalNewCameraMatrix">
@@ -1272,6 +1366,7 @@ und = und[y:y + rh, x:x + rw]      # crop black edges
 <li>Here alpha = 1 <b>folds</b>: the 5-coefficient polynomial is only valid where there were corners. Try <code>CALIB_RATIONAL_MODEL</code> or fisheye for wide lenses (Lab 6C).</li>
 </ul>
 </div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/03-calibrate-and-undistort.ipynb" style="right:24px; bottom:34px;" title="Open notebook 6C in Google Colab">&#9654;&#xFE0E; Lab 6C in Colab</a>
 </section>
 
 <section id="undistort-video" class="slide level2" data-menu-title="Fast undistortion for video">
@@ -1301,6 +1396,7 @@ pts_ud = cv2.undistortPoints(pts, K, dist, P=newK)
 <p>If you only need a few points, <code>undistortPoints</code> avoids warping the image at all.</p>
 </div>
 </div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/03-calibrate-and-undistort.ipynb" style="right:24px; top:6px;" title="Open notebook 6C in Google Colab">&#9654;&#xFE0E; Lab 6C in Colab</a>
 </section>
 
 <section id="calibration-pitfalls" class="slide level2" data-menu-title="Calibration pitfalls">
@@ -1323,6 +1419,13 @@ pts_ud = cv2.undistortPoints(pts, K, dist, P=newK)
 <p class="tiny muted" style="margin-top:0.6em;">Lab 6F is a bug hunt with these pitfalls planted in the code.</p>
 </div>
 </div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/06-bug-hunt.ipynb" style="right:24px; top:6px;" title="Open notebook 6F in Google Colab">&#9654;&#xFE0E; Lab 6F in Colab</a>
+</section>
+
+<section id="remember-calibration" class="slide level2" data-menu-title="Remember: Calibrating with OpenCV">
+<p class="kicker">Remember</p>
+<h2>Calibrating with OpenCV: the 3 things to remember</h2>
+<ol class="tight" style="font-size:1em;"><li>Corners: <code>findChessboardCorners</code> + <code>cornerSubPix</code>, count the <b>inner</b> corners.</li><li><code>calibrateCamera(objpoints, imgpoints, (w, h))</code> → K, dist and one pose per photo.</li><li>Judge it with the <b>RMS reprojection error</b> (&lt; 0.5 px good, &gt; 1 px re-shoot), then <code>undistort</code> / <code>remap</code>.</li></ol>
 </section>
 
 <!-- ============================ SECTION 6 ============================ -->
@@ -1343,6 +1446,7 @@ pts_ud = cv2.undistortPoints(pts, K, dist, P=newK)
 </ul>
 <p class="small">Watch: <a href="https://www.youtube.com/watch?v=EUvco3rjUdQ">How to do Camera Calibration with ChArUco Boards</a> (Nicolai Nielsen) · <a href="https://docs.opencv.org/4.13.0/da/d13/tutorial_aruco_calibration.html">OpenCV tutorial: calibration with ArUco and ChArUco</a></p>
 </div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/05-charuco-and-fisheye.ipynb" style="right:24px; top:6px;" title="Open notebook 6E in Google Colab">&#9654;&#xFE0E; Lab 6E in Colab</a>
 </section>
 
 <section id="charuco-code" class="slide level2" data-menu-title="ChArUco: the code">
@@ -1379,6 +1483,7 @@ rms, K, dist, rvecs, tvecs = cv2.calibrateCamera(
 </ul>
 </div>
 </div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/05-charuco-and-fisheye.ipynb" style="right:24px; top:6px;" title="Open notebook 6E in Google Colab">&#9654;&#xFE0E; Lab 6E in Colab</a>
 </section>
 
 <section id="fisheye-calibration" class="slide level2" data-menu-title="Fisheye calibration">
@@ -1403,6 +1508,7 @@ und = cv2.remap(img, m1, m2, cv2.INTER_LINEAR)
 <li>Very wide (&gt; 200°) or mirror cameras: <code>cv2.omnidir</code> (contrib)</li>
 </ul>
 </div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/05-charuco-and-fisheye.ipynb" style="right:24px; top:6px;" title="Open notebook 6E in Google Colab">&#9654;&#xFE0E; Lab 6E in Colab</a>
 </section>
 
 <section id="stereo-calibration" class="slide level2" data-menu-title="Stereo calibration">
@@ -1421,6 +1527,7 @@ und = cv2.remap(img, m1, m2, cv2.INTER_LINEAR)
 <p class="tiny muted">Depth from disparity, <i>Z = fB/d</i>, is Lecture 10. Datasets: <a href="https://www.kaggle.com/datasets/danielwe14/stereocamera-chessboard-pictures">Kaggle stereo chessboard pictures</a>.</p>
 </div>
 </div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/07-stereo-calibration.ipynb" style="right:24px; top:6px;" title="Open notebook 6G in Google Colab">&#9654;&#xFE0E; Lab 6G in Colab</a>
 </section>
 
 <section id="stereo-code" class="slide level2" data-menu-title="Stereo calibration: the code">
@@ -1445,6 +1552,7 @@ rectR = cv2.remap(right, *mapR, cv2.INTER_LINEAR)       # now matching points sh
 <p class="note">Two Raspberry Pi cameras on a bracket (or the Pi 5's two CSI ports) make a cheap stereo rig. Keep them <b>rigidly</b> mounted: any movement invalidates R, T. See <a href="https://medium.com/@erencanbulut/raspberry-pi-stereo-camera-calibration-a-step-by-step-guide-23cc62d06716">Raspberry Pi stereo camera calibration</a>.</p>
 <p class="warn">Check the rectified pair: draw horizontal lines. If the same corner is on different rows, the calibration or the synchronisation is off.</p>
 </div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/07-stereo-calibration.ipynb" style="right:24px; top:6px;" title="Open notebook 6G in Google Colab">&#9654;&#xFE0E; Lab 6G in Colab</a>
 </section>
 
 <section id="calibrate-your-own-camera" class="slide level2" data-menu-title="Calibrate your own camera">
@@ -1485,6 +1593,7 @@ for i in range(25):
 <p class="tiny muted" style="margin-top:0.3em;">Based on <a href="https://github.com/Petros626/Camera-Calibration-with-PiCamera2-OpenCV">Petros626/Camera-Calibration-with-PiCamera2-OpenCV</a>, <a href="https://github.com/niconielsen32/camera-calibration">niconielsen32/camera-calibration</a>, <a href="https://github.com/nuwandda/Checkerboard-Calibration">nuwandda/Checkerboard-Calibration</a>, <a href="https://github.com/ibois-epfl/rgb-camera-calibration">ibois-epfl/rgb-camera-calibration</a>.</p>
 </div>
 </div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/08-calibrate-your-camera.ipynb" style="right:24px; top:6px;" title="Open notebook 6H in Google Colab">&#9654;&#xFE0E; Lab 6H in Colab</a>
 </section>
 
 <section id="calibration-tools" class="slide level2" data-menu-title="Calibration tools">
@@ -1528,6 +1637,7 @@ for i in range(25):
 \[ R_{curve} = \frac{(1 + (2Ay + B)^2)^{3/2}}{|2A|} \]
 </div>
 </div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/04-road-camera-birdseye.ipynb" style="right:24px; top:6px;" title="Open notebook 6D in Google Colab">&#9654;&#xFE0E; Lab 6D in Colab</a>
 </section>
 
 <section id="what-is-perspective" class="slide level2" data-menu-title="Perspective">
@@ -1546,6 +1656,7 @@ for i in range(25):
 <div><img class="fig h340" src="assets/06_camera_calibration/p_54.jpg" alt="Text seen from the front"><p class="cap">… mapped to 4 points of a rectangle</p></div>
 </div>
 <p class="small" style="margin-top:0.4em;">A perspective transform maps the points of a given image to <b>different, desired</b> image points, as if seen from a new viewpoint. It effectively drags points towards or away from the camera. <b>Four point pairs</b> are enough to define it (a 3 × 3 <b>homography</b> with 8 degrees of freedom).</p>
+<p class="plain"><b>In plain words:</b> four corners of a flat thing are enough to tell OpenCV how to "walk around" it and photograph it from the front or from above.</p>
 </section>
 
 <section id="birds-eye-view" class="slide level2" data-menu-title="Bird's-eye view">
@@ -1629,6 +1740,7 @@ def warp(img):
 <pre><code id="pw-M" class="nohighlight" style="font-size:0.9em;"></code></pre>
 </div>
 <p class="demo-msg" id="pw-msg"></p>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/04-road-camera-birdseye.ipynb" style="right:24px; bottom:34px;" title="Open notebook 6D in Google Colab">&#9654;&#xFE0E; Lab 6D in Colab</a>
 </section>
 
 <section id="birdseye-result" class="slide level2" data-menu-title="Bird's-eye on the road camera">
@@ -1636,6 +1748,7 @@ def warp(img):
 <img class="fig full" src="assets/06_camera_calibration/g_birdseye.jpg" alt="Undistorted road with source trapezoid and the bird's-eye view" style="max-height:300px;">
 <img class="fig full" src="assets/06_camera_calibration/g_curvature.jpg" alt="Curved road, bird's-eye view and polynomial fit" style="max-height:250px; margin-top:8px;">
 <p class="cap">Top: <code>src = [[577,463],[707,463],[1110,720],[205,720]]</code> → <code>dst = [[300,0],[980,0],[980,720],[300,720]]</code>. Bottom: lane pixels in the bird's-eye view, second-order fits and the radius in <b>metres</b> (assuming 30 m per 720 px vertically and 3.7 m per 700 px horizontally; Lab 6D).</p>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/04-road-camera-birdseye.ipynb" style="right:24px; top:6px;" title="Open notebook 6D in Google Colab">&#9654;&#xFE0E; Lab 6D in Colab</a>
 </section>
 
 <section id="quiz-undistort-and-transform" class="slide level2" data-menu-title="Quiz: undistort and transform">
@@ -1674,6 +1787,7 @@ def corners_unwarp(img, nx, ny, mtx, dist):
 </code></pre>
 </div>
 </div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/04-road-camera-birdseye.ipynb" style="right:24px; top:6px;" title="Open notebook 6D in Google Colab">&#9654;&#xFE0E; Lab 6D in Colab</a>
 </section>
 
 <section id="unwarp-result" class="slide level2" data-menu-title="Undistort & transform: result">
@@ -1706,6 +1820,12 @@ def corners_unwarp(img, nx, ny, mtx, dist):
 </div>
 </section>
 
+<section id="remember-perspective" class="slide level2" data-menu-title="Remember: Perspective transform">
+<p class="kicker">Remember</p>
+<h2>Perspective transform: the 3 things to remember</h2>
+<ol class="tight" style="font-size:1em;"><li><b>Undistort first</b>, then warp: a homography keeps straight lines straight, so it cannot fix lens curves.</li><li>4 point pairs → <code>getPerspectiveTransform</code> → <code>warpPerspective</code>.</li><li>Bird's-eye view → fit x = Ay² + By + C → lane curvature in metres.</li></ol>
+</section>
+
 <!-- ============================ WRAP-UP ============================ -->
 <section id="watch-and-learn" class="slide level2" data-menu-title="Watch and learn">
 <h2>Watch &amp; learn: recommended videos</h2>
@@ -1719,6 +1839,62 @@ def corners_unwarp(img, nx, ny, mtx, dist):
 <a href="https://www.youtube.com/watch?v=3h7wgR5fYik"><img src="https://img.youtube.com/vi/3h7wgR5fYik/mqdefault.jpg" alt=""><span><b>Calibration with a Python script</b><br>Nicolai Nielsen</span></a>
 <a href="https://www.youtube.com/watch?v=EUvco3rjUdQ"><img src="https://img.youtube.com/vi/EUvco3rjUdQ/mqdefault.jpg" alt=""><span><b>ChArUco board calibration</b><br>Nicolai Nielsen</span></a>
 <a href="https://www.youtube.com/watch?v=O-7TkOKeK2M"><img src="https://img.youtube.com/vi/O-7TkOKeK2M/mqdefault.jpg" alt=""><span><b>Calibrate an OpenCV camera in 15 minutes</b><br>The Drone Dojo (Raspberry Pi)</span></a>
+</div>
+<div class="btnrow" style="margin-top:0.6em; align-items:center;">
+<a class="lab-link" href="../tutorials/08_camera_calibration_videos.html">&#128214; Step-by-step tutorials for all 9 videos</a>
+<span class="small muted">Video labs:</span>
+<a class="lab-link alt" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/09-pi-camera-in-15-minutes.ipynb">6I Pi in 15 min</a><a class="lab-link alt" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/10-nicolai-get-images-and-calibrate.ipynb">6J Nicolai</a><a class="lab-link alt" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/11-kevin-wood-calibration-app.ipynb">6K Kevin Wood</a><a class="lab-link alt" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/12-charuco-webcam-pipeline.ipynb">6L ChArUco</a><a class="lab-link alt" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/13-zhang-method-from-scratch.ipynb">6M Zhang (Cyrill)</a>
+</div>
+</section>
+
+<section id="video-lab-pi-15-minutes" class="slide level2" data-menu-title="Video lab: Pi camera in 15 minutes">
+<p class="kicker">Hands-on · Video lab 6I</p>
+<h2>Calibrate your Raspberry Pi camera in 15 minutes</h2>
+<div class="grid2 wide-left">
+<pre class="code-sm"><code class="bash" data-trim data-noescape>
+# on the Pi (SSH + VNC), Raspberry Pi OS Bookworm
+mkdir -p ~/calib &amp;&amp; cd ~/calib
+for f in pi_calibrate_20.py aruco_pose_test.py; do
+  wget https://raw.githubusercontent.com/Kazimbalti/\
+intelligent-vision-systems/main/LAB/Lab_6/$f; done
+wget https://raw.githubusercontent.com/opencv/opencv/4.x/doc/pattern.png
+sudo apt install -y python3-opencv python3-picamera2
+
+# 1. calibrate: 26 mm squares, 640 x 480 (as in the video)
+python3 pi_calibrate_20.py --mm 26 --width 640 --height 480
+
+# 2. print a marker, measure it, test with a ruler
+python3 aruco_pose_test.py --make-marker --id 72
+python3 aruco_pose_test.py --size 200 --id 72 \
+        --width 640 --height 480
+</code></pre>
+<div>
+<ol class="tight small">
+<li>Print <b>pattern.png</b> on A4, glue it flat, <b>measure</b> a square</li>
+<li>The script keeps <b>20 good, different</b> frames by itself: show the <b>edges</b> first, then near, far, tilted</li>
+<li>It saves <code>cameraMatrix.txt</code>, <code>cameraDistortion.txt</code>, <code>camera.yaml</code></li>
+<li><b>Ruler test:</b> centre an ArUco marker (x ≈ 0), slide it <b>6 cm</b>: the program must say <b>≈ 60 mm</b></li>
+<li>Same resolution in every script!</li>
+</ol>
+<p class="tiny muted">After <a href="https://www.youtube.com/watch?v=O-7TkOKeK2M">The Drone Dojo: Calibrate OpenCV Camera In Under 15 Minutes</a>, updated for Bookworm + OpenCV 5 (Picamera2, apt instead of sudo pip, solvePnP instead of estimatePoseSingleMarkers).</p>
+<div class="btnrow"><a class="lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/09-pi-camera-in-15-minutes.ipynb">&#9654;&#xFE0E; Lab 6I in Colab</a><a class="lab-link alt" href="../tutorials/08_camera_calibration_videos.html#pi-in-15-minutes">Step-by-step tutorial</a></div>
+</div>
+</div>
+</section>
+
+<section id="faq" class="slide level2" data-menu-title="Questions students always ask">
+<h2>Questions students always ask</h2>
+<div class="grid2">
+<div>
+<p class="small"><b>Do I calibrate every time I switch the camera on?</b><br>No. Once per camera + lens + focus + resolution. Save <code>camera.yaml</code> and reuse it.</p>
+<p class="small"><b>I changed the resolution. Recalibrate?</b><br>Best yes. Same aspect ratio: just scale f<sub>x</sub>, f<sub>y</sub>, c<sub>x</sub>, c<sub>y</sub> by the resize factor (dist stays the same).</p>
+<p class="small"><b>Two cameras of the same model: same K?</b><br>Close, but not equal. Every unit is assembled slightly differently, so calibrate each one.</p>
+</div>
+<div>
+<p class="small"><b>Why a chessboard and not any picture?</b><br>We must know the true shape exactly, and chessboard corners can be found to 0.1 px.</p>
+<p class="small"><b>How many photos?</b><br>3 is the mathematical minimum; use <b>15–30</b> sharp, tilted views covering the whole frame.</p>
+<p class="small"><b>My RMS is 0.3 px. Am I done?</b><br>Almost: also check the board covered the edges, and do a ruler test (Lab 6I): does a known distance come out right?</p>
+</div>
 </div>
 </section>
 
@@ -1743,31 +1919,13 @@ def corners_unwarp(img, nx, ny, mtx, dist):
 </section>
 
 <section id="lab-6-and-resources" class="slide level2" data-menu-title="Lab 6 &amp; resources">
-<h2>Lab 6 &amp; resources</h2>
-<div class="grid2">
-<div class="card"><h3>Lab 6 notebooks (Colab-ready)</h3>
-<ul class="tight">
-<li><a href="../labs.html#lab-6a">6A · Pinhole projection &amp; distortion</a></li>
-<li><a href="../labs.html#lab-6b">6B · Finding chessboard corners</a></li>
-<li><a href="../labs.html#lab-6c">6C · Calibrate &amp; undistort (GoPro)</a></li>
-<li><a href="../labs.html#lab-6d">6D · Road camera: undistort, bird's-eye &amp; curvature</a></li>
-<li><a href="../labs.html#lab-6e">6E · ChArUco &amp; fisheye with a known ground truth</a></li>
-<li><a href="../labs.html#lab-6f">6F · Bug hunt (pairs)</a></li>
-<li><a href="../labs.html#lab-6g">6G · Stereo calibration &amp; rectification</a></li>
-<li><a href="../labs.html#lab-6h">6H · Calibrate your own Pi / USB camera</a></li>
-</ul>
-<p class="tiny muted">All on <a href="https://github.com/Kazimbalti/intelligent-vision-systems/tree/main/LAB/Lab_6">GitHub: LAB/Lab_6</a></p></div>
-<div class="card"><h3>Further reading</h3>
-<ul class="tight">
-<li><a href="https://docs.opencv.org/4.5.4/d9/d0c/group__calib3d.html">OpenCV calib3d module</a> · <a href="https://docs.opencv.org/4.x/dc/dbb/tutorial_py_calibration.html">Python calibration tutorial</a> · <a href="https://docs.opencv.org/4.13.0/da/d13/tutorial_aruco_calibration.html">ArUco/ChArUco calibration</a></li>
-<li><a href="https://docs.ros.org/en/rolling/p/camera_calibration/modules.html">ROS camera_calibration</a></li>
-<li>Zhang, <i>A Flexible New Technique for Camera Calibration</i>, TPAMI 2000</li>
-<li>Szeliski, <i>Computer Vision</i> 2e, §2.1, §11.1 · Hartley &amp; Zisserman, ch. 6–7</li>
-<li><a href="https://medium.com/@chaitalibh.cb/camera-calibration-with-checkerboard-54f93af742a0">Camera calibration with checkerboard</a> (Medium)</li>
-<li><a href="https://github.com/udacity/CarND-Camera-Calibration">udacity/CarND-Camera-Calibration</a></li>
-</ul></div>
+<h2>Lab 6: all notebooks (click to open in Colab)</h2>
+<div class="labgrid"><a class="" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/01-pinhole-and-distortion.ipynb"><b>6A</b>Pinhole projection &amp; distortion</a><a class="" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/02-finding-corners.ipynb"><b>6B</b>Finding chessboard corners</a><a class="" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/03-calibrate-and-undistort.ipynb"><b>6C</b>Calibrate &amp; undistort (GoPro)</a><a class="" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/04-road-camera-birdseye.ipynb"><b>6D</b>Road camera: bird's-eye &amp; curvature</a><a class="" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/05-charuco-and-fisheye.ipynb"><b>6E</b>ChArUco &amp; fisheye (known truth)</a><a class="" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/06-bug-hunt.ipynb"><b>6F</b>Bug hunt 🐞 (pairs)</a><a class="" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/07-stereo-calibration.ipynb"><b>6G</b>Stereo calibration &amp; rectification</a><a class="" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/08-calibrate-your-camera.ipynb"><b>6H</b>Calibrate your own Pi / USB camera</a><a class="vid" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/09-pi-camera-in-15-minutes.ipynb"><b>6I</b>🎬 Pi camera in 15 minutes</a><a class="vid" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/10-nicolai-get-images-and-calibrate.ipynb"><b>6J</b>🎬 Get images → calibrate (Nicolai)</a><a class="vid" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/11-kevin-wood-calibration-app.ipynb"><b>6K</b>🎬 Calibration explained (Kevin Wood)</a><a class="vid" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/12-charuco-webcam-pipeline.ipynb"><b>6L</b>🎬 ChArUco pipeline (Nicolai)</a><a class="vid" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/13-zhang-method-from-scratch.ipynb"><b>6M</b>🎬 Zhang from scratch (Cyrill)</a><a href="../labs.html#lab-6-calibration"><b>📋</b>Labs page: Colab · View · Download for every notebook</a></div>
+<div class="grid2" style="margin-top:0.6em;">
+<p class="tiny muted">Scripts: <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/pi_calibrate_20.py">pi_calibrate_20.py</a> · <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/aruco_pose_test.py">aruco_pose_test.py</a> · <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/capture_calib.py">capture_calib.py</a> · <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/calibrate.py">calibrate.py</a> · <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/get_images.py">get_images.py</a> · <a href="https://github.com/Kazimbalti/intelligent-vision-systems/tree/main/LAB/Lab_6">all on GitHub</a> · <a href="../tutorials/08_camera_calibration_videos.html">video tutorials</a></p>
+<p class="tiny muted">Reading: <a href="https://docs.opencv.org/4.5.4/d9/d0c/group__calib3d.html">OpenCV calib3d</a> · <a href="https://docs.opencv.org/4.13.0/da/d13/tutorial_aruco_calibration.html">ArUco/ChArUco calibration</a> · <a href="https://docs.ros.org/en/rolling/p/camera_calibration/modules.html">ROS camera_calibration</a> · Zhang, TPAMI 2000 · Szeliski 2e §2.1, §11.1 · <a href="https://medium.com/@chaitalibh.cb/camera-calibration-with-checkerboard-54f93af742a0">Medium: checkerboard calibration</a> · <a href="https://github.com/udacity/CarND-Camera-Calibration">udacity/CarND-Camera-Calibration</a></p>
 </div>
-<p class="tiny muted" style="margin-top:0.6em;"><b>Credits.</b> Adapted and extended from the <i>Camera Calibration</i> lesson of the Udacity Self-Driving Car Engineer Nanodegree. Lesson illustrations and calibration images © Udacity, Inc. (MIT-licensed repositories); stereo sample images from OpenCV (Apache 2.0). Used here for teaching.</p>
+<p class="tiny muted" style="margin-top:0.3em;"><b>Credits.</b> Adapted and extended from the <i>Camera Calibration</i> lesson of the Udacity Self-Driving Car Engineer Nanodegree. Lesson illustrations and calibration images © Udacity, Inc. (MIT-licensed repositories); stereo sample images from OpenCV (Apache 2.0). Videos © their authors. Used here for teaching.</p>
 </section>
 
 <section id="questions" class="slide level2 center" data-background-color="#28568a" data-menu-title="Questions">

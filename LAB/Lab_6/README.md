@@ -18,6 +18,16 @@ ground truth and a stereo pair, and finally **your own** Raspberry Pi or USB cam
 | 6G | `07-stereo-calibration.ipynb` | 6 · Stereo | `stereoCalibrate`, epipolar check, `stereoRectify` + `remap`, a first disparity map |
 | 6H | `08-calibrate-your-camera.ipynb` | 6 · Your own camera | Capture with Picamera2 or a webcam, calibrate, check coverage, save `camera.yaml`, measure distance with `solvePnP` |
 
+### Video labs (one per recommended video — see the [tutorial page](https://kazimbalti.github.io/intelligent-vision-systems/tutorials/08_camera_calibration_videos.html))
+
+| Part | Notebook | Video | What you build |
+|---|---|---|---|
+| 6I | `09-pi-camera-in-15-minutes.ipynb` | The Drone Dojo — *Calibrate OpenCV Camera In Under 15 Minutes* | Auto-capture 20 good frames at 640 × 480 (`pi_calibrate_20.py`), calibrate, ArUco + ruler test (`aruco_pose_test.py`) |
+| 6J | `10-nicolai-get-images-and-calibrate.ipynb` | Nicolai Nielsen — *< 5 minutes* and *Python script* | `get_images.py`, the script line by line, pickle, undistort vs remap, total error vs RMS |
+| 6K | `11-kevin-wood-calibration-app.ipynb` | Kevin Wood — *Explained* and *OpenCV Python* | JSON output, P = K[R\|t] by hand, straight-line test, calibration doctor |
+| 6L | `12-charuco-webcam-pipeline.ipynb` | Nicolai Nielsen — *ChArUco boards* | 18 × 11 ChArUco, per-image errors, outlier removal, JSON, 3-D board view |
+| 6M | `13-zhang-method-from-scratch.ipynb` | Cyrill Stachniss — *Intrinsics/extrinsics*, *Intrinsic calibration*, *Zhang's method* | DLT, homographies, Zhang's closed form in NumPy |
+
 Scripts for 6H (and for your project): `capture_calib.py` (Picamera2 timer capture or a webcam preview with SPACE to save)
 and `calibrate.py` (pinhole, rational or fisheye model; per-view errors; drop bad views; writes `camera.yaml`; optional
 undistorted copies). Run either with `--help`.

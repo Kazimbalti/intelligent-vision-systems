@@ -457,3 +457,71 @@ def check_own_calibration(rms, K, size, n_views):
         return _hint("The principal point is far from the image centre: add views near the image corners.")
     hfov = 2 * np.degrees(np.arctan(w / 2 / K[0, 0]))
     return _ok(f"Your camera: RMS {rms:.2f} px, fx = {K[0, 0]:.0f} px, horizontal FOV ≈ {hfov:.0f}°. Save camera.yaml!")
+
+
+# ============================================================================== video labs (6I-6M)
+def check_good_frame_filter(kept, n_target=20):
+    if len(kept) < n_target:
+        return _hint(f"Only {len(kept)} frames kept: lower the novelty threshold or record more frames.")
+    if len(kept) > n_target:
+        return _hint(f"{len(kept)} frames kept: stop as soon as you have {n_target} good frames.")
+    return _ok(f"{n_target} good, different frames collected, just like the Pi script does.")
+
+
+def check_marker_shift(shift_mm, true_mm=60.0):
+    if not np.isfinite(shift_mm):
+        return _hint("The shift is not a number: was the marker detected in both images?")
+    err = abs(shift_mm - true_mm)
+    if err > 0.15 * true_mm:
+        return _hint(f"You measured {shift_mm:.1f} mm for a {true_mm:.0f} mm move. Is the marker size in mm, and did you use the calibrated K and dist?")
+    return _ok(f"The marker moved {shift_mm:.1f} mm (true {true_mm:.0f} mm): the calibration measures real distances.")
+
+
+def check_total_error(total_error, rms):
+    if not (0 < total_error < rms):
+        return _hint("Nicolai's 'total error' = mean over images of (L2 norm of all residuals / number of corners). It is always smaller than the RMS.")
+    return _ok(f"Total error {total_error:.4f} vs RMS {rms:.3f} px: two different numbers for the same fit. Always say which one you report!")
+
+
+def check_blur_scores(scores, files):
+    scores = np.asarray(scores, float)
+    if len(scores) != len(files):
+        return _hint("One blur score per image, please.")
+    if scores.std() == 0:
+        return _hint("All scores are equal: use the variance of cv2.Laplacian(gray, cv2.CV_64F).")
+    return _ok(f"Blur scores computed: sharpest {scores.max():.0f}, blurriest {scores.min():.0f}.")
+
+
+def check_outlier_removal(rms_before, rms_after, n_removed):
+    if n_removed == 0:
+        return _hint("Nothing was removed: drop the views whose error is far above the median (e.g. > 2 × median).")
+    if rms_after >= rms_before:
+        return _hint("RMS did not improve: did you recalibrate after removing the views?")
+    return _ok(f"Removed {n_removed} outlier view(s): RMS {rms_before:.3f} → {rms_after:.3f} px.")
+
+
+def check_homography(H, H_ref):
+    H = np.asarray(H, float); H = H / H[2, 2]; H_ref = np.asarray(H_ref, float) / H_ref[2, 2]
+    if np.abs(H - H_ref).max() > 1e-3 * np.abs(H_ref).max():
+        return _hint("Your homography differs from cv2.findHomography. Use the last right-singular vector of A (Vt[-1]) and reshape it to 3 × 3.")
+    return _ok("Your DLT homography matches cv2.findHomography.")
+
+
+def check_zhang_K(K, K_true, tol=0.02):
+    K = np.asarray(K, float)
+    if K.shape != (3, 3) or not np.isfinite(K).all():
+        return _hint("K must be a finite 3 × 3 matrix.")
+    if K[0, 0] < 0:
+        return _hint("fx is negative: B is only known up to sign. Flip b if B[0, 0] < 0 before the Cholesky step.")
+    e = abs(K[0, 0] - K_true[0, 0]) / K_true[0, 0]
+    ec = np.hypot(K[0, 2] - K_true[0, 2], K[1, 2] - K_true[1, 2])
+    if e > tol or ec > 0.02 * K_true[0, 2]:
+        return _hint(f"fx off by {100 * e:.1f}%, principal point by {ec:.1f} px. Check the v_ij vectors and the two constraints per view.")
+    return _ok(f"Zhang's closed form works: fx error {100 * e:.2f} %, principal point error {ec:.2f} px.")
+
+
+def check_dlt(P, P_true):
+    P = np.asarray(P, float); P = P / np.linalg.norm(P); Pt = np.asarray(P_true, float); Pt = Pt / np.linalg.norm(Pt)
+    if min(np.abs(P - Pt).max(), np.abs(P + Pt).max()) > 1e-6:
+        return _hint("P does not match. Each point gives TWO rows of A; take Vt[-1] and reshape to 3 × 4.")
+    return _ok("DLT recovered the 3 × 4 projection matrix (11 degrees of freedom) from 6+ known points.")

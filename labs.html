@@ -498,6 +498,7 @@ window.Quarto = {
 <div style="flex:1; min-width:260px;">
 <p class="mb-2"><strong>How to run:</strong> click <em>Colab</em> and run all cells (uncomment the <code>!pip install</code> line on a fresh runtime) &mdash; each notebook downloads the images it needs. <strong>6H runs on the machine the camera is attached to</strong> (Pi&nbsp;5 or laptop) and needs a printed 9&nbsp;&times;&nbsp;6 chessboard (<a href="https://github.com/opencv/opencv/blob/4.x/doc/pattern.png">pattern.png</a>). Locally: install <a href="LAB/Lab_6/requirements.txt"><code>requirements.txt</code></a> (see the <a href="https://github.com/Kazimbalti/intelligent-vision-systems/tree/main/LAB/Lab_6">Lab 6 README</a>). Tested with OpenCV 5.0 (4.7+ works); the notebooks point out every OpenCV&nbsp;4&nbsp;&rarr;&nbsp;5 change they rely on.</p>
 <p class="mb-2"><strong>Auto-checks:</strong> after each exercise a &#x2705; check cell tells you whether your result is good enough, or gives a &#x1F4A1; hint &mdash; never the answer. Scripts for your own projects: <a href="LAB/Lab_6/capture_calib.py"><code>capture_calib.py</code></a> and <a href="LAB/Lab_6/calibrate.py"><code>calibrate.py</code></a>.</p>
+<p class="mb-2"><strong>Video labs 6I&ndash;6M:</strong> each recommended video from the lecture&rsquo;s <em>Watch &amp; learn</em> slide has a <a href="tutorials/08_camera_calibration_videos.html">step-by-step tutorial</a> and its own notebook &mdash; start with <a href="#lab-6i">6I, a Raspberry Pi camera in 15 minutes</a>.</p>
 <p class="mb-0"><strong>Deliverable:</strong> notebooks 6A&ndash;6E and 6G with the <em>&ldquo;Your turn&rdquo;</em> tasks answered; the 6F bug-hunt scoreboard shown in class; for 6H your <code>camera.yaml</code>, error/coverage plots and answers &mdash; keep <code>camera.yaml</code> for Lab&nbsp;9 and the project.</p>
 </div>
 </div>
@@ -553,6 +554,37 @@ window.Quarto = {
 <td><strong>Calibrate your own camera</strong><br><small>Capture 20&ndash;30 views with Picamera2 or a webcam (<code>capture_calib.py</code>), calibrate (<code>calibrate.py</code>), check coverage and per-view error, save <code>camera.yaml</code>, measure a distance with <code>solvePnP</code>. Runs on the Pi / your laptop, not Colab.</small></td>
 <td>6 &middot; Your own camera<br><a href="lectures/06_Camera_Calibration.html#/calibrate-your-own-camera">lecture slide</a></td>
 <td style="white-space:nowrap;"><a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/08-calibrate-your-camera.ipynb">Colab</a> &middot; <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/08-calibrate-your-camera.ipynb">View</a> &middot; <a href="LAB/Lab_6/08-calibrate-your-camera.ipynb" download>Download</a></td>
+</tr>
+<tr class="header"><td colspan="4" style="background:#eef3f9;"><strong>&#x1F3AC; Video labs</strong> &mdash; one notebook per recommended video, with a step-by-step <a href="tutorials/08_camera_calibration_videos.html">tutorial page</a>.</td></tr>
+<tr id="lab-6i" class="even">
+<td style="text-align:center;"><strong>6I</strong></td>
+<td><strong>Video lab: Raspberry Pi camera in 15 minutes &#x1F3AC;</strong><br><small>After <a href="https://www.youtube.com/watch?v=O-7TkOKeK2M">The Drone Dojo</a>: auto-capture 20 good, different frames at 640&times;480 (<code>pi_calibrate_20.py</code>), calibrate, then the ArUco + ruler test (<code>aruco_pose_test.py</code>): slide the marker 60&nbsp;mm and check the camera says 60&nbsp;mm. Virtual Pi camera first, then your real Pi.</small></td>
+<td>Watch &amp; learn<br><a href="tutorials/08_camera_calibration_videos.html#pi-in-15-minutes">tutorial</a> &middot; <a href="lectures/06_Camera_Calibration.html#/watch-and-learn">lecture slide</a></td>
+<td style="white-space:nowrap;"><a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/09-pi-camera-in-15-minutes.ipynb">Colab</a> &middot; <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/09-pi-camera-in-15-minutes.ipynb">View</a> &middot; <a href="LAB/Lab_6/09-pi-camera-in-15-minutes.ipynb" download>Download</a></td>
+</tr>
+<tr id="lab-6j" class="odd">
+<td style="text-align:center;"><strong>6J</strong></td>
+<td><strong>Video lab: get images &rarr; calibrate (Nicolai Nielsen) &#x1F3AC;</strong><br><small>Both of his videos: <code>get_images.py</code> (s = save, ESC = quit), the calibration script line by line, pickle files, <code>undistort</code> vs <code>remap</code> timing, his &ldquo;total error&rdquo; vs the RMS, and how many views you need.</small></td>
+<td>Watch &amp; learn<br><a href="tutorials/08_camera_calibration_videos.html#nicolai-script">tutorial</a> &middot; <a href="lectures/06_Camera_Calibration.html#/watch-and-learn">lecture slide</a></td>
+<td style="white-space:nowrap;"><a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/10-nicolai-get-images-and-calibrate.ipynb">Colab</a> &middot; <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/10-nicolai-get-images-and-calibrate.ipynb">View</a> &middot; <a href="LAB/Lab_6/10-nicolai-get-images-and-calibrate.ipynb" download>Download</a></td>
+</tr>
+<tr id="lab-6k" class="even">
+<td style="text-align:center;"><strong>6K</strong></td>
+<td><strong>Video lab: calibration explained (Kevin Wood) &#x1F3AC;</strong><br><small>His calibration app on 36 GoPro images: plot all detections, save a JSON, build P = K[R|t] by hand, the straight-line undistortion test, and a <em>calibration doctor</em> for his four improvement tips (count, coverage, cut-off boards, blur).</small></td>
+<td>Watch &amp; learn<br><a href="tutorials/08_camera_calibration_videos.html#kevin-opencv">tutorial</a> &middot; <a href="lectures/06_Camera_Calibration.html#/watch-and-learn">lecture slide</a></td>
+<td style="white-space:nowrap;"><a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/11-kevin-wood-calibration-app.ipynb">Colab</a> &middot; <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/11-kevin-wood-calibration-app.ipynb">View</a> &middot; <a href="LAB/Lab_6/11-kevin-wood-calibration-app.ipynb" download>Download</a></td>
+</tr>
+<tr id="lab-6l" class="odd">
+<td style="text-align:center;"><strong>6L</strong></td>
+<td><strong>Video lab: ChArUco pipeline (Nicolai Nielsen) &#x1F3AC;</strong><br><small>The video&rsquo;s 18&times;11 <code>DICT_4X4_100</code> board, free in OpenCV: capture, detect IDs, per-image errors, remove two shaky rolling-shutter shots (RMS 0.67&nbsp;&rarr;&nbsp;0.33&nbsp;px), JSON export, 3-D view of the boards.</small></td>
+<td>Watch &amp; learn<br><a href="tutorials/08_camera_calibration_videos.html#charuco-video">tutorial</a> &middot; <a href="lectures/06_Camera_Calibration.html#/watch-and-learn">lecture slide</a></td>
+<td style="white-space:nowrap;"><a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/12-charuco-webcam-pipeline.ipynb">Colab</a> &middot; <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/12-charuco-webcam-pipeline.ipynb">View</a> &middot; <a href="LAB/Lab_6/12-charuco-webcam-pipeline.ipynb" download>Download</a></td>
+</tr>
+<tr id="lab-6m" class="even">
+<td style="text-align:center;"><strong>6M</strong></td>
+<td><strong>Video lab: Zhang&rsquo;s method from scratch (Cyrill Stachniss) &#x1F3AC;</strong><br><small>Cyrill&rsquo;s three videos in NumPy: P = K[R|t] and its 11 degrees of freedom, the DLT from 6+ 3-D points, one homography per photo, two equations per photo &rarr; B &rarr; Cholesky &rarr; K (within 0.1&nbsp;%), then OpenCV&rsquo;s refinement on a real lens.</small></td>
+<td>Watch &amp; learn<br><a href="tutorials/08_camera_calibration_videos.html#cyrill-zhang">tutorial</a> &middot; <a href="lectures/06_Camera_Calibration.html#/watch-and-learn">lecture slide</a></td>
+<td style="white-space:nowrap;"><a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/13-zhang-method-from-scratch.ipynb">Colab</a> &middot; <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/13-zhang-method-from-scratch.ipynb">View</a> &middot; <a href="LAB/Lab_6/13-zhang-method-from-scratch.ipynb" download>Download</a></td>
 </tr>
 </tbody>
 </table>
