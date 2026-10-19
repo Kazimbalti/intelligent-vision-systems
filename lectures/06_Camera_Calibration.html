@@ -1,0 +1,2494 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="../site_libs/quarto-contrib/videojs/video.min.js"></script>
+<link href="../site_libs/quarto-contrib/videojs/video-js.css" rel="stylesheet">
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.10.18">
+
+  <meta name="author" content="Dr. Muhammad Kazim">
+  <title>Intelligent Vision Systems – Lecture 06 — Camera Calibration</title>
+  <meta name="description" content="Lecture 6: the pinhole camera, intrinsics and extrinsics, lens distortion, camera types (wide-angle, fisheye, stereo, Raspberry Pi), chessboard and ChArUco calibration with OpenCV, undistortion, perspective transforms and lane curvature, with live demos and Lab 6.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-e29227cb4367bc74b13779e945f9984f.css">
+  <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none;
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". ";
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto;
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0;
+    }
+  </style>
+  <style type="text/css">
+  /* ---- Lecture 6: house style copied from Lecture 5 Part II (navy #28568a, white slides) ---- */
+  .reveal .slides > section.slide { font-size: 1.24em; }
+  .reveal { --navy: #28568a; --navy-d: #1c3f66; --ink: #1f2933; --muted: #5b6b7b; --soft: #eef3f9; --ok: #1f7a4d; --warn: #9a3412; }
+  .reveal h2 { color: var(--navy); font-size: 1.45em; margin-bottom: 0.45em; }
+  .reveal h3 { color: var(--navy); font-size: 1.05em; margin: 0.2em 0 0.35em; }
+  .reveal .kicker { color: var(--navy); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.55em; margin: 0 0 0.2em; }
+  .reveal .muted { color: var(--muted); }
+  .reveal .small { font-size: 0.72em; }
+  .reveal .tiny { font-size: 0.55em; }
+  .reveal .center-text { text-align: center; }
+  .reveal .grid2 { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 22px; align-items: start; }
+  .reveal .grid2.wide-left { grid-template-columns: minmax(0,1.35fr) minmax(0,1fr); }
+  .reveal .grid2.wide-right { grid-template-columns: minmax(0,1fr) minmax(0,1.35fr); }
+  .reveal .grid3 { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; align-items: start; }
+  .reveal .grid4 { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 18px; align-items: start; }
+  .reveal img.fig { display: block; max-width: 100%; max-height: 780px; margin: 0 auto; border-radius: 6px; }
+  .reveal img.fig.h520 { max-height: 700px; }
+  .reveal img.fig.h420 { max-height: 600px; }
+  .reveal img.fig.h340 { max-height: 500px; }
+  .reveal .cap { font-size: 0.6em; color: var(--muted); text-align: center; margin-top: 0.35em; }
+  .reveal .card { background: var(--soft); border-radius: 10px; padding: 0.55em 0.75em; border-left: 6px solid var(--navy); }
+  .reveal .card h3 { margin-top: 0; }
+  .reveal .card p, .reveal .card li { font-size: 0.78em; }
+  .reveal .note { background: #eef6ff; border-left: 6px solid #2a76dd; border-radius: 8px; padding: 0.45em 0.8em; font-size: 0.72em; }
+  .reveal .warn { background: #fff4ec; border-left: 6px solid #ea580c; border-radius: 8px; padding: 0.45em 0.8em; font-size: 0.72em; }
+  .reveal .quiz { background: #fffbea; border: 2px solid #f2c94c; border-radius: 10px; padding: 0.5em 0.85em; }
+  .reveal .quiz .q { font-weight: 700; color: #7a5b00; font-size: 0.6em; letter-spacing: 0.08em; text-transform: uppercase; }
+  .reveal .answer { background: #e9f7ef; border-left: 6px solid var(--ok); border-radius: 8px; padding: 0.4em 0.8em; font-size: 0.75em; margin-top: 0.5em; }
+  .reveal .answer b:first-child { color: var(--ok); }
+  .reveal ul.tight li, .reveal ol.tight li { margin-top: 0.15em; margin-bottom: 0.1em; }
+  .reveal .slide ul, .reveal .slide ol { font-size: 0.86em; }
+  .reveal .card ul, .reveal .card ol { font-size: 1em; }
+  .reveal table.simple { font-size: 0.62em; border-collapse: collapse; width: 100%; }
+  .reveal table.simple th { background: var(--navy); color: #fff; padding: 0.35em 0.55em; text-align: left; }
+  .reveal table.simple td { border-bottom: 1px solid #d8e0ea; padding: 0.32em 0.55em; vertical-align: top; }
+  .reveal table.simple tr:nth-child(even) td { background: #f6f9fc; }
+  .reveal pre { width: 100%; box-shadow: none; margin: 0.2em 0; font-size: 0.57em; line-height: 1.32; }
+  .reveal pre code { max-height: 760px; padding: 0.7em 0.9em; border-radius: 8px; background: #f6f8fa; color: #24292f; border: 1px solid #d8dee4; }
+  .reveal pre.code-sm { font-size: 0.47em; }
+  .reveal code { font-family: var(--r-code-font); }
+  .reveal p code, .reveal li code, .reveal td code { background: #eef1f4; padding: 0.05em 0.3em; border-radius: 4px; font-size: 0.88em; color: #8a1538; }
+  /* light highlight.js theme */
+  .reveal .hljs-keyword, .reveal .hljs-built_in, .reveal .hljs-literal { color: #cf222e; }
+  .reveal .hljs-string { color: #0a3069; }
+  .reveal .hljs-comment { color: #6e7781; font-style: italic; }
+  .reveal .hljs-number { color: #0550ae; }
+  .reveal .hljs-title, .reveal .hljs-title.function_ { color: #8250df; }
+  .reveal .hljs-params { color: #24292f; }
+  .reveal .hljs-meta { color: #953800; }
+  /* section dividers */
+  .reveal .sec-num { font-size: 3.2em; font-weight: 800; color: rgba(255,255,255,0.25); line-height: 1; margin: 0; }
+  .reveal .sec-title { color: #fff; font-size: 2.3em; font-weight: 700; line-height: 1.12; margin: 0.1em 0 0.25em; }
+  .reveal .sec-sub { color: #dbe7f5; font-size: 1.0em; margin: 0; }
+  /* title slide */
+  .reveal .title-wrap { display: grid; grid-template-columns: 1.35fr 1fr; gap: 40px; align-items: center; height: 100%; }
+  .reveal .t-kicker { color: var(--navy); font-weight: 800; letter-spacing: 0.08em; font-size: 0.75em; margin: 0; }
+  .reveal .t-main { color: var(--navy); font-size: 2.05em; font-weight: 800; line-height: 1.02; margin: 0.08em 0 0.12em; }
+  .reveal .t-sub { color: #1f2933; font-size: 1.15em; margin: 0 0 0.9em; }
+  .reveal .t-rule { width: 54px; height: 5px; background: var(--navy); margin: 0.4em 0 0.5em; }
+  .reveal .pixgrid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; }
+  .reveal .pixgrid span { aspect-ratio: 1; border-radius: 3px; }
+  /* roadmap pipeline */
+  .reveal .pipe { display: flex; align-items: stretch; gap: 10px; margin: 0.5em 0; }
+  .reveal .pipe .st { flex: 1; background: var(--soft); border: 2px solid var(--navy); border-radius: 10px; padding: 0.4em 0.3em; text-align: center; font-size: 0.6em; font-weight: 600; color: var(--navy-d); }
+  .reveal .pipe .st small { display: block; font-weight: 400; color: var(--muted); font-size: 0.85em; margin-top: 0.25em; }
+  .reveal .pipe .ar { align-self: center; color: var(--navy); font-size: 0.9em; font-weight: 700; }
+  .reveal .pipe .st.on { background: var(--navy); color: #fff; }
+  .reveal .pipe .st.on small { color: #dbe7f5; }
+  /* lab buttons (same as Lecture 4) */
+  .reveal .lab-link { z-index: 6; background: #28568a; color: #fff; font-weight: 600; font-size: 0.6em;
+    padding: 0.35em 0.9em; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.25); text-decoration: none; }
+  .reveal .lab-link:hover { background: #1c3f66; color: #fff; }
+  .reveal .btnrow { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 0.5em; }
+  .reveal .btnrow a, .reveal .btnrow button { position: static; display: inline-block; }
+  .reveal a.lab-link.alt { background: #fff; color: var(--navy); border: 2px solid var(--navy); box-shadow: none; }
+  /* interactive demos */
+  .reveal .demo-box { background: #f6f9fc; border: 1px solid #d8e0ea; border-radius: 10px; padding: 0.5em 0.7em; }
+  .reveal .demo-box label { font-size: 0.55em; color: var(--ink); display: flex; align-items: center; gap: 10px; margin: 0.3em 0; }
+  .reveal .demo-box input[type=range] { flex: 1; }
+  .reveal .demo-box .val { font-family: var(--r-code-font); min-width: 2.6em; text-align: right; color: var(--navy); font-weight: 700; }
+  .reveal .slides canvas { display: block; max-width: 100%; border-radius: 6px; background: #fff; }
+  .reveal button.dbtn { font-size: 0.5em; padding: 0.3em 0.8em; border-radius: 6px; border: 2px solid var(--navy); background: #fff; color: var(--navy); cursor: pointer; font-weight: 600; }
+  .reveal button.dbtn:hover { background: var(--navy); color: #fff; }
+  .reveal .demo-msg { font-size: 0.5em; color: var(--warn); }
+  .reveal .badge { display: inline-block; background: var(--navy); color: #fff; border-radius: 999px; padding: 0.05em 0.6em; font-size: 0.55em; font-weight: 700; vertical-align: middle; }
+  .reveal .badge.new { background: #ea580c; }
+  .reveal .pill { display: inline-block; border: 2px solid var(--navy); color: var(--navy); border-radius: 999px; padding: 0.05em 0.55em; font-size: 0.6em; font-weight: 700; margin: 0.1em; }
+
+  .reveal svg.stack-svg { display:block; width:100%; height:auto; max-height:650px; margin:0 auto; }
+  /* larger-image layouts */
+  .reveal .grid2.img-wide { grid-template-columns: minmax(0,1.75fr) minmax(0,1fr); }
+  .reveal .grid2.img-wide-r { grid-template-columns: minmax(0,1fr) minmax(0,1.75fr); }
+  .reveal img.fig.h600 { max-height: 640px; }
+  .reveal .grid2 img.fig, .reveal .grid3 img.fig { width: 100%; object-fit: contain; }
+  .reveal img.fig.full { max-height: 720px; width: 100%; object-fit: contain; }
+  .reveal .slides img.fig, .reveal .slides img.zoomable { cursor: zoom-in; }
+  .reveal .zoom-hint { position: absolute; right: 18px; bottom: 6px; font-size: 0.42em; color: #8a99aa; }
+  /* click-to-zoom lightbox */
+  #lb { position: fixed; inset: 0; z-index: 9999; background: rgba(10,16,24,0.92); display: none; align-items: center; justify-content: center; cursor: zoom-out; }
+  #lb.on { display: flex; }
+  #lb img { max-width: 96vw; max-height: 92vh; object-fit: contain; border-radius: 6px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); background: #fff; }
+  #lb p { position: fixed; bottom: 1.2vh; left: 0; right: 0; text-align: center; color: #dbe7f5; font: 15px "Source Sans Pro", sans-serif; margin: 0; }
+
+  /* Lecture 6 additions */
+  .reveal .vids { gap: 16px; }
+  .reveal .vids a { display: flex; gap: 12px; align-items: center; background: var(--soft); border-radius: 10px; padding: 8px; text-decoration: none; color: var(--ink); }
+  .reveal .vids a:hover { background: #dfe9f5; }
+  .reveal .vids img { width: 190px; border-radius: 6px; margin: 0; flex: none; }
+  .reveal .vids span { font-size: 0.5em; line-height: 1.3; }
+  .reveal .demo-box input[type=number] { font-size: 1em; padding: 0.1em 0.3em; border: 1px solid #b8c4d2; border-radius: 4px; }
+  .reveal #pw-src { cursor: grab; touch-action: none; }
+  .reveal .MathJax_Display, .reveal mjx-container { margin: 0.3em 0 !important; }
+  .reveal .grid4 img.fig { width: 100%; object-fit: contain; }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="lecture-6-camera-calibration" class="slide level2" data-menu-title="Lecture 6 — Camera Calibration">
+<div class="title-wrap">
+<div>
+<p class="t-kicker">LECTURE 6</p>
+<p class="t-main">Camera Calibration</p>
+<p class="t-sub">From pixels to the real world: camera models, lens distortion, calibration &amp; perspective transforms</p>
+<p class="muted" style="font-size:0.62em; margin:0;">Pinhole, wide-angle, fisheye, stereo &amp; Raspberry Pi cameras · hands-on with OpenCV · Lab 6</p>
+<div class="t-rule"></div>
+<p style="font-size:0.66em; font-weight:700; margin:0;">Dr. Muhammad Kazim</p>
+<p class="muted" style="font-size:0.56em; margin:0;">Department of Intelligent Systems<br>University of Lahore</p>
+</div>
+<div>
+<img src="assets/06_camera_calibration/g_undist_gopro.jpg" alt="A distorted chessboard and the same image after calibration" style="width:100%; border-radius:10px; box-shadow:0 6px 24px rgba(0,0,0,0.18); margin:0;">
+<div class="pixgrid" style="margin-top:18px;">
+<span style="background:#1f2933"></span><span style="background:#f4f7fb"></span><span style="background:#1f2933"></span><span style="background:#f4f7fb"></span><span style="background:#1f2933"></span><span style="background:#f4f7fb"></span><span style="background:#1f2933"></span><span style="background:#f4f7fb"></span>
+<span style="background:#f4f7fb"></span><span style="background:#28568a"></span><span style="background:#f4f7fb"></span><span style="background:#28568a"></span><span style="background:#f4f7fb"></span><span style="background:#28568a"></span><span style="background:#f4f7fb"></span><span style="background:#28568a"></span>
+</div>
+</div>
+</div>
+<aside class="notes">Lecture 5 found lane lines in pixels. Today we learn how a camera maps the 3-D world to pixels, why real lenses bend straight lines, and how to measure a camera's parameters with a chessboard so that pixels can be turned into real measurements. Large parts follow the Udacity Self-Driving Car Nanodegree lesson "Camera Calibration", extended with OpenCV's calib3d module, ChArUco and fisheye calibration, stereo calibration and the Raspberry Pi camera.</aside>
+</section>
+
+<section id="from-lecture-5-to-lecture-6" class="slide level2" data-menu-title="From Lecture 5 to Lecture 6">
+<p class="kicker">Where we are</p>
+<h2>From lane pixels to real-world measurements</h2>
+<div class="grid2">
+<div class="card">
+<h3>Lecture 5 · you can already</h3>
+<ul class="tight">
+<li>Select lane paint by <b>colour</b> and <b>region</b></li>
+<li>Find edges with <b>Canny</b>, lines with <b>Hough</b></li>
+<li>Draw two straight lane lines on <b>video</b></li>
+</ul>
+<p class="small muted" style="margin-top:0.6em;">…but everything is in <b>pixels</b>, and straight lines only.</p>
+</div>
+<div class="card" style="border-left-color:#ea580c;">
+<h3>Lecture 6 · today</h3>
+<ul class="tight">
+<li>How a camera turns <b>3-D points into pixels</b> (pinhole model, <b>K</b>, <b>[R | t]</b>)</li>
+<li>Why lenses <b>distort</b> and the 5 numbers that fix it</li>
+<li><b>Calibrate</b> any camera with a chessboard (Zhang's method)</li>
+<li>Fisheye, ChArUco, stereo &amp; Raspberry Pi cameras</li>
+<li><b>Perspective transform</b> → bird's-eye view → lane <b>curvature</b> in metres</li>
+</ul>
+</div>
+</div>
+<div class="grid3" style="margin-top:0.3em;">
+<div><img class="fig" src="assets/06_camera_calibration/p_01.jpg" alt="Driver view of a road" style="max-height:150px;"></div>
+<div><img class="fig" src="assets/06_camera_calibration/p_02.jpg" alt="Road ahead" style="max-height:150px;"></div>
+<div><img class="fig" src="assets/06_camera_calibration/p_03.jpg" alt="Car seen from above" style="max-height:150px;"></div>
+</div>
+<p class="cap">To steer, a car must measure how much its lane <b>curves</b>, which means looking at the road from above. That warp is only correct after we remove <b>lens distortion</b> (Udacity).</p>
+</section>
+
+<section id="learning-outcomes" class="slide level2" data-menu-title="Learning outcomes">
+<h2>Learning outcomes</h2>
+<p class="small muted">By the end of this lecture and Lab 6 you should be able to:</p>
+<ol>
+<li>Write the <b>pinhole projection</b> <i>s·x = K [R | t] X</i> and explain every intrinsic and extrinsic parameter.</li>
+<li>Describe <b>radial</b> and <b>tangential</b> distortion, the OpenCV coefficients <code>(k1, k2, p1, p2, k3)</code>, and when you need the <b>fisheye</b> or <b>omnidirectional</b> model instead.</li>
+<li>Compare camera types (standard, wide-angle, fisheye, 360°, stereo, RGB-D, rolling vs global shutter) and calibration targets (chessboard, circles, ChArUco).</li>
+<li><b>Calibrate</b> a camera with OpenCV: corners → object/image points → <code>calibrateCamera</code> → <b>reprojection error</b>.</li>
+<li><b>Undistort</b> images and video efficiently, and judge a calibration's quality.</li>
+<li>Calibrate a <b>stereo pair</b> and rectify it; calibrate your own <b>Raspberry Pi / USB camera</b>.</li>
+<li>Apply a <b>perspective transform</b> to get a bird's-eye view and measure lane curvature.</li>
+</ol>
+</section>
+
+<section id="roadmap" class="slide level2" data-menu-title="Roadmap">
+<h2>Roadmap</h2>
+<div class="pipe">
+<div class="st">① Why?<small>distortion matters</small></div><div class="ar">→</div>
+<div class="st">② Pinhole<small>K and [R | t]</small></div><div class="ar">→</div>
+<div class="st">③ Distortion<small>radial &amp; tangential</small></div><div class="ar">→</div>
+<div class="st">④ Camera types<small>fisheye, 360°, stereo…</small></div><div class="ar">→</div>
+<div class="st">⑤ Calibrate<small>chessboard → K, dist</small></div><div class="ar">→</div>
+<div class="st">⑥ Beyond<small>ChArUco, fisheye, stereo, Pi</small></div><div class="ar">→</div>
+<div class="st">⑦ Perspective<small>bird's-eye &amp; curvature</small></div>
+</div>
+<img class="fig" src="assets/06_camera_calibration/p_20.jpg" alt="Real-world scene, distorted image, corrected image" style="max-height:400px;">
+<p class="cap">The whole lecture in one picture: real world → (lens) → distorted image → (calibration) → corrected image (Udacity).</p>
+</section>
+
+<!-- ============================ SECTION 1 ============================ -->
+<section id="why-calibrate" class="slide level2 center" data-background-color="#28568a" data-menu-title="1 · Why calibrate?">
+<p class="sec-num">01</p>
+<p class="sec-title">Why calibrate a camera?</p>
+<p class="sec-sub">Cameras do not create perfect images</p>
+</section>
+
+<section id="image-distortion" class="slide level2" data-menu-title="Image distortion">
+<h2>Image distortion: 3-D world → imperfect 2-D image</h2>
+<div class="grid2 img-wide">
+<div><img class="fig h600" src="assets/06_camera_calibration/p_04.jpg" alt="A car camera turns 3-D objects into a 2-D image"></div>
+<div>
+<p class="small">When a camera looks at <b>3-D objects</b> and turns them into a <b>2-D image</b>, the transformation is not perfect.</p>
+<ul class="tight small">
+<li>Distortion changes the apparent <b>shape</b> and <b>size</b> of objects</li>
+<li>It is strongest near the <b>edges</b> of the image</li>
+<li>A distorted lane gives the <b>wrong curvature</b> → the wrong <b>steering angle</b></li>
+</ul>
+<p class="note">So the <b>first step</b> of any measuring vision system is to <b>undo the distortion</b>.</p>
+</div>
+</div>
+</section>
+
+<section id="distorted-road-images" class="slide level2" data-menu-title="Distorted road images">
+<h2>The same road through different lenses</h2>
+<div class="grid2">
+<div><img class="fig h420" src="assets/06_camera_calibration/p_06.jpg" alt="Original and distorted road images"></div>
+<div><img class="fig h420" src="assets/06_camera_calibration/p_07.jpg" alt="Distorted road images with lane edges bent"></div>
+</div>
+<p class="small" style="margin-top:0.5em;">The lane edges are <b>bent</b>, rounded or stretched outward. Distortion changes what the shape and size of objects <i>appear</i> to be, and a self-driving car must place itself in the world <b>accurately</b>.</p>
+</section>
+
+<section id="real-dashcam-distortion" class="slide level2" data-menu-title="Real dash-cam distortion">
+<h2>Is it visible on a real dash-cam? <span class="badge new">new</span></h2>
+<img class="fig full" src="assets/06_camera_calibration/g_road_undist.jpg" alt="Raw dash-cam frame, undistorted frame and their difference">
+<p class="cap">A frame from the Udacity <i>Advanced Lane Lines</i> camera before and after undistortion (we calibrate this camera in Lab 6D). The difference image shows the correction is <b>largest near the image border</b>: exactly where the lane lines and nearby cars are.</p>
+</section>
+
+<section id="quiz-why-correct" class="slide level2" data-menu-title="Quiz: why correct distortion?">
+<h2>Quiz: why is it important to correct for distortion?</h2>
+<div class="quiz">
+<p class="q">Quiz question · select all that apply</p>
+<ol type="A" class="tight">
+<li>Distortion can change the apparent <b>size</b> of an object in an image.</li>
+<li>Distortion can change the apparent <b>shape</b> of an object in an image.</li>
+<li>Distortion can cause an object's appearance to change depending on <b>where it is in the field of view</b>.</li>
+<li>Distortion can make objects appear <b>closer or farther away</b> than they actually are.</li>
+</ol>
+<div class="answer fragment"><b>All four.</b> Each one breaks measurements: lane width, curvature, object size, distance to the car ahead.</div>
+</div>
+</section>
+
+<section id="what-calibration-gives-you" class="slide level2" data-menu-title="What calibration gives you">
+<h2>What calibration gives you</h2>
+<div class="grid3">
+<div class="card"><h3>Intrinsics K</h3><p>Focal lengths <i>f<sub>x</sub>, f<sub>y</sub></i> and principal point <i>c<sub>x</sub>, c<sub>y</sub></i>, in pixels. Fixed for a given camera, lens, focus and resolution.</p></div>
+<div class="card" style="border-left-color:#ea580c;"><h3>Distortion</h3><p><code>dist = [k1, k2, p1, p2, k3]</code> (or the fisheye <code>[k1..k4]</code>). How the lens bends rays away from the ideal pinhole.</p></div>
+<div class="card" style="border-left-color:#1f7a4d;"><h3>Extrinsics [R | t]</h3><p>Where the camera is relative to the world (or to the board, or to a second camera). One pose per calibration image.</p></div>
+</div>
+<table class="simple" style="margin-top:0.7em;">
+<tr><th>Application</th><th>Needs</th></tr>
+<tr><td>Lane curvature, bird's-eye view (SDC)</td><td>K + distortion, then a perspective transform</td></tr>
+<tr><td>Measuring object size in mm (inspection, Lab 9)</td><td>K + distortion + the distance or plane</td></tr>
+<tr><td>Stereo depth (Lecture 10), visual SLAM, 3-D reconstruction</td><td>K, distortion <b>and</b> the relative pose of the cameras</td></tr>
+<tr><td>AR overlays, robot pick-and-place, ArUco pose (<code>solvePnP</code>)</td><td>K + distortion → pose of objects</td></tr>
+<tr><td>Multi-sensor fusion (camera + LiDAR / IMU)</td><td>intrinsics + extrinsic calibration between sensors</td></tr>
+</table>
+</section>
+
+<!-- ============================ SECTION 2 ============================ -->
+<section id="pinhole-camera-model" class="slide level2 center" data-background-color="#28568a" data-menu-title="2 · The pinhole camera model">
+<p class="sec-num">02</p>
+<p class="sec-title">The pinhole camera model</p>
+<p class="sec-sub">How 3-D points become pixels</p>
+</section>
+
+<section id="pinhole-camera" class="slide level2" data-menu-title="Pinhole camera">
+<h2>The pinhole camera</h2>
+<div class="grid2 img-wide">
+<div><img class="fig h600" src="assets/06_camera_calibration/p_10.jpg" alt="Pinhole camera model with object, pinhole and formed image"></div>
+<div>
+<ul class="tight small">
+<li>Light reflected from an object passes through a <b>tiny hole</b> and forms an image on the back plane (film / sensor).</li>
+<li>The image is <b>upside-down and mirrored</b>: rays from the top of the object continue through the pinhole to the bottom of the image.</li>
+<li>The pinhole camera is the earliest means of projecting images: the <i>camera obscura</i> was described in China around 2,500 years ago.</li>
+</ul>
+<p class="note">A pinhole has <b>no lens</b>, so it has <b>no distortion</b>; it just lets in very little light.</p>
+</div>
+</div>
+</section>
+
+<section id="pinhole-and-eye" class="slide level2" data-menu-title="The pinhole and the human eye">
+<h2>The camera and the human eye</h2>
+<div class="grid2 wide-left">
+<div><img class="fig h600" src="assets/06_camera_calibration/p_11.jpg" alt="Pinhole camera compared with the human eye"></div>
+<div>
+<p class="small">The eye works the same way: the <b>pupil</b> is the pinhole and the <b>retina</b> is the image plane, and the image on it is upside-down too. The brain flips it.</p>
+<div class="quiz" style="margin-top:0.3em; font-size:0.9em;">
+<p class="q">Quiz</p>
+<p class="small">What is the fundamental difference between images formed with a pinhole camera and those formed using lenses?</p>
+<ul class="tight small">
+<li>Pinhole images are always flipped, lens images upright</li>
+<li>Pinhole images are black and white</li>
+<li>Pinhole images are free from distortion; lenses tend to introduce distortion</li>
+<li>They are exactly the same</li>
+</ul>
+<div class="answer fragment"><b>Free from distortion.</b> Lenses gather more light but bend rays at their edges.</div>
+</div>
+</div>
+</div>
+</section>
+
+<section id="camera-matrix-3d-to-2d" class="slide level2" data-menu-title="Camera matrix: 3D to 2D">
+<h2>From 3-D to 2-D: the camera matrix</h2>
+<div class="grid2">
+<div><img class="fig h420" src="assets/06_camera_calibration/p_12.jpg" alt="3-D to 2-D projection"></div>
+<div><img class="fig h420" src="assets/06_camera_calibration/p_13.jpg" alt="Camera matrix C maps P(X,Y,Z) to p(x,y)"></div>
+</div>
+<p class="small" style="margin-top:0.5em;">A 3-D object point <b>P(X, Y, Z)</b> maps to a 2-D image point <b>p(x, y)</b> through a <b>camera matrix</b> (Udacity calls it <i>C</i>, so <i>p ≈ C P</i>). Calibration is the job of <b>measuring</b> that matrix plus the lens distortion.</p>
+</section>
+
+<section id="perspective-projection" class="slide level2" data-menu-title="Perspective projection">
+<h2>Perspective projection by similar triangles</h2>
+<div class="grid2">
+<div>
+<svg viewBox="0 0 640 360" style="width:100%; max-height:430px;" role="img" aria-label="Similar triangles: x = f X / Z">
+<line x1="20" y1="200" x2="620" y2="200" stroke="#9aa8b8" stroke-dasharray="6 6" stroke-width="2"/>
+<text x="560" y="222" font-size="18" fill="#5b6b7b">optical axis</text>
+<line x1="160" y1="60" x2="160" y2="340" stroke="#28568a" stroke-width="4"/>
+<text x="110" y="52" font-size="18" fill="#28568a" font-weight="700">image plane</text>
+<circle cx="300" cy="200" r="7" fill="#ea580c"/><text x="282" y="236" font-size="18" fill="#ea580c" font-weight="700">C (pinhole)</text>
+<line x1="560" y1="200" x2="560" y2="70" stroke="#1f7a4d" stroke-width="6"/>
+<text x="575" y="82" font-size="20" fill="#1f7a4d" font-weight="700">X</text>
+<line x1="560" y1="70" x2="160" y2="330" stroke="#c0392b" stroke-width="2.5"/>
+<line x1="160" y1="200" x2="160" y2="330" stroke="#c0392b" stroke-width="6"/>
+<text x="120" y="290" font-size="20" fill="#c0392b" font-weight="700">x</text>
+<line x1="160" y1="352" x2="300" y2="352" stroke="#28568a" stroke-width="2"/><text x="215" y="346" font-size="18" fill="#28568a">f</text>
+<line x1="300" y1="300" x2="560" y2="300" stroke="#1f7a4d" stroke-width="2"/><text x="420" y="292" font-size="18" fill="#1f7a4d">Z (depth)</text>
+</svg>
+</div>
+<div>
+<p class="small">Similar triangles give, for a camera at the origin looking along <i>Z</i>:</p>
+\[ x = f\,\frac{X}{Z}, \qquad y = f\,\frac{Y}{Z} \]
+<ul class="tight small">
+<li>Objects <b>twice as far</b> appear <b>half as big</b>: the <b>1/Z</b> is perspective.</li>
+<li>Depth is <b>lost</b>: every point on the ray through <i>C</i> lands on the same pixel. One camera cannot measure distance on its own.</li>
+<li>We put a virtual image plane <b>in front</b> of the pinhole so the image is not flipped.</li>
+</ul>
+</div>
+</div>
+</section>
+
+<section id="intrinsic-matrix" class="slide level2" data-menu-title="Intrinsic matrix K">
+<h2>From millimetres to pixels: the intrinsic matrix K</h2>
+<div class="grid2 wide-left">
+<div>
+\[ \begin{bmatrix} u \\ v \\ 1 \end{bmatrix} \simeq \underbrace{\begin{bmatrix} f_x & s & c_x \\ 0 & f_y & c_y \\ 0 & 0 & 1 \end{bmatrix}}_{K} \begin{bmatrix} X/Z \\ Y/Z \\ 1 \end{bmatrix} \]
+<ul class="tight small">
+<li><b>f<sub>x</sub>, f<sub>y</sub></b>: focal length in <b>pixels</b> = <i>f</i> [mm] / pixel size [mm]. Equal for square pixels.</li>
+<li><b>c<sub>x</sub>, c<sub>y</sub></b>: <b>principal point</b>, where the optical axis hits the sensor (≈ image centre, never exactly).</li>
+<li><b>s</b>: skew, 0 for every modern sensor (OpenCV assumes 0).</li>
+</ul>
+</div>
+<div class="card">
+<h3>Worked example: Pi Camera v2</h3>
+<p>Sony IMX219: <i>f</i> = 3.04 mm, pixel = 1.12 µm, 3280 × 2464 px.</p>
+<p>f<sub>x</sub> = 3.04 / 0.00112 ≈ <b>2714 px</b><br>c<sub>x</sub> ≈ 3280/2 = <b>1640</b>, c<sub>y</sub> ≈ <b>1232</b></p>
+<p>Horizontal FOV = 2·atan(1640 / 2714) ≈ <b>62°</b> ✔ (datasheet: 62.2°)</p>
+<p class="muted">Datasheet values are only a <i>starting guess</i>. Calibration measures the real ones.</p>
+</div>
+</div>
+</section>
+
+<section id="calc-intrinsics" class="slide level2" data-menu-title="Calculator: K from a datasheet">
+<h2>Try it: K from a datasheet <span class="badge new">interactive</span></h2>
+<div class="grid2 wide-right">
+<div class="demo-box">
+<div class="btnrow" style="margin:0 0 0.4em;">
+<button class="dbtn" data-cam="v2">Pi Cam v2</button><button class="dbtn" data-cam="v3">Pi Cam 3</button><button class="dbtn" data-cam="v3w">Pi Cam 3 Wide</button><button class="dbtn" data-cam="gs">Global Shutter</button><button class="dbtn" data-cam="web">USB webcam</button>
+</div>
+<label>focal length f (mm) <input type="number" id="kc-f" step="0.01" value="3.04" style="width:6em;"></label>
+<label>pixel size (µm) <input type="number" id="kc-p" step="0.01" value="1.12" style="width:6em;"></label>
+<label>width (px) <input type="number" id="kc-w" value="3280" style="width:6em;"> height (px) <input type="number" id="kc-h" value="2464" style="width:6em;"></label>
+<label>resize to width (px) <input type="number" id="kc-rw" value="640" style="width:6em;"> <span class="muted">(scaling the image scales K!)</span></label>
+</div>
+<div>
+<pre><code id="kc-out" class="nohighlight" style="font-size:1.05em; min-height:300px;"></code></pre>
+<p class="tiny muted">Sensor data from the Raspberry Pi camera documentation. Lens values of webcams vary: treat the preset as an example.</p>
+</div>
+</div>
+</section>
+
+<section id="extrinsics" class="slide level2" data-menu-title="Extrinsics [R | t]">
+<h2>Where is the camera? Extrinsics [R | t]</h2>
+<div class="grid2 wide-left">
+<div>
+<p class="small">World points are usually not given in the camera's frame. A <b>rotation R</b> (3×3) and <b>translation t</b> (3×1) move them there:</p>
+\[ \mathbf{X}_{cam} = R\,\mathbf{X}_{world} + \mathbf{t} \]
+<p class="small">Putting it all together, the full <b>projection</b> (Lecture 10 notation):</p>
+\[ s \begin{bmatrix} u \\ v \\ 1 \end{bmatrix} = K\,[R \mid \mathbf{t}] \begin{bmatrix} X \\ Y \\ Z \\ 1 \end{bmatrix} = P\,\tilde{\mathbf{X}} \]
+<p class="small"><i>P = K[R | t]</i> is the 3×4 <b>projection matrix</b>: 4 intrinsic + 6 extrinsic numbers (3 rotation, 3 translation).</p>
+</div>
+<div class="card">
+<h3>In OpenCV</h3>
+<ul class="tight">
+<li>R is stored as a 3-vector <code>rvec</code> (axis × angle, <b>Rodrigues</b>): <code>R, _ = cv2.Rodrigues(rvec)</code></li>
+<li><code>calibrateCamera</code> returns one <code>rvec, tvec</code> <b>per calibration image</b>: the pose of the board</li>
+<li><code>cv2.projectPoints(X, rvec, tvec, K, dist)</code> applies the whole model, including distortion</li>
+<li><code>cv2.solvePnP</code> does the inverse: known K + 3-D/2-D matches → pose</li>
+</ul>
+</div>
+</div>
+</section>
+
+<section id="demo-pinhole" class="slide level2" data-menu-title="Live demo: pinhole projection">
+<h2>Live demo: the pinhole camera <span class="badge new">interactive</span></h2>
+<div class="grid2 wide-left">
+<div><canvas id="pin-canvas" width="800" height="600"></canvas></div>
+<div class="demo-box">
+<label>focal length f<sub>x</sub> = f<sub>y</sub> <input type="range" id="pin-f" min="150" max="1200" value="500"><span class="val" id="pin-fv"></span></label>
+<label>principal point c<sub>x</sub> <input type="range" id="pin-cx" min="200" max="600" value="400"><span class="val" id="pin-cxv"></span></label>
+<label>distance Z (m) <input type="range" id="pin-z" min="20" max="120" value="40"><span class="val" id="pin-zv"></span></label>
+<label>orbit around (°) <input type="range" id="pin-yaw" min="-45" max="45" value="30"><span class="val" id="pin-yawv"></span></label>
+<label>camera elevation (°) <input type="range" id="pin-pitch" min="2" max="60" value="25"><span class="val" id="pin-pitchv"></span></label>
+<label>barrel distortion k<sub>1</sub> <input type="range" id="pin-k1" min="-50" max="30" value="0"><span class="val" id="pin-k1v"></span></label>
+<pre><code id="pin-K" class="nohighlight" style="font-size:0.95em;"></code></pre>
+<p class="tiny muted">A 1 m cube on a floor grid of 1 m squares; the camera looks at the cube. Change f: the image zooms (FOV changes). Move Z: size ∝ 1/Z. Add k1 &lt; 0: straight edges bow outwards.</p>
+</div>
+</div>
+</section>
+
+<section id="quiz-projection" class="slide level2" data-menu-title="Quiz: project a point">
+<h2>Quiz: project a point by hand</h2>
+<div class="grid2">
+<div class="quiz">
+<p class="q">Quiz question</p>
+<p class="small">A camera has <i>f<sub>x</sub> = f<sub>y</sub> = 800</i> px, <i>c<sub>x</sub> = 640</i>, <i>c<sub>y</sub> = 360</i>, no distortion, and R = I, t = 0. Where does the point <b>X = (0.5, −0.25, 4)</b> m land?</p>
+<div class="answer fragment"><b>u = 800·0.5/4 + 640 = 740</b>, <b>v = 800·(−0.25)/4 + 360 = 310</b>. Pixel (740, 310).</div>
+<p class="small fragment" style="margin-top:0.6em;">And a point twice as far, <b>(1, −0.5, 8)</b>?</p>
+<div class="answer fragment"><b>The same pixel (740, 310)</b>: it lies on the same ray. Depth cannot be recovered from one image.</div>
+</div>
+<div>
+<pre><code class="python" data-trim data-noescape>
+import numpy as np, cv2
+K = np.array([[800, 0, 640],
+              [0, 800, 360],
+              [0,   0,   1]], float)
+X = np.array([[0.5, -0.25, 4.0],
+              [1.0, -0.50, 8.0]])
+uv, _ = cv2.projectPoints(X, np.zeros(3), np.zeros(3),
+                          K, None)
+print(uv.reshape(-1, 2))   # [[740. 310.] [740. 310.]]
+</code></pre>
+</div>
+</div>
+</section>
+
+<section id="image-formation-steps" class="slide level2" data-menu-title="Image formation: the full chain">
+<h2>Image formation: the full chain in OpenCV</h2>
+<div class="pipe">
+<div class="st">World point<small>(X, Y, Z) in metres</small></div><div class="ar">→</div>
+<div class="st">Extrinsics<small>X<sub>c</sub> = R X + t</small></div><div class="ar">→</div>
+<div class="st">Normalise<small>x' = X<sub>c</sub>/Z<sub>c</sub>, y' = Y<sub>c</sub>/Z<sub>c</sub></small></div><div class="ar">→</div>
+<div class="st on">Distort<small>radial + tangential<br>(x'', y'')</small></div><div class="ar">→</div>
+<div class="st">Intrinsics<small>u = f<sub>x</sub>x'' + c<sub>x</sub><br>v = f<sub>y</sub>y'' + c<sub>y</sub></small></div>
+</div>
+<div class="grid2" style="margin-top:0.6em;">
+<div class="note">Distortion is applied to the <b>normalised</b> coordinates (units of focal length), not to pixels. That is why the same <code>dist</code> vector works at any image size, while <b>K must be scaled</b> when you resize.</div>
+<div class="warn">Udacity's notes write <i>r</i> as the distance from the <b>distortion centre</b> (≈ image centre). In OpenCV it is <i>r² = x'² + y'²</i> in normalised coordinates.</div>
+</div>
+<p class="cap" style="margin-top:0.6em;">Watch: <a href="https://www.youtube.com/watch?v=ND2fa08vxkY">Camera Intrinsics and Extrinsics: 5 Minutes with Cyrill</a> (Cyrill Stachniss, Uni Bonn).</p>
+</section>
+
+<!-- ============================ SECTION 3 ============================ -->
+<section id="lens-distortion" class="slide level2 center" data-background-color="#28568a" data-menu-title="3 · Lens distortion">
+<p class="sec-num">03</p>
+<p class="sec-title">Lens distortion</p>
+<p class="sec-sub">Real cameras use lenses, and lenses bend light</p>
+</section>
+
+<section id="pinhole-vs-lens" class="slide level2" data-menu-title="Pinhole vs lens">
+<h2>Why real cameras use lenses</h2>
+<div class="grid2 wide-left">
+<div><img class="fig h600" src="assets/06_camera_calibration/p_14.jpg" alt="Pinhole versus convex lens"></div>
+<div>
+<ul class="tight small">
+<li>A pinhole lets through <b>one ray</b> per scene point: a dark image or a very long exposure.</li>
+<li>A <b>convex lens</b> focuses <b>many rays</b> at once: bright images and fast shutter speeds.</li>
+<li>But rays bend a little <b>too much or too little</b> near the edges of a curved lens → <b>distortion</b>.</li>
+</ul>
+</div>
+</div>
+</section>
+
+<section id="radial-distortion" class="slide level2" data-menu-title="Radial distortion">
+<h2>Radial distortion: the most common type</h2>
+<div class="grid2 img-wide">
+<div><img class="fig h600" src="assets/06_camera_calibration/p_15.jpg" alt="Radial distortion"></div>
+<div>
+<p class="small">Light rays bend more (or less) the <b>further they are from the centre</b> of the lens. Lines and objects appear more or less <b>curved</b> than they are.</p>
+<ul class="tight small">
+<li><b>Barrel</b> (k<sub>1</sub> &lt; 0): lines bow <b>outwards</b>: wide-angle, GoPro, dash-cams</li>
+<li><b>Pincushion</b> (k<sub>1</sub> &gt; 0): lines bow <b>inwards</b>: telephoto, some zooms</li>
+<li><b>Mustache</b>: barrel in the centre, pincushion at the edge (k<sub>1</sub>, k<sub>2</sub> opposite signs)</li>
+</ul>
+</div>
+</div>
+</section>
+
+<section id="tangential-distortion" class="slide level2" data-menu-title="Tangential distortion">
+<h2>Tangential distortion: a tilted lens</h2>
+<div class="grid2 img-wide">
+<div><img class="fig h600" src="assets/06_camera_calibration/p_16.jpg" alt="Tangential distortion"></div>
+<div>
+<p class="small">Occurs when the lens is <b>not perfectly parallel</b> to the imaging plane (sensor), for example from glue or assembly tolerances in cheap modules.</p>
+<p class="small">The image looks <b>tilted</b>: some objects appear farther away or closer than they actually are.</p>
+<p class="note">Usually much smaller than radial distortion, but cheap phone, Pi and webcam modules can show it.</p>
+</div>
+</div>
+</section>
+
+<section id="distortion-on-purpose" class="slide level2" data-menu-title="Distortion on purpose">
+<h2>Some lenses distort on purpose</h2>
+<div class="grid2">
+<div><img class="fig h420" src="assets/06_camera_calibration/p_17.jpg" alt="Convex car mirror"><p class="cap">A convex car mirror: wider view, objects look farther away</p></div>
+<div><img class="fig h420" src="assets/06_camera_calibration/p_18.jpg" alt="Fisheye photograph"><p class="cap">Fisheye photography: 180° field of view, extreme barrel</p></div>
+</div>
+<p class="small" style="margin-top:0.4em;">Fine for style or a wide view, but for <b>measurement</b> (steering, sizing, depth) we need images that accurately reflect the real world.</p>
+</section>
+
+<section id="distortion-types-gallery" class="slide level2" data-menu-title="Distortion types gallery">
+<h2>Distortion types on a straight grid</h2>
+<img class="fig full" src="assets/06_camera_calibration/g_distortion_types.jpg" alt="Grid under no, barrel, pincushion, mustache and tangential distortion">
+<p class="cap">Generated with <code>cv2.projectPoints</code> on a flat grid: same K, different <code>dist</code> vectors.</p>
+</section>
+
+<section id="distortion-coefficients" class="slide level2" data-menu-title="Distortion coefficients">
+<h2>Five numbers capture the distortion</h2>
+<div class="grid2 wide-left">
+<div>
+<img class="fig" src="assets/06_camera_calibration/p_19.jpg" alt="Distortion coefficients = (k1 k2 p1 p2 k3)" style="max-height:170px;">
+<p class="small"><b>Radial</b>, with <i>r² = x² + y²</i> (normalised coordinates):</p>
+\[ \begin{aligned} x_{d} &= x\,(1 + k_1 r^2 + k_2 r^4 + k_3 r^6) \\ y_{d} &= y\,(1 + k_1 r^2 + k_2 r^4 + k_3 r^6) \end{aligned} \]
+<p class="small"><b>Tangential</b>:</p>
+\[ \begin{aligned} x_{d} &= x + [\,2p_1 xy + p_2(r^2 + 2x^2)\,] \\ y_{d} &= y + [\,p_1(r^2 + 2y^2) + 2p_2 xy\,] \end{aligned} \]
+</div>
+<div>
+<img class="fig" src="assets/06_camera_calibration/p_09.jpg" alt="A point in the distorted and corrected image" style="max-height:230px;">
+<ul class="tight small">
+<li>OpenCV order: <code>[k1, k2, p1, p2, k3]</code>. k3 comes <b>last</b> because it is only needed for strong (wide-angle) distortion.</li>
+<li>Optional extras: rational <code>k4–k6</code>, thin-prism <code>s1–s4</code>, tilted sensor <code>τx, τy</code>, so up to 14 numbers.</li>
+<li>The equations go <b>ideal → distorted</b>. Undistortion inverts them numerically.</li>
+</ul>
+</div>
+</div>
+</section>
+
+<section id="demo-distortion" class="slide level2" data-menu-title="Live demo: lens distortion explorer">
+<h2>Live demo: lens distortion explorer <span class="badge new">interactive</span></h2>
+<div class="grid2 wide-left">
+<div><canvas id="dist-canvas" width="800" height="600"></canvas></div>
+<div class="demo-box">
+<label>k<sub>1</sub> <input type="range" id="ds-k1" min="-60" max="60" value="-25"><span class="val" id="ds-k1v"></span></label>
+<label>k<sub>2</sub> <input type="range" id="ds-k2" min="-40" max="40" value="5"><span class="val" id="ds-k2v"></span></label>
+<label>k<sub>3</sub> <input type="range" id="ds-k3" min="-30" max="30" value="0"><span class="val" id="ds-k3v"></span></label>
+<label>p<sub>1</sub> <input type="range" id="ds-p1" min="-50" max="50" value="0"><span class="val" id="ds-p1v"></span></label>
+<label>p<sub>2</sub> <input type="range" id="ds-p2" min="-50" max="50" value="0"><span class="val" id="ds-p2v"></span></label>
+<label><input type="checkbox" id="ds-ref" checked> show the ideal (undistorted) board in red</label>
+<div class="btnrow">
+<button class="dbtn" id="ds-barrel">barrel</button><button class="dbtn" id="ds-pin">pincushion</button><button class="dbtn" id="ds-must">mustache</button><button class="dbtn" id="ds-tan">tangential</button><button class="dbtn" id="ds-gopro">GoPro (Lab 6)</button><button class="dbtn" id="ds-zero">reset</button>
+</div>
+<pre><code id="ds-vec" class="nohighlight" style="font-size:0.95em;"></code></pre>
+</div>
+</div>
+</section>
+
+<section id="quiz-distortion-type" class="slide level2" data-menu-title="Quiz: which distortion?">
+<h2>Quiz: name that distortion</h2>
+<div class="grid2 wide-left">
+<div><img class="fig h600" src="assets/06_camera_calibration/p_26.jpg" alt="A wide-angle view of a chessboard with detected corners"></div>
+<div class="quiz">
+<p class="q">Quiz question</p>
+<p class="small">This chessboard was shot with a GoPro (the camera we calibrate in Lab 6).</p>
+<ol type="A" class="tight small">
+<li>What kind of distortion is it? What sign do you expect for <b>k<sub>1</sub></b>?</li>
+<li>Where in the image is the distortion strongest?</li>
+<li>Would a pure pinhole camera show it?</li>
+</ol>
+<div class="answer fragment"><b>A:</b> barrel → <b>k<sub>1</sub> &lt; 0</b> (Lab 6 measures k<sub>1</sub> ≈ −0.23). <b>B:</b> at the edges and corners (large <i>r</i>). <b>C:</b> No, a pinhole has no lens.</div>
+</div>
+</div>
+</section>
+
+<!-- ============================ SECTION 4 ============================ -->
+<section id="camera-types" class="slide level2 center" data-background-color="#28568a" data-menu-title="4 · Types of cameras">
+<p class="sec-num">04</p>
+<p class="sec-title">Types of cameras &amp; their models</p>
+<p class="sec-sub">One calibration idea, many lens and sensor models</p>
+</section>
+
+<section id="camera-types-overview" class="slide level2" data-menu-title="Camera types overview">
+<h2>Camera types you will meet</h2>
+<table class="simple">
+<tr><th>Camera</th><th>Typical FOV</th><th>Model to calibrate with</th><th>OpenCV</th><th>Examples</th></tr>
+<tr><td><b>Standard / narrow lens</b></td><td>40–70°</td><td>pinhole + radial/tangential (k1, k2, p1, p2)</td><td><code>cv2.calibrateCamera</code></td><td>Pi Cam v2/3, webcams, phone main camera</td></tr>
+<tr><td><b>Wide-angle</b></td><td>90–120°</td><td>pinhole + k3, or <code>CALIB_RATIONAL_MODEL</code> (k4–k6)</td><td><code>cv2.calibrateCamera</code></td><td>Pi Cam 3 Wide, GoPro (linear mode), dash-cams</td></tr>
+<tr><td><b>Fisheye</b></td><td>150–200°</td><td>Kannala–Brandt equidistant θ(1 + k1θ² + …)</td><td><code>cv2.fisheye.calibrate</code></td><td>car surround-view, drones, robot vacuum, T265</td></tr>
+<tr><td><b>Omnidirectional / catadioptric</b></td><td>≥ 180–360°</td><td>unified (Mei) model with mirror parameter ξ</td><td><code>cv2.omnidir.calibrate</code> (contrib)</td><td>mirror + lens rigs, 360° cameras (dual fisheye)</td></tr>
+<tr><td><b>Stereo pair</b></td><td>any</td><td>two intrinsics + relative pose (R, T)</td><td><code>cv2.stereoCalibrate</code></td><td>ZED, OAK-D, two Pi cameras, Kaggle stereo set</td></tr>
+<tr><td><b>RGB-D / ToF</b></td><td>60–90°</td><td>factory-calibrated colour + depth intrinsics &amp; extrinsics</td><td>vendor SDK, <code>calibrateCamera</code> on IR</td><td>RealSense, Kinect, Orbbec</td></tr>
+<tr><td><b>Thermal</b></td><td>25–60°</td><td>pinhole: needs a <b>heated</b> or emissive target</td><td><code>calibrateCamera</code></td><td>FLIR Lepton</td></tr>
+<tr><td><b>Event camera</b></td><td>~ 60–90°</td><td>pinhole; board shown as a blinking screen</td><td>reconstruct frames → OpenCV</td><td>Prophesee, DAVIS</td></tr>
+</table>
+<p class="tiny muted" style="margin-top:0.5em;">The more the field of view grows, the more the simple pinhole + polynomial model breaks down: at 90° off-axis, tan θ → ∞.</p>
+</section>
+
+<section id="projection-models" class="slide level2" data-menu-title="Projection models">
+<h2>Why fisheye needs a different model</h2>
+<div class="grid2 wide-left">
+<div><img class="fig h600" src="assets/06_camera_calibration/g_projection_models.jpg" alt="Image radius versus ray angle for different lens projections"></div>
+<div>
+<ul class="tight small">
+<li>A pinhole maps a ray at angle θ to radius <b>r = f tan θ</b>, which goes to infinity at 90°. No finite sensor can hold a 180° view.</li>
+<li>Fisheye lenses are designed so <b>r grows slowly</b>: equidistant <i>r = fθ</i>, equisolid, stereographic…</li>
+<li>OpenCV's <b>fisheye</b> module models the real lens as<br><i>θ<sub>d</sub> = θ (1 + k<sub>1</sub>θ² + k<sub>2</sub>θ⁴ + k<sub>3</sub>θ⁶ + k<sub>4</sub>θ⁸)</i>, so D has <b>4</b> coefficients.</li>
+<li>Rule of thumb: FOV above ~120°, or the standard model leaves the edges curved → switch to <code>cv2.fisheye</code>.</li>
+</ul>
+</div>
+</div>
+</section>
+
+<section id="raspberry-pi-cameras" class="slide level2" data-menu-title="Raspberry Pi cameras">
+<h2>The cameras on our lab bench: Raspberry Pi</h2>
+<table class="simple">
+<tr><th>Module</th><th>Sensor</th><th>Resolution</th><th>Pixel</th><th>Focal length</th><th>H-FOV</th><th>Shutter</th><th>Calibrate as</th></tr>
+<tr><td>Camera Module v2</td><td>IMX219</td><td>3280 × 2464</td><td>1.12 µm</td><td>3.04 mm</td><td>62°</td><td>rolling</td><td>standard</td></tr>
+<tr><td>Camera Module 3</td><td>IMX708</td><td>4608 × 2592</td><td>1.4 µm</td><td>4.74 mm</td><td>66°</td><td>rolling</td><td>standard (fix the focus!)</td></tr>
+<tr><td>Camera Module 3 Wide</td><td>IMX708</td><td>4608 × 2592</td><td>1.4 µm</td><td>2.75 mm</td><td>102°</td><td>rolling</td><td>wide: k3 or rational</td></tr>
+<tr><td>HQ Camera</td><td>IMX477</td><td>4056 × 3040</td><td>1.55 µm</td><td>lens (6 mm, 16 mm…)</td><td>lens</td><td>rolling</td><td>depends on lens</td></tr>
+<tr><td>Global Shutter Camera</td><td>IMX296</td><td>1456 × 1088</td><td>3.45 µm</td><td>lens</td><td>lens</td><td><b>global</b></td><td>depends on lens</td></tr>
+<tr><td>M12 fisheye lens on HQ/GS</td><td>–</td><td>–</td><td>–</td><td>~1.5–2 mm</td><td>&gt; 180°</td><td>–</td><td><b>fisheye</b></td></tr>
+</table>
+<div class="grid2" style="margin-top:0.6em;">
+<div class="warn"><b>Camera Module 3 has autofocus.</b> Intrinsics change with focus, so lock the lens (<code>picam2.set_controls({"AfMode": 0, "LensPosition": …})</code>) before you calibrate and keep it there.</div>
+<div class="note"><b>Rolling shutter</b> rows are exposed one after another, so a moving board or camera skews the image. Hold the board <b>still</b> for every shot, or use the Global Shutter camera.</div>
+</div>
+</section>
+
+<section id="calibration-patterns" class="slide level2" data-menu-title="Calibration patterns">
+<h2>Calibration targets</h2>
+<img class="fig full" src="assets/06_camera_calibration/g_patterns.jpg" alt="Chessboard, circle grid, asymmetric circles, ChArUco and ArUco grid board" style="max-height:330px;">
+<table class="simple" style="margin-top:0.5em;">
+<tr><th>Target</th><th>Detect with</th><th>+</th><th>−</th></tr>
+<tr><td>Chessboard</td><td><code>findChessboardCorners</code>, <code>findChessboardCornersSB</code></td><td>easy to print, very accurate saddle points</td><td>must be <b>fully visible</b>; 180° ambiguity if rows = cols</td></tr>
+<tr><td>(Asymmetric) circle grid</td><td><code>findCirclesGrid</code></td><td>robust to blur &amp; noise</td><td>circle centres biased under strong perspective/distortion</td></tr>
+<tr><td><b>ChArUco</b></td><td><code>cv2.aruco.CharucoDetector</code></td><td><b>partial views OK</b>, every corner has an <b>ID</b>: ideal for fisheye &amp; edges</td><td>needs the right dictionary &amp; a sharp print</td></tr>
+<tr><td>ArUco grid / AprilGrid</td><td><code>cv2.aruco.ArucoDetector</code></td><td>pose of each marker, multi-camera rigs (Kalibr)</td><td>marker corners less precise than saddles</td></tr>
+</table>
+</section>
+
+<section id="making-a-good-target" class="slide level2" data-menu-title="Making a good target">
+<h2>Making a good target (it matters more than the code)</h2>
+<div class="grid2">
+<div class="card"><h3>Do</h3>
+<ul class="tight">
+<li>Print at <b>100 % scale</b>, then <b>measure</b> a square with a ruler or caliper: that is <code>square_size</code></li>
+<li>Glue it to something <b>rigid and flat</b>: glass, aluminium, foam board</li>
+<li><b>Matte</b> paper: no glare spots on the corners</li>
+<li>Keep a <b>white border</b> around the pattern (the detector needs it)</li>
+<li>Use <b>different</b> row/column counts (9 × 6, not 8 × 8) so the orientation is unambiguous</li>
+</ul></div>
+<div class="card" style="border-left-color:#ea580c;"><h3>Don't</h3>
+<ul class="tight">
+<li>Use a board that bends or ripples: the model assumes <b>Z = 0</b> for every corner</li>
+<li>Show it on a laptop screen at an angle (moiré, refresh, reflections). OK only as a last resort</li>
+<li>Count <b>squares</b> instead of <b>inner corners</b></li>
+<li>Let auto-exposure / motion blur smear the corners</li>
+</ul>
+<p class="tiny muted">Pattern generators: <a href="https://calib.io/pages/camera-calibration-pattern-generator">calib.io</a>, OpenCV <code>gen_pattern.py</code>, or <code>board.generateImage()</code> in Lab 6E.</p></div>
+</div>
+</section>
+
+<!-- ============================ SECTION 5 ============================ -->
+<section id="calibrating-a-camera" class="slide level2 center" data-background-color="#28568a" data-menu-title="5 · Calibrating a camera">
+<p class="sec-num">05</p>
+<p class="sec-title">Calibrating a camera with OpenCV</p>
+<p class="sec-sub">Chessboard → corners → object &amp; image points → K, dist</p>
+</section>
+
+<section id="measuring-distortion" class="slide level2" data-menu-title="Measuring distortion">
+<h2>Measuring distortion with a known shape</h2>
+<div class="grid2">
+<div><img class="fig h420" src="assets/06_camera_calibration/p_22.jpg" alt="A flat chessboard and distorted chessboards"></div>
+<div><img class="fig h420" src="assets/06_camera_calibration/p_23.jpg" alt="Several chessboard pictures at different angles"></div>
+</div>
+<p class="small" style="margin-top:0.4em;">We know exactly what a <b>flat chessboard</b> looks like, and its regular high-contrast pattern is easy to detect automatically. Take <b>many pictures</b> of it at different angles and distances; the difference between the <b>apparent</b> and the <b>real</b> square shapes reveals the distortion.</p>
+</section>
+
+<section id="map-distorted-to-undistorted" class="slide level2" data-menu-title="Map distorted points to undistorted points">
+<h2>Map distorted points → undistorted points</h2>
+<div class="grid2">
+<div><img class="fig h420" src="assets/06_camera_calibration/p_61.jpg" alt="Distorted and undistorted chessboard"></div>
+<div><img class="fig h420" src="assets/06_camera_calibration/p_62.jpg" alt="Matching corners between distorted and undistorted chessboards"></div>
+</div>
+<ol class="tight small" style="margin-top:0.4em;">
+<li><b>Detect</b> the corners in each distorted image: the <b>image points</b> (2-D, pixels).</li>
+<li>Write down where they <b>really</b> are on the flat board: the <b>object points</b> (3-D, Z = 0).</li>
+<li><b>Calibrate</b>: find K, dist and each pose that best maps object points to image points.</li>
+<li><b>Undistort</b> any new image from that camera.</li>
+</ol>
+</section>
+
+<section id="quiz-count-corners" class="slide level2" data-menu-title="Quiz: count the corners">
+<h2>Quiz: how many corners? <span class="badge new">interactive</span></h2>
+<div class="grid2 wide-left">
+<div><img class="fig h600" src="assets/06_camera_calibration/p_24.jpg" alt="A chessboard to count corners on"></div>
+<div class="quiz">
+<p class="q">Quiz question</p>
+<p class="small">Count the <b>inside corners</b> in a row (<b>nx</b>) and in a column (<b>ny</b>) of the right-hand board. Only points where <b>two black and two white</b> squares meet count, not the outside corners.</p>
+<div class="demo-box" style="margin-top:0.4em;">
+<label>nx = <input type="number" id="cc-nx" min="1" max="20" style="width:4em;"> ny = <input type="number" id="cc-ny" min="1" max="20" style="width:4em;"> <button class="dbtn" id="cc-go">check</button></label>
+<p id="cc-msg" class="small" style="margin:0.2em 0 0;"></p>
+</div>
+<div class="answer fragment"><b>nx = 8, ny = 6.</b> The board has 9 × 7 squares → 8 × 6 inner corners. This is the <code>patternSize</code> you pass to OpenCV.</div>
+</div>
+</div>
+</section>
+
+<section id="finding-corners" class="slide level2" data-menu-title="Finding corners">
+<h2>Finding corners: <code>findChessboardCorners</code></h2>
+<img class="fig full" src="assets/06_camera_calibration/g_corners_gopro.jpg" alt="A GoPro chessboard image and the detected corners" style="max-height:520px;">
+<pre><code class="python" data-trim data-noescape>
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)              # cv2.imread gives BGR (mpimg.imread gives RGB!)
+ret, corners = cv2.findChessboardCorners(gray, (8, 6), None)
+img = cv2.drawChessboardCorners(img, (8, 6), corners, ret)  # coloured rows; first corner = (0,0,0)
+</code></pre>
+</section>
+
+<section id="object-points" class="slide level2" data-menu-title="Object points">
+<h2>Object points: where the corners really are</h2>
+<div class="grid2">
+<div>
+<img class="fig" src="assets/06_camera_calibration/p_32.jpg" alt="Object point coordinates from (0,0,0) to (7,5,0)" style="max-height:380px;">
+<p class="small">Top-left corner is <b>(0, 0, 0)</b>, bottom-right is <b>(7, 5, 0)</b>, not (8, 6, 0): counting starts at zero. <b>Z = 0</b> for every point because the board is flat.</p>
+</div>
+<div>
+<pre><code class="python" data-trim data-noescape>
+nx, ny = 8, 6
+square = 25.0            # mm, measured on YOUR print
+
+# (48, 3) array: (0,0,0), (1,0,0) ... (7,5,0)
+objp = np.zeros((nx * ny, 3), np.float32)
+objp[:, :2] = np.mgrid[0:nx, 0:ny].T.reshape(-1, 2)
+objp *= square           # now in millimetres
+
+objpoints = []   # 3-D points in the board frame
+imgpoints = []   # 2-D points in the image
+</code></pre>
+<p class="note">Units of <code>objp</code> = units of <code>tvec</code>. In <b>squares</b> K and dist are still correct, but distances come out in squares. Multiply by the square size to get mm.</p>
+</div>
+</div>
+</section>
+
+<section id="subpixel-corners" class="slide level2" data-menu-title="Sub-pixel corners">
+<h2>Refining to sub-pixel accuracy</h2>
+<div class="grid2 wide-right">
+<div><img class="fig h600" src="assets/06_camera_calibration/g_subpix.jpg" alt="A chessboard corner at pixel level, whole-pixel versus sub-pixel position"></div>
+<div>
+<p class="small">The saddle point between four squares is not on a pixel centre. <code>cornerSubPix</code> moves each corner to where the image gradients around it are orthogonal to the vector to the corner, typically to <b>0.1 px</b>.</p>
+<pre><code class="python" data-trim data-noescape>
+crit = (cv2.TERM_CRITERIA_EPS +
+        cv2.TERM_CRITERIA_MAX_ITER, 30, 1e-3)
+corners = cv2.cornerSubPix(gray, corners,
+                           (11, 11), (-1, -1), crit)
+
+# OpenCV ≥ 4.3: sector-based detector, more
+# accurate and robust, sub-pixel built in
+ret, corners = cv2.findChessboardCornersSB(
+    gray, (8, 6), cv2.CALIB_CB_EXHAUSTIVE +
+                  cv2.CALIB_CB_ACCURACY)
+</code></pre>
+<p class="tiny muted">Window (11, 11) means a 23 × 23 search area: keep it smaller than one square in the image.</p>
+</div>
+</div>
+</section>
+
+<section id="calibration-loop" class="slide level2" data-menu-title="Calibration: the loop">
+<h2>Calibration, step 1: collect points from every image</h2>
+<div class="grid2 wide-left">
+<pre><code class="python" data-trim data-noescape>
+import glob, cv2, numpy as np
+
+nx, ny = 8, 6
+objp = np.zeros((nx * ny, 3), np.float32)
+objp[:, :2] = np.mgrid[0:nx, 0:ny].T.reshape(-1, 2)
+
+objpoints, imgpoints = [], []
+images = sorted(glob.glob("calibration_wide/GOPR*.jpg"))
+
+for fname in images:
+    img  = cv2.imread(fname)
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    ret, corners = cv2.findChessboardCorners(gray, (nx, ny), None)
+    if ret:                                   # skip images where the board is not found
+        corners = cv2.cornerSubPix(gray, corners, (11, 11), (-1, -1), crit)
+        objpoints.append(objp)                # same for every image
+        imgpoints.append(corners)
+
+print(f"board found in {len(imgpoints)} / {len(images)} images")   # 35 / 36
+</code></pre>
+<div>
+<img class="fig" src="assets/06_camera_calibration/g_coverage.jpg" alt="All detected corners from the 35 calibration images cover the frame" style="max-height:420px;">
+<p class="cap">All 1680 corners from the 35 GoPro images: they cover the <b>whole frame</b>, corners included. That is what makes a calibration reliable.</p>
+</div>
+</div>
+</section>
+
+<section id="calibrate-camera" class="slide level2" data-menu-title="calibrateCamera">
+<h2>Calibration, step 2: <code>cv2.calibrateCamera</code></h2>
+<div class="grid2">
+<div>
+<img class="fig" src="assets/06_camera_calibration/p_39.jpg" alt="cv2.calibrateCamera returns ret, mtx, dist, rvecs, tvecs" style="max-height:230px;">
+<pre><code class="python" data-trim data-noescape>
+ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(
+    objpoints, imgpoints, gray.shape[::-1], None, None)
+
+print("RMS reprojection error:", ret)  # 0.82 px
+print(mtx)   # [[560.0   0.0  651.1]
+             #  [  0.0 561.1  498.9]
+             #  [  0.0   0.0    1.0]]
+print(dist)  # [[-0.233  0.062  0.000  0.000 -0.008]]
+</code></pre>
+</div>
+<div class="card">
+<h3>Image size: (width, height)!</h3>
+<p><code>gray.shape</code> is <b>(960, 1280)</b> = (rows, cols). OpenCV wants <b>(1280, 960)</b> = (w, h), hence <code>gray.shape[::-1]</code>.</p>
+<p>For a colour image use <code>img.shape[1::-1]</code>. Passing the full <code>(960, 1280, 3)</code> raises an error.</p>
+<h3 style="margin-top:0.5em;">What comes back</h3>
+<ul class="tight">
+<li><code>ret</code>: RMS reprojection error (px)</li>
+<li><code>mtx</code>: K (3 × 3); <code>dist</code>: (1 × 5)</li>
+<li><code>rvecs, tvecs</code>: one board pose per image</li>
+</ul>
+</div>
+</div>
+</section>
+
+<section id="zhang-method" class="slide level2" data-menu-title="Zhang's method">
+<h2>What happens inside: Zhang's method (2000)</h2>
+<div class="grid2 wide-left">
+<div>
+<ol class="tight small">
+<li>For each view, the flat board (Z = 0) maps to the image by a <b>homography</b>: \( \mathbf{x} \simeq H\,[X\;Y\;1]^\top \), with \( H = K\,[\mathbf{r}_1\;\mathbf{r}_2\;\mathbf{t}] \).</li>
+<li>Columns r<sub>1</sub>, r<sub>2</sub> of a rotation are <b>orthonormal</b>, which gives 2 equations per view on \( B = K^{-\top}K^{-1} \):<br>\( \mathbf{h}_1^\top B\,\mathbf{h}_2 = 0, \;\; \mathbf{h}_1^\top B\,\mathbf{h}_1 = \mathbf{h}_2^\top B\,\mathbf{h}_2 \)</li>
+<li>B has 5 unknowns (zero skew: 4) → <b>≥ 3 views</b> (≥ 2 with zero skew) give a <b>closed-form K</b>; then each view's R, t.</li>
+<li>Non-linear <b>Levenberg–Marquardt</b> refinement of K, dist and all poses together, minimising the <b>reprojection error</b>.</li>
+</ol>
+<p class="note">Only a printed board, no expensive 3-D rig, so it is used everywhere: OpenCV, MATLAB, ROS.</p>
+</div>
+<div>
+<img class="fig" src="assets/06_camera_calibration/g_extrinsics.jpg" alt="Board poses recovered by calibration, in the camera frame" style="max-height:470px;">
+<p class="cap">The 35 recovered board poses (rvecs, tvecs) seen from the camera (orange).</p>
+<p class="tiny muted">Watch: <a href="https://www.youtube.com/watch?v=-9He7Nu3u8s">Camera Calibration using Zhang's Method</a> and <a href="https://www.youtube.com/watch?v=26nV4oDLiqc">Intrinsic Camera Calibration</a> (Cyrill Stachniss).</p>
+</div>
+</div>
+</section>
+
+<section id="reprojection-error" class="slide level2" data-menu-title="Reprojection error">
+<h2>Is the calibration any good? Reprojection error</h2>
+<img class="fig full" src="assets/06_camera_calibration/g_reproj.jpg" alt="Per-view reprojection error bar chart and residual scatter" style="max-height:400px;">
+<div class="grid2" style="margin-top:0.4em;">
+<div>
+\[ E_{RMS} = \sqrt{\tfrac{1}{N}\sum_i \lVert \mathbf{x}_i - \hat{\mathbf{x}}_i(K, \text{dist}, R_j, \mathbf{t}_j)\rVert^2} \]
+<p class="small">Project the object points with the estimated model and compare with the detected corners.</p>
+</div>
+<div>
+<ul class="tight small">
+<li><b>&lt; 0.5 px</b>: good; <b>0.5–1 px</b>: acceptable; <b>&gt; 1 px</b>: investigate</li>
+<li>One view at <b>3.5 px</b> (orange): blurred or mis-detected. <b>Drop it and recalibrate</b> (Lab 6C).</li>
+<li>Low error ≠ correct: 3 nearly identical views can also fit well. Check <b>coverage</b>, too.</li>
+</ul>
+</div>
+</div>
+</section>
+
+<section id="per-view-error-code" class="slide level2" data-menu-title="Per-view error: code">
+<h2>Per-view error and saving the result</h2>
+<div class="grid2">
+<pre><code class="python" data-trim data-noescape>
+errs = []
+for objp_i, imgp_i, r, t in zip(objpoints, imgpoints,
+                                rvecs, tvecs):
+    proj, _ = cv2.projectPoints(objp_i, r, t, mtx, dist)
+    d = imgp_i.reshape(-1, 2) - proj.reshape(-1, 2)
+    errs.append(np.sqrt((d ** 2).sum(1).mean()))
+
+worst = np.argsort(errs)[::-1][:3]
+print("worst views:", [images[i] for i in worst])
+
+# Uncertainty of each intrinsic (std. dev.)
+ret, mtx, dist, rv, tv, std_in, std_ex, per_view = \
+    cv2.calibrateCameraExtended(objpoints, imgpoints,
+                                size, None, None)
+print("fx = %.1f ± %.1f px" % (mtx[0, 0], std_in[0, 0]))
+</code></pre>
+<pre><code class="python" data-trim data-noescape>
+# Save: portable YAML that C++, ROS and Python can read
+fs = cv2.FileStorage("camera.yaml", cv2.FILE_STORAGE_WRITE)
+fs.write("image_width", size[0]); fs.write("image_height", size[1])
+fs.write("camera_matrix", mtx)
+fs.write("distortion_coefficients", dist)
+fs.write("rms", ret)
+fs.release()
+
+# Load it back
+fs = cv2.FileStorage("camera.yaml", cv2.FILE_STORAGE_READ)
+K = fs.getNode("camera_matrix").mat()
+D = fs.getNode("distortion_coefficients").mat()
+
+# or simply
+np.savez("camera.npz", K=mtx, dist=dist)
+# (Udacity used pickle: wide_dist_pickle.p)
+</code></pre>
+</div>
+</section>
+
+<section id="pose-coverage" class="slide level2" data-menu-title="Good calibration images">
+<h2>How to take good calibration images</h2>
+<div class="grid2">
+<div class="card"><h3>Coverage &amp; variety</h3>
+<ul class="tight">
+<li><b>15–30 images</b> (Udacity: ≥ 20)</li>
+<li>Board in every <b>part of the frame</b>, especially the <b>corners</b>, where distortion is largest</li>
+<li><b>Tilt</b> the board ±30–45° in both axes. Frontal-only views cannot separate f from distance</li>
+<li>Vary the <b>distance</b>: near (board fills the frame) and far</li>
+</ul></div>
+<div class="card" style="border-left-color:#ea580c;"><h3>Quality</h3>
+<ul class="tight">
+<li>Sharp: <b>still</b> board, good light, short exposure</li>
+<li>Same <b>resolution, focus and zoom</b> you will use later: K changes with all three</li>
+<li>Do not crop or resize the images before calibration</li>
+<li>Check the <b>per-view error</b> and coverage, re-shoot the gaps</li>
+</ul></div>
+</div>
+<p class="small" style="margin-top:0.6em;">The <b>ROS</b> calibrator turns this advice into four progress bars, <b>X, Y, Size and Skew</b>, and only enables <i>CALIBRATE</i> once your views cover enough of each. Try it on the next slide.</p>
+</section>
+
+<section id="demo-coverage" class="slide level2" data-menu-title="Live demo: calibration coverage">
+<h2>Live demo: collect a good calibration set <span class="badge new">interactive</span></h2>
+<div class="grid2 wide-left">
+<div><canvas id="cov-canvas" width="800" height="600"></canvas></div>
+<div class="demo-box">
+<label>board x <input type="range" id="cv-x" min="-100" max="100" value="0"><span class="val" id="cv-xv"></span></label>
+<label>board y <input type="range" id="cv-y" min="-100" max="100" value="0"><span class="val" id="cv-yv"></span></label>
+<label>distance <input type="range" id="cv-z" min="45" max="160" value="100"><span class="val" id="cv-zv"></span></label>
+<label>tilt left/right <input type="range" id="cv-ty" min="-55" max="55" value="0"><span class="val" id="cv-tyv"></span></label>
+<label>tilt up/down <input type="range" id="cv-tx" min="-55" max="55" value="0"><span class="val" id="cv-txv"></span></label>
+<div class="btnrow"><button class="dbtn" id="cv-cap">📸 capture</button><button class="dbtn" id="cv-rand">random pose</button><button class="dbtn" id="cv-clear">clear</button></div>
+<div id="cv-bars" style="margin-top:0.4em;"></div>
+<p id="cv-msg" class="small" style="margin:0.3em 0 0;"></p>
+<p class="tiny muted">Bars follow ROS <code>camera_calibration</code>: the spread of the board's centre (X, Y), apparent size and skew over the accepted samples. Samples too similar to an earlier one are rejected.</p>
+</div>
+</div>
+</section>
+
+<section id="ros-camera-calibration" class="slide level2" data-menu-title="ROS 2 camera_calibration">
+<h2>The same idea in ROS 2: <code>camera_calibration</code></h2>
+<div class="grid2 wide-left">
+<div>
+<pre><code class="bash" data-trim data-noescape>
+# install (ROS 2 Humble / Jazzy / Rolling)
+sudo apt install ros-$ROS_DISTRO-camera-calibration
+
+# monocular: 8x6 inner corners, 25 mm squares
+ros2 run camera_calibration cameracalibrator \
+  --size 8x6 --square 0.025 \
+  --ros-args -r image:=/camera/image_raw \
+             -p camera:=/camera
+
+# stereo pair
+ros2 run camera_calibration cameracalibrator \
+  --size 8x6 --square 0.025 --approximate 0.1 \
+  --ros-args -r left:=/left/image_raw -r right:=/right/image_raw
+
+# fisheye lens:   --camera-model fisheye
+# ChArUco board:  --pattern charuco --charuco_marker_size 0.019 --aruco_dict 5x5_100
+</code></pre>
+</div>
+<div class="card">
+<h3>How it works</h3>
+<ul class="tight">
+<li>Uses OpenCV under the hood: the Python module <code>camera_calibration.calibrator</code> (<code>MonoCalibrator</code>, <code>StereoCalibrator</code>)</li>
+<li>Move the board until the X / Y / Size / Skew bars go <b>green</b> → <b>CALIBRATE</b> → <b>SAVE</b> / <b>COMMIT</b></li>
+<li>Writes a <code>camera_info</code> <b>YAML</b> (K, D, R, P), loaded by <code>camera_info_manager</code> and used by <code>image_proc</code> to publish <code>image_rect</code></li>
+<li>Models: <code>pinhole</code> (plumb-bob) and <code>fisheye</code> (equidistant)</li>
+</ul>
+<p class="tiny muted"><a href="https://docs.ros.org/en/rolling/p/camera_calibration/modules.html">docs.ros.org: camera_calibration</a></p>
+</div>
+</div>
+</section>
+
+<!-- ======== undistortion ======== -->
+<section id="undistort" class="slide level2" data-menu-title="Undistorting images">
+<h2>Calibration, step 3: undistort</h2>
+<div class="grid2 wide-left">
+<div><img class="fig h600" src="assets/06_camera_calibration/g_undist_gopro.jpg" alt="Original distorted test image and undistorted result"></div>
+<div>
+<img class="fig" src="assets/06_camera_calibration/p_40.jpg" alt="dst = cv2.undistort(img, mtx, dist, None, mtx)" style="max-height:150px;">
+<ul class="tight small" style="margin-top:0.4em;">
+<li>Takes a distorted image, K and dist; returns the corrected <b>destination</b> image</li>
+<li>The last argument is the <b>new</b> camera matrix; passing <code>mtx</code> keeps the same focal length</li>
+<li>For every output pixel OpenCV computes <i>where it came from</i> (the distortion model) and interpolates</li>
+</ul>
+<p class="note">Straight lines on the board are straight again: the calibration worked.</p>
+</div>
+</div>
+</section>
+
+<section id="quiz-cal-undistort" class="slide level2" data-menu-title="Quiz: cal_undistort">
+<h2>Quiz: write <code>cal_undistort()</code></h2>
+<div class="grid2">
+<div>
+<pre><code class="python" data-trim data-noescape>
+import pickle, cv2, numpy as np
+
+# Saved objpoints and imgpoints (Udacity wide_dist_pickle.p)
+dist_pickle = pickle.load(open("wide_dist_pickle.p", "rb"))
+objpoints = dist_pickle["objpoints"]
+imgpoints = dist_pickle["imgpoints"]
+img = cv2.imread("test_image.png")
+
+# TODO: take an image, object points and image points,
+# calibrate, undistort and return the undistorted image
+def cal_undistort(img, objpoints, imgpoints):
+    undist = np.copy(img)        # delete this line
+    return undist
+</code></pre>
+<img class="fig" src="assets/06_camera_calibration/p_41.jpg" alt="Original and undistorted test image" style="max-height:220px;">
+</div>
+<div class="answer fragment">
+<p><b>One solution</b></p>
+<pre><code class="python" data-trim data-noescape>
+def cal_undistort(img, objpoints, imgpoints):
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(
+        objpoints, imgpoints, gray.shape[::-1], None, None)
+    return cv2.undistort(img, mtx, dist, None, mtx)
+</code></pre>
+<p>In practice calibrate <b>once</b>, save mtx and dist, and only call <code>undistort</code> per frame. Lab 6C has an auto-check.</p>
+</div>
+</div>
+</section>
+
+<section id="optimal-new-camera-matrix" class="slide level2" data-menu-title="getOptimalNewCameraMatrix">
+<h2>Keep or crop the borders? <code>getOptimalNewCameraMatrix</code></h2>
+<img class="fig full" src="assets/06_camera_calibration/g_alpha.jpg" alt="Undistortion with the original K, alpha 0 and alpha 1" style="max-height:330px;">
+<div class="grid2" style="margin-top:0.4em;">
+<pre><code class="python" data-trim data-noescape>
+h, w = img.shape[:2]
+newK, roi = cv2.getOptimalNewCameraMatrix(
+    mtx, dist, (w, h), alpha=0)   # 0 … 1
+und = cv2.undistort(img, mtx, dist, None, newK)
+x, y, rw, rh = roi                 # green box
+und = und[y:y + rh, x:x + rw]      # crop black edges
+</code></pre>
+<ul class="tight small">
+<li><b>alpha = 0</b>: zoom in until <b>every</b> output pixel is valid (loses a little FOV)</li>
+<li><b>alpha = 1</b>: keep <b>all</b> source pixels (black curved borders)</li>
+<li>Here alpha = 1 <b>folds</b>: the 5-coefficient polynomial is only valid where there were corners. Try <code>CALIB_RATIONAL_MODEL</code> or fisheye for wide lenses (Lab 6C).</li>
+</ul>
+</div>
+</section>
+
+<section id="undistort-video" class="slide level2" data-menu-title="Fast undistortion for video">
+<h2>Undistorting video fast: compute the map once</h2>
+<div class="grid2 wide-left">
+<pre><code class="python" data-trim data-noescape>
+# once, at start-up
+newK, roi = cv2.getOptimalNewCameraMatrix(K, dist, (w, h), 0)
+map1, map2 = cv2.initUndistortRectifyMap(
+    K, dist, None, newK, (w, h), cv2.CV_16SC2)
+
+cap = cv2.VideoCapture(0)          # or Picamera2 frames
+while True:
+    ok, frame = cap.read()
+    if not ok: break
+    und = cv2.remap(frame, map1, map2, cv2.INTER_LINEAR)
+    cv2.imshow("undistorted", und)
+    if cv2.waitKey(1) == 27: break
+
+# undistort only some points (e.g. detected corners, lane pixels)
+pts_ud = cv2.undistortPoints(pts, K, dist, P=newK)
+</code></pre>
+<div class="card">
+<h3>Why it is faster</h3>
+<p><code>cv2.undistort</code> recomputes the distortion model for every pixel on every call.</p>
+<p><code>initUndistortRectifyMap</code> stores the source coordinate of each output pixel <b>once</b>; <code>remap</code> is then a pure lookup: several times faster, which matters at 30 fps on a Raspberry Pi.</p>
+<p>If you only need a few points, <code>undistortPoints</code> avoids warping the image at all.</p>
+</div>
+</div>
+</section>
+
+<section id="calibration-pitfalls" class="slide level2" data-menu-title="Calibration pitfalls">
+<h2>Common calibration pitfalls</h2>
+<div class="grid2 wide-left">
+<div>
+<table class="simple">
+<tr><th>Symptom</th><th>Likely cause</th></tr>
+<tr><td><code>ret</code> is <code>False</code> for many images</td><td>wrong (nx, ny): squares instead of inner corners; board cut off by the frame; glare</td></tr>
+<tr><td><code>calibrateCamera</code> error about sizes</td><td>passed <code>img.shape</code> with 3 channels, or images of <b>different sizes</b> (two Udacity images are 1281 × 721!)</td></tr>
+<tr><td>RMS &gt; 1 px</td><td>blur, a bent board, a mis-detected view: check per-view errors</td></tr>
+<tr><td>Edges still curved / folded after undistort</td><td>no corners near the image edges; lens too wide for the model → k3, rational, or fisheye</td></tr>
+<tr><td>Good RMS, wrong distances</td><td>wrong <code>square_size</code>; calibrated at another resolution or focus</td></tr>
+<tr><td>Image upside-down / mirrored axes</td><td>symmetric board (8 × 8): use nx ≠ ny</td></tr>
+</table>
+</div>
+<div>
+<img class="fig" src="assets/06_camera_calibration/g_failed_detect.jpg" alt="Three calibration images where the board was not found" style="max-height:200px;">
+<p class="cap">3 of the 20 road-camera images fail: part of the board is <b>outside the frame</b>. Fine for a chessboard: they are skipped. A ChArUco board would still use them.</p>
+<p class="tiny muted" style="margin-top:0.6em;">Lab 6F is a bug hunt with these pitfalls planted in the code.</p>
+</div>
+</div>
+</section>
+
+<!-- ============================ SECTION 6 ============================ -->
+<section id="beyond-the-chessboard" class="slide level2 center" data-background-color="#28568a" data-menu-title="6 · ChArUco, fisheye, stereo &amp; your own camera">
+<p class="sec-num">06</p>
+<p class="sec-title">Beyond the basic chessboard</p>
+<p class="sec-sub">ChArUco boards · fisheye lenses · stereo pairs · your own Raspberry Pi camera</p>
+</section>
+
+<section id="charuco-calibration" class="slide level2" data-menu-title="ChArUco calibration">
+<h2>ChArUco: a chessboard with an ID on every square</h2>
+<img class="fig full" src="assets/06_camera_calibration/g_charuco_detect.jpg" alt="A rendered ChArUco board partly covered, and the detected corners with IDs" style="max-height:360px;">
+<div class="grid2" style="margin-top:0.4em;">
+<ul class="tight small">
+<li>ArUco markers inside the white squares tell the detector <b>which</b> corner it is seeing</li>
+<li>So <b>partial, occluded or out-of-frame</b> boards still give corners: perfect for covering image <b>edges</b> and fisheye lenses</li>
+<li>Corners are chessboard <b>saddle points</b> → as accurate as a chessboard</li>
+</ul>
+<p class="small">Watch: <a href="https://www.youtube.com/watch?v=EUvco3rjUdQ">How to do Camera Calibration with ChArUco Boards</a> (Nicolai Nielsen) · <a href="https://docs.opencv.org/4.13.0/da/d13/tutorial_aruco_calibration.html">OpenCV tutorial: calibration with ArUco and ChArUco</a></p>
+</div>
+</section>
+
+<section id="charuco-code" class="slide level2" data-menu-title="ChArUco: the code">
+<h2>ChArUco calibration: the code (OpenCV ≥ 4.7 / 5)</h2>
+<div class="grid2 wide-left">
+<pre><code class="python" data-trim data-noescape>
+import cv2, glob
+
+aruco_dict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_5X5_100)
+board = cv2.aruco.CharucoBoard((7, 5),          # squares x, y
+                               0.040, 0.030,    # square, marker (m)
+                               aruco_dict)
+cv2.imwrite("board.png", board.generateImage((2100, 1500), marginSize=60))
+
+detector = cv2.aruco.CharucoDetector(board)
+all_obj, all_img = [], []
+for f in glob.glob("charuco/*.jpg"):
+    gray = cv2.imread(f, cv2.IMREAD_GRAYSCALE)
+    ch_corners, ch_ids, m_corners, m_ids = detector.detectBoard(gray)
+    if ch_ids is not None and len(ch_ids) >= 6:     # partial view is fine
+        obj, img = board.matchImagePoints(ch_corners, ch_ids)
+        all_obj.append(obj); all_img.append(img)
+
+rms, K, dist, rvecs, tvecs = cv2.calibrateCamera(
+    all_obj, all_img, gray.shape[::-1], None, None)
+</code></pre>
+<div class="card">
+<h3>Notes</h3>
+<ul class="tight">
+<li>The old <code>cv2.aruco.calibrateCameraCharuco</code> / <code>interpolateCornersCharuco</code> were removed in 4.7+. Use <code>CharucoDetector</code> + <code>matchImagePoints</code>.</li>
+<li>Measure both the square and marker size on the print.</li>
+<li>Pick a dictionary with few markers (e.g. 5×5_100) for better robustness.</li>
+<li>Lab 6E renders synthetic ChArUco views with a <b>known</b> camera, so you can check your calibration against the ground truth.</li>
+</ul>
+</div>
+</div>
+</section>
+
+<section id="fisheye-calibration" class="slide level2" data-menu-title="Fisheye calibration">
+<h2>Fisheye lenses: <code>cv2.fisheye</code></h2>
+<img class="fig full" src="assets/06_camera_calibration/g_fisheye.jpg" alt="A fisheye view of a road scene and two undistorted versions" style="max-height:330px;">
+<div class="grid2 wide-left" style="margin-top:0.4em;">
+<pre><code class="python" data-trim data-noescape>
+# per view: objpoints (1,N,3) float64, imgpoints (1,N,2) float64
+# OpenCV 5: cv2.CALIB_*   (OpenCV 4: cv2.fisheye.CALIB_*)
+flags = cv2.CALIB_RECOMPUTE_EXTRINSIC | cv2.CALIB_FIX_SKEW
+rms, K, D, rvecs, tvecs = cv2.fisheye.calibrate(
+    objpoints, imgpoints, (w, h), None, None, flags=flags)   # D = [k1..k4]
+
+newK = cv2.fisheye.estimateNewCameraMatrixForUndistortRectify(
+    K, D, (w, h), np.eye(3), balance=0.0)                    # 0 crop … 1 keep all
+m1, m2 = cv2.fisheye.initUndistortRectifyMap(K, D, np.eye(3), newK, (w, h), cv2.CV_16SC2)
+und = cv2.remap(img, m1, m2, cv2.INTER_LINEAR)
+</code></pre>
+<ul class="tight small">
+<li>The whole 180° view <b>cannot</b> fit into one pinhole image: choose a narrower <b>newK</b> (middle) or accept stretched edges (right)</li>
+<li>Points must be float64, shape <b>(1, N, 3)</b>: OpenCV 5 rejects the old (N, 1, 3). The #1 fisheye error</li>
+<li>Very wide (&gt; 200°) or mirror cameras: <code>cv2.omnidir</code> (contrib)</li>
+</ul>
+</div>
+</section>
+
+<section id="stereo-calibration" class="slide level2" data-menu-title="Stereo calibration">
+<h2>Stereo calibration: two cameras, one rig</h2>
+<div class="grid2 wide-left">
+<div><img class="fig h600" src="assets/06_camera_calibration/g_stereo_rect.jpg" alt="Raw and rectified stereo pairs with horizontal guide lines"></div>
+<div>
+<ol class="tight small">
+<li>Capture the board with <b>both cameras at the same moment</b> (hardware sync or a still board)</li>
+<li>Calibrate each camera → K<sub>1</sub>, D<sub>1</sub>, K<sub>2</sub>, D<sub>2</sub></li>
+<li><code>stereoCalibrate</code> → <b>R, T</b> between the cameras (+ E, F)</li>
+<li><code>stereoRectify</code> → rotations that make epipolar lines <b>horizontal</b></li>
+<li><code>initUndistortRectifyMap</code> + <code>remap</code> per frame → disparity → depth</li>
+</ol>
+<p class="small">OpenCV's left/right sample pair: RMS 0.45 px, baseline <b>3.3 squares</b> along −x.</p>
+<p class="tiny muted">Depth from disparity, <i>Z = fB/d</i>, is Lecture 10. Datasets: <a href="https://www.kaggle.com/datasets/danielwe14/stereocamera-chessboard-pictures">Kaggle stereo chessboard pictures</a>.</p>
+</div>
+</div>
+</section>
+
+<section id="stereo-code" class="slide level2" data-menu-title="Stereo calibration: the code">
+<h2>Stereo calibration: the code</h2>
+<pre><code class="python" data-trim data-noescape>
+# objpoints, imgL, imgR: corners found in BOTH images of each pair
+_, K1, D1, _, _ = cv2.calibrateCamera(objpoints, imgL, size, None, None)
+_, K2, D2, _, _ = cv2.calibrateCamera(objpoints, imgR, size, None, None)
+
+rms, K1, D1, K2, D2, R, T, E, F = cv2.stereoCalibrate(
+    objpoints, imgL, imgR, K1, D1, K2, D2, size,
+    flags=cv2.CALIB_FIX_INTRINSIC)           # keep the mono results, solve only R, T
+print("stereo RMS", rms, "baseline", np.linalg.norm(T) * square_mm, "mm")
+
+R1, R2, P1, P2, Q, roi1, roi2 = cv2.stereoRectify(K1, D1, K2, D2, size, R, T, alpha=0)
+mapL = cv2.initUndistortRectifyMap(K1, D1, R1, P1, size, cv2.CV_16SC2)
+mapR = cv2.initUndistortRectifyMap(K2, D2, R2, P2, size, cv2.CV_16SC2)
+rectL = cv2.remap(left,  *mapL, cv2.INTER_LINEAR)
+rectR = cv2.remap(right, *mapR, cv2.INTER_LINEAR)       # now matching points share a row
+</code></pre>
+<div class="grid2">
+<p class="note">Two Raspberry Pi cameras on a bracket (or the Pi 5's two CSI ports) make a cheap stereo rig. Keep them <b>rigidly</b> mounted: any movement invalidates R, T. See <a href="https://medium.com/@erencanbulut/raspberry-pi-stereo-camera-calibration-a-step-by-step-guide-23cc62d06716">Raspberry Pi stereo camera calibration</a>.</p>
+<p class="warn">Check the rectified pair: draw horizontal lines. If the same corner is on different rows, the calibration or the synchronisation is off.</p>
+</div>
+</section>
+
+<section id="calibrate-your-own-camera" class="slide level2" data-menu-title="Calibrate your own camera">
+<h2>Challenge: calibrate your own camera</h2>
+<div class="grid2 wide-left">
+<div>
+<pre><code class="python" data-trim data-noescape>
+# capture_calib.py  (Lab 6H): Pi camera or USB webcam
+from picamera2 import Picamera2           # USB: cv2.VideoCapture(0)
+import cv2, time, os
+
+picam2 = Picamera2()
+picam2.configure(picam2.create_still_configuration(
+    main={"size": (1920, 1080), "format": "RGB888"}))
+picam2.start()
+picam2.set_controls({"AfMode": 0, "LensPosition": 0.0})  # Module 3: lock focus
+
+os.makedirs("calib_images", exist_ok=True)
+for i in range(25):
+    time.sleep(3)                           # move the board, hold still
+    frame = picam2.capture_array()
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    ok, _ = cv2.findChessboardCorners(gray, (9, 6),
+                cv2.CALIB_CB_FAST_CHECK)
+    cv2.imwrite(f"calib_images/img_{i:02d}.jpg", frame)
+    print(i, "board found" if ok else "NO board: move it")
+</code></pre>
+</div>
+<div class="card">
+<h3>Recipe</h3>
+<ol class="tight">
+<li>Print a 9 × 6 board (<a href="https://github.com/opencv/opencv/blob/4.x/doc/pattern.png">pattern.png</a>), stick it to a flat board, measure a square</li>
+<li>Take 20–30 pictures over the <b>whole field of view</b>, especially near the edges</li>
+<li>Run <code>calibrate.py --board 9x6 --square 24.5</code> → <code>camera.yaml</code></li>
+<li>Check RMS &lt; 0.5–1 px and that straight lines are straight</li>
+<li>Commit <code>camera.yaml</code> next to your project code</li>
+</ol>
+<p class="tiny muted" style="margin-top:0.3em;">Based on <a href="https://github.com/Petros626/Camera-Calibration-with-PiCamera2-OpenCV">Petros626/Camera-Calibration-with-PiCamera2-OpenCV</a>, <a href="https://github.com/niconielsen32/camera-calibration">niconielsen32/camera-calibration</a>, <a href="https://github.com/nuwandda/Checkerboard-Calibration">nuwandda/Checkerboard-Calibration</a>, <a href="https://github.com/ibois-epfl/rgb-camera-calibration">ibois-epfl/rgb-camera-calibration</a>.</p>
+</div>
+</div>
+</section>
+
+<section id="calibration-tools" class="slide level2" data-menu-title="Calibration tools">
+<h2>Calibration tools in the wild</h2>
+<table class="simple">
+<tr><th>Tool</th><th>Best for</th><th>Notes</th></tr>
+<tr><td><b>OpenCV calib3d</b> (<code>cv2.calibrateCamera</code>, <code>fisheye</code>, <code>stereoCalibrate</code>, <code>aruco</code>)</td><td>everything in this course</td><td><a href="https://docs.opencv.org/4.5.4/d9/d0c/group__calib3d.html">calib3d reference</a>: models, flags, functions</td></tr>
+<tr><td>OpenCV <code>interactive-calibration</code> app</td><td>guided live calibration</td><td>suggests the next pose, shows per-parameter uncertainty</td></tr>
+<tr><td><b>ROS 2</b> <code>camera_calibration</code></td><td>robots, mono/stereo, fisheye, ChArUco</td><td>X/Y/Size/Skew bars → <code>camera_info</code> YAML</td></tr>
+<tr><td>MATLAB Camera Calibrator / Stereo Camera Calibrator</td><td>teaching, quick visual checks</td><td>error plots and 3-D pose views</td></tr>
+<tr><td><b>Kalibr</b> (ETH Zürich)</td><td>multi-camera + IMU, rolling shutter</td><td>AprilGrid targets; the standard for VIO / SLAM rigs</td></tr>
+<tr><td>calib.io camera calibrator, <b>mrcal</b> (NASA JPL)</td><td>high-accuracy industrial / metrology</td><td>richer lens models, uncertainty maps</td></tr>
+</table>
+<p class="small" style="margin-top:0.5em;">Whatever the tool, the inputs and outputs are the same: <b>known 3-D target points + detected 2-D corners → K, distortion, poses, reprojection error</b>.</p>
+</section>
+
+<!-- ============================ SECTION 7 ============================ -->
+<section id="perspective-transform" class="slide level2 center" data-background-color="#28568a" data-menu-title="7 · Perspective transform &amp; bird's-eye view">
+<p class="sec-num">07</p>
+<p class="sec-title">Perspective transform &amp; lane curvature</p>
+<p class="sec-sub">Using the undistorted image to measure the road</p>
+</section>
+
+<section id="lane-curvature" class="slide level2" data-menu-title="Lane curvature">
+<h2>Why we need all this: lane curvature</h2>
+<div class="grid4">
+<div><img class="fig" src="assets/06_camera_calibration/p_42.jpg" alt="Original image"></div>
+<div><img class="fig" src="assets/06_camera_calibration/p_44.jpg" alt="Thresholded image with region"></div>
+<div><img class="fig" src="assets/06_camera_calibration/p_45.jpg" alt="Perspective transform"></div>
+<div><img class="fig" src="assets/06_camera_calibration/p_47.jpg" alt="Detect lines and determine curvature"></div>
+</div>
+<div class="grid2" style="margin-top:0.5em;">
+<div>
+<p class="small">A self-driving car needs a <b>steering angle</b>, which comes from the car's speed and dynamics and <b>how much the lane curves</b>:</p>
+<ol class="tight small"><li>threshold the lane pixels (Lecture 5)</li><li><b>perspective transform</b> → bird's-eye view</li><li>fit a polynomial to each line</li><li>compute the curvature</li></ol>
+</div>
+<div class="card">
+<h3>For a near-vertical lane line</h3>
+\[ f(y) = Ay^2 + By + C \]
+<p><b>A</b> → curvature · <b>B</b> → heading (direction) · <b>C</b> → position (offset from the left of the image)</p>
+\[ R_{curve} = \frac{(1 + (2Ay + B)^2)^{3/2}}{|2A|} \]
+</div>
+</div>
+</section>
+
+<section id="what-is-perspective" class="slide level2" data-menu-title="Perspective">
+<h2>Perspective: far things look small, parallel lines meet</h2>
+<div class="grid2">
+<div><img class="fig h420" src="assets/06_camera_calibration/p_50.jpg" alt="Van Gogh's Bedroom in Arles and a road photo with converging lines"></div>
+<div><img class="fig h420" src="assets/06_camera_calibration/p_52.jpg" alt="Road with background large z and foreground small z"></div>
+</div>
+<p class="small" style="margin-top:0.4em;">The greater an object's <b>Z</b> (distance from the camera), the smaller it appears: the 1/Z of the pinhole model. Artists use the same rule. Lane lines that are <b>parallel</b> on the road <b>converge</b> to a vanishing point in the image.</p>
+</section>
+
+<section id="perspective-transform-idea" class="slide level2" data-menu-title="Perspective transform: the idea">
+<h2>A perspective transform changes the viewpoint</h2>
+<div class="grid2">
+<div><img class="fig h340" src="assets/06_camera_calibration/p_53.jpg" alt="Text seen at an angle with four corner points"><p class="cap">4 points on a plane in the image …</p></div>
+<div><img class="fig h340" src="assets/06_camera_calibration/p_54.jpg" alt="Text seen from the front"><p class="cap">… mapped to 4 points of a rectangle</p></div>
+</div>
+<p class="small" style="margin-top:0.4em;">A perspective transform maps the points of a given image to <b>different, desired</b> image points, as if seen from a new viewpoint. It effectively drags points towards or away from the camera. <b>Four point pairs</b> are enough to define it (a 3 × 3 <b>homography</b> with 8 degrees of freedom).</p>
+</section>
+
+<section id="birds-eye-view" class="slide level2" data-menu-title="Bird's-eye view">
+<h2>The bird's-eye view of a road</h2>
+<div class="grid2">
+<div><img class="fig h420" src="assets/06_camera_calibration/p_58.jpg" alt="Normal view versus bird's-eye view"></div>
+<div><img class="fig h420" src="assets/06_camera_calibration/p_60.jpg" alt="Maps and bird's-eye examples"></div>
+</div>
+<ul class="tight small" style="margin-top:0.4em;">
+<li>From the car's camera, the left line seems to lean and curve to the right, the right line to lean left without much curve.</li>
+<li>From above, both lines are <b>parallel</b>, a <b>consistent width</b> apart, and curve <b>by the same amount</b>.</li>
+<li>A top-down view also lines up directly with a <b>map</b>.</li>
+</ul>
+</section>
+
+<section id="quiz-why-perspective" class="slide level2" data-menu-title="Quiz: why transform perspective?">
+<h2>Quiz: why a bird's-eye view?</h2>
+<div class="quiz">
+<p class="q">Quiz question</p>
+<p class="small">For images from a front-facing car camera, why do we want to perform a perspective transform?</p>
+<ol type="A" class="tight">
+<li>Because it is more straightforward to take a gradient on a top-down view.</li>
+<li>Because ultimately we want to measure the <b>curvature</b> of the lines, and to do that we need to transform to a top-down view.</li>
+<li>Because transforming the perspective removes the effect of curvature from our measurement.</li>
+<li>Because it removes the effect of shadows and colour differences.</li>
+</ol>
+<div class="answer fragment"><b>B.</b> Curvature is a property of the road seen from above. In the camera view perspective bends and squeezes it.</div>
+</div>
+</section>
+
+<section id="stop-sign-transform" class="slide level2" data-menu-title="Transform a stop sign">
+<h2>Example: transform a stop sign</h2>
+<div class="grid2 wide-left">
+<div><img class="fig h600" src="assets/06_camera_calibration/p_73.jpg" alt="Stop sign with four source points mapped to a frontal warped image"></div>
+<div>
+<ol class="tight small">
+<li>Pick <b>4 source points</b> that define a rectangle on a <b>plane</b> in the image (the face of the sign)</li>
+<li>Pick <b>4 destination points</b>: where they should appear in the <b>warped</b> image</li>
+<li><code>getPerspectiveTransform(src, dst)</code> → <b>M</b></li>
+<li><code>warpPerspective(img, M, size)</code> → the warped image</li>
+</ol>
+<p class="small">A traffic sign is a good test because <b>text</b> shows clearly whether the transform is right.</p>
+</div>
+</div>
+</section>
+
+<section id="perspective-code" class="slide level2" data-menu-title="Perspective transform: the code">
+<h2>Perspective transform: the code</h2>
+<div class="grid2 wide-left">
+<pre><code class="python" data-trim data-noescape>
+def warp(img):
+    img_size = (img.shape[1], img.shape[0])        # (w, h)
+    # four source points on the sign (read off by hovering
+    # the mouse over the image), clockwise from top-right
+    src = np.float32([[850, 320], [865, 450],
+                      [533, 350], [535, 210]])
+    # where we want them: a front-facing rectangle
+    dst = np.float32([[870, 240], [870, 370],
+                      [520, 370], [520, 240]])
+    M    = cv2.getPerspectiveTransform(src, dst)
+    Minv = cv2.getPerspectiveTransform(dst, src)   # to un-warp
+    warped = cv2.warpPerspective(img, M, img_size,
+                                 flags=cv2.INTER_LINEAR)
+    return warped
+</code></pre>
+<div>
+<img class="fig" src="assets/06_camera_calibration/p_66.jpg" alt="Stop sign before and after warping" style="max-height:330px;">
+<p class="note" style="margin-top:0.5em;">Choosing points <b>by hand</b> is fine for a fixed car camera (do it once). Many systems pick them <b>automatically</b> from corners, edges or detected objects, as you will with chessboard corners in the next quiz.</p>
+</div>
+</div>
+</section>
+
+<section id="demo-perspective" class="slide level2" data-menu-title="Live demo: bird's-eye warp">
+<h2>Live demo: drag four points → bird's-eye view <span class="badge new">interactive</span></h2>
+<div class="grid2">
+<div><canvas id="pw-src" width="640" height="360"></canvas><p class="cap">Drag the 4 red handles onto the lane lines (undistorted frame, Lab 6D camera).</p></div>
+<div><canvas id="pw-dst" width="640" height="360"></canvas><p class="cap">Warped: good points make the lane lines <b>vertical and parallel</b>.</p></div>
+</div>
+<div class="grid2" style="margin-top:0.3em;">
+<div class="btnrow" style="margin:0;"><button class="dbtn" id="pw-reset">recommended points</button><button class="dbtn" id="pw-bad">a bad choice</button><button class="dbtn" id="pw-grid">toggle grid</button></div>
+<pre><code id="pw-M" class="nohighlight" style="font-size:0.9em;"></code></pre>
+</div>
+<p class="demo-msg" id="pw-msg"></p>
+</section>
+
+<section id="birdseye-result" class="slide level2" data-menu-title="Bird's-eye on the road camera">
+<h2>Undistort → warp → fit: on the real road camera</h2>
+<img class="fig full" src="assets/06_camera_calibration/g_birdseye.jpg" alt="Undistorted road with source trapezoid and the bird's-eye view" style="max-height:300px;">
+<img class="fig full" src="assets/06_camera_calibration/g_curvature.jpg" alt="Curved road, bird's-eye view and polynomial fit" style="max-height:250px; margin-top:8px;">
+<p class="cap">Top: <code>src = [[577,463],[707,463],[1110,720],[205,720]]</code> → <code>dst = [[300,0],[980,0],[980,720],[300,720]]</code>. Bottom: lane pixels in the bird's-eye view, second-order fits and the radius in <b>metres</b> (assuming 30 m per 720 px vertically and 3.7 m per 700 px horizontally; Lab 6D).</p>
+</section>
+
+<section id="quiz-undistort-and-transform" class="slide level2" data-menu-title="Quiz: undistort and transform">
+<h2>Quiz: undistort and transform a chessboard</h2>
+<div class="grid2 wide-left">
+<div>
+<img class="fig" src="assets/06_camera_calibration/p_80.jpg" alt="Original image and undistorted warped image" style="max-height:300px;">
+<p class="small">Given <code>mtx</code> and <code>dist</code>, write <code>corners_unwarp(img, nx, ny, mtx, dist)</code>:</p>
+<ol class="tight small">
+<li>Undistort with <code>cv2.undistort</code></li>
+<li>Convert to grayscale and find the chessboard corners; draw them</li>
+<li><b>src</b> = the <b>outer 4 detected corners</b></li>
+<li><b>dst</b> = 4 points of a rectangle, <b>in the same order</b> as src</li>
+<li><code>getPerspectiveTransform</code> → M; <code>warpPerspective</code> → top-down view</li>
+</ol>
+</div>
+<div class="answer fragment">
+<pre><code class="python" data-trim data-noescape>
+def corners_unwarp(img, nx, ny, mtx, dist):
+    undist = cv2.undistort(img, mtx, dist, None, mtx)
+    gray = cv2.cvtColor(undist, cv2.COLOR_BGR2GRAY)
+    ret, corners = cv2.findChessboardCorners(gray, (nx, ny), None)
+    M, warped = None, undist
+    if ret:
+        corners = corners.reshape(-1, 2)   # (N,1,2) in 4.x, (N,2) in 5.0
+        cv2.drawChessboardCorners(undist, (nx, ny), corners, ret)
+        offset = 100
+        w, h = gray.shape[1], gray.shape[0]
+        src = np.float32([corners[0], corners[nx - 1],
+                          corners[-1], corners[-nx]])
+        dst = np.float32([[offset, offset], [w - offset, offset],
+                          [w - offset, h - offset], [offset, h - offset]])
+        M = cv2.getPerspectiveTransform(src, dst)
+        warped = cv2.warpPerspective(undist, M, (w, h))
+    return warped, M
+</code></pre>
+</div>
+</div>
+</section>
+
+<section id="unwarp-result" class="slide level2" data-menu-title="Undistort & transform: result">
+<h2>Undistort &amp; transform: the result</h2>
+<img class="fig full" src="assets/06_camera_calibration/g_unwarp_chess.jpg" alt="Original, undistorted with corners, and warped top-down chessboard" style="max-height:470px;">
+<p class="cap">Our solution on a GoPro image from Lab 6. Note the order: <b>undistort first</b>. A homography maps straight lines to straight lines, so it cannot remove lens curvature.</p>
+<div class="warn" style="margin-top:0.5em;"><b>OpenCV 5 note:</b> <code>findChessboardCorners</code> returns corners of shape <b>(N, 2)</b>; OpenCV 4.x returned <b>(N, 1, 2)</b>. Code like <code>corners[0][0]</code> breaks. Use <code>corners.reshape(-1, 2)</code> to work with both.</div>
+</section>
+
+<section id="quiz-intuitions" class="slide level2" data-menu-title="Quiz: intuitions">
+<h2>Quiz: match each process to its purpose</h2>
+<div class="grid2">
+<div class="quiz">
+<p class="q">Matching challenge</p>
+<p class="small"><b>Processes:</b> ① Camera calibration · ② Distortion correction · ③ Perspective transform</p>
+<p class="small"><b>Purposes:</b></p>
+<ol type="A" class="tight small">
+<li>To transform an image so that we are effectively viewing objects from a different angle or direction.</li>
+<li>To ensure that the geometrical shape of objects is represented consistently, no matter where they appear in an image.</li>
+<li>To compute the transformation between 3-D object points in the world and 2-D image points.</li>
+<li>To measure the orientation angles of objects in an image. <i>(distractor)</i></li>
+</ol>
+</div>
+<div>
+<div class="answer fragment"><b>① Camera calibration → C</b>: computes the mapping between 3-D world points and 2-D image points.</div>
+<div class="answer fragment"><b>② Distortion correction → B</b>: shapes look the same anywhere in the frame.</div>
+<div class="answer fragment"><b>③ Perspective transform → A</b>: view the scene from a different angle, e.g. from above.</div>
+<p class="small fragment muted" style="margin-top:0.6em;">D is not a purpose of any of the three on its own.</p>
+</div>
+</div>
+</section>
+
+<!-- ============================ WRAP-UP ============================ -->
+<section id="watch-and-learn" class="slide level2" data-menu-title="Watch and learn">
+<h2>Watch &amp; learn: recommended videos</h2>
+<div class="grid3 vids">
+<a href="https://www.youtube.com/watch?v=ND2fa08vxkY"><img src="https://img.youtube.com/vi/ND2fa08vxkY/mqdefault.jpg" alt=""><span><b>Intrinsics &amp; extrinsics</b><br>Cyrill Stachniss · 5 min</span></a>
+<a href="https://www.youtube.com/watch?v=26nV4oDLiqc"><img src="https://img.youtube.com/vi/26nV4oDLiqc/mqdefault.jpg" alt=""><span><b>Intrinsic camera calibration</b><br>Cyrill Stachniss · 5 min</span></a>
+<a href="https://www.youtube.com/watch?v=-9He7Nu3u8s"><img src="https://img.youtube.com/vi/-9He7Nu3u8s/mqdefault.jpg" alt=""><span><b>Zhang's method</b><br>Cyrill Stachniss · lecture</span></a>
+<a href="https://www.youtube.com/watch?v=Wcnb197g2i0"><img src="https://img.youtube.com/vi/Wcnb197g2i0/mqdefault.jpg" alt=""><span><b>Camera calibration explained, step by step</b><br>Kevin Wood</span></a>
+<a href="https://www.youtube.com/watch?v=H5qbRTikxI4"><img src="https://img.youtube.com/vi/H5qbRTikxI4/mqdefault.jpg" alt=""><span><b>OpenCV Python calibration (intrinsic, extrinsic, distortion)</b><br>Kevin Wood</span></a>
+<a href="https://www.youtube.com/watch?v=_-BTKiamRTg"><img src="https://img.youtube.com/vi/_-BTKiamRTg/mqdefault.jpg" alt=""><span><b>Camera calibration in &lt; 5 minutes</b><br>Nicolai Nielsen</span></a>
+<a href="https://www.youtube.com/watch?v=3h7wgR5fYik"><img src="https://img.youtube.com/vi/3h7wgR5fYik/mqdefault.jpg" alt=""><span><b>Calibration with a Python script</b><br>Nicolai Nielsen</span></a>
+<a href="https://www.youtube.com/watch?v=EUvco3rjUdQ"><img src="https://img.youtube.com/vi/EUvco3rjUdQ/mqdefault.jpg" alt=""><span><b>ChArUco board calibration</b><br>Nicolai Nielsen</span></a>
+<a href="https://www.youtube.com/watch?v=O-7TkOKeK2M"><img src="https://img.youtube.com/vi/O-7TkOKeK2M/mqdefault.jpg" alt=""><span><b>Calibrate an OpenCV camera in 15 minutes</b><br>The Drone Dojo (Raspberry Pi)</span></a>
+</div>
+</section>
+
+<section id="summary" class="slide level2" data-menu-title="Summary">
+<h2>Summary</h2>
+<div class="grid2">
+<div class="card"><h3>Model</h3>
+<ul class="tight">
+<li><i>s·x = K [R | t] X</i>: <b>K</b> (f<sub>x</sub>, f<sub>y</sub>, c<sub>x</sub>, c<sub>y</sub>) is the camera, <b>[R | t]</b> is where it is</li>
+<li>Lenses add <b>radial</b> (k1, k2, k3) and <b>tangential</b> (p1, p2) distortion, applied in normalised coordinates</li>
+<li>Wide and fisheye lenses need k3 / rational or the <b>fisheye</b> model; stereo needs <b>R, T</b> between cameras</li>
+</ul></div>
+<div class="card" style="border-left-color:#ea580c;"><h3>Practice</h3>
+<ul class="tight">
+<li><code>findChessboardCorners</code> (+ <code>cornerSubPix</code>) → <code>calibrateCamera</code> → RMS &lt; 0.5–1 px</li>
+<li>20+ sharp, tilted views covering the <b>whole frame</b>; same resolution &amp; focus as deployment</li>
+<li><code>undistort</code> or <code>initUndistortRectifyMap</code> + <code>remap</code> for video</li>
+<li><b>Undistort first</b>, then <code>getPerspectiveTransform</code> + <code>warpPerspective</code> → bird's-eye → curvature</li>
+</ul></div>
+</div>
+<p class="note" style="margin-top:0.6em;">Next: Lecture 10 builds on this with epipolar geometry, disparity and depth from stereo, and the Lab 9 measuring system needs your calibrated camera.</p>
+</section>
+
+<section id="lab-6-and-resources" class="slide level2" data-menu-title="Lab 6 &amp; resources">
+<h2>Lab 6 &amp; resources</h2>
+<div class="grid2">
+<div class="card"><h3>Lab 6 notebooks (Colab-ready)</h3>
+<ul class="tight">
+<li><a href="../labs.html#lab-6a">6A · Pinhole projection &amp; distortion</a></li>
+<li><a href="../labs.html#lab-6b">6B · Finding chessboard corners</a></li>
+<li><a href="../labs.html#lab-6c">6C · Calibrate &amp; undistort (GoPro)</a></li>
+<li><a href="../labs.html#lab-6d">6D · Road camera: undistort, bird's-eye &amp; curvature</a></li>
+<li><a href="../labs.html#lab-6e">6E · ChArUco &amp; fisheye with a known ground truth</a></li>
+<li><a href="../labs.html#lab-6f">6F · Bug hunt (pairs)</a></li>
+<li><a href="../labs.html#lab-6g">6G · Stereo calibration &amp; rectification</a></li>
+<li><a href="../labs.html#lab-6h">6H · Calibrate your own Pi / USB camera</a></li>
+</ul>
+<p class="tiny muted">All on <a href="https://github.com/Kazimbalti/intelligent-vision-systems/tree/main/LAB/Lab_6">GitHub: LAB/Lab_6</a></p></div>
+<div class="card"><h3>Further reading</h3>
+<ul class="tight">
+<li><a href="https://docs.opencv.org/4.5.4/d9/d0c/group__calib3d.html">OpenCV calib3d module</a> · <a href="https://docs.opencv.org/4.x/dc/dbb/tutorial_py_calibration.html">Python calibration tutorial</a> · <a href="https://docs.opencv.org/4.13.0/da/d13/tutorial_aruco_calibration.html">ArUco/ChArUco calibration</a></li>
+<li><a href="https://docs.ros.org/en/rolling/p/camera_calibration/modules.html">ROS camera_calibration</a></li>
+<li>Zhang, <i>A Flexible New Technique for Camera Calibration</i>, TPAMI 2000</li>
+<li>Szeliski, <i>Computer Vision</i> 2e, §2.1, §11.1 · Hartley &amp; Zisserman, ch. 6–7</li>
+<li><a href="https://medium.com/@chaitalibh.cb/camera-calibration-with-checkerboard-54f93af742a0">Camera calibration with checkerboard</a> (Medium)</li>
+<li><a href="https://github.com/udacity/CarND-Camera-Calibration">udacity/CarND-Camera-Calibration</a></li>
+</ul></div>
+</div>
+<p class="tiny muted" style="margin-top:0.6em;"><b>Credits.</b> Adapted and extended from the <i>Camera Calibration</i> lesson of the Udacity Self-Driving Car Engineer Nanodegree. Lesson illustrations and calibration images © Udacity, Inc. (MIT-licensed repositories); stereo sample images from OpenCV (Apache 2.0). Used here for teaching.</p>
+</section>
+
+<section id="questions" class="slide level2 center" data-background-color="#28568a" data-menu-title="Questions">
+<p class="sec-title" style="text-align:center;">Questions?</p>
+<p class="sec-sub" style="text-align:center;">Next: Lab 6. Calibrate the GoPro, the road camera, a stereo pair, and then your own camera.</p>
+</section>
+
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+<p>Intelligent Vision Systems; University of Lahore | Dr. Muhammad Kazim</p>
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="../site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
+  <script src="../site_libs/revealjs/plugin/quarto-support/support.js"></script>
+
+
+  <script src="../site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="../site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="../site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="../site_libs/revealjs/plugin/math/math.js"></script>
+  <script src="../site_libs/revealjs/plugin/highlight/highlight.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': false,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'pdfMaxPagesPerSlide': 1,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\"><kbd>b</kbd> Toggle Chalkboard</a></li>\n<li class=\"slide-tool-item\" data-item=\"6\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\"><kbd>c</kbd> Toggle Notes Canvas</a></li>\n<li class=\"slide-tool-item\" data-item=\"7\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\"><kbd>d</kbd> Download Drawings</a></li>\n<li class=\"slide-tool-item\" data-item=\"8\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'chalkboard': {"buttons":true},
+'smaller': false,
+
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1600,
+
+        height: 900,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.04,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, RevealChalkboard, QuartoSupport,
+
+          RevealMath,
+          RevealHighlight,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button,
+              { trigger: "manual",
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config);
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+
+
+  <script>
+  /* ---- Lecture 6 live demos ---- */
+  (function () {
+    function $(id) { return document.getElementById(id); }
+    function fmt(v, d) { return (v >= 0 ? " " : "") + v.toFixed(d); }
+
+    /* shared camera maths: rotation from yaw/pitch, OpenCV distortion */
+    function rotYP(yaw, pitch) {
+      var cy = Math.cos(yaw), sy = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch);
+      // R = Rx(pitch) * Ry(yaw)
+      return [[cy, 0, sy], [sp * sy, cp, -sp * cy], [-cp * sy, sp, cp * cy]];
+    }
+    function mul(R, p) { return [R[0][0] * p[0] + R[0][1] * p[1] + R[0][2] * p[2], R[1][0] * p[0] + R[1][1] * p[1] + R[1][2] * p[2], R[2][0] * p[0] + R[2][1] * p[1] + R[2][2] * p[2]]; }
+    function distort(x, y, k) {   // k = [k1,k2,p1,p2,k3]
+      var r2 = x * x + y * y, rad = 1 + k[0] * r2 + k[1] * r2 * r2 + k[4] * r2 * r2 * r2;
+      return [x * rad + 2 * k[2] * x * y + k[3] * (r2 + 2 * x * x), y * rad + k[2] * (r2 + 2 * y * y) + 2 * k[3] * x * y];
+    }
+
+    /* 1. intrinsics calculator */
+    function kcDemo() {
+      if (!$("kc-f")) return;
+      var presets = { v2: [3.04, 1.12, 3280, 2464], v3: [4.74, 1.4, 4608, 2592], v3w: [2.75, 1.4, 4608, 2592], gs: [6.0, 3.45, 1456, 1088], web: [3.6, 2.8, 1280, 720] };
+      function upd() {
+        var f = +$("kc-f").value, p = +$("kc-p").value / 1000, W = +$("kc-w").value, H = +$("kc-h").value, rw = +$("kc-rw").value || W;
+        var fx = f / p, s = rw / W;
+        var hf = 2 * Math.atan(W / 2 / fx) * 180 / Math.PI, vf = 2 * Math.atan(H / 2 / fx) * 180 / Math.PI;
+        var r = function (v) { return v.toFixed(1).padStart(8); };
+        $("kc-out").textContent =
+          "full resolution " + W + " x " + H + "\n" +
+          "fx = fy = f / pixel = " + fx.toFixed(1) + " px\n\n" +
+          "K = [[" + r(fx) + ", " + r(0) + ", " + r(W / 2) + "],\n     [" + r(0) + ", " + r(fx) + ", " + r(H / 2) + "],\n     [" + r(0) + ", " + r(0) + ", " + r(1) + "]]\n\n" +
+          "horizontal FOV = " + hf.toFixed(1) + " deg\nvertical FOV   = " + vf.toFixed(1) + " deg\n\n" +
+          "resized to " + rw + " x " + Math.round(H * s) + "  (scale " + s.toFixed(3) + "):\n" +
+          "fx' = " + (fx * s).toFixed(1) + "   cx' = " + (W / 2 * s).toFixed(1) + "   cy' = " + (H / 2 * s).toFixed(1);
+      }
+      ["kc-f", "kc-p", "kc-w", "kc-h", "kc-rw"].forEach(function (id) { $(id).addEventListener("input", upd); });
+      document.querySelectorAll("[data-cam]").forEach(function (b) {
+        b.addEventListener("click", function () {
+          var v = presets[b.getAttribute("data-cam")];
+          $("kc-f").value = v[0]; $("kc-p").value = v[1]; $("kc-w").value = v[2]; $("kc-h").value = v[3]; upd();
+        });
+      });
+      upd();
+    }
+
+    /* 2. pinhole projection of a cube on a floor grid */
+    function pinDemo() {
+      var cv = $("pin-canvas"); if (!cv) return;
+      var ctx = cv.getContext("2d"), W = 800, H = 600;
+      var ids = ["pin-f", "pin-cx", "pin-z", "pin-yaw", "pin-pitch", "pin-k1"];
+      function draw() {
+        var f = +$("pin-f").value, cx = +$("pin-cx").value, cy = 300, Z = $("pin-z").value / 10;
+        var yaw = $("pin-yaw").value * Math.PI / 180, pitch = $("pin-pitch").value * Math.PI / 180, k1 = $("pin-k1").value / 100;
+        $("pin-fv").textContent = f; $("pin-cxv").textContent = cx; $("pin-zv").textContent = Z.toFixed(1);
+        $("pin-yawv").textContent = $("pin-yaw").value; $("pin-pitchv").textContent = $("pin-pitch").value; $("pin-k1v").textContent = k1.toFixed(2);
+        // orbit camera: distance Z, azimuth yaw, elevation pitch; looks at the cube centre (world y points down)
+        var el = pitch, C = [Z * Math.cos(el) * Math.sin(yaw), 0.5 - Z * Math.sin(el), -Z * Math.cos(el) * Math.cos(yaw)];
+        var T = [0, 0.5, 0], fw = [T[0] - C[0], T[1] - C[1], T[2] - C[2]], n = Math.hypot(fw[0], fw[1], fw[2]);
+        fw = fw.map(function (v) { return v / n; });
+        var xr = [fw[2], 0, -fw[0]], m = Math.hypot(xr[0], xr[2]); xr = [xr[0] / m, 0, xr[2] / m];        // cross(down, fw)
+        var yd = [fw[1] * xr[2] - fw[2] * xr[1], fw[2] * xr[0] - fw[0] * xr[2], fw[0] * xr[1] - fw[1] * xr[0]];  // cross(fw, xr)
+        var R = [xr, yd, fw];
+        function proj(p) {
+          var c = mul(R, [p[0] - C[0], p[1] - C[1], p[2] - C[2]]);
+          if (c[2] < 0.05) return null;
+          var d = distort(c[0] / c[2], c[1] / c[2], [k1, 0, 0, 0, 0]);
+          return [f * d[0] + cx, f * d[1] + cy];
+        }
+        function seg(a, b, n) {   // draw a 3-D segment as a polyline (so distortion bends it)
+          ctx.beginPath(); var started = false;
+          for (var i = 0; i <= n; i++) {
+            var s = i / n, q = proj([a[0] + (b[0] - a[0]) * s, a[1] + (b[1] - a[1]) * s, a[2] + (b[2] - a[2]) * s]);
+            if (!q) { started = false; continue; }
+            if (!started) { ctx.moveTo(q[0], q[1]); started = true; } else ctx.lineTo(q[0], q[1]);
+          }
+          ctx.stroke();
+        }
+        ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, W, H);
+        ctx.strokeStyle = "#c9d5e3"; ctx.lineWidth = 1.5;
+        for (var g = -4; g <= 4; g++) { seg([g, 1, -4], [g, 1, 4], 40); seg([-4, 1, g], [4, 1, g], 40); }
+        var V = [[-.5, 0, -.5], [.5, 0, -.5], [.5, 1, -.5], [-.5, 1, -.5], [-.5, 0, .5], [.5, 0, .5], [.5, 1, .5], [-.5, 1, .5]];
+        var E = [[0, 1], [1, 2], [2, 3], [3, 0], [4, 5], [5, 6], [6, 7], [7, 4], [0, 4], [1, 5], [2, 6], [3, 7]];
+        ctx.strokeStyle = "#28568a"; ctx.lineWidth = 3.5;
+        E.forEach(function (e) { seg(V[e[0]], V[e[1]], 20); });
+        ctx.fillStyle = "#ea580c";
+        V.forEach(function (v) { var q = proj(v); if (q) { ctx.beginPath(); ctx.arc(q[0], q[1], 5, 0, 7); ctx.fill(); } });
+        // principal point & image border
+        ctx.strokeStyle = "#ea580c"; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(cx - 12, cy); ctx.lineTo(cx + 12, cy); ctx.moveTo(cx, cy - 12); ctx.lineTo(cx, cy + 12); ctx.stroke();
+        ctx.fillStyle = "#ea580c"; ctx.font = "16px sans-serif"; ctx.fillText("(cx, cy)", cx + 8, cy - 8);
+        ctx.strokeStyle = "#1f2933"; ctx.lineWidth = 2; ctx.strokeRect(1, 1, W - 2, H - 2);
+        var hf = 2 * Math.atan(W / 2 / f) * 180 / Math.PI;
+        ctx.fillStyle = "#5b6b7b"; ctx.fillText("800 x 600 image · horizontal FOV ≈ " + hf.toFixed(0) + "°", 12, H - 14);
+        $("pin-K").textContent = "K = [[" + String(f).padStart(5) + ",     0, " + String(cx).padStart(4) + "],\n     [    0, " + String(f).padStart(5) + ",  300],\n     [    0,     0,    1]]\ncamera centre C = [" + C.map(function (v) { return v.toFixed(2); }).join(", ") + "] m\ndist = [" + k1.toFixed(2) + ", 0, 0, 0, 0]";
+      }
+      ids.forEach(function (id) { $(id).addEventListener("input", draw); });
+      draw();
+    }
+
+    /* 3. distortion explorer: a chessboard through the OpenCV model */
+    function distDemo() {
+      var cv = $("dist-canvas"); if (!cv) return;
+      var ctx = cv.getContext("2d"), W = 800, H = 600, F = 430, CX = 400, CY = 300;
+      var keys = ["k1", "k2", "k3", "p1", "p2"], scale = { k1: 100, k2: 100, k3: 100, p1: 1000, p2: 1000 };
+      function k() { return [$("ds-k1").value / 100, $("ds-k2").value / 100, $("ds-p1").value / 1000, $("ds-p2").value / 1000, $("ds-k3").value / 100]; }
+      function P(x, y, kk) { var d = distort(x, y, kk); return [F * d[0] + CX, F * d[1] + CY]; }
+      function draw() {
+        var kk = k(); keys.forEach(function (n) { $("ds-" + n + "v").textContent = ($("ds-" + n).value / scale[n]).toFixed(n[0] === "p" ? 3 : 2); });
+        ctx.fillStyle = "#f1f4f8"; ctx.fillRect(0, 0, W, H);
+        var nx = 12, ny = 9, s = 0.135, x0 = -nx * s / 2, y0 = -ny * s / 2, N = 10;
+        for (var i = 0; i < nx; i++) for (var j = 0; j < ny; j++) {
+          ctx.beginPath();
+          var xa = x0 + i * s, ya = y0 + j * s, pts = [];
+          for (var q = 0; q <= N; q++) pts.push(P(xa + s * q / N, ya, kk));
+          for (q = 0; q <= N; q++) pts.push(P(xa + s, ya + s * q / N, kk));
+          for (q = 0; q <= N; q++) pts.push(P(xa + s - s * q / N, ya + s, kk));
+          for (q = 0; q <= N; q++) pts.push(P(xa, ya + s - s * q / N, kk));
+          pts.forEach(function (p, m) { if (m) ctx.lineTo(p[0], p[1]); else ctx.moveTo(p[0], p[1]); });
+          ctx.fillStyle = (i + j) % 2 ? "#ffffff" : "#1f2933"; ctx.fill();
+        }
+        if ($("ds-ref").checked) {
+          ctx.strokeStyle = "rgba(220,38,38,0.85)"; ctx.lineWidth = 1.5; ctx.beginPath();
+          for (i = 0; i <= nx; i++) { ctx.moveTo(F * (x0 + i * s) + CX, F * y0 + CY); ctx.lineTo(F * (x0 + i * s) + CX, F * (y0 + ny * s) + CY); }
+          for (j = 0; j <= ny; j++) { ctx.moveTo(F * x0 + CX, F * (y0 + j * s) + CY); ctx.lineTo(F * (x0 + nx * s) + CX, F * (y0 + j * s) + CY); }
+          ctx.stroke();
+        }
+        ctx.strokeStyle = "#1f2933"; ctx.lineWidth = 2; ctx.strokeRect(1, 1, W - 2, H - 2);
+        $("ds-vec").textContent = "dist = [k1, k2, p1, p2, k3]\n     = [" + [kk[0].toFixed(2), kk[1].toFixed(2), kk[2].toFixed(3), kk[3].toFixed(3), kk[4].toFixed(2)].join(", ") + "]";
+      }
+      function set(v) { keys.forEach(function (n, i) { $("ds-" + n).value = v[i]; }); draw(); }
+      keys.forEach(function (n) { $("ds-" + n).addEventListener("input", draw); });
+      $("ds-ref").addEventListener("change", draw);
+      $("ds-barrel").addEventListener("click", function () { set([-30, 5, 0, 0, 0]); });
+      $("ds-pin").addEventListener("click", function () { set([30, 5, 0, 0, 0]); });
+      $("ds-must").addEventListener("click", function () { set([-45, 35, 0, 0, 0]); });
+      $("ds-tan").addEventListener("click", function () { set([0, 0, 0, 40, 25]); });
+      $("ds-gopro").addEventListener("click", function () { set([-23, 6, -1, 0, 0]); });
+      $("ds-zero").addEventListener("click", function () { set([0, 0, 0, 0, 0]); });
+      draw();
+    }
+
+    /* 4. count the corners */
+    function countDemo() {
+      if (!$("cc-go")) return;
+      $("cc-go").addEventListener("click", function () {
+        var nx = +$("cc-nx").value, ny = +$("cc-ny").value, m = $("cc-msg");
+        if (nx === 8 && ny === 6) { m.innerHTML = "✅ Correct: <code>patternSize = (8, 6)</code>."; m.style.color = "#1f7a4d"; }
+        else if (nx === 9 && ny === 7) { m.innerHTML = "💡 You counted <b>squares</b>. Count only the inner corners."; m.style.color = "#9a3412"; }
+        else if (nx === 6 && ny === 8) { m.innerHTML = "💡 Close, but nx is along a <b>row</b> (left to right)."; m.style.color = "#9a3412"; }
+        else if (nx === 10 && ny === 8) { m.innerHTML = "💡 Those include the outside corners. Count only where 4 squares meet."; m.style.color = "#9a3412"; }
+        else { m.innerHTML = "💡 Not quite. Count the points where two black and two white squares meet."; m.style.color = "#9a3412"; }
+      });
+    }
+
+    /* 5. calibration coverage simulator (ROS camera_calibration style) */
+    function coverageDemo() {
+      var cv = $("cov-canvas"); if (!cv) return;
+      var ctx = cv.getContext("2d"), W = 800, H = 600, F = 520, K1 = -0.18, samples = [];
+      var NX = 9, NY = 6, SQ = 0.1;   // board in 'units'
+      function boardPts(x, y, z, tx, ty) {
+        var R = rotYP(ty * Math.PI / 180, tx * Math.PI / 180), pts = [];
+        for (var j = -1; j <= NY; j++) for (var i = -1; i <= NX; i++) {
+          var p = [(i - (NX - 1) / 2) * SQ, (j - (NY - 1) / 2) * SQ, 0], c = mul(R, p);
+          c = [c[0] + x, c[1] + y, c[2] + z];
+          var d = distort(c[0] / c[2], c[1] / c[2], [K1, 0.03, 0, 0, 0]);
+          pts.push([F * d[0] + W / 2, F * d[1] + H / 2]);
+        }
+        return pts;   // (NY+2) rows of (NX+2) points: outer square corners included
+      }
+      function pose() {
+        return { x: $("cv-x").value / 100 * 0.6 * $("cv-z").value / 100, y: $("cv-y").value / 100 * 0.45 * $("cv-z").value / 100, z: $("cv-z").value / 100, tx: +$("cv-tx").value, ty: +$("cv-ty").value };
+      }
+      function params(pts) {   // ROS: x, y of centre; size = sqrt(area); skew from corner angle
+        var C = NX + 2, a = pts[C + 1], b = pts[C + NX], c = pts[C * NY + NX], d = pts[C * NY + 1];   // inner corners
+        var cx = (a[0] + b[0] + c[0] + d[0]) / 4, cy = (a[1] + b[1] + c[1] + d[1]) / 4;
+        var area = Math.abs((b[0] - d[0]) * (c[1] - a[1]) - (c[0] - a[0]) * (b[1] - d[1])) / 2;
+        function ang(u, v, w) { var ax = u[0] - v[0], ay = u[1] - v[1], bx = w[0] - v[0], by = w[1] - v[1]; return Math.acos((ax * bx + ay * by) / Math.hypot(ax, ay) / Math.hypot(bx, by)); }
+        var skew = Math.min(1, 2 * Math.abs(Math.PI / 2 - ang(b, a, d)));
+        var inside = [a, b, c, d].every(function (p) { return p[0] > 0 && p[0] < W && p[1] > 0 && p[1] < H; });
+        return { p: [cx / W, cy / H, Math.sqrt(area / (W * H)), skew], ok: inside, corners: [a, b, c, d] };
+      }
+      function poly(pts, fill, stroke, alpha) {
+        var C = NX + 2, outer = [pts[0], pts[C - 1], pts[C * (NY + 2) - 1], pts[C * (NY + 1)]];
+        ctx.globalAlpha = alpha; ctx.beginPath(); outer.forEach(function (p, m) { if (m) ctx.lineTo(p[0], p[1]); else ctx.moveTo(p[0], p[1]); }); ctx.closePath();
+        if (fill) { ctx.fillStyle = fill; ctx.fill(); } if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = 2; ctx.stroke(); } ctx.globalAlpha = 1;
+      }
+      function drawBoard(pts) {
+        var C = NX + 2;
+        for (var j = 0; j < NY + 1; j++) for (var i = 0; i < NX + 1; i++) {
+          if ((i + j) % 2) continue;
+          var q = [pts[j * C + i], pts[j * C + i + 1], pts[(j + 1) * C + i + 1], pts[(j + 1) * C + i]];
+          ctx.beginPath(); q.forEach(function (p, m) { if (m) ctx.lineTo(p[0], p[1]); else ctx.moveTo(p[0], p[1]); }); ctx.fillStyle = "#1f2933"; ctx.fill();
+        }
+      }
+      function bars() {
+        var lim = [0.7, 0.7, 0.4, 0.5], names = ["X", "Y", "Size", "Skew"], html = "", good = 0;
+        for (var k = 0; k < 4; k++) {
+          var lo = 1, hi = 0; samples.forEach(function (s) { lo = Math.min(lo, s.p[k]); hi = Math.max(hi, s.p[k]); });
+          var prog = samples.length ? Math.min(1, (hi - lo) / lim[k]) : 0; if (prog >= 1) good++;
+          html += '<div style="display:flex;align-items:center;gap:8px;font-size:0.5em;margin:2px 0;"><b style="width:3em;">' + names[k] + '</b><div style="flex:1;height:14px;background:#e3e9f1;border-radius:7px;overflow:hidden;"><div style="height:100%;width:' + (prog * 100).toFixed(0) + '%;background:' + (prog >= 1 ? "#1f7a4d" : prog > 0.5 ? "#e6a23c" : "#c0392b") + ';"></div></div><span style="width:3em;text-align:right;">' + (prog * 100).toFixed(0) + '%</span></div>';
+        }
+        var ready = good === 4 && samples.length >= 8;
+        html += '<p style="font-size:0.55em;margin:0.3em 0 0;">' + samples.length + ' samples · <b style="color:' + (ready ? "#1f7a4d" : "#9a3412") + ';">' + (ready ? "CALIBRATE ✔ ready" : "CALIBRATE (not yet)") + "</b></p>";
+        $("cv-bars").innerHTML = html;
+      }
+      function draw() {
+        var p = pose(); $("cv-xv").textContent = $("cv-x").value; $("cv-yv").textContent = $("cv-y").value; $("cv-zv").textContent = (p.z).toFixed(2); $("cv-txv").textContent = p.tx; $("cv-tyv").textContent = p.ty;
+        ctx.fillStyle = "#dfe6ee"; ctx.fillRect(0, 0, W, H);
+        samples.forEach(function (s) { poly(s.pts, "#28568a", null, 0.12); poly(s.pts, null, "#28568a", 0.5); });
+        var pts = boardPts(p.x, p.y, p.z, p.tx, p.ty);
+        poly(pts, "#ffffff", null, 1); drawBoard(pts);
+        var pr = params(pts);
+        ctx.fillStyle = pr.ok ? "#1f7a4d" : "#c0392b";
+        pr.corners.forEach(function (c) { ctx.beginPath(); ctx.arc(c[0], c[1], 6, 0, 7); ctx.fill(); });
+        ctx.strokeStyle = "#1f2933"; ctx.lineWidth = 2; ctx.strokeRect(1, 1, W - 2, H - 2);
+        bars();
+        return pr;
+      }
+      function capture() {
+        var pr = draw(), m = $("cv-msg");
+        if (!pr.ok) { m.textContent = "Board not fully visible: findChessboardCorners would fail."; m.style.color = "#9a3412"; return; }
+        var near = samples.some(function (s) { var d = 0; for (var k = 0; k < 4; k++) d += Math.abs(s.p[k] - pr.p[k]); return d < 0.2; });
+        if (near) { m.textContent = "Rejected: too similar to an earlier sample. Move or tilt the board."; m.style.color = "#9a3412"; return; }
+        var p = pose(); samples.push({ p: pr.p, pts: boardPts(p.x, p.y, p.z, p.tx, p.ty) });
+        m.textContent = "Captured sample " + samples.length + "."; m.style.color = "#1f7a4d"; draw();
+      }
+      ["cv-x", "cv-y", "cv-z", "cv-tx", "cv-ty"].forEach(function (id) { $(id).addEventListener("input", draw); });
+      $("cv-cap").addEventListener("click", capture);
+      $("cv-rand").addEventListener("click", function () {
+        $("cv-x").value = Math.round(Math.random() * 180 - 90); $("cv-y").value = Math.round(Math.random() * 180 - 90);
+        $("cv-z").value = Math.round(55 + Math.random() * 100); $("cv-tx").value = Math.round(Math.random() * 80 - 40); $("cv-ty").value = Math.round(Math.random() * 80 - 40); draw();
+      });
+      $("cv-clear").addEventListener("click", function () { samples = []; $("cv-msg").textContent = ""; draw(); });
+      draw();
+    }
+
+    /* 6. perspective warp with draggable source points */
+    function warpDemo() {
+      var cs = $("pw-src"), cd = $("pw-dst"); if (!cs) return;
+      var a = cs.getContext("2d"), b = cd.getContext("2d"), W = 640, H = 360, S = 0.5, src = null, img = new Image(), drag = -1, grid = true;
+      var REC = [[577, 463], [707, 463], [1110, 720], [205, 720]], BAD = [[540, 470], [760, 470], [1180, 720], [120, 700]];
+      var DST = [[300, 0], [980, 0], [980, 720], [300, 720]];
+      var P = REC.map(function (p) { return [p[0] * S, p[1] * S]; });
+      function solveH(s, d) {   // homography mapping s -> d (4 points), via 8x8 Gaussian elimination
+        var A = [], B = [];
+        for (var i = 0; i < 4; i++) {
+          var x = s[i][0], y = s[i][1], u = d[i][0], v = d[i][1];
+          A.push([x, y, 1, 0, 0, 0, -u * x, -u * y]); B.push(u);
+          A.push([0, 0, 0, x, y, 1, -v * x, -v * y]); B.push(v);
+        }
+        for (var c = 0; c < 8; c++) {
+          var piv = c; for (var r = c + 1; r < 8; r++) if (Math.abs(A[r][c]) > Math.abs(A[piv][c])) piv = r;
+          var t = A[c]; A[c] = A[piv]; A[piv] = t; t = B[c]; B[c] = B[piv]; B[piv] = t;
+          if (Math.abs(A[c][c]) < 1e-12) return null;
+          for (r = 0; r < 8; r++) if (r !== c) { var f = A[r][c] / A[c][c]; for (var k = c; k < 8; k++) A[r][k] -= f * A[c][k]; B[r] -= f * B[c]; }
+        }
+        var h = B.map(function (v, i) { return v / A[i][i]; }); h.push(1);
+        return h;
+      }
+      function render() {
+        if (!src) return;
+        a.putImageData(src, 0, 0);
+        a.strokeStyle = "#dc2626"; a.lineWidth = 2.5; a.beginPath(); P.forEach(function (p, m) { if (m) a.lineTo(p[0], p[1]); else a.moveTo(p[0], p[1]); }); a.closePath(); a.stroke();
+        P.forEach(function (p, m) { a.fillStyle = "#dc2626"; a.beginPath(); a.arc(p[0], p[1], 9, 0, 7); a.fill(); a.fillStyle = "#fff"; a.font = "bold 12px sans-serif"; a.fillText(m + 1, p[0] - 3.5, p[1] + 4.5); });
+        var full = P.map(function (p) { return [p[0] / S, p[1] / S]; });
+        var M = solveH(full, DST), Hi = solveH(DST.map(function (p) { return [p[0] * S, p[1] * S]; }), P);   // dst(px, half-res) -> src(px, half-res)
+        if (!M || !Hi) { $("pw-msg").textContent = "Degenerate points: three are on a line."; return; }
+        $("pw-msg").textContent = "";
+        var out = b.createImageData(W, H), o = out.data, s = src.data;
+        for (var y = 0; y < H; y++) for (var x = 0; x < W; x++) {
+          var w = Hi[6] * x + Hi[7] * y + 1, u = (Hi[0] * x + Hi[1] * y + Hi[2]) / w, v = (Hi[3] * x + Hi[4] * y + Hi[5]) / w, i = (y * W + x) * 4;
+          if (w > 0 && u >= 0 && v >= 0 && u < W - 1 && v < H - 1) { var j = ((v | 0) * W + (u | 0)) * 4; o[i] = s[j]; o[i + 1] = s[j + 1]; o[i + 2] = s[j + 2]; }
+          o[i + 3] = 255;
+        }
+        b.putImageData(out, 0, 0);
+        if (grid) { b.strokeStyle = "rgba(34,211,238,0.8)"; b.lineWidth = 2; b.beginPath(); b.moveTo(150, 0); b.lineTo(150, H); b.moveTo(490, 0); b.lineTo(490, H); b.stroke(); }
+        var r = function (v) { return v.toFixed(3).padStart(9); };
+        $("pw-M").textContent = "src = " + JSON.stringify(full.map(function (p) { return p.map(Math.round); })) + "\nM = [[" + r(M[0]) + "," + r(M[1]) + "," + r(M[2]) + "],\n     [" + r(M[3]) + "," + r(M[4]) + "," + r(M[5]) + "],\n     [" + r(M[6]) + "," + r(M[7]) + "," + r(M[8]) + "]]";
+      }
+      function pos(e) { var r = cs.getBoundingClientRect(); return [(e.clientX - r.left) * W / r.width, (e.clientY - r.top) * H / r.height]; }
+      cs.addEventListener("pointerdown", function (e) {
+        var q = pos(e), best = 1e9; P.forEach(function (p, m) { var d = Math.hypot(p[0] - q[0], p[1] - q[1]); if (d < best) { best = d; drag = m; } });
+        if (best > 30) drag = -1; else { cs.setPointerCapture(e.pointerId); e.preventDefault(); e.stopPropagation(); }
+      });
+      cs.addEventListener("pointermove", function (e) { if (drag < 0) return; var q = pos(e); P[drag] = [Math.max(0, Math.min(W, q[0])), Math.max(0, Math.min(H, q[1]))]; render(); });
+      cs.addEventListener("pointerup", function () { drag = -1; });
+      $("pw-reset").addEventListener("click", function () { P = REC.map(function (p) { return [p[0] * S, p[1] * S]; }); render(); });
+      $("pw-bad").addEventListener("click", function () { P = BAD.map(function (p) { return [p[0] * S, p[1] * S]; }); render(); });
+      $("pw-grid").addEventListener("click", function () { grid = !grid; render(); });
+      img.onload = function () {
+        a.drawImage(img, 0, 0, W, H);
+        try { src = a.getImageData(0, 0, W, H); } catch (e) { $("pw-msg").textContent = "Live demo needs the page served over http(s): open it from the course website."; return; }
+        render();
+      };
+      img.src = "assets/06_camera_calibration/road_undist.jpg";
+    }
+
+    /* 7. click any slide image to view it full screen */
+    function lightbox() {
+      var box = document.createElement("div"); box.id = "lb";
+      box.innerHTML = '<img alt=""><p>Click anywhere or press Esc to close</p>';
+      document.body.appendChild(box);
+      var big = box.querySelector("img");
+      function close() { box.classList.remove("on"); big.removeAttribute("src"); }
+      box.addEventListener("click", close);
+      document.addEventListener("keydown", function (e) {
+        if (box.classList.contains("on") && (e.key === "Escape" || e.key === "Esc")) { e.stopImmediatePropagation(); e.preventDefault(); close(); }
+      }, true);
+      document.querySelector(".reveal .slides").addEventListener("click", function (e) {
+        var t = e.target;
+        if (t.tagName !== "IMG" || t.closest("a")) return;
+        if (document.documentElement.classList.contains("print-pdf")) return;
+        big.src = t.currentSrc || t.src || t.getAttribute("data-src");
+        big.alt = t.alt || "";
+        box.classList.add("on");
+      });
+    }
+    /* keep keyboard arrows inside number inputs from changing slides */
+    function guardInputs() {
+      document.querySelectorAll(".reveal input").forEach(function (el) {
+        el.addEventListener("keydown", function (e) { e.stopPropagation(); });
+      });
+    }
+    function init() { kcDemo(); pinDemo(); distDemo(); countDemo(); coverageDemo(); warpDemo(); lightbox(); guardInputs(); }
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init); else init();
+  })();
+  </script>
+</body></html>

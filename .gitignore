@@ -28,3 +28,8 @@ lectures/Lecture_5/Assignment_2_solution/
 LAB/Lab_5/test_videos/
 LAB/Lab_5/test_videos_output/
 LAB/Lab_5/test_images_output/
+# Outputs produced when students run Lab 6
+LAB/Lab_6/calib_images/
+LAB/Lab_6/my_calib/
+LAB/Lab_6/*.yaml
+LAB/Lab_6/charuco_7x5.png

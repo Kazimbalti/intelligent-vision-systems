@@ -311,9 +311,21 @@ window.Quarto = {
 
   <div class="lecture-item mb-4 pb-3 border-bottom" data-index="5">
     <h3 class="listing-title mb-1 anchored">
-      <a href="06_filtering_frequency_restoration_morphology.html">Lecture 06 — Filtering, Frequency, Restoration &amp; Morphology</a>
+      <a href="06_Camera_Calibration.html">Lecture 06 — Camera Calibration</a>
     </h3>
-    <p class="listing-description mb-2">Why filters work: correlation vs convolution, Gaussian smoothing, separability, sharpening and gradient operators, non-linear filters; the same filters as signals (DFT, convolution theorem, sampling, aliasing, Gaussian/Laplacian pyramids). Then repairing images (noise models, Wiener, non-local means, PSNR/SSIM) and shapes (erosion, dilation, opening, closing, connected components, distance transform, skeletons).</p>
+    <p class="listing-description mb-2">How a camera turns the 3-D world into pixels and how to measure it: the pinhole model, intrinsics <i>K</i> and extrinsics <i>[R | t]</i>, radial and tangential lens distortion, camera types (wide-angle, fisheye, omnidirectional, stereo, RGB-D, Raspberry Pi modules) and calibration targets (chessboard, circles, ChArUco). Calibrating with OpenCV &mdash; corners, object/image points, Zhang&rsquo;s method, reprojection error, undistortion and <code>remap</code> &mdash; then ChArUco, fisheye, stereo, ROS&nbsp;2 and your own Pi camera, and finally perspective transforms, the bird&rsquo;s-eye view and lane curvature. Six live in-browser demos, slide quizzes and <a href="../labs.html#lab-6-calibration">Lab 6</a> notebooks. Partly adapted from the Udacity Self-Driving Car Engineer Nanodegree.</p>
+    <div class="d-flex gap-2 flex-wrap">
+      <a class="btn btn-outline-primary btn-sm" href="06_Camera_Calibration.html">View Slides</a>
+      <a class="btn btn-outline-secondary btn-sm" href="pdf/06_Camera_Calibration.pdf">PDF</a>
+      <a class="btn btn-outline-secondary btn-sm" href="../labs.html#lab-6-calibration">Lab 6</a>
+    </div>
+  </div>
+
+  <div class="lecture-item mb-4 pb-3 border-bottom" data-index="5">
+    <h3 class="listing-title mb-1 anchored">
+      <a href="06_filtering_frequency_restoration_morphology.html">Supplementary — Filtering, Frequency, Restoration &amp; Morphology</a>
+    </h3>
+    <p class="listing-description mb-2"><b>Self-study deck</b> (the core filters are in Lecture 05 Part I). Why filters work: correlation vs convolution, Gaussian smoothing, separability, sharpening and gradient operators, non-linear filters; the same filters as signals (DFT, convolution theorem, sampling, aliasing, Gaussian/Laplacian pyramids). Then repairing images (noise models, Wiener, non-local means, PSNR/SSIM) and shapes (erosion, dilation, opening, closing, connected components, distance transform, skeletons).</p>
     <div class="d-flex gap-2 flex-wrap">
       <a class="btn btn-outline-primary btn-sm" href="06_filtering_frequency_restoration_morphology.html">View Slides</a>
     </div>

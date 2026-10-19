@@ -1,0 +1,7 @@
+# Lab 6 — Camera Calibration (companion to Lecture 6)
+# Python 3.10–3.12.  Install:  pip install -r requirements.txt
+opencv-python        # tested with OpenCV 5.0 (4.7+ works too; ChArUco needs >= 4.7)
+numpy
+matplotlib
+jupyter
+# On the Raspberry Pi 5 for 6H, Picamera2 comes with Raspberry Pi OS:  sudo apt install python3-picamera2

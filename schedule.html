@@ -212,10 +212,10 @@ ul.task-list li input[type="checkbox"] {
 <tr class="even">
 <td style="text-align:center;">6</td>
 <td>Mon 5 Oct</td>
-<td><strong>L11&ndash;L12 &mdash; Filtering, Frequency, Restoration &amp; Morphology.</strong> Correlation vs convolution; box &amp; Gaussian smoothing; kernel separability; border handling; integral images. Sharpening/unsharp masking; Laplacian; gradients (Sobel, Prewitt, Scharr); non-linear filters (median, bilateral, guided). 1D/2D DFT &amp; FFT; reading a spectrum; the convolution theorem; ideal/Butterworth/Gaussian low-, high- &amp; band-pass; notch filtering; ringing. 2D sampling theorem; aliasing &amp; anti-aliasing; Gaussian &amp; Laplacian pyramids; coarse-to-fine processing. Noise models (Gaussian, salt-and-pepper, Poisson, speckle); inverse &amp; Wiener filtering; non-local means; total-variation denoising; PSNR/SSIM. Erosion, dilation, opening, closing; structuring elements; hit-or-miss; connected components; distance transform; skeletonisation.</td>
-<td><strong>Lab 6</strong> &mdash; Filtering, edges &amp; morphology on the Pi: smoothing/sharpening, Sobel/Canny, morphological pipeline on live video.</td>
-<td style="text-align:center;"><a href="lectures/06_filtering_frequency_restoration_morphology.html">Lec 06</a></td>
-<td>Lab 6 &middot; Assign. 2 out &middot; G&amp;W 3.4&ndash;3.6, 4, 5, 9 &middot; S 3.2&ndash;3.5</td>
+<td><strong>L11&ndash;L12 &mdash; Camera Calibration.</strong> Why distortion matters for measurement; the pinhole model, intrinsics <i>K</i> (focal length, principal point) and extrinsics <i>[R | t]</i>; radial (barrel, pincushion, mustache) and tangential distortion and the OpenCV coefficients; camera types &mdash; standard, wide-angle, fisheye, omnidirectional, stereo, RGB-D, rolling vs global shutter, Raspberry Pi modules; calibration targets (chessboard, circle grids, ChArUco). Calibrating with OpenCV: corners &amp; sub-pixel refinement, object/image points, Zhang&rsquo;s method, reprojection error, undistortion &amp; <code>remap</code>; ChArUco, fisheye and stereo calibration; ROS&nbsp;2 <code>camera_calibration</code>; perspective transforms, bird&rsquo;s-eye view &amp; lane curvature. <span style="color:#5b6b7b;">(Filtering, frequency, restoration &amp; morphology: <a href="lectures/06_filtering_frequency_restoration_morphology.html">supplementary deck</a>.)</span></td>
+<td><strong><a href="labs.html#lab-6-calibration">Lab 6</a></strong> &mdash; Camera calibration: pinhole &amp; distortion, chessboard corners, calibrate &amp; undistort a GoPro, dash-cam bird&rsquo;s-eye view &amp; curvature, ChArUco &amp; fisheye, bug hunt, stereo rectification, calibrate your own Pi camera &mdash; eight notebooks.</td>
+<td style="text-align:center;"><a href="lectures/06_Camera_Calibration.html">Lec 06</a></td>
+<td>Lab 6 &middot; Assign. 2 out &middot; S 2.1, 11.1 &middot; H&amp;Z 6&ndash;7 &middot; Zhang 2000</td>
 </tr>
 <tr class="odd">
 <td style="text-align:center;">7</td>

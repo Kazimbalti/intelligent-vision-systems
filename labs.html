@@ -171,6 +171,7 @@ window.Quarto = {
   <li><a href="#lab-4-demos" id="toc-lab-4-demos" class="nav-link" data-scroll-target="#lab-4-demos">Lab 4 Demos &amp; Examples</a></li>
   <li><a href="#lab-5-lane-lines" id="toc-lab-5-lane-lines" class="nav-link" data-scroll-target="#lab-5-lane-lines">Lab 5 Lane Lines (SDC)</a></li>
   <li><a href="#lab-5-leaderboard" id="toc-lab-5-leaderboard" class="nav-link" data-scroll-target="#lab-5-leaderboard">Lab 5 Leaderboard</a></li>
+  <li><a href="#lab-6-calibration" id="toc-lab-6-calibration" class="nav-link" data-scroll-target="#lab-6-calibration">Lab 6 Camera Calibration</a></li>
   <li><a href="#research-papers" id="toc-research-papers" class="nav-link" data-scroll-target="#research-papers">Reading &amp; Implementing Research Papers</a></li>
   <li><a href="#opencv5-deep-dive" id="toc-opencv5-deep-dive" class="nav-link" data-scroll-target="#opencv5-deep-dive">OpenCV 5.0 Deep Dive</a></li>
   <li><a href="#capstone-project" id="toc-capstone-project" class="nav-link" data-scroll-target="#capstone-project">Capstone Project</a>
@@ -248,10 +249,10 @@ window.Quarto = {
 </tr>
 <tr class="even">
 <td style="text-align:center;">6</td>
-<td><strong>Lab 6</strong></td>
-<td><strong>Filtering, Edges &amp; Morphology.</strong></td>
-<td>Smoothing and sharpening filters; Sobel and Canny edges; morphological operations (open/close); histogram equalisation &amp; CLAHE &mdash; all on live Pi video.</td>
-<td>A tunable, real-time processing pipeline.</td>
+<td><strong><a href="#lab-6-calibration">Lab 6</a></strong></td>
+<td><strong>Camera Calibration.</strong> Hands-on companion to <a href="lectures/06_Camera_Calibration.html">Lecture&nbsp;6</a>.</td>
+<td>Eight notebooks: (6A) the pinhole model &amp; lens distortion in NumPy; (6B) chessboard corners &amp; object points; (6C) <code>calibrateCamera</code>, reprojection error &amp; undistortion (GoPro); (6D) a dash-cam: undistort, bird&rsquo;s-eye view &amp; lane curvature; (6E) ChArUco &amp; fisheye calibration against a known ground truth; (6F) a pair-programming bug hunt; (6G) stereo calibration &amp; rectification; (6H) calibrate your own Raspberry Pi / USB camera. Built-in &#x2705; auto-checks.</td>
+<td>Notebooks 6A&ndash;6E, 6G with answers to each &ldquo;Your turn&rdquo; task; <code>camera.yaml</code> + report for your own camera (6H).</td>
 </tr>
 <tr class="odd">
 <td style="text-align:center;">7</td>
@@ -486,6 +487,77 @@ window.Quarto = {
     });
 })();
 </script>
+</section>
+
+<section id="lab-6-calibration" class="level2">
+<style>#lab-6-calibration tr[id]{scroll-margin-top:90px}#lab-6-calibration tr:target td{background:#fff4cc;transition:background .6s}</style>
+<h2 class="anchored" data-anchor-id="lab-6-calibration">Lab 6 &mdash; Camera Calibration</h2>
+<p>Lab 6 is the hands-on half of <a href="lectures/06_Camera_Calibration.html"><strong>Lecture 6 &mdash; Camera Calibration</strong></a> (<a href="lectures/pdf/06_Camera_Calibration.pdf">PDF</a>). You build the camera model yourself, calibrate a wide-angle GoPro, a car dash-cam, a ChArUco/fisheye camera whose true parameters are known, and a stereo pair &mdash; then <strong>your own</strong> Raspberry&nbsp;Pi or USB camera. Partly adapted from the <em>Camera Calibration</em> lesson of the Udacity Self-Driving Car Engineer Nanodegree.</p>
+<div class="d-flex gap-4 flex-wrap align-items-start mb-3">
+<img src="lectures/assets/06_camera_calibration/g_corners_gopro.jpg" alt="Chessboard corners detected on a GoPro calibration image" style="width:300px; max-width:100%; border-radius:6px;">
+<div style="flex:1; min-width:260px;">
+<p class="mb-2"><strong>How to run:</strong> click <em>Colab</em> and run all cells (uncomment the <code>!pip install</code> line on a fresh runtime) &mdash; each notebook downloads the images it needs. <strong>6H runs on the machine the camera is attached to</strong> (Pi&nbsp;5 or laptop) and needs a printed 9&nbsp;&times;&nbsp;6 chessboard (<a href="https://github.com/opencv/opencv/blob/4.x/doc/pattern.png">pattern.png</a>). Locally: install <a href="LAB/Lab_6/requirements.txt"><code>requirements.txt</code></a> (see the <a href="https://github.com/Kazimbalti/intelligent-vision-systems/tree/main/LAB/Lab_6">Lab 6 README</a>). Tested with OpenCV 5.0 (4.7+ works); the notebooks point out every OpenCV&nbsp;4&nbsp;&rarr;&nbsp;5 change they rely on.</p>
+<p class="mb-2"><strong>Auto-checks:</strong> after each exercise a &#x2705; check cell tells you whether your result is good enough, or gives a &#x1F4A1; hint &mdash; never the answer. Scripts for your own projects: <a href="LAB/Lab_6/capture_calib.py"><code>capture_calib.py</code></a> and <a href="LAB/Lab_6/calibrate.py"><code>calibrate.py</code></a>.</p>
+<p class="mb-0"><strong>Deliverable:</strong> notebooks 6A&ndash;6E and 6G with the <em>&ldquo;Your turn&rdquo;</em> tasks answered; the 6F bug-hunt scoreboard shown in class; for 6H your <code>camera.yaml</code>, error/coverage plots and answers &mdash; keep <code>camera.yaml</code> for Lab&nbsp;9 and the project.</p>
+</div>
+</div>
+<div class="table-responsive">
+<table class="caption-top table">
+<colgroup><col style="width: 6%"><col style="width: 50%"><col style="width: 22%"><col style="width: 22%"></colgroup>
+<thead><tr class="header"><th style="text-align:center;">Part</th><th>What you do</th><th>Lecture 6 section</th><th>Notebook</th></tr></thead>
+<tbody>
+<tr id="lab-6a" class="odd">
+<td style="text-align:center;"><strong>6A</strong></td>
+<td><strong>Pinhole camera &amp; lens distortion</strong><br><small>Project 3-D points by hand, compute K from the Raspberry Pi Camera&nbsp;v2 datasheet, implement OpenCV&rsquo;s radial + tangential distortion model in NumPy and see barrel, pincushion, mustache and tangential grids.</small></td>
+<td>2&ndash;3 &middot; Pinhole &amp; distortion<br><a href="lectures/06_Camera_Calibration.html#/demo-pinhole">lecture slide</a></td>
+<td style="white-space:nowrap;"><a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/01-pinhole-and-distortion.ipynb">Colab</a> &middot; <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/01-pinhole-and-distortion.ipynb">View</a> &middot; <a href="LAB/Lab_6/01-pinhole-and-distortion.ipynb" download>Download</a></td>
+</tr>
+<tr id="lab-6b" class="even">
+<td style="text-align:center;"><strong>6B</strong></td>
+<td><strong>Finding chessboard corners</strong><br><small>Count the inner corners (the Udacity quiz), <code>findChessboardCorners</code> on 36 GoPro images, object points with <code>np.mgrid</code>, why one image fails, <code>cornerSubPix</code> vs <code>findChessboardCornersSB</code>.</small></td>
+<td>5 &middot; Finding corners<br><a href="lectures/06_Camera_Calibration.html#/finding-corners">lecture slide</a></td>
+<td style="white-space:nowrap;"><a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/02-finding-corners.ipynb">Colab</a> &middot; <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/02-finding-corners.ipynb">View</a> &middot; <a href="LAB/Lab_6/02-finding-corners.ipynb" download>Download</a></td>
+</tr>
+<tr id="lab-6c" class="odd">
+<td style="text-align:center;"><strong>6C</strong></td>
+<td><strong>Calibrate &amp; undistort</strong><br><small><code>calibrateCamera</code>, the <code>cal_undistort</code> quiz, per-view reprojection errors, dropping a bad view (RMS 0.82 &rarr; 0.57&nbsp;px), parameter uncertainty, <code>alpha</code> and the rational model, fast <code>remap</code>, saving YAML.</small></td>
+<td>5 &middot; calibrateCamera<br><a href="lectures/06_Camera_Calibration.html#/calibrate-camera">lecture slide</a></td>
+<td style="white-space:nowrap;"><a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/03-calibrate-and-undistort.ipynb">Colab</a> &middot; <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/03-calibrate-and-undistort.ipynb">View</a> &middot; <a href="LAB/Lab_6/03-calibrate-and-undistort.ipynb" download>Download</a></td>
+</tr>
+<tr id="lab-6d" class="even">
+<td style="text-align:center;"><strong>6D</strong></td>
+<td><strong>Road camera: bird&rsquo;s-eye view &amp; curvature</strong><br><small>Calibrate a dash-cam (mixed image sizes!), the <code>corners_unwarp</code> quiz, choose source points for a bird&rsquo;s-eye view, fit <i>f(y) = Ay&sup2; + By + C</i> and measure the lane radius in metres.</small></td>
+<td>7 &middot; Perspective transform<br><a href="lectures/06_Camera_Calibration.html#/demo-perspective">lecture slide</a></td>
+<td style="white-space:nowrap;"><a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/04-road-camera-birdseye.ipynb">Colab</a> &middot; <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/04-road-camera-birdseye.ipynb">View</a> &middot; <a href="LAB/Lab_6/04-road-camera-birdseye.ipynb" download>Download</a></td>
+</tr>
+<tr id="lab-6e" class="odd">
+<td style="text-align:center;"><strong>6E</strong></td>
+<td><strong>ChArUco &amp; fisheye with a known ground truth</strong><br><small>Ray-traced pictures from a hidden camera: calibrate with a partly covered ChArUco board and recover K within 0.1&nbsp;%, then a 190&deg; fisheye with <code>cv2.fisheye</code> (and why it needs a starting guess).</small></td>
+<td>6 &middot; ChArUco &amp; fisheye<br><a href="lectures/06_Camera_Calibration.html#/charuco-calibration">lecture slide</a></td>
+<td style="white-space:nowrap;"><a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/05-charuco-and-fisheye.ipynb">Colab</a> &middot; <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/05-charuco-and-fisheye.ipynb">View</a> &middot; <a href="LAB/Lab_6/05-charuco-and-fisheye.ipynb" download>Download</a></td>
+</tr>
+<tr id="lab-6f" class="even">
+<td style="text-align:center;"><strong>6F</strong></td>
+<td><strong>Bug hunt &#x1F41E; (pairs)</strong><br><small>Eight planted calibration bugs: squares vs corners, (h,&nbsp;w) vs (w,&nbsp;h), object-point order, mixed image sizes, OpenCV&nbsp;5 corner shapes, src/dst order, resizing without scaling K, fisheye point layout. Scoreboard to 8/8.</small></td>
+<td>Common pitfalls<br><a href="lectures/06_Camera_Calibration.html#/calibration-pitfalls">lecture slide</a></td>
+<td style="white-space:nowrap;"><a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/06-bug-hunt.ipynb">Colab</a> &middot; <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/06-bug-hunt.ipynb">View</a> &middot; <a href="LAB/Lab_6/06-bug-hunt.ipynb" download>Download</a></td>
+</tr>
+<tr id="lab-6g" class="odd">
+<td style="text-align:center;"><strong>6G</strong></td>
+<td><strong>Stereo calibration &amp; rectification</strong><br><small>Calibrate OpenCV&rsquo;s left/right pairs, <code>stereoCalibrate</code> &rarr; R,&nbsp;T, check the epipolar constraint, <code>stereoRectify</code> + <code>remap</code> (matching rows within 0.2&nbsp;px), a first disparity map.</small></td>
+<td>6 &middot; Stereo<br><a href="lectures/06_Camera_Calibration.html#/stereo-calibration">lecture slide</a></td>
+<td style="white-space:nowrap;"><a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/07-stereo-calibration.ipynb">Colab</a> &middot; <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/07-stereo-calibration.ipynb">View</a> &middot; <a href="LAB/Lab_6/07-stereo-calibration.ipynb" download>Download</a></td>
+</tr>
+<tr id="lab-6h" class="even">
+<td style="text-align:center;"><strong>6H</strong></td>
+<td><strong>Calibrate your own camera</strong><br><small>Capture 20&ndash;30 views with Picamera2 or a webcam (<code>capture_calib.py</code>), calibrate (<code>calibrate.py</code>), check coverage and per-view error, save <code>camera.yaml</code>, measure a distance with <code>solvePnP</code>. Runs on the Pi / your laptop, not Colab.</small></td>
+<td>6 &middot; Your own camera<br><a href="lectures/06_Camera_Calibration.html#/calibrate-your-own-camera">lecture slide</a></td>
+<td style="white-space:nowrap;"><a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/08-calibrate-your-camera.ipynb">Colab</a> &middot; <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/08-calibrate-your-camera.ipynb">View</a> &middot; <a href="LAB/Lab_6/08-calibrate-your-camera.ipynb" download>Download</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><small>GoPro and dash-cam images &copy; Udacity, Inc. (<a href="https://github.com/udacity/CarND-Camera-Calibration">CarND-Camera-Calibration</a>, <a href="https://github.com/udacity/CarND-Advanced-Lane-Lines">CarND-Advanced-Lane-Lines</a>, MIT licence); stereo pairs from the OpenCV samples (Apache&nbsp;2.0).</small></p>
 </section>
 
 <section id="research-papers" class="level2">
