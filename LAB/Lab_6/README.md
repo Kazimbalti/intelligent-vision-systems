@@ -18,6 +18,12 @@ ground truth and a stereo pair, and finally **your own** Raspberry Pi or USB cam
 | 6G | `07-stereo-calibration.ipynb` | 6 · Stereo | `stereoCalibrate`, epipolar check, `stereoRectify` + `remap`, a first disparity map |
 | 6H | `08-calibrate-your-camera.ipynb` | 6 · Your own camera | Capture with Picamera2 or a webcam, calibrate, check coverage, save `camera.yaml`, measure distance with `solvePnP` |
 
+### Live webcam demo (Lecture 6, Level 5)
+
+* **In the browser:** [Webcam Calibration Studio](https://kazimbalti.github.io/intelligent-vision-systems/lectures/06_webcam_calibration_studio.html) runs the real OpenCV-Python 4.10 (`cv2`, via WebAssembly) on your webcam: detect the 9 × 6 board, auto-capture views, calibrate, undistort live, measure distance, download `camera.yaml`. No install; the video stays on your computer. No webcam? It has 20 demo images.
+* **Offline:** `python webcam_calibration_studio.py --board 9x6 --mm 25` (keys: SPACE capture, A auto, C calibrate, U undistort, M measure, S save).
+* The pattern: [`pattern_9x6.png`](../../lectures/assets/06_camera_calibration/pattern_9x6.png): print at 100 % (or [show it on a phone](https://kazimbalti.github.io/intelligent-vision-systems/lectures/06_pattern_fullscreen.html)), measure one square.
+
 ### Video labs (one per recommended video — see the [tutorial page](https://kazimbalti.github.io/intelligent-vision-systems/tutorials/08_camera_calibration_videos.html))
 
 | Part | Notebook | Video | What you build |

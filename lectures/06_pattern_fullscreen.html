@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Calibration Pattern 9 × 6 – Intelligent Vision Systems</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #fff; font: 16px/1.4 "Segoe UI", Helvetica, Arial, sans-serif; color: #1f2933; }
+  .wrap { height: 100%; display: flex; align-items: center; justify-content: center; }
+  img { max-width: 96vw; max-height: 96vh; image-rendering: pixelated; }
+  .help { position: fixed; left: 0; right: 0; bottom: 0; background: rgba(40, 86, 138, .95); color: #fff; padding: 10px 14px; font-size: 15px; }
+  .help b { color: #ffe08a; } .help button { margin-left: 8px; font-size: 15px; padding: 4px 10px; border-radius: 6px; border: 0; font-weight: 700; }
+  body.full .help { display: none; }
+</style>
+</head>
+<body>
+<div class="wrap"><img id="p" src="assets/06_camera_calibration/pattern_9x6.png" alt="9 x 6 chessboard calibration pattern"></div>
+<div class="help">
+  Hold this screen <b>flat</b> in front of the webcam (9 × 6 inner corners). Turn the brightness up and avoid reflections.
+  Measure one square <b>on this screen</b> with a ruler and type it into the studio.
+  <button id="fs">Full screen</button>
+</div>
+<script>
+  document.getElementById("fs").onclick = async () => {
+    try { await document.documentElement.requestFullscreen(); } catch (e) {}
+    document.body.classList.add("full");
+    try { await navigator.wakeLock.request("screen"); } catch (e) {}
+  };
+  document.addEventListener("fullscreenchange", () => { if (!document.fullscreenElement) document.body.classList.remove("full"); });
+  document.getElementById("p").onclick = () => document.getElementById("fs").click();
+</script>
+</body>
+</html>

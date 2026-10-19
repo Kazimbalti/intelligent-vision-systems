@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Webcam Calibration Studio – Intelligent Vision Systems</title>
+<meta name="description" content="Calibrate your webcam live in the browser with real OpenCV-Python (cv2) running in WebAssembly: detect a chessboard, capture views, calibrate, undistort live, and measure distances.">
+<style>
+  :root { --navy:#28568a; --navy-d:#1c3f66; --soft:#eef3f9; --ink:#1f2933; --muted:#5b6b7b; --ok:#1f7a4d; --warn:#b45309; --bad:#c0392b; --line:#d8e0ea; }
+  * { box-sizing: border-box; }
+  html, body { margin:0; height:100%; background:#f6f8fb; color:var(--ink); font: 15px/1.4 "Source Sans Pro", "Segoe UI", Helvetica, Arial, sans-serif; }
+  header { display:flex; align-items:center; gap:14px; padding:8px 14px; background:var(--navy); color:#fff; flex-wrap:wrap; }
+  header h1 { font-size:19px; margin:0; font-weight:700; }
+  header .status { margin-left:auto; font-size:13px; background:rgba(255,255,255,.15); padding:3px 10px; border-radius:999px; }
+  header a { color:#dbe7f5; font-size:13px; }
+  main { display:grid; grid-template-columns: minmax(0, 1.55fr) minmax(330px, 1fr); gap:12px; padding:10px 12px; height: calc(100% - 46px); }
+  .stage { display:flex; flex-direction:column; gap:8px; min-height:0; }
+  .tabs { display:flex; gap:6px; flex-wrap:wrap; }
+  .tab { border:2px solid var(--navy); background:#fff; color:var(--navy); border-radius:8px; padding:5px 12px; font-weight:700; cursor:pointer; font-size:14px; }
+  .tab.on { background:var(--navy); color:#fff; }
+  .tab:disabled { opacity:.4; cursor:not-allowed; }
+  .view { position:relative; flex:1; min-height:0; background:#0f1720; border-radius:10px; overflow:hidden; display:flex; align-items:center; justify-content:center; }
+  .view canvas { max-width:100%; max-height:100%; display:block; }
+  .banner { position:absolute; left:10px; top:10px; right:10px; display:flex; gap:8px; align-items:center; pointer-events:none; }
+  .pill { background:rgba(15,23,32,.75); color:#fff; padding:4px 10px; border-radius:999px; font-weight:700; font-size:14px; }
+  .pill.ok { background:rgba(31,122,77,.9); } .pill.bad { background:rgba(192,57,43,.9); } .pill.warn { background:rgba(180,83,9,.9); }
+  .big { position:absolute; right:14px; bottom:12px; background:rgba(15,23,32,.8); color:#fff; padding:8px 14px; border-radius:10px; font-size:30px; font-weight:800; display:none; }
+  .panel { background:#fff; border:1px solid var(--line); border-radius:10px; padding:10px 12px; overflow:auto; min-height:0; }
+  .step { border-left:5px solid var(--line); padding:4px 0 6px 10px; margin-bottom:8px; }
+  .step.on { border-left-color:var(--navy); }
+  .step.done { border-left-color:var(--ok); }
+  .step h3 { margin:0 0 4px; font-size:16px; color:var(--navy); }
+  .step p { margin:2px 0 6px; font-size:13.5px; color:var(--muted); }
+  button.b { border:none; background:var(--navy); color:#fff; font-weight:700; border-radius:7px; padding:7px 12px; cursor:pointer; font-size:14px; margin:2px 4px 2px 0; }
+  button.b.alt { background:#fff; color:var(--navy); border:2px solid var(--navy); padding:5px 10px; }
+  button.b.green { background:var(--ok); }
+  button.b:disabled { opacity:.45; cursor:not-allowed; }
+  label.f { display:inline-flex; align-items:center; gap:6px; font-size:13.5px; margin:2px 10px 2px 0; }
+  label.f input[type=number] { width:62px; padding:3px 4px; border:1px solid #b8c4d2; border-radius:5px; font-size:14px; }
+  select { padding:3px; border-radius:5px; border:1px solid #b8c4d2; font-size:13.5px; max-width:220px; }
+  .bars div.row { display:flex; align-items:center; gap:6px; font-size:13px; margin:2px 0; }
+  .bars b { width:36px; } .bars .track { flex:1; height:12px; background:#e3e9f1; border-radius:6px; overflow:hidden; } .bars .fill { height:100%; width:0; }
+  .thumbs { display:flex; gap:4px; flex-wrap:wrap; margin-top:4px; }
+  .thumbs canvas { width:58px; height:auto; border-radius:4px; border:2px solid transparent; cursor:pointer; }
+  .thumbs canvas.bad { border-color:var(--bad); }
+  pre { background:#f6f8fa; border:1px solid #d8dee4; border-radius:8px; padding:8px 10px; font-size:13px; margin:4px 0; overflow:auto; }
+  .kv { font-family: Consolas, Menlo, monospace; font-size:13.5px; }
+  .meaning { font-size:13px; background:#effaf3; border-left:5px solid var(--ok); border-radius:6px; padding:6px 9px; margin:6px 0; }
+  .note { font-size:13px; background:#eef6ff; border-left:5px solid #2a76dd; border-radius:6px; padding:6px 9px; margin:6px 0; }
+  .warnbox { font-size:13px; background:#fff4ec; border-left:5px solid #ea580c; border-radius:6px; padding:6px 9px; margin:6px 0; }
+  details summary { cursor:pointer; font-weight:700; color:var(--navy); font-size:14px; }
+  #pv { width:100%; height:110px; display:block; }
+  .rms { font-size:22px; font-weight:800; }
+  .hidden { display:none !important; }
+  @media (max-width: 900px) { main { grid-template-columns: 1fr; height:auto; } .view { min-height:300px; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>📷 Webcam Calibration Studio</h1>
+  <a href="06_Camera_Calibration.html" target="_top">Lecture 6</a>
+  <a href="assets/06_camera_calibration/pattern_9x6.png" target="_blank">Print the pattern (9 × 6)</a>
+  <a href="06_pattern_fullscreen.html" target="_blank">Show the pattern on a phone</a>
+  <span class="status" id="status">Loading OpenCV (cv2) in your browser…</span>
+</header>
+<main>
+  <section class="stage">
+    <div class="tabs">
+      <button class="tab on" data-mode="capture">① Detect &amp; capture</button>
+      <button class="tab" data-mode="undistort" id="tab-und" disabled>③ Undistort (live)</button>
+      <button class="tab" data-mode="measure" id="tab-mea" disabled>④ Measure distance (live)</button>
+      <span style="margin-left:auto; display:flex; gap:6px; align-items:center;">
+        <label class="f"><input type="checkbox" id="mirror" checked> mirror view</label>
+        <label class="f"><input type="checkbox" id="grid"> straight-line grid</label>
+      </span>
+    </div>
+    <div class="view" id="view">
+      <canvas id="screen" width="640" height="480"></canvas>
+      <div class="banner"><span class="pill" id="det">camera off</span><span class="pill hidden" id="hint"></span></div>
+      <div class="big" id="bigtext"></div>
+    </div>
+  </section>
+
+  <aside class="panel" id="panel">
+    <div class="step on" id="s1">
+      <h3>1 · Start the camera</h3>
+      <p>Allow the browser to use your webcam. Hold the printed 9 × 6 chessboard (or a phone showing it) in front of it.</p>
+      <label class="f">camera <select id="camsel"><option value="">default</option></select></label>
+      <label class="f">resolution <select id="res"><option value="640x480">640 × 480</option><option value="1280x720">1280 × 720</option></select></label><br>
+      <button class="b" id="start">▶ Start webcam</button>
+      <button class="b alt" id="demo">No webcam? Use 20 demo images</button>
+      <div class="note hidden" id="camerr"></div>
+    </div>
+
+    <div class="step" id="s2">
+      <h3>2 · Tell the computer about your board</h3>
+      <p><b>Inner corners</b> (where 4 squares meet): the course pattern has <b>9 × 6</b>. Measure one square with a ruler.</p>
+      <label class="f">corners across <input type="number" id="nx" value="9" min="3" max="20"></label>
+      <label class="f">down <input type="number" id="ny" value="6" min="3" max="20"></label>
+      <label class="f">square size (mm) <input type="number" id="sq" value="25" min="1" step="0.5"></label>
+    </div>
+
+    <div class="step" id="s3">
+      <h3>3 · Capture 15–20 good views</h3>
+      <p>Green corners = board found. <b>Auto</b> takes a picture when the board is <b>still</b> and in a <b>new</b> place. Move it to the edges and corners, tilt it, near and far.</p>
+      <button class="b" id="cap" disabled>📸 Capture now (space)</button>
+      <button class="b alt" id="auto" disabled>Auto: off</button>
+      <button class="b alt" id="clear" disabled>Clear all</button>
+      <div class="bars" id="bars"></div>
+      <div style="font-size:13px; margin-top:4px;"><b id="count">0</b> views captured. <span id="capmsg" style="color:var(--muted)"></span></div>
+      <div class="thumbs" id="thumbs"></div>
+    </div>
+
+    <div class="step" id="s4">
+      <h3>4 · Calibrate</h3>
+      <p>Runs <code>cv2.calibrateCamera</code> on your views (needs at least 8; 15+ is better).</p>
+      <button class="b green" id="calib" disabled>🧮 Calibrate</button>
+      <label class="f"><input type="checkbox" id="rational"> rational model (very wide lenses)</label>
+      <div id="results" class="hidden">
+        <div style="display:flex; align-items:baseline; gap:10px;"><span>RMS reprojection error:</span><span class="rms" id="rms"></span><span id="rmsverdict"></span></div>
+        <canvas id="pv" width="600" height="110"></canvas>
+        <div style="font-size:12px; color:var(--muted)">Error of each view (click a bar to delete a bad view, then calibrate again).</div>
+        <pre class="kv" id="kout"></pre>
+        <div class="meaning" id="meaning"></div>
+        <button class="b alt" id="dlyaml">⬇ camera.yaml</button>
+        <button class="b alt" id="dljson">⬇ camera.json</button>
+      </div>
+    </div>
+
+    <div class="step" id="s5">
+      <h3>5 · Use it</h3>
+      <p><b>③ Undistort</b>: see the corrected live image. <b>④ Measure</b>: hold the board up and read its distance; check it with a ruler or tape measure.</p>
+      <label class="f">alpha (0 = crop, 1 = keep all) <input type="range" id="alpha" min="0" max="1" step="0.1" value="0" style="width:110px"><span id="alphav">0</span></label>
+      <label class="f">view <select id="undmode"><option value="split">split: left raw | right corrected</option><option value="und">corrected only</option><option value="raw">raw only</option></select></label><br>
+      <button class="b alt" id="testimg">Try the test image (calibration_test.png)</button>
+    </div>
+
+    <details>
+      <summary>Show the Python (cv2) code this page runs</summary>
+<pre>import cv2, numpy as np
+nx, ny, square = 9, 6, 25.0                      # inner corners, mm
+objp = np.zeros((nx * ny, 3), np.float32)
+objp[:, :2] = np.mgrid[0:nx, 0:ny].T.reshape(-1, 2) * square
+
+# live:   found, corners = cv2.findChessboardCorners(gray, (nx, ny),
+#              cv2.CALIB_CB_ADAPTIVE_THRESH | cv2.CALIB_CB_NORMALIZE_IMAGE | cv2.CALIB_CB_FAST_CHECK)
+# capture (each view):
+corners = cv2.cornerSubPix(gray, corners, (11, 11), (-1, -1), criteria)
+objpoints.append(objp); imgpoints.append(corners)
+
+rms, K, dist, rvecs, tvecs, std_in, std_ex, per_view = \
+    cv2.calibrateCameraExtended(objpoints, imgpoints, (w, h), None, None)
+
+newK, roi = cv2.getOptimalNewCameraMatrix(K, dist, (w, h), alpha)
+mapx, mapy = cv2.initUndistortRectifyMap(K, dist, None, newK, (w, h), cv2.CV_32FC1)
+undistorted = cv2.remap(frame, mapx, mapy, cv2.INTER_LINEAR)
+
+ok, rvec, tvec = cv2.solvePnP(objp, corners, K, dist)   # distance = |tvec|</pre>
+      <p style="font-size:13px; color:var(--muted)">It is the real OpenCV-Python 4.10 compiled to WebAssembly (Pyodide), running inside a Web Worker. Your video never leaves your computer.</p>
+    </details>
+  </aside>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  const $ = (id) => document.getElementById(id);
+  const screen = $("screen"), sctx = screen.getContext("2d");
+  const work = document.createElement("canvas"), wctx = work.getContext("2d", { willReadFrequently: true });
+  const video = document.createElement("video"); video.playsInline = true; video.muted = true;
+
+  // ------------------------------------------------------------------ worker RPC
+  const worker = new Worker("assets/06_camera_calibration/calib_worker.js");
+  let rid = 0; const pending = new Map();
+  worker.onmessage = (e) => { const p = pending.get(e.data.id); if (p) { pending.delete(e.data.id); e.data.ok ? p.res(e.data) : p.rej(e.data.error); } };
+  function rpc(cmd, data, transfer) { return new Promise((res, rej) => { const id = ++rid; pending.set(id, { res, rej }); worker.postMessage(Object.assign({ cmd, id }, data || {}), transfer || []); }); }
+
+  let ready = false;
+  rpc("init").then((r) => { ready = true; setStatus("✅ OpenCV " + r.version + " ready (running in your browser)"); refreshButtons(); })
+             .catch((e) => setStatus("❌ Could not load OpenCV: " + e + " (needs internet once)"));
+  function setStatus(t) { $("status").textContent = t; }
+
+  // ------------------------------------------------------------------ state
+  const S = { source: null, W: 640, H: 480, mode: "capture", corners: null, cornersW: 0, cornersH: 0, busy: false,
+              views: [], sigs: [], calib: null, maps: null, mapsKey: "", auto: false, still: 0, lastCorners: null,
+              pose: null, demoFrames: null, demoIdx: 0, testImg: null, lastAuto: 0 };
+  const nx = () => +$("nx").value, ny = () => +$("ny").value;
+
+  function setStep(n) { for (let i = 1; i <= 5; i++) { const el = $("s" + i); el.classList.toggle("on", i === n); if (i < n) el.classList.add("done"); } }
+  function refreshButtons() {
+    const live = ready && S.source;
+    $("cap").disabled = !live || S.source === "demo";
+    $("auto").disabled = !live || S.source === "demo";
+    $("clear").disabled = !S.views.length;
+    $("calib").disabled = !ready || S.views.length < 8;
+    $("tab-und").disabled = !S.calib;
+    $("tab-mea").disabled = !S.calib || S.source !== "camera";
+    $("count").textContent = S.views.length;
+  }
+
+  // ------------------------------------------------------------------ camera
+  async function listCams() {
+    try {
+      const devs = await navigator.mediaDevices.enumerateDevices();
+      const sel = $("camsel"); const cur = sel.value; sel.innerHTML = '<option value="">default</option>';
+      devs.filter((d) => d.kind === "videoinput").forEach((d, i) => { const o = document.createElement("option"); o.value = d.deviceId; o.textContent = d.label || ("camera " + (i + 1)); sel.appendChild(o); });
+      sel.value = cur;
+    } catch (e) { /* ignore */ }
+  }
+  async function startCamera() {
+    const [w, h] = $("res").value.split("x").map(Number);
+    if (video.srcObject) video.srcObject.getTracks().forEach((t) => t.stop());
+    const c = { width: { ideal: w }, height: { ideal: h } };
+    if ($("camsel").value) c.deviceId = { exact: $("camsel").value };
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: c, audio: false });
+      video.srcObject = stream; await video.play();
+      S.source = "camera"; S.W = video.videoWidth; S.H = video.videoHeight;
+      if (S.views.length && (S.views[0].w !== S.W || S.views[0].h !== S.H)) clearViews();
+      sizeCanvases(); $("camerr").classList.add("hidden"); setStep(3); listCams(); refreshButtons();
+      $("det").textContent = "camera " + S.W + "×" + S.H;
+    } catch (e) {
+      const box = $("camerr"); box.classList.remove("hidden");
+      box.innerHTML = "<b>Camera not available:</b> " + e.name + ". Allow camera access in the address bar (🔒 / 📷 icon), close other apps using the webcam (Zoom, Teams), or use the demo images." +
+        (location.protocol === "file:" ? "<br>Tip: open this page from the course website or <code>python -m http.server</code>, not as a file." : "");
+    }
+  }
+  function sizeCanvases() { screen.width = S.W; screen.height = S.H; work.width = S.W; work.height = S.H; }
+
+  // ------------------------------------------------------------------ helpers
+  function grayOf(ctx, w, h) {
+    const d = ctx.getImageData(0, 0, w, h).data, g = new Uint8Array(w * h);
+    for (let i = 0, j = 0; j < g.length; i += 4, j++) g[j] = (d[i] * 77 + d[i + 1] * 150 + d[i + 2] * 29) >> 8;
+    return g;
+  }
+  function procSize() { const s = Math.min(1, 640 / S.W); return [Math.round(S.W * s), Math.round(S.H * s), s]; }
+  function signature(c, w, h) {   // (x, y, size, skew) like the ROS calibrator
+    const n = c.length / 2, X = nx(), Y = ny();
+    let sx = 0, sy = 0; for (let i = 0; i < n; i++) { sx += c[2 * i]; sy += c[2 * i + 1]; }
+    const p = (k) => [c[2 * k], c[2 * k + 1]];
+    const a = p(0), b = p(X - 1), d = p(n - 1), e = p(n - X);
+    const area = Math.abs((b[0] - e[0]) * (d[1] - a[1]) - (d[0] - a[0]) * (b[1] - e[1])) / 2;
+    const v1 = [b[0] - a[0], b[1] - a[1]], v2 = [e[0] - a[0], e[1] - a[1]];
+    const ang = Math.acos((v1[0] * v2[0] + v1[1] * v2[1]) / (Math.hypot(...v1) * Math.hypot(...v2)));
+    return [sx / n / w, sy / n / h, Math.sqrt(area / (w * h)), Math.min(1, 2 * Math.abs(Math.PI / 2 - ang))];
+  }
+  function isNew(sig) { return S.sigs.every((s) => Math.abs(s[0] - sig[0]) + Math.abs(s[1] - sig[1]) + Math.abs(s[2] - sig[2]) + Math.abs(s[3] - sig[3]) > 0.15); }
+  function drawCorners(ctx, c, scale, ok) {
+    const n = c.length / 2, X = nx();
+    ctx.lineWidth = 2;
+    for (let i = 0; i < n; i++) {
+      const r = Math.floor(i / X), hue = (r * 50) % 360;
+      ctx.strokeStyle = ok ? "hsl(" + hue + ",85%,55%)" : "#e74c3c"; ctx.fillStyle = ctx.strokeStyle;
+      const x = c[2 * i] * scale, y = c[2 * i + 1] * scale;
+      ctx.beginPath(); ctx.arc(x, y, 4, 0, 7); ctx.stroke();
+      if (i > 0) { ctx.beginPath(); ctx.moveTo(c[2 * i - 2] * scale, c[2 * i - 1] * scale); ctx.lineTo(x, y); ctx.stroke(); }
+    }
+    ctx.fillStyle = "#e74c3c"; ctx.beginPath(); ctx.arc(c[0] * scale, c[1] * scale, 7, 0, 7); ctx.fill();
+  }
+  function bars() {
+    const lim = [0.7, 0.7, 0.4, 0.5], names = ["X", "Y", "Size", "Skew"]; let html = "";
+    for (let k = 0; k < 4; k++) {
+      let lo = 1, hi = 0; S.sigs.forEach((s) => { lo = Math.min(lo, s[k]); hi = Math.max(hi, s[k]); });
+      const p = S.sigs.length ? Math.min(1, (hi - lo) / lim[k]) : 0;
+      html += '<div class="row"><b>' + names[k] + '</b><div class="track"><div class="fill" style="width:' + (100 * p).toFixed(0) + '%;background:' + (p >= 1 ? "#1f7a4d" : p > 0.5 ? "#e6a23c" : "#c0392b") + '"></div></div><span>' + (100 * p).toFixed(0) + '%</span></div>';
+    }
+    $("bars").innerHTML = html;
+  }
+
+  // ------------------------------------------------------------------ capture
+  async function captureFrame(fromDemo) {
+    if (!ready || S.busy === "capture") return;
+    const g = grayOf(wctx, S.W, S.H);
+    S.busy = "capture";
+    try {
+      const r = (await rpc("capture", { gray: g, w: S.W, h: S.H, nx: nx(), ny: ny() }, [g.buffer])).result;
+      if (!r) { $("capmsg").textContent = "board not found in that frame: try again"; return false; }
+      if (r.error) { $("capmsg").textContent = "all views must have the same size"; return false; }
+      const sig = signature(r.corners, S.W, S.H);
+      S.views.push({ corners: r.corners, w: S.W, h: S.H }); S.sigs.push(sig);
+      const t = document.createElement("canvas"); t.width = 116; t.height = Math.round(116 * S.H / S.W);
+      t.getContext("2d").drawImage(work, 0, 0, t.width, t.height); t.title = "view " + S.views.length + " (click to delete)";
+      const idx = S.views.length - 1; t.onclick = () => removeView(S.views.indexOf(S.views[idx]));
+      $("thumbs").appendChild(t);
+      $("capmsg").textContent = fromDemo ? "" : "captured ✓";
+      flash();
+      bars(); refreshButtons(); if (S.views.length >= 8) setStep(4);
+      return true;
+    } finally { S.busy = false; }
+  }
+  let flashT = 0; function flash() { flashT = performance.now(); }
+  async function removeView(i) {
+    if (i < 0 || i >= S.views.length) return;
+    await rpc("remove", { index: i });
+    S.views.splice(i, 1); S.sigs.splice(i, 1); $("thumbs").children[i].remove();
+    [...$("thumbs").children].forEach((t, k) => { t.onclick = () => removeView(k); t.classList.remove("bad"); });
+    bars(); refreshButtons();
+    if (S.calib && S.views.length >= 8) calibrate();
+  }
+  async function clearViews() {
+    await rpc("reset"); S.views = []; S.sigs = []; S.calib = null; S.maps = null; $("thumbs").innerHTML = ""; $("results").classList.add("hidden");
+    bars(); refreshButtons(); setMode("capture");
+  }
+
+  // ------------------------------------------------------------------ calibrate
+  async function calibrate() {
+    $("calib").disabled = true; $("calib").textContent = "🧮 Calibrating…";
+    try {
+      const r = (await rpc("calibrate", { square: +$("sq").value, model: $("rational").checked ? "rational" : "standard" })).result;
+      S.calib = r; S.mapsKey = "";
+      showResults(r); setStep(5); refreshButtons();
+      $("s4").scrollIntoView({ behavior: "smooth", block: "start" });
+    } catch (e) { alert("Calibration failed: " + e); }
+    finally { $("calib").textContent = "🧮 Calibrate"; refreshButtons(); }
+  }
+  function showResults(r) {
+    $("results").classList.remove("hidden");
+    const rms = r.rms, col = rms < 0.5 ? "#1f7a4d" : rms < 1 ? "#b45309" : "#c0392b";
+    $("rms").textContent = rms.toFixed(3) + " px"; $("rms").style.color = col;
+    $("rmsverdict").textContent = rms < 0.5 ? "excellent" : rms < 1 ? "OK: delete the worst views and recalibrate" : "too high: re-shoot (blur? board bent?)";
+    const K = r.K, D = r.D, f = (v, d) => v.toFixed(d === undefined ? 1 : d);
+    $("kout").textContent =
+      "K = [[" + f(K[0][0]).padStart(8) + ", " + "0".padStart(6) + ", " + f(K[0][2]).padStart(7) + "],\n" +
+      "     [" + "0".padStart(8) + ", " + f(K[1][1]).padStart(6) + ", " + f(K[1][2]).padStart(7) + "],\n" +
+      "     [" + "0".padStart(8) + ", " + "0".padStart(6) + ", " + "1".padStart(7) + "]]\n" +
+      "dist = [" + D.slice(0, 5).map((v) => v.toFixed(4)).join(", ") + (D.length > 5 ? ", …" : "") + "]\n" +
+      "fx = " + f(K[0][0]) + " ± " + f(r.std.fx) + " px     image " + r.size[0] + " × " + r.size[1] + ", " + r.n + " views";
+    const cx = K[0][2] - r.size[0] / 2, cy = K[1][2] - r.size[1] / 2;
+    $("meaning").innerHTML = "<b>What these numbers mean:</b> your camera sees <b>" + r.hfov.toFixed(0) + "°</b> across and <b>" + r.vfov.toFixed(0) + "°</b> up–down. " +
+      "One millimetre-sized object 1 m away covers about <b>" + (K[0][0] / 1000).toFixed(2) + " px</b>. The lens centre is <b>" + Math.abs(cx).toFixed(0) + " px " + (cx >= 0 ? "right" : "left") + "</b> and <b>" + Math.abs(cy).toFixed(0) + " px " + (cy >= 0 ? "below" : "above") + "</b> the image centre. " +
+      "k1 = " + D[0].toFixed(3) + (D[0] < -0.02 ? " → <b>barrel</b> distortion (lines bow outwards)." : D[0] > 0.02 ? " → <b>pincushion</b> distortion (lines bow inwards)." : " → very little distortion (typical for a webcam).");
+    drawPerView(r.per_view);
+  }
+  function drawPerView(e) {
+    const c = $("pv"), x = c.getContext("2d"), W = c.width, H = c.height; x.clearRect(0, 0, W, H);
+    const max = Math.max(1, ...e) * 1.1, bw = W / e.length, med = [...e].sort((a, b) => a - b)[Math.floor(e.length / 2)];
+    x.strokeStyle = "#1f7a4d"; x.setLineDash([5, 4]); x.beginPath(); x.moveTo(0, H - 0.5 / max * H); x.lineTo(W, H - 0.5 / max * H); x.stroke(); x.setLineDash([]);
+    e.forEach((v, i) => { x.fillStyle = v > 2 * med && v > 0.5 ? "#c0392b" : "#28568a"; x.fillRect(i * bw + 2, H - v / max * H, bw - 4, v / max * H); });
+    [...$("thumbs").children].forEach((t, i) => t.classList.toggle("bad", e[i] > 2 * med && e[i] > 0.5));
+    c.onclick = (ev) => { const r = c.getBoundingClientRect(); const i = Math.floor((ev.clientX - r.left) / r.width * e.length); if (confirm("Delete view " + (i + 1) + " (error " + e[i].toFixed(2) + " px) and recalibrate?")) removeView(i); };
+  }
+  function download(name, text) { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type: "text/plain" })); a.download = name; a.click(); }
+
+  // ------------------------------------------------------------------ undistort maps
+  let lut = null;
+  async function ensureMaps(w, h) {
+    const key = w + "x" + h + "@" + $("alpha").value + "#" + (S.calib ? S.calib.rms : "");
+    if (S.mapsKey === key || S.busy === "maps") return;
+    S.busy = "maps"; S.mapsKey = key;
+    try {
+      const r = await rpc("maps", { w, h, alpha: +$("alpha").value });
+      lut = new Int32Array(w * h);
+      for (let i = 0; i < lut.length; i++) { const x = Math.round(r.mx[i]), y = Math.round(r.my[i]); lut[i] = x >= 0 && y >= 0 && x < w && y < h ? y * w + x : -1; }
+      S.maps = { w, h };
+    } finally { S.busy = false; }
+  }
+  function remapInto(srcData, w, h) {
+    const out = sctx.createImageData(w, h), s = srcData.data, d = out.data;
+    for (let i = 0; i < lut.length; i++) { const j = lut[i], o = 4 * i; if (j < 0) { d[o + 3] = 255; continue; } const k = 4 * j; d[o] = s[k]; d[o + 1] = s[k + 1]; d[o + 2] = s[k + 2]; d[o + 3] = 255; }
+    return out;
+  }
+
+  // ------------------------------------------------------------------ modes & main loop
+  function setMode(m) { S.mode = m; document.querySelectorAll(".tab").forEach((t) => t.classList.toggle("on", t.dataset.mode === m)); $("bigtext").style.display = m === "measure" ? "block" : "none"; }
+  document.querySelectorAll(".tab").forEach((t) => t.addEventListener("click", () => { if (!t.disabled) setMode(t.dataset.mode); }));
+
+  function drawGrid(ctx, w, h) {
+    ctx.strokeStyle = "rgba(34,211,238,0.85)"; ctx.lineWidth = 1.5; ctx.beginPath();
+    for (let i = 1; i < 8; i++) { ctx.moveTo(i * w / 8, 0); ctx.lineTo(i * w / 8, h); }
+    for (let i = 1; i < 6; i++) { ctx.moveTo(0, i * h / 6); ctx.lineTo(w, i * h / 6); }
+    ctx.stroke();
+  }
+
+  async function detectAsync() {
+    if (!ready || S.busy) return;
+    const [pw, ph, s] = procSize();
+    const tmp = detectAsync.c || (detectAsync.c = document.createElement("canvas")); tmp.width = pw; tmp.height = ph;
+    const tctx = tmp.getContext("2d", { willReadFrequently: true }); tctx.drawImage(work, 0, 0, pw, ph);
+    const g = grayOf(tctx, pw, ph);
+    S.busy = "detect";
+    try {
+      if (S.mode === "measure" && S.calib) {
+        const r = await rpc("pose", { gray: g, w: pw, h: ph, nx: nx(), ny: ny() }, [g.buffer]);
+        S.pose = r.pose ? Object.assign(r.pose, { s }) : null; S.corners = r.pose ? r.pose.corners.map((v) => v / s) : null;
+      } else {
+        const r = await rpc("detect", { gray: g, w: pw, h: ph, nx: nx(), ny: ny() }, [g.buffer]);
+        const c = r.corners ? r.corners.map((v) => v / s) : null;
+        // stillness (for auto-capture): mean corner movement between detections
+        if (c && S.lastCorners && S.lastCorners.length === c.length) {
+          let m = 0; for (let i = 0; i < c.length; i++) m += Math.abs(c[i] - S.lastCorners[i]); m /= c.length;
+          S.still = m < 1.5 ? S.still + 1 : 0;
+        } else S.still = 0;
+        S.lastCorners = c; S.corners = c;
+      }
+    } catch (e) { /* keep going */ }
+    finally { if (S.busy === "detect") S.busy = false; }
+    if (S.auto && S.mode === "capture" && S.corners && S.still >= 2 && performance.now() - S.lastAuto > 900) {
+      const sig = signature(S.corners, S.W, S.H);
+      if (isNew(sig)) { S.lastAuto = performance.now(); await captureFrame(); }
+      else $("hint").textContent = "move or tilt the board to a NEW place", $("hint").classList.remove("hidden");
+    }
+  }
+
+  function loop() {
+    requestAnimationFrame(loop);
+    if (!S.source) return;
+    if (S.source === "camera") {
+      if (video.readyState < 2) return;
+      wctx.drawImage(video, 0, 0, S.W, S.H);
+    }
+    const mirror = $("mirror").checked && S.source === "camera";
+    const W = S.W, H = S.H;
+    if (S.mode === "undistort" && S.calib) {
+      ensureMaps(W, H);
+      const raw = wctx.getImageData(0, 0, W, H);
+      if (lut && S.maps && S.maps.w === W) {
+        const und = remapInto(raw, W, H), m = $("undmode").value;
+        if (m === "raw") sctx.putImageData(raw, 0, 0);
+        else if (m === "und") sctx.putImageData(und, 0, 0);
+        else { sctx.putImageData(raw, 0, 0, 0, 0, W / 2, H); sctx.putImageData(und, 0, 0, W / 2, 0, W / 2, H);
+               sctx.strokeStyle = "#fff"; sctx.lineWidth = 3; sctx.beginPath(); sctx.moveTo(W / 2, 0); sctx.lineTo(W / 2, H); sctx.stroke();
+               sctx.fillStyle = "rgba(15,23,32,.7)"; sctx.fillRect(8, H - 34, 120, 26); sctx.fillRect(W / 2 + 8, H - 34, 150, 26);
+               sctx.fillStyle = "#fff"; sctx.font = "bold 16px sans-serif"; sctx.fillText("raw", 16, H - 15); sctx.fillText("corrected", W / 2 + 16, H - 15); }
+      } else sctx.putImageData(raw, 0, 0);
+      if ($("grid").checked) drawGrid(sctx, W, H);
+      $("det").textContent = "undistorted with your calibration"; $("det").className = "pill ok";
+      return;
+    }
+    // capture / measure: draw the frame (mirrored like a mirror if wanted) + overlays
+    sctx.save();
+    if (mirror) { sctx.translate(W, 0); sctx.scale(-1, 1); }
+    sctx.drawImage(work, 0, 0);
+    S.views.forEach((v) => { sctx.fillStyle = "rgba(42,118,221,0.35)"; for (let i = 0; i < v.corners.length; i += 2) sctx.fillRect(v.corners[i] - 2, v.corners[i + 1] - 2, 4, 4); });
+    if (S.corners) drawCorners(sctx, S.corners, 1, true);
+    if (S.mode === "measure" && S.pose) {
+      const a = S.pose.axes.map((v) => v / S.pose.s), cols = ["#e74c3c", "#2ecc71", "#3498db"];
+      for (let k = 1; k <= 3; k++) { sctx.strokeStyle = cols[k - 1]; sctx.lineWidth = 5; sctx.beginPath(); sctx.moveTo(a[0], a[1]); sctx.lineTo(a[2 * k], a[2 * k + 1]); sctx.stroke(); }
+    }
+    sctx.restore();
+    if ($("grid").checked) drawGrid(sctx, W, H);
+    if (performance.now() - flashT < 180) { sctx.fillStyle = "rgba(255,255,255,0.55)"; sctx.fillRect(0, 0, W, H); }
+    const det = $("det");
+    if (S.corners) { det.textContent = "✓ board found (" + nx() + " × " + ny() + ")"; det.className = "pill ok"; }
+    else { det.textContent = "board not found: show the WHOLE board, check " + nx() + " × " + ny(); det.className = "pill bad"; }
+    if (!S.auto || S.mode !== "capture") $("hint").classList.add("hidden");
+    if (S.mode === "measure") {
+      $("bigtext").textContent = S.pose ? (S.pose.dist / 10).toFixed(1) + " cm away · tilt " + S.pose.tilt.toFixed(0) + "°" : "show the board";
+    }
+    if (S.source === "camera") detectAsync();
+  }
+  requestAnimationFrame(loop);
+
+  // ------------------------------------------------------------------ demo images (no webcam)
+  async function loadDemo() {
+    if (!ready) { alert("Wait until OpenCV has loaded (top right)."); return; }
+    if (video.srcObject) video.srcObject.getTracks().forEach((t) => t.stop());
+    await clearViews();
+    $("nx").value = 9; $("ny").value = 6; $("sq").value = 25;
+    S.source = "demo"; S.W = 1280; S.H = 720; sizeCanvases(); setStep(3); refreshButtons();
+    const base = "../LAB/Lab_6/data/camera_cal/calibration";
+    for (let i = 1; i <= 20; i++) {
+      const img = await new Promise((res) => { const im = new Image(); im.onload = () => res(im); im.onerror = () => res(null); im.src = base + i + ".jpg"; });
+      if (!img) continue;
+      wctx.drawImage(img, 0, 0, 1280, 720);
+      const ok = await captureFrame(true);
+      $("capmsg").textContent = "demo image " + i + "/20 " + (ok ? "✓" : "✗ board cut off by the frame");
+      await new Promise((r) => setTimeout(r, 30));
+    }
+    $("capmsg").textContent = S.views.length + " of 20 demo images usable (3 have the board cut off). Now press Calibrate.";
+    const road = new Image(); road.onload = () => { wctx.drawImage(road, 0, 0, 1280, 720); }; road.src = "../LAB/Lab_6/data/road/test5.jpg";
+  }
+
+  async function testImage() {
+    if (!ready) return;
+    const img = await new Promise((res) => { const im = new Image(); im.onload = () => res(im); im.src = "assets/06_camera_calibration/calibration_test.png"; });
+    if (video.srcObject) video.srcObject.getTracks().forEach((t) => t.stop());
+    S.source = "image"; S.W = img.width; S.H = img.height; sizeCanvases(); wctx.drawImage(img, 0, 0);
+    if (!S.calib || S.calib.size[0] !== 1280 || S.calib.size[1] !== 720 || S.calib.preset !== "gopro") {
+      // this picture was taken by a GoPro (16:9 mode) - use the GoPro calibration from Lab 6C, shifted to the 720p crop
+      const K = [[560.0, 0, 651.1], [0, 561.1, 378.9], [0, 0, 1]], D = [-0.2326, 0.0615, 0.0, 0.0001, -0.0075];
+      await rpc("set", { K, D, w: 1280, h: 720 });
+      S.calib = { preset: "gopro", rms: 0, K, D, size: [1280, 720], per_view: [], std: { fx: 0 }, n: 35, hfov: 2 * Math.atan(640 / 560) * 180 / Math.PI, vfov: 2 * Math.atan(360 / 561.1) * 180 / Math.PI };
+      $("capmsg").textContent = "Test image loaded with the GoPro calibration from Lab 6C (it was taken by that camera).";
+    }
+    S.mapsKey = ""; $("grid").checked = true; refreshButtons(); setMode("undistort");
+  }
+
+  // ------------------------------------------------------------------ wiring
+  $("start").onclick = startCamera;
+  $("demo").onclick = loadDemo;
+  $("testimg").onclick = testImage;
+  $("cap").onclick = () => captureFrame();
+  $("auto").onclick = () => { S.auto = !S.auto; $("auto").textContent = "Auto: " + (S.auto ? "ON" : "off"); $("auto").classList.toggle("green", S.auto); $("auto").classList.toggle("alt", !S.auto); };
+  $("clear").onclick = () => { if (confirm("Delete all captured views?")) clearViews(); };
+  $("calib").onclick = calibrate;
+  $("alpha").oninput = () => { $("alphav").textContent = $("alpha").value; };
+  $("res").onchange = () => { if (S.source === "camera") startCamera(); };
+  $("camsel").onchange = () => { if (S.source === "camera") startCamera(); };
+  ["nx", "ny"].forEach((id) => $(id).onchange = () => { if (S.views.length) clearViews(); });
+  $("dlyaml").onclick = async () => download("camera.yaml", (await rpc("yaml")).text);
+  $("dljson").onclick = () => download("camera.json", JSON.stringify({ camera_matrix: S.calib.K, dist_coeffs: S.calib.D, rms: S.calib.rms, image_size: S.calib.size, square_mm: +$("sq").value, board: [nx(), ny()] }, null, 1));
+  document.addEventListener("keydown", (e) => { if (e.code === "Space" && !$("cap").disabled && S.mode === "capture") { e.preventDefault(); captureFrame(); } });
+  bars(); refreshButtons();
+})();
+</script>
+</body>
+</html>

@@ -303,6 +303,8 @@
   #lb p { position: fixed; bottom: 1.2vh; left: 0; right: 0; text-align: center; color: #dbe7f5; font: 15px "Source Sans Pro", sans-serif; margin: 0; }
 
   /* Lecture 6 additions */
+  .reveal .tryit { background: #fff7e6; border-left: 6px solid #f2a900; border-radius: 8px; padding: 0.35em 0.8em; font-size: 0.62em; margin: 0.5em 0 0; }
+  .reveal .tryit b:first-child { color: #9a6700; }
   .reveal .plain { background: #effaf3; border-left: 6px solid #1f7a4d; border-radius: 8px; padding: 0.35em 0.8em; font-size: 0.62em; margin: 0.5em 0 0; }
   .reveal .plain b:first-child { color: #1f7a4d; }
   .reveal .lab-link.colab::before { content: ""; }
@@ -398,16 +400,46 @@
 </ol>
 </section>
 
+<section id="how-to-teach-this-lecture" class="slide level2" data-menu-title="How to teach (and learn) this lecture">
+<p class="kicker">For the teacher and the student</p>
+<h2>How this lecture works: 8 levels, basics → advanced</h2>
+<div class="grid2 wide-left">
+<table class="simple">
+<tr><th>Level</th><th>Topic</th><th>Time</th><th>Hands-on</th></tr>
+<tr><td>0</td><td>Pictures, pixels, lenses, coordinates</td><td>10 min</td><td>pixel explorer, phone camera</td></tr>
+<tr><td>1</td><td>Why calibrate?</td><td>5 min</td><td>quiz</td></tr>
+<tr><td>2</td><td>Pinhole model, K and [R | t]</td><td>15 min</td><td>pinhole demo, K calculator · Lab 6A</td></tr>
+<tr><td>3</td><td>Lens distortion</td><td>10 min</td><td>distortion explorer · Lab 6A</td></tr>
+<tr><td>4</td><td>The calibration recipe in OpenCV</td><td>20 min</td><td>count corners, coverage demo · 6B, 6C</td></tr>
+<tr><td><b>5</b></td><td><b>LIVE: calibrate the webcam</b></td><td><b>20 min</b></td><td><b>Webcam Calibration Studio</b> · 6H</td></tr>
+<tr><td>6</td><td>Use it: undistort, bird's-eye, measure</td><td>15 min</td><td>warp demo · 6D</td></tr>
+<tr><td>7</td><td>Advanced: camera types, fisheye, ChArUco, stereo, Pi, Zhang</td><td>pick</td><td>6E, 6G, 6I–6M</td></tr>
+</table>
+<div>
+<div class="card"><h3>Teacher checklist</h3>
+<ul class="tight">
+<li>Print <a href="assets/06_camera_calibration/pattern_9x6.png">pattern.png</a> at 100 %, glue on card, measure a square</li>
+<li>Laptop webcam + Chrome/Edge; open the <a href="06_webcam_calibration_studio.html">studio</a> once before class</li>
+<li>Press <b>S</b> for speaker notes (teaching tips on many slides)</li>
+<li>Backup: offline <code>webcam_calibration_studio.py</code> or the studio's demo images</li>
+</ul></div>
+<p class="plain" style="margin-top:0.6em;"><b>Students:</b> every level ends with a <b>quiz or "Remember"</b> slide; 🖐 boxes are things to try yourself; ▶ buttons open the matching Colab notebook.</p>
+</div>
+</div>
+<aside class="notes">Two 60-minute sessions work well: session 1 = Levels 0–4, session 2 = Level 5 (live) + 6, then the lab. Level 7 topics can be chosen to fit the class (Pi students: 6I; robotics students: stereo; maths-minded students: Zhang from scratch).</aside>
+</section>
+
 <section id="roadmap" class="slide level2" data-menu-title="Roadmap">
-<h2>Roadmap</h2>
+<h2>Roadmap: from the very basics to the advanced</h2>
 <div class="pipe">
-<div class="st">① Why?<small>distortion matters</small></div><div class="ar">→</div>
-<div class="st">② Pinhole<small>K and [R | t]</small></div><div class="ar">→</div>
-<div class="st">③ Distortion<small>radial &amp; tangential</small></div><div class="ar">→</div>
-<div class="st">④ Camera types<small>fisheye, 360°, stereo…</small></div><div class="ar">→</div>
-<div class="st">⑤ Calibrate<small>chessboard → K, dist</small></div><div class="ar">→</div>
-<div class="st">⑥ Beyond<small>ChArUco, fisheye, stereo, Pi</small></div><div class="ar">→</div>
-<div class="st">⑦ Perspective<small>bird's-eye &amp; curvature</small></div>
+<div class="st">0 · Basics<small>pixels, lenses</small></div><div class="ar">→</div>
+<div class="st">1 · Why?<small>distortion matters</small></div><div class="ar">→</div>
+<div class="st">2 · Pinhole<small>K and [R | t]</small></div><div class="ar">→</div>
+<div class="st">3 · Distortion<small>k1, k2, p1, p2, k3</small></div><div class="ar">→</div>
+<div class="st">4 · Calibrate<small>the recipe</small></div><div class="ar">→</div>
+<div class="st on">5 · LIVE<small>your webcam</small></div><div class="ar">→</div>
+<div class="st">6 · Use it<small>undistort, warp, measure</small></div><div class="ar">→</div>
+<div class="st">7 · Advanced<small>fisheye, stereo, Pi…</small></div>
 </div>
 <img class="fig" src="assets/06_camera_calibration/p_20.jpg" alt="Real-world scene, distorted image, corrected image" style="max-height:400px;">
 <p class="cap">The whole lecture in one picture: real world → (lens) → distorted image → (calibration) → corrected image (Udacity).</p>
@@ -439,11 +471,125 @@
 </table>
 </section>
 
+<section id="level-0-basics" class="slide level2 center" data-background-color="#28568a" data-menu-title="Level 0 · The very basics">
+<p class="sec-num">0</p>
+<p class="sec-title">The very basics</p>
+<p class="sec-sub"><b>Level 0</b> · pictures, pixels, lenses and three kinds of coordinates</p>
+<aside class="notes">Start here even with strong students: ten minutes on pixels and coordinates saves an hour of confusion later. Ask questions rather than lecture.</aside>
+</section>
+
+<section id="what-is-a-digital-picture" class="slide level2" data-menu-title="What is a digital picture?">
+<p class="kicker">Level 0 · step 1</p>
+<h2>A digital picture is a grid of numbers</h2>
+<div class="grid2 wide-left">
+<div><canvas id="px-canvas" width="800" height="450"></canvas><p class="cap">Move the mouse over the picture (it is <code>calibration_test.png</code>, 1280 × 720 pixels).</p></div>
+<div>
+<div class="demo-box">
+<p class="small" style="margin:0.2em 0;">pixel position <b>(u, v)</b> = <span id="px-uv" class="val">(–, –)</span></p>
+<p class="small" style="margin:0.2em 0;">brightness = <span id="px-val" class="val">–</span> (0 = black, 255 = white)</p>
+<canvas id="px-zoom" width="300" height="300" style="width:260px; image-rendering:pixelated;"></canvas>
+</div>
+<ul class="tight small">
+<li><b>u</b> counts columns from the <b>left</b>, <b>v</b> counts rows from the <b>top</b>.</li>
+<li>(0, 0) is the <b>top-left</b> corner. v grows <b>downwards</b> (not like maths class!).</li>
+<li>OpenCV writes the size as <b>(width, height)</b>; NumPy as <code>img.shape = (height, width)</code>.</li>
+</ul>
+</div>
+</div>
+<aside class="notes">Let a student come to the front and find the pixel at the image centre (640, 360). Ask: what is the brightness of a black square? Of a white one? Point out that everything we do today is about WHERE pixels are, not what colour they are.</aside>
+</section>
+
+<section id="pixels-are-not-millimetres" class="slide level2" data-menu-title="Pixels are not millimetres">
+<p class="kicker">Level 0 · step 2</p>
+<h2>Pixels are not millimetres</h2>
+<div class="grid2">
+<svg viewBox="0 0 640 380" style="width:100%;max-height:440px" role="img" aria-label="The same phone near and far covers different numbers of pixels">
+<rect x="10" y="20" width="300" height="220" rx="10" fill="#eef3f9" stroke="#28568a" stroke-width="3"/>
+<rect x="330" y="20" width="300" height="220" rx="10" fill="#eef3f9" stroke="#28568a" stroke-width="3"/>
+<rect x="110" y="60" width="100" height="150" rx="10" fill="#1f2933"/><rect x="440" y="100" width="50" height="75" rx="6" fill="#1f2933"/>
+<text x="160" y="270" font-size="22" text-anchor="middle" fill="#28568a" font-weight="700">phone 1 m away</text>
+<text x="480" y="270" font-size="22" text-anchor="middle" fill="#28568a" font-weight="700">phone 2 m away</text>
+<text x="160" y="305" font-size="20" text-anchor="middle" fill="#1f2933">150 px tall</text>
+<text x="480" y="305" font-size="20" text-anchor="middle" fill="#1f2933">75 px tall</text>
+<text x="320" y="355" font-size="20" text-anchor="middle" fill="#ea580c" font-weight="700">same 150 mm phone</text>
+</svg>
+<div>
+<p class="small">A camera only gives <b>pixels</b>. How many pixels an object covers depends on</p>
+<ol class="tight small"><li>how <b>big</b> it is (mm),</li><li>how <b>far</b> it is (distance), and</li><li><b>the camera itself</b>: its zoom (focal length) and lens.</li></ol>
+<p class="note">Calibration measures item 3, the camera's own numbers. Then pixels can be turned into <b>millimetres, angles and distances</b>.</p>
+<p class="tryit"><b>🖐 Try it:</b> hold your phone at arm's length, then at half the distance. How much bigger does it look on the webcam? (About 2 ×: size ∝ 1 / distance.)</p>
+</div>
+</div>
+<aside class="notes">Do the try-it live with the classroom webcam. Students should leave this slide knowing: pixel size depends on distance AND on the camera. That second part is what calibration measures.</aside>
+</section>
+
+<section id="what-does-a-lens-do" class="slide level2" data-menu-title="What does a lens do?">
+<p class="kicker">Level 0 · step 3</p>
+<h2>What does a lens do?</h2>
+<div class="grid2 wide-right">
+<div>
+<ul class="tight small">
+<li>A lens <b>bends light</b> so that all rays from one point meet again at one point on the sensor, like a magnifying glass focusing sunlight to a spot.</li>
+<li>It lets in much more light than a tiny hole, so pictures are bright and sharp.</li>
+<li>But real lenses bend the rays near their <b>edges</b> a little too much or too little, so <b>straight lines look curved</b>, most of all near the corners of the picture.</li>
+<li>Wide lenses (phones' "0.5 ×", GoPro, dash-cams, many webcams) bend the most.</li>
+</ul>
+<p class="tryit"><b>🖐 Try it:</b> open your phone camera, switch to the ultra-wide (0.5 ×) lens and point it at a door frame. Put the frame near the edge of the picture: does it bend?</p>
+</div>
+<div><img class="fig h420" src="assets/06_camera_calibration/p_26.jpg" alt="A chessboard seen through a wide-angle lens: straight lines look curved"><p class="cap">A flat chessboard through a wide-angle GoPro lens: the straight rows look curved.</p></div>
+</div>
+<aside class="notes">The try-it works on almost every modern phone. Students immediately see that the lens, not the world, makes lines curve. That is the problem Level 3 solves.</aside>
+</section>
+
+<section id="three-kinds-of-coordinates" class="slide level2" data-menu-title="Three kinds of coordinates">
+<p class="kicker">Level 0 · step 4</p>
+<h2>A point lives in three "addresses"</h2>
+<svg viewBox="0 0 1500 400" style="width:100%;max-height:430px" role="img" aria-label="World coordinates, camera coordinates and image coordinates">
+<g font-family="Source Sans Pro, sans-serif">
+<rect x="10" y="40" width="420" height="300" rx="16" fill="#eef3f9" stroke="#28568a" stroke-width="3"/>
+<rect x="540" y="40" width="420" height="300" rx="16" fill="#fff4ec" stroke="#ea580c" stroke-width="3"/>
+<rect x="1070" y="40" width="420" height="300" rx="16" fill="#effaf3" stroke="#1f7a4d" stroke-width="3"/>
+<text x="220" y="85" font-size="30" font-weight="700" text-anchor="middle" fill="#28568a">① World</text>
+<text x="750" y="85" font-size="30" font-weight="700" text-anchor="middle" fill="#ea580c">② Camera</text>
+<text x="1280" y="85" font-size="30" font-weight="700" text-anchor="middle" fill="#1f7a4d">③ Image</text>
+<text x="220" y="135" font-size="22" text-anchor="middle">"the corner is 3 squares right,</text><text x="220" y="165" font-size="22" text-anchor="middle">2 down on the board"</text>
+<text x="220" y="215" font-size="24" text-anchor="middle" font-weight="700">(X, Y, Z) in mm</text>
+<text x="220" y="260" font-size="20" text-anchor="middle" fill="#5b6b7b">we choose where (0,0,0) is</text>
+<text x="750" y="135" font-size="22" text-anchor="middle">"the corner is 40 cm in front</text><text x="750" y="165" font-size="22" text-anchor="middle">of the lens, 5 cm to the right"</text>
+<text x="750" y="215" font-size="24" text-anchor="middle" font-weight="700">(Xc, Yc, Zc) in mm</text>
+<text x="750" y="260" font-size="20" text-anchor="middle" fill="#5b6b7b">origin = the camera's eye</text>
+<text x="1280" y="135" font-size="22" text-anchor="middle">"the corner appears at</text><text x="1280" y="165" font-size="22" text-anchor="middle">column 412, row 233"</text>
+<text x="1280" y="215" font-size="24" text-anchor="middle" font-weight="700">(u, v) in pixels</text>
+<text x="1280" y="260" font-size="20" text-anchor="middle" fill="#5b6b7b">origin = top-left pixel</text>
+<path d="M440 190 H530" stroke="#28568a" stroke-width="6" marker-end="url(#ar0)"/><path d="M970 190 H1060" stroke="#28568a" stroke-width="6" marker-end="url(#ar0)"/>
+<text x="485" y="380" font-size="22" text-anchor="middle" fill="#28568a" font-weight="700">R, t</text><text x="485" y="400" font-size="17" text-anchor="middle" fill="#5b6b7b">where the camera is</text>
+<text x="1015" y="380" font-size="22" text-anchor="middle" fill="#28568a" font-weight="700">K + dist</text><text x="1015" y="400" font-size="17" text-anchor="middle" fill="#5b6b7b">the camera itself</text>
+<defs><marker id="ar0" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10z" fill="#28568a"/></marker></defs>
+</g></svg>
+<p class="plain"><b>In plain words:</b> calibration finds the arrows. <b>K + dist</b> (the camera's own numbers) are found once; <b>R, t</b> change every time the camera or the object moves.</p>
+<aside class="notes">This is the single most important diagram of the lecture. Come back to it whenever students get lost: "which arrow are we talking about now?"</aside>
+</section>
+
+<section id="level-0-quiz" class="slide level2" data-menu-title="Level 0 quiz">
+<h2>Level 0 check: three quick questions</h2>
+<div class="quiz">
+<p class="q">Answer out loud, then click</p>
+<ol class="tight">
+<li>An image is 640 × 480. What are the (u, v) coordinates of its <b>centre</b>? Of the <b>bottom-right</b> pixel?</li>
+<li>A box covers 100 px at 2 m. Roughly how many pixels at 4 m, with the same camera?</li>
+<li>Which numbers never change for a camera (if you don't touch the lens or resolution): K and dist, or R and t?</li>
+</ol>
+<div class="answer fragment"><b>1.</b> Centre (320, 240); bottom-right (639, 479), because counting starts at 0.</div>
+<div class="answer fragment"><b>2.</b> About 50 px: twice as far → half as big.</div>
+<div class="answer fragment"><b>3.</b> <b>K and dist</b> (the camera itself). R and t describe where the camera is, so they change whenever it moves.</div>
+</div>
+</section>
+
 <!-- ============================ SECTION 1 ============================ -->
 <section id="why-calibrate" class="slide level2 center" data-background-color="#28568a" data-menu-title="1 · Why calibrate?">
-<p class="sec-num">01</p>
+<p class="sec-num">1</p>
 <p class="sec-title">Why calibrate a camera?</p>
-<p class="sec-sub">Cameras do not create perfect images</p>
+<p class="sec-sub"><b>Level 1</b> · Why do cameras need calibrating?</p>
 </section>
 
 <section id="image-distortion" class="slide level2" data-menu-title="Image distortion">
@@ -511,9 +657,9 @@
 
 <!-- ============================ SECTION 2 ============================ -->
 <section id="pinhole-camera-model" class="slide level2 center" data-background-color="#28568a" data-menu-title="2 · The pinhole camera model">
-<p class="sec-num">02</p>
+<p class="sec-num">2</p>
 <p class="sec-title">The pinhole camera model</p>
-<p class="sec-sub">How 3-D points become pixels</p>
+<p class="sec-sub"><b>Level 2</b> · How 3-D points become pixels</p>
 </section>
 
 <section id="pinhole-camera" class="slide level2" data-menu-title="Pinhole camera">
@@ -726,9 +872,9 @@ print(uv.reshape(-1, 2))   # [[740. 310.] [740. 310.]]
 
 <!-- ============================ SECTION 3 ============================ -->
 <section id="lens-distortion" class="slide level2 center" data-background-color="#28568a" data-menu-title="3 · Lens distortion">
-<p class="sec-num">03</p>
+<p class="sec-num">3</p>
 <p class="sec-title">Lens distortion</p>
-<p class="sec-sub">Real cameras use lenses, and lenses bend light</p>
+<p class="sec-sub"><b>Level 3</b> · Real cameras use lenses, and lenses bend light</p>
 </section>
 
 <section id="pinhole-vs-lens" class="slide level2" data-menu-title="Pinhole vs lens">
@@ -874,101 +1020,11 @@ print(uv.reshape(-1, 2))   # [[740. 310.] [740. 310.]]
 <ol class="tight" style="font-size:1em;"><li>Real lenses bend lines, mostly <b>radially</b>: barrel (k1 &lt; 0) or pincushion (k1 &gt; 0).</li><li>OpenCV describes it with 5 numbers: <code>[k1, k2, p1, p2, k3]</code>.</li><li>It is small in the centre and large at the edges (it grows with r²).</li></ol>
 </section>
 
-<!-- ============================ SECTION 4 ============================ -->
-<section id="camera-types" class="slide level2 center" data-background-color="#28568a" data-menu-title="4 · Types of cameras">
-<p class="sec-num">04</p>
-<p class="sec-title">Types of cameras &amp; their models</p>
-<p class="sec-sub">One calibration idea, many lens and sensor models</p>
-</section>
-
-<section id="camera-types-overview" class="slide level2" data-menu-title="Camera types overview">
-<h2>Camera types you will meet</h2>
-<table class="simple" style="font-size:0.56em;">
-<tr><th>Camera</th><th>Typical FOV</th><th>Model to calibrate with</th><th>OpenCV</th><th>Examples</th></tr>
-<tr><td><b>Standard / narrow lens</b></td><td>40–70°</td><td>pinhole + radial/tangential (k1, k2, p1, p2)</td><td><code>cv2.calibrateCamera</code></td><td>Pi Cam v2/3, webcams, phone main camera</td></tr>
-<tr><td><b>Wide-angle</b></td><td>90–120°</td><td>pinhole + k3, or <code>CALIB_RATIONAL_MODEL</code> (k4–k6)</td><td><code>cv2.calibrateCamera</code></td><td>Pi Cam 3 Wide, GoPro (linear mode), dash-cams</td></tr>
-<tr><td><b>Fisheye</b></td><td>150–200°</td><td>Kannala–Brandt equidistant θ(1 + k1θ² + …)</td><td><code>cv2.fisheye.calibrate</code></td><td>car surround-view, drones, robot vacuum, T265</td></tr>
-<tr><td><b>Omnidirectional / catadioptric</b></td><td>≥ 180–360°</td><td>unified (Mei) model with mirror parameter ξ</td><td><code>cv2.omnidir.calibrate</code> (contrib)</td><td>mirror + lens rigs, 360° cameras (dual fisheye)</td></tr>
-<tr><td><b>Stereo pair</b></td><td>any</td><td>two intrinsics + relative pose (R, T)</td><td><code>cv2.stereoCalibrate</code></td><td>ZED, OAK-D, two Pi cameras, Kaggle stereo set</td></tr>
-<tr><td><b>RGB-D / ToF</b></td><td>60–90°</td><td>factory-calibrated colour + depth intrinsics &amp; extrinsics</td><td>vendor SDK, <code>calibrateCamera</code> on IR</td><td>RealSense, Kinect, Orbbec</td></tr>
-<tr><td><b>Thermal</b></td><td>25–60°</td><td>pinhole: needs a <b>heated</b> or emissive target</td><td><code>calibrateCamera</code></td><td>FLIR Lepton</td></tr>
-<tr><td><b>Event camera</b></td><td>~ 60–90°</td><td>pinhole; board shown as a blinking screen</td><td>reconstruct frames → OpenCV</td><td>Prophesee, DAVIS</td></tr>
-</table>
-<p class="tiny muted" style="margin-top:0.5em;">The more the field of view grows, the more the simple pinhole + polynomial model breaks down: at 90° off-axis, tan θ → ∞.</p>
-<p class="plain"><b>In plain words:</b> the wider the lens sees, the more it bends lines, and the more special the maths. Normal lens → standard model; very wide → fisheye model.</p>
-</section>
-
-<section id="projection-models" class="slide level2" data-menu-title="Projection models">
-<h2>Why fisheye needs a different model</h2>
-<div class="grid2 wide-left">
-<div><img class="fig h600" src="assets/06_camera_calibration/g_projection_models.jpg" alt="Image radius versus ray angle for different lens projections"></div>
-<div>
-<ul class="tight small">
-<li>A pinhole maps a ray at angle θ to radius <b>r = f tan θ</b>, which goes to infinity at 90°. No finite sensor can hold a 180° view.</li>
-<li>Fisheye lenses are designed so <b>r grows slowly</b>: equidistant <i>r = fθ</i>, equisolid, stereographic…</li>
-<li>OpenCV's <b>fisheye</b> module models the real lens as<br><i>θ<sub>d</sub> = θ (1 + k<sub>1</sub>θ² + k<sub>2</sub>θ⁴ + k<sub>3</sub>θ⁶ + k<sub>4</sub>θ⁸)</i>, so D has <b>4</b> coefficients.</li>
-<li>Rule of thumb: FOV above ~120°, or the standard model leaves the edges curved → switch to <code>cv2.fisheye</code>.</li>
-</ul>
-</div>
-</div>
-</section>
-
-<section id="raspberry-pi-cameras" class="slide level2" data-menu-title="Raspberry Pi cameras">
-<h2>The cameras on our lab bench: Raspberry Pi</h2>
-<table class="simple">
-<tr><th>Module</th><th>Sensor</th><th>Resolution</th><th>Pixel</th><th>Focal length</th><th>H-FOV</th><th>Shutter</th><th>Calibrate as</th></tr>
-<tr><td>Camera Module v2</td><td>IMX219</td><td>3280 × 2464</td><td>1.12 µm</td><td>3.04 mm</td><td>62°</td><td>rolling</td><td>standard</td></tr>
-<tr><td>Camera Module 3</td><td>IMX708</td><td>4608 × 2592</td><td>1.4 µm</td><td>4.74 mm</td><td>66°</td><td>rolling</td><td>standard (fix the focus!)</td></tr>
-<tr><td>Camera Module 3 Wide</td><td>IMX708</td><td>4608 × 2592</td><td>1.4 µm</td><td>2.75 mm</td><td>102°</td><td>rolling</td><td>wide: k3 or rational</td></tr>
-<tr><td>HQ Camera</td><td>IMX477</td><td>4056 × 3040</td><td>1.55 µm</td><td>lens (6 mm, 16 mm…)</td><td>lens</td><td>rolling</td><td>depends on lens</td></tr>
-<tr><td>Global Shutter Camera</td><td>IMX296</td><td>1456 × 1088</td><td>3.45 µm</td><td>lens</td><td>lens</td><td><b>global</b></td><td>depends on lens</td></tr>
-<tr><td>M12 fisheye lens on HQ/GS</td><td>–</td><td>–</td><td>–</td><td>~1.5–2 mm</td><td>&gt; 180°</td><td>–</td><td><b>fisheye</b></td></tr>
-</table>
-<div class="grid2" style="margin-top:0.6em;">
-<div class="warn"><b>Camera Module 3 has autofocus.</b> Intrinsics change with focus, so lock the lens (<code>picam2.set_controls({"AfMode": 0, "LensPosition": …})</code>) before you calibrate and keep it there.</div>
-<div class="note"><b>Rolling shutter</b> rows are exposed one after another, so a moving board or camera skews the image. Hold the board <b>still</b> for every shot, or use the Global Shutter camera.</div>
-</div>
-</section>
-
-<section id="calibration-patterns" class="slide level2" data-menu-title="Calibration patterns">
-<h2>Calibration targets</h2>
-<img class="fig full" src="assets/06_camera_calibration/g_patterns.jpg" alt="Chessboard, circle grid, asymmetric circles, ChArUco and ArUco grid board" style="max-height:330px;">
-<table class="simple" style="margin-top:0.5em;">
-<tr><th>Target</th><th>Detect with</th><th>+</th><th>−</th></tr>
-<tr><td>Chessboard</td><td><code>findChessboardCorners</code>, <code>findChessboardCornersSB</code></td><td>easy to print, very accurate saddle points</td><td>must be <b>fully visible</b>; 180° ambiguity if rows = cols</td></tr>
-<tr><td>(Asymmetric) circle grid</td><td><code>findCirclesGrid</code></td><td>robust to blur &amp; noise</td><td>circle centres biased under strong perspective/distortion</td></tr>
-<tr><td><b>ChArUco</b></td><td><code>cv2.aruco.CharucoDetector</code></td><td><b>partial views OK</b>, every corner has an <b>ID</b>: ideal for fisheye &amp; edges</td><td>needs the right dictionary &amp; a sharp print</td></tr>
-<tr><td>ArUco grid / AprilGrid</td><td><code>cv2.aruco.ArucoDetector</code></td><td>pose of each marker, multi-camera rigs (Kalibr)</td><td>marker corners less precise than saddles</td></tr>
-</table>
-</section>
-
-<section id="making-a-good-target" class="slide level2" data-menu-title="Making a good target">
-<h2>Making a good target (it matters more than the code)</h2>
-<div class="grid2">
-<div class="card"><h3>Do</h3>
-<ul class="tight">
-<li>Print at <b>100 % scale</b>, then <b>measure</b> a square with a ruler or caliper: that is <code>square_size</code></li>
-<li>Glue it to something <b>rigid and flat</b>: glass, aluminium, foam board</li>
-<li><b>Matte</b> paper: no glare spots on the corners</li>
-<li>Keep a <b>white border</b> around the pattern (the detector needs it)</li>
-<li>Use <b>different</b> row/column counts (9 × 6, not 8 × 8) so the orientation is unambiguous</li>
-</ul></div>
-<div class="card" style="border-left-color:#ea580c;"><h3>Don't</h3>
-<ul class="tight">
-<li>Use a board that bends or ripples: the model assumes <b>Z = 0</b> for every corner</li>
-<li>Show it on a laptop screen at an angle (moiré, refresh, reflections). OK only as a last resort</li>
-<li>Count <b>squares</b> instead of <b>inner corners</b></li>
-<li>Let auto-exposure / motion blur smear the corners</li>
-</ul>
-<p class="tiny muted">Pattern generators: <a href="https://calib.io/pages/camera-calibration-pattern-generator">calib.io</a>, OpenCV <code>gen_pattern.py</code>, or <code>board.generateImage()</code> in Lab 6E.</p></div>
-</div>
-</section>
-
 <!-- ============================ SECTION 5 ============================ -->
 <section id="calibrating-a-camera" class="slide level2 center" data-background-color="#28568a" data-menu-title="5 · Calibrating a camera">
-<p class="sec-num">05</p>
+<p class="sec-num">4</p>
 <p class="sec-title">Calibrating a camera with OpenCV</p>
-<p class="sec-sub">Chessboard → corners → object &amp; image points → K, dist</p>
+<p class="sec-sub"><b>Level 4</b> · The recipe: chessboard → corners → K and dist</p>
 </section>
 
 <section id="measuring-distortion" class="slide level2" data-menu-title="Measuring distortion">
@@ -1428,193 +1484,193 @@ pts_ud = cv2.undistortPoints(pts, K, dist, P=newK)
 <ol class="tight" style="font-size:1em;"><li>Corners: <code>findChessboardCorners</code> + <code>cornerSubPix</code>, count the <b>inner</b> corners.</li><li><code>calibrateCamera(objpoints, imgpoints, (w, h))</code> → K, dist and one pose per photo.</li><li>Judge it with the <b>RMS reprojection error</b> (&lt; 0.5 px good, &gt; 1 px re-shoot), then <code>undistort</code> / <code>remap</code>.</li></ol>
 </section>
 
-<!-- ============================ SECTION 6 ============================ -->
-<section id="beyond-the-chessboard" class="slide level2 center" data-background-color="#28568a" data-menu-title="6 · ChArUco, fisheye, stereo &amp; your own camera">
-<p class="sec-num">06</p>
-<p class="sec-title">Beyond the basic chessboard</p>
-<p class="sec-sub">ChArUco boards · fisheye lenses · stereo pairs · your own Raspberry Pi camera</p>
+<section id="level-5-live" class="slide level2 center" data-background-color="#28568a" data-menu-title="Level 5 · Live: calibrate the classroom webcam">
+<p class="sec-num">5</p>
+<p class="sec-title">Hands-on: calibrate the webcam, live</p>
+<p class="sec-sub"><b>Level 5</b> · real OpenCV running in the browser, a printed chessboard, 10 minutes</p>
 </section>
 
-<section id="charuco-calibration" class="slide level2" data-menu-title="ChArUco calibration">
-<h2>ChArUco: a chessboard with an ID on every square</h2>
-<img class="fig full" src="assets/06_camera_calibration/g_charuco_detect.jpg" alt="A rendered ChArUco board partly covered, and the detected corners with IDs" style="max-height:360px;">
-<div class="grid2" style="margin-top:0.4em;">
-<ul class="tight small">
-<li>ArUco markers inside the white squares tell the detector <b>which</b> corner it is seeing</li>
-<li>So <b>partial, occluded or out-of-frame</b> boards still give corners: perfect for covering image <b>edges</b> and fisheye lenses</li>
-<li>Corners are chessboard <b>saddle points</b> → as accurate as a chessboard</li>
-</ul>
-<p class="small">Watch: <a href="https://www.youtube.com/watch?v=EUvco3rjUdQ">How to do Camera Calibration with ChArUco Boards</a> (Nicolai Nielsen) · <a href="https://docs.opencv.org/4.13.0/da/d13/tutorial_aruco_calibration.html">OpenCV tutorial: calibration with ArUco and ChArUco</a></p>
-</div>
-<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/05-charuco-and-fisheye.ipynb" style="right:24px; top:6px;" title="Open notebook 6E in Google Colab">&#9654;&#xFE0E; Lab 6E in Colab</a>
-</section>
-
-<section id="charuco-code" class="slide level2" data-menu-title="ChArUco: the code">
-<h2>ChArUco calibration: the code (OpenCV ≥ 4.7 / 5)</h2>
-<div class="grid2 wide-left">
-<pre><code class="python" data-trim data-noescape>
-import cv2, glob
-
-aruco_dict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_5X5_100)
-board = cv2.aruco.CharucoBoard((7, 5),          # squares x, y
-                               0.040, 0.030,    # square, marker (m)
-                               aruco_dict)
-cv2.imwrite("board.png", board.generateImage((2100, 1500), marginSize=60))
-
-detector = cv2.aruco.CharucoDetector(board)
-all_obj, all_img = [], []
-for f in glob.glob("charuco/*.jpg"):
-    gray = cv2.imread(f, cv2.IMREAD_GRAYSCALE)
-    ch_corners, ch_ids, m_corners, m_ids = detector.detectBoard(gray)
-    if ch_ids is not None and len(ch_ids) >= 6:     # partial view is fine
-        obj, img = board.matchImagePoints(ch_corners, ch_ids)
-        all_obj.append(obj); all_img.append(img)
-
-rms, K, dist, rvecs, tvecs = cv2.calibrateCamera(
-    all_obj, all_img, gray.shape[::-1], None, None)
-</code></pre>
-<div class="card">
-<h3>Notes</h3>
-<ul class="tight">
-<li>The old <code>cv2.aruco.calibrateCameraCharuco</code> / <code>interpolateCornersCharuco</code> were removed in 4.7+. Use <code>CharucoDetector</code> + <code>matchImagePoints</code>.</li>
-<li>Measure both the square and marker size on the print.</li>
-<li>Pick a dictionary with few markers (e.g. 5×5_100) for better robustness.</li>
-<li>Lab 6E renders synthetic ChArUco views with a <b>known</b> camera, so you can check your calibration against the ground truth.</li>
-</ul>
-</div>
-</div>
-<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/05-charuco-and-fisheye.ipynb" style="right:24px; top:6px;" title="Open notebook 6E in Google Colab">&#9654;&#xFE0E; Lab 6E in Colab</a>
-</section>
-
-<section id="fisheye-calibration" class="slide level2" data-menu-title="Fisheye calibration">
-<h2>Fisheye lenses: <code>cv2.fisheye</code></h2>
-<img class="fig full" src="assets/06_camera_calibration/g_fisheye.jpg" alt="A fisheye view of a road scene and two undistorted versions" style="max-height:330px;">
-<div class="grid2 wide-left" style="margin-top:0.4em;">
-<pre><code class="python" data-trim data-noescape>
-# per view: objpoints (1,N,3) float64, imgpoints (1,N,2) float64
-# OpenCV 5: cv2.CALIB_*   (OpenCV 4: cv2.fisheye.CALIB_*)
-flags = cv2.CALIB_RECOMPUTE_EXTRINSIC | cv2.CALIB_FIX_SKEW
-rms, K, D, rvecs, tvecs = cv2.fisheye.calibrate(
-    objpoints, imgpoints, (w, h), None, None, flags=flags)   # D = [k1..k4]
-
-newK = cv2.fisheye.estimateNewCameraMatrixForUndistortRectify(
-    K, D, (w, h), np.eye(3), balance=0.0)                    # 0 crop … 1 keep all
-m1, m2 = cv2.fisheye.initUndistortRectifyMap(K, D, np.eye(3), newK, (w, h), cv2.CV_16SC2)
-und = cv2.remap(img, m1, m2, cv2.INTER_LINEAR)
-</code></pre>
-<ul class="tight small">
-<li>The whole 180° view <b>cannot</b> fit into one pinhole image: choose a narrower <b>newK</b> (middle) or accept stretched edges (right)</li>
-<li>Points must be float64, shape <b>(1, N, 3)</b>: OpenCV 5 rejects the old (N, 1, 3). The #1 fisheye error</li>
-<li>Very wide (&gt; 200°) or mirror cameras: <code>cv2.omnidir</code> (contrib)</li>
-</ul>
-</div>
-<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/05-charuco-and-fisheye.ipynb" style="right:24px; top:6px;" title="Open notebook 6E in Google Colab">&#9654;&#xFE0E; Lab 6E in Colab</a>
-</section>
-
-<section id="stereo-calibration" class="slide level2" data-menu-title="Stereo calibration">
-<h2>Stereo calibration: two cameras, one rig</h2>
-<div class="grid2 wide-left">
-<div><img class="fig h600" src="assets/06_camera_calibration/g_stereo_rect.jpg" alt="Raw and rectified stereo pairs with horizontal guide lines"></div>
+<section id="before-the-live-demo" class="slide level2" data-menu-title="Before the live demo">
+<p class="kicker">Level 5 · get ready</p>
+<h2>What you need (and how to hold the board)</h2>
+<div class="grid2">
+<div>
+<div>
+<div><img class="fig" src="assets/06_camera_calibration/g_pattern_corners.jpg" alt="The course pattern with its 9 × 6 inner corners marked" style="max-height:300px;"></div>
 <div>
 <ol class="tight small">
-<li>Capture the board with <b>both cameras at the same moment</b> (hardware sync or a still board)</li>
-<li>Calibrate each camera → K<sub>1</sub>, D<sub>1</sub>, K<sub>2</sub>, D<sub>2</sub></li>
-<li><code>stereoCalibrate</code> → <b>R, T</b> between the cameras (+ E, F)</li>
-<li><code>stereoRectify</code> → rotations that make epipolar lines <b>horizontal</b></li>
-<li><code>initUndistortRectifyMap</code> + <code>remap</code> per frame → disparity → depth</li>
+<li><a href="assets/06_camera_calibration/pattern_9x6.png"><b>Print pattern.png</b></a> on A4 at <b>100 %</b> (no "fit to page") <i>or</i> <a href="06_pattern_fullscreen.html">show it full-screen on a phone</a></li>
+<li>Glue it to stiff card. It must stay <b>flat</b></li>
+<li><b>Measure</b> one square with a ruler (e.g. 24.5 mm)</li>
+<li>A laptop webcam, Chrome or Edge, good light</li>
 </ol>
-<p class="small">OpenCV's left/right sample pair: RMS 0.45 px, baseline <b>3.3 squares</b> along −x.</p>
-<p class="tiny muted">Depth from disparity, <i>Z = fB/d</i>, is Lecture 10. Datasets: <a href="https://www.kaggle.com/datasets/danielwe14/stereocamera-chessboard-pictures">Kaggle stereo chessboard pictures</a>.</p>
 </div>
 </div>
-<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/07-stereo-calibration.ipynb" style="right:24px; top:6px;" title="Open notebook 6G in Google Colab">&#9654;&#xFE0E; Lab 6G in Colab</a>
-</section>
-
-<section id="stereo-code" class="slide level2" data-menu-title="Stereo calibration: the code">
-<h2>Stereo calibration: the code</h2>
-<pre><code class="python" data-trim data-noescape>
-# objpoints, imgL, imgR: corners found in BOTH images of each pair
-_, K1, D1, _, _ = cv2.calibrateCamera(objpoints, imgL, size, None, None)
-_, K2, D2, _, _ = cv2.calibrateCamera(objpoints, imgR, size, None, None)
-
-rms, K1, D1, K2, D2, R, T, E, F = cv2.stereoCalibrate(
-    objpoints, imgL, imgR, K1, D1, K2, D2, size,
-    flags=cv2.CALIB_FIX_INTRINSIC)           # keep the mono results, solve only R, T
-print("stereo RMS", rms, "baseline", np.linalg.norm(T) * square_mm, "mm")
-
-R1, R2, P1, P2, Q, roi1, roi2 = cv2.stereoRectify(K1, D1, K2, D2, size, R, T, alpha=0)
-mapL = cv2.initUndistortRectifyMap(K1, D1, R1, P1, size, cv2.CV_16SC2)
-mapR = cv2.initUndistortRectifyMap(K2, D2, R2, P2, size, cv2.CV_16SC2)
-rectL = cv2.remap(left,  *mapL, cv2.INTER_LINEAR)
-rectR = cv2.remap(right, *mapR, cv2.INTER_LINEAR)       # now matching points share a row
-</code></pre>
-<div class="grid2">
-<p class="note">Two Raspberry Pi cameras on a bracket (or the Pi 5's two CSI ports) make a cheap stereo rig. Keep them <b>rigidly</b> mounted: any movement invalidates R, T. See <a href="https://medium.com/@erencanbulut/raspberry-pi-stereo-camera-calibration-a-step-by-step-guide-23cc62d06716">Raspberry Pi stereo camera calibration</a>.</p>
-<p class="warn">Check the rectified pair: draw horizontal lines. If the same corner is on different rows, the calibration or the synchronisation is off.</p>
-</div>
-<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/07-stereo-calibration.ipynb" style="right:24px; top:6px;" title="Open notebook 6G in Google Colab">&#9654;&#xFE0E; Lab 6G in Colab</a>
-</section>
-
-<section id="calibrate-your-own-camera" class="slide level2" data-menu-title="Calibrate your own camera">
-<h2>Challenge: calibrate your own camera</h2>
-<div class="grid2 wide-left">
-<div>
-<pre><code class="python" data-trim data-noescape>
-# capture_calib.py  (Lab 6H): Pi camera or USB webcam
-from picamera2 import Picamera2           # USB: cv2.VideoCapture(0)
-import cv2, time, os
-
-picam2 = Picamera2()
-picam2.configure(picam2.create_still_configuration(
-    main={"size": (1920, 1080), "format": "RGB888"}))
-picam2.start()
-picam2.set_controls({"AfMode": 0, "LensPosition": 0.0})  # Module 3: lock focus
-
-os.makedirs("calib_images", exist_ok=True)
-for i in range(25):
-    time.sleep(3)                           # move the board, hold still
-    frame = picam2.capture_array()
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    ok, _ = cv2.findChessboardCorners(gray, (9, 6),
-                cv2.CALIB_CB_FAST_CHECK)
-    cv2.imwrite(f"calib_images/img_{i:02d}.jpg", frame)
-    print(i, "board found" if ok else "NO board: move it")
-</code></pre>
+<p class="note small">It has <b>10 × 7 squares</b> but <b>9 × 6 inner corners</b> (red = corner number 1). We always count the inner corners.</p>
 </div>
 <div class="card">
-<h3>Recipe</h3>
-<ol class="tight">
-<li>Print a 9 × 6 board (<a href="https://github.com/opencv/opencv/blob/4.x/doc/pattern.png">pattern.png</a>), stick it to a flat board, measure a square</li>
-<li>Take 20–30 pictures over the <b>whole field of view</b>, especially near the edges</li>
-<li>Run <code>calibrate.py --board 9x6 --square 24.5</code> → <code>camera.yaml</code></li>
-<li>Check RMS &lt; 0.5–1 px and that straight lines are straight</li>
-<li>Commit <code>camera.yaml</code> next to your project code</li>
-</ol>
-<p class="tiny muted" style="margin-top:0.3em;">Based on <a href="https://github.com/Petros626/Camera-Calibration-with-PiCamera2-OpenCV">Petros626/Camera-Calibration-with-PiCamera2-OpenCV</a>, <a href="https://github.com/niconielsen32/camera-calibration">niconielsen32/camera-calibration</a>, <a href="https://github.com/nuwandda/Checkerboard-Calibration">nuwandda/Checkerboard-Calibration</a>, <a href="https://github.com/ibois-epfl/rgb-camera-calibration">ibois-epfl/rgb-camera-calibration</a>.</p>
+<h3>The "calibration dance": 15–20 views</h3>
+<svg viewBox="0 0 600 330" style="width:100%" role="img" aria-label="Nine board positions: centre, four corners, tilted left, right, up and down, near and far">
+<g fill="#eef3f9" stroke="#28568a" stroke-width="2">
+<rect x="10" y="10" width="180" height="100" rx="6"/><rect x="210" y="10" width="180" height="100" rx="6"/><rect x="410" y="10" width="180" height="100" rx="6"/>
+<rect x="10" y="120" width="180" height="100" rx="6"/><rect x="210" y="120" width="180" height="100" rx="6"/><rect x="410" y="120" width="180" height="100" rx="6"/>
+<rect x="10" y="230" width="180" height="100" rx="6"/><rect x="210" y="230" width="180" height="100" rx="6"/><rect x="410" y="230" width="180" height="100" rx="6"/></g>
+<g fill="#1f2933">
+<rect x="20" y="18" width="60" height="40"/><rect x="320" y="18" width="60" height="40"/><rect x="520" y="62" width="60" height="40"/>
+<rect x="70" y="145" width="60" height="45"/><polygon points="250,140 340,150 340,200 250,210"/><polygon points="450,150 550,140 550,210 450,200"/>
+<polygon points="40,255 160,255 150,320 50,320"/><rect x="230" y="235" width="140" height="90"/><rect x="485" y="265" width="30" height="20"/></g>
+<g font-size="15" fill="#28568a" font-weight="700" text-anchor="middle">
+<text x="100" y="100">corner</text><text x="300" y="100">corner</text><text x="500" y="100">corner</text>
+<text x="100" y="212">centre</text><text x="300" y="212">tilt left</text><text x="500" y="212">tilt right</text>
+<text x="100" y="250">tilt back</text><text x="300" y="250">near</text><text x="500" y="322">far</text></g>
+</svg>
+<p class="small">Hold it <b>still</b> for each shot. Cover the <b>edges and corners</b>, where the lens bends most.</p>
 </div>
 </div>
-<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/08-calibrate-your-camera.ipynb" style="right:24px; top:6px;" title="Open notebook 6H in Google Colab">&#9654;&#xFE0E; Lab 6H in Colab</a>
+<aside class="notes">Teacher prep before class: print two or three copies of pattern.png at 100 %, glue them on card, measure a square. Open the studio once before the lecture so the browser caches OpenCV (about 15 MB). If the network is down use the offline Python studio (next slides).</aside>
 </section>
 
-<section id="calibration-tools" class="slide level2" data-menu-title="Calibration tools">
-<h2>Calibration tools in the wild</h2>
+<section id="live-demo-steps" class="slide level2" data-menu-title="The live demo, step by step">
+<p class="kicker">Level 5 · the plan</p>
+<h2>The live demo in 7 steps</h2>
 <table class="simple">
-<tr><th>Tool</th><th>Best for</th><th>Notes</th></tr>
-<tr><td><b>OpenCV calib3d</b> (<code>cv2.calibrateCamera</code>, <code>fisheye</code>, <code>stereoCalibrate</code>, <code>aruco</code>)</td><td>everything in this course</td><td><a href="https://docs.opencv.org/4.5.4/d9/d0c/group__calib3d.html">calib3d reference</a>: models, flags, functions</td></tr>
-<tr><td>OpenCV <code>interactive-calibration</code> app</td><td>guided live calibration</td><td>suggests the next pose, shows per-parameter uncertainty</td></tr>
-<tr><td><b>ROS 2</b> <code>camera_calibration</code></td><td>robots, mono/stereo, fisheye, ChArUco</td><td>X/Y/Size/Skew bars → <code>camera_info</code> YAML</td></tr>
-<tr><td>MATLAB Camera Calibrator / Stereo Camera Calibrator</td><td>teaching, quick visual checks</td><td>error plots and 3-D pose views</td></tr>
-<tr><td><b>Kalibr</b> (ETH Zürich)</td><td>multi-camera + IMU, rolling shutter</td><td>AprilGrid targets; the standard for VIO / SLAM rigs</td></tr>
-<tr><td>calib.io camera calibrator, <b>mrcal</b> (NASA JPL)</td><td>high-accuracy industrial / metrology</td><td>richer lens models, uncertainty maps</td></tr>
+<tr><th>#</th><th>Teacher does</th><th>Students see</th><th>The OpenCV behind it</th></tr>
+<tr><td>1</td><td>Open the studio, click <b>Start webcam</b>, allow the camera</td><td>the live picture</td><td><code>VideoCapture</code> / <code>getUserMedia</code></td></tr>
+<tr><td>2</td><td>Type the board: 9 × 6 corners, measured square size</td><td>–</td><td><code>objp = np.mgrid[...] * square</code></td></tr>
+<tr><td>3</td><td>Hold the board up</td><td>coloured corners: <b>found!</b></td><td><code>cv2.findChessboardCorners</code></td></tr>
+<tr><td>4</td><td>Turn <b>Auto</b> on, do the calibration dance</td><td>views appear; X/Y/Size/Skew bars fill</td><td><code>cv2.cornerSubPix</code>, collect points</td></tr>
+<tr><td>5</td><td>Click <b>Calibrate</b></td><td>K, dist, RMS, the error of each view</td><td><code>cv2.calibrateCamera</code></td></tr>
+<tr><td>6</td><td>Tab ③ <b>Undistort</b>, split view + grid</td><td>raw vs corrected, live</td><td><code>initUndistortRectifyMap</code> + <code>remap</code></td></tr>
+<tr><td>7</td><td>Tab ④ <b>Measure</b>; check with a tape measure</td><td>"43.2 cm away"</td><td><code>cv2.solvePnP</code></td></tr>
 </table>
-<p class="small" style="margin-top:0.5em;">Whatever the tool, the inputs and outputs are the same: <b>known 3-D target points + detected 2-D corners → K, distortion, poses, reprojection error</b>.</p>
+<p class="plain"><b>Tip:</b> let two or three students take turns holding the board. Everyone watches the bars fill and learns <i>why</i> varied views matter.</p>
+</section>
+
+<section id="live-studio" class="slide level2" data-menu-title="LIVE: Webcam Calibration Studio">
+<div style="display:flex; align-items:center; gap:14px; margin-bottom:6px;">
+<h2 style="margin:0;">LIVE: calibrate this webcam now <span class="badge new">live</span></h2>
+<a class="lab-link" href="06_webcam_calibration_studio.html" target="_blank" style="position:static; margin-left:auto;">⛶ Open full screen</a>
+</div>
+<iframe data-src="06_webcam_calibration_studio.html" allow="camera; fullscreen" title="Webcam Calibration Studio" style="width:100%; height:735px; border:2px solid #d8e0ea; border-radius:10px; background:#f6f8fb;"></iframe>
+<aside class="notes">If the camera prompt does not appear inside the slide, click "Open full screen". It opens the same studio in its own tab, which is also better for the projector. No webcam or no permission? Click "No webcam? Use 20 demo images" inside the studio.</aside>
+</section>
+
+<section id="what-just-happened" class="slide level2" data-menu-title="What just happened?">
+<p class="kicker">Level 5 · explain</p>
+<h2>What just happened? The code you ran</h2>
+<div class="grid2 wide-left">
+<pre class="code-sm"><code class="python" data-trim data-noescape>
+import cv2, numpy as np
+nx, ny, square = 9, 6, 24.5                        # step 2: the board
+objp = np.zeros((nx * ny, 3), np.float32)
+objp[:, :2] = np.mgrid[0:nx, 0:ny].T.reshape(-1, 2) * square
+
+objpoints, imgpoints = [], []
+cap = cv2.VideoCapture(0)                           # step 1: the webcam
+while len(imgpoints) &lt; 15:
+    ok, frame = cap.read()
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    found, corners = cv2.findChessboardCorners(gray, (nx, ny))   # step 3
+    if found and board_is_still_and_new(corners):                # step 4 (auto)
+        corners = cv2.cornerSubPix(gray, corners, (11, 11), (-1, -1), crit)
+        objpoints.append(objp); imgpoints.append(corners)
+
+rms, K, dist, rvecs, tvecs = cv2.calibrateCamera(      # step 5
+    objpoints, imgpoints, gray.shape[::-1], None, None)
+
+mapx, mapy = cv2.initUndistortRectifyMap(K, dist, None, K, (w, h), cv2.CV_32FC1)
+fixed = cv2.remap(frame, mapx, mapy, cv2.INTER_LINEAR)   # step 6
+
+ok, rvec, tvec = cv2.solvePnP(objp, corners, K, dist)    # step 7
+print("distance:", np.linalg.norm(tvec) / 10, "cm")
+</code></pre>
+<div>
+<p class="small">The studio runs <b>exactly these OpenCV-Python calls</b>: real <code>cv2</code> 4.10, compiled to WebAssembly and running inside your browser. The video never leaves your laptop.</p>
+<p class="small">The same program as a desktop app, which works <b>offline</b>:</p>
+<pre class="code-sm"><code class="bash" data-trim>
+pip install opencv-python numpy
+python webcam_calibration_studio.py --board 9x6 --mm 24.5
+# SPACE capture · A auto · C calibrate · U undistort · M measure · S save
+</code></pre>
+<p class="tiny muted"><a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/webcam_calibration_studio.py">webcam_calibration_studio.py</a> in LAB/Lab_6</p>
+</div>
+</div>
+</section>
+
+<section id="reading-your-result" class="slide level2" data-menu-title="Reading your result">
+<p class="kicker">Level 5 · understand</p>
+<h2>Reading your result: is it good?</h2>
+<div class="grid2">
+<div class="card">
+<h3>A typical laptop webcam at 640 × 480</h3>
+<pre class="code-sm"><code class="nohighlight">RMS = 0.31 px
+K = [[612.4,     0, 318.9],
+     [    0, 611.8, 243.6],
+     [    0,     0,     1]]
+dist = [0.04, -0.16, 0.001, -0.002, 0.09]</code></pre>
+<ul class="tight">
+<li><b>RMS 0.31 px</b>: on average the model is off by a third of a pixel. Excellent.</li>
+<li><b>f<sub>x</sub> ≈ f<sub>y</sub> ≈ 612</b>: square pixels ✓. Field of view = 2·atan(320 / 612) ≈ <b>55°</b>.</li>
+<li><b>(c<sub>x</sub>, c<sub>y</sub>) ≈ (319, 244)</b>: close to the centre (320, 240) ✓.</li>
+<li><b>k1 small</b>: webcams have little distortion. Wide cameras have k1 ≈ −0.2 to −0.4.</li>
+</ul>
+</div>
+<div>
+<table class="simple">
+<tr><th>You see</th><th>Means</th><th>Do</th></tr>
+<tr><td>RMS &lt; 0.5 px</td><td>excellent</td><td>save camera.yaml</td></tr>
+<tr><td>RMS 0.5–1 px</td><td>usable</td><td>delete the red (worst) views, recalibrate</td></tr>
+<tr><td>RMS &gt; 1 px</td><td>bad views</td><td>blur? bent board? re-shoot, hold still</td></tr>
+<tr><td>f<sub>x</sub> and f<sub>y</sub> differ by &gt; 2 %</td><td>too few tilted views</td><td>add tilted and near views</td></tr>
+<tr><td>c<sub>x</sub>, c<sub>y</sub> far from the centre</td><td>edges not covered</td><td>put the board in the corners</td></tr>
+<tr><td>distance wrong by a fixed %</td><td>wrong square size</td><td>measure the square again</td></tr>
+</table>
+<p class="plain"><b>Remember:</b> a small RMS only says the model fits <i>your</i> photos. The ruler test (next slide) says whether it fits the <i>world</i>.</p>
+</div>
+</div>
+</section>
+
+<section id="test-your-calibration" class="slide level2" data-menu-title="Test your calibration">
+<p class="kicker">Level 5 · check</p>
+<h2>Three ways to test a calibration</h2>
+<div class="grid3">
+<div class="card"><h3>① Straight-line test</h3><p>Undistort tab, <b>split view + grid</b>. Hold a ruler or door frame near the image edge: in the corrected half it must follow the grid lines.</p></div>
+<div class="card" style="border-left-color:#ea580c;"><h3>② Ruler test</h3><p>Measure tab. Put the board <b>40 cm</b> from the webcam (tape measure). The studio should say 40 ± 1 cm. Move to 60 cm, then 80 cm.</p></div>
+<div class="card" style="border-left-color:#1f7a4d;"><h3>③ Test image</h3><p>Click <b>Try the test image</b>: <code>calibration_test.png</code> from a GoPro, straightened with that GoPro's calibration (Lab 6C).</p></div>
+</div>
+<img class="fig full" src="assets/06_camera_calibration/g_test_image.jpg" alt="calibration_test.png before and after undistortion with a straight-line grid" style="max-height:330px; margin-top:10px;">
+<aside class="notes">The ruler test is the one students remember. If the distance is off by a constant percentage, the square size was typed wrong. That makes a nice question for the class.</aside>
+</section>
+
+<section id="live-troubleshooting" class="slide level2" data-menu-title="If the live demo goes wrong">
+<p class="kicker">Level 5 · troubleshooting</p>
+<h2>If the live demo goes wrong</h2>
+<table class="simple">
+<tr><th>Problem</th><th>Fix</th></tr>
+<tr><td>No camera prompt / "NotAllowedError"</td><td>click the camera icon in the address bar → Allow; or <b>Open full screen</b> (own tab)</td></tr>
+<tr><td>"NotReadableError" / black picture</td><td>close Zoom, Teams, the Windows Camera app: only one program can use the webcam</td></tr>
+<tr><td>"board not found" all the time</td><td>show the <b>whole</b> board with a white margin; check 9 × 6; more light; avoid reflections on glossy paper or a phone</td></tr>
+<tr><td>Corners found but flicker</td><td>hold still; webcams auto-expose; move closer to a window or lamp</td></tr>
+<tr><td>Auto never captures</td><td>the board must be still <b>and</b> in a new place: move to a new corner or tilt</td></tr>
+<tr><td>OpenCV does not load (no internet)</td><td>run <code>python webcam_calibration_studio.py</code> (offline), or use the 20 demo images</td></tr>
+<tr><td>RMS high</td><td>delete the red views (click their bars), recalibrate</td></tr>
+</table>
+</section>
+
+<section id="remember-live" class="slide level2" data-menu-title="Remember: live calibration">
+<p class="kicker">Remember</p>
+<h2>Live calibration: the 3 things to remember</h2>
+<ol class="tight" style="font-size:1em;"><li>A printed, <b>flat</b> 9 × 6 board + a <b>measured</b> square size + 15–20 <b>varied, still</b> views.</li>
+<li><code>findChessboardCorners</code> → <code>calibrateCamera</code> → check <b>RMS</b> and delete bad views.</li>
+<li>Test it in the world: <b>straight lines</b> stay straight, the <b>ruler</b> distance comes out right.</li></ol>
+<div class="btnrow" style="margin-top:1em;"><a class="lab-link" href="06_webcam_calibration_studio.html" target="_blank">📷 Open the studio</a><a class="lab-link alt" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/08-calibrate-your-camera.ipynb">Lab 6H: calibrate your own camera (notebook)</a><a class="lab-link alt" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/09-pi-camera-in-15-minutes.ipynb">Lab 6I: Raspberry Pi version</a></div>
 </section>
 
 <!-- ============================ SECTION 7 ============================ -->
 <section id="perspective-transform" class="slide level2 center" data-background-color="#28568a" data-menu-title="7 · Perspective transform &amp; bird's-eye view">
-<p class="sec-num">07</p>
+<p class="sec-num">6</p>
 <p class="sec-title">Perspective transform &amp; lane curvature</p>
-<p class="sec-sub">Using the undistorted image to measure the road</p>
+<p class="sec-sub"><b>Level 6</b> · Use your calibration: straighten, warp and measure the road</p>
 </section>
 
 <section id="lane-curvature" class="slide level2" data-menu-title="Lane curvature">
@@ -1826,6 +1882,274 @@ def corners_unwarp(img, nx, ny, mtx, dist):
 <ol class="tight" style="font-size:1em;"><li><b>Undistort first</b>, then warp: a homography keeps straight lines straight, so it cannot fix lens curves.</li><li>4 point pairs → <code>getPerspectiveTransform</code> → <code>warpPerspective</code>.</li><li>Bird's-eye view → fit x = Ay² + By + C → lane curvature in metres.</li></ol>
 </section>
 
+<!-- ============================ SECTION 4 ============================ -->
+<section id="camera-types" class="slide level2 center" data-background-color="#28568a" data-menu-title="4 · Types of cameras">
+<p class="sec-num">7</p>
+<p class="sec-title">Advanced: more cameras, better targets</p>
+<p class="sec-sub"><b>Level 7 · advanced</b> · camera types · ChArUco · fisheye · stereo · Raspberry Pi · tools</p>
+</section>
+
+<section id="camera-types-overview" class="slide level2" data-menu-title="Camera types overview">
+<h2>Camera types you will meet</h2>
+<table class="simple" style="font-size:0.56em;">
+<tr><th>Camera</th><th>Typical FOV</th><th>Model to calibrate with</th><th>OpenCV</th><th>Examples</th></tr>
+<tr><td><b>Standard / narrow lens</b></td><td>40–70°</td><td>pinhole + radial/tangential (k1, k2, p1, p2)</td><td><code>cv2.calibrateCamera</code></td><td>Pi Cam v2/3, webcams, phone main camera</td></tr>
+<tr><td><b>Wide-angle</b></td><td>90–120°</td><td>pinhole + k3, or <code>CALIB_RATIONAL_MODEL</code> (k4–k6)</td><td><code>cv2.calibrateCamera</code></td><td>Pi Cam 3 Wide, GoPro (linear mode), dash-cams</td></tr>
+<tr><td><b>Fisheye</b></td><td>150–200°</td><td>Kannala–Brandt equidistant θ(1 + k1θ² + …)</td><td><code>cv2.fisheye.calibrate</code></td><td>car surround-view, drones, robot vacuum, T265</td></tr>
+<tr><td><b>Omnidirectional / catadioptric</b></td><td>≥ 180–360°</td><td>unified (Mei) model with mirror parameter ξ</td><td><code>cv2.omnidir.calibrate</code> (contrib)</td><td>mirror + lens rigs, 360° cameras (dual fisheye)</td></tr>
+<tr><td><b>Stereo pair</b></td><td>any</td><td>two intrinsics + relative pose (R, T)</td><td><code>cv2.stereoCalibrate</code></td><td>ZED, OAK-D, two Pi cameras, Kaggle stereo set</td></tr>
+<tr><td><b>RGB-D / ToF</b></td><td>60–90°</td><td>factory-calibrated colour + depth intrinsics &amp; extrinsics</td><td>vendor SDK, <code>calibrateCamera</code> on IR</td><td>RealSense, Kinect, Orbbec</td></tr>
+<tr><td><b>Thermal</b></td><td>25–60°</td><td>pinhole: needs a <b>heated</b> or emissive target</td><td><code>calibrateCamera</code></td><td>FLIR Lepton</td></tr>
+<tr><td><b>Event camera</b></td><td>~ 60–90°</td><td>pinhole; board shown as a blinking screen</td><td>reconstruct frames → OpenCV</td><td>Prophesee, DAVIS</td></tr>
+</table>
+<p class="tiny muted" style="margin-top:0.5em;">The more the field of view grows, the more the simple pinhole + polynomial model breaks down: at 90° off-axis, tan θ → ∞.</p>
+<p class="plain"><b>In plain words:</b> the wider the lens sees, the more it bends lines, and the more special the maths. Normal lens → standard model; very wide → fisheye model.</p>
+</section>
+
+<section id="projection-models" class="slide level2" data-menu-title="Projection models">
+<h2>Why fisheye needs a different model</h2>
+<div class="grid2 wide-left">
+<div><img class="fig h600" src="assets/06_camera_calibration/g_projection_models.jpg" alt="Image radius versus ray angle for different lens projections"></div>
+<div>
+<ul class="tight small">
+<li>A pinhole maps a ray at angle θ to radius <b>r = f tan θ</b>, which goes to infinity at 90°. No finite sensor can hold a 180° view.</li>
+<li>Fisheye lenses are designed so <b>r grows slowly</b>: equidistant <i>r = fθ</i>, equisolid, stereographic…</li>
+<li>OpenCV's <b>fisheye</b> module models the real lens as<br><i>θ<sub>d</sub> = θ (1 + k<sub>1</sub>θ² + k<sub>2</sub>θ⁴ + k<sub>3</sub>θ⁶ + k<sub>4</sub>θ⁸)</i>, so D has <b>4</b> coefficients.</li>
+<li>Rule of thumb: FOV above ~120°, or the standard model leaves the edges curved → switch to <code>cv2.fisheye</code>.</li>
+</ul>
+</div>
+</div>
+</section>
+
+<section id="raspberry-pi-cameras" class="slide level2" data-menu-title="Raspberry Pi cameras">
+<h2>The cameras on our lab bench: Raspberry Pi</h2>
+<table class="simple">
+<tr><th>Module</th><th>Sensor</th><th>Resolution</th><th>Pixel</th><th>Focal length</th><th>H-FOV</th><th>Shutter</th><th>Calibrate as</th></tr>
+<tr><td>Camera Module v2</td><td>IMX219</td><td>3280 × 2464</td><td>1.12 µm</td><td>3.04 mm</td><td>62°</td><td>rolling</td><td>standard</td></tr>
+<tr><td>Camera Module 3</td><td>IMX708</td><td>4608 × 2592</td><td>1.4 µm</td><td>4.74 mm</td><td>66°</td><td>rolling</td><td>standard (fix the focus!)</td></tr>
+<tr><td>Camera Module 3 Wide</td><td>IMX708</td><td>4608 × 2592</td><td>1.4 µm</td><td>2.75 mm</td><td>102°</td><td>rolling</td><td>wide: k3 or rational</td></tr>
+<tr><td>HQ Camera</td><td>IMX477</td><td>4056 × 3040</td><td>1.55 µm</td><td>lens (6 mm, 16 mm…)</td><td>lens</td><td>rolling</td><td>depends on lens</td></tr>
+<tr><td>Global Shutter Camera</td><td>IMX296</td><td>1456 × 1088</td><td>3.45 µm</td><td>lens</td><td>lens</td><td><b>global</b></td><td>depends on lens</td></tr>
+<tr><td>M12 fisheye lens on HQ/GS</td><td>–</td><td>–</td><td>–</td><td>~1.5–2 mm</td><td>&gt; 180°</td><td>–</td><td><b>fisheye</b></td></tr>
+</table>
+<div class="grid2" style="margin-top:0.6em;">
+<div class="warn"><b>Camera Module 3 has autofocus.</b> Intrinsics change with focus, so lock the lens (<code>picam2.set_controls({"AfMode": 0, "LensPosition": …})</code>) before you calibrate and keep it there.</div>
+<div class="note"><b>Rolling shutter</b> rows are exposed one after another, so a moving board or camera skews the image. Hold the board <b>still</b> for every shot, or use the Global Shutter camera.</div>
+</div>
+</section>
+
+<section id="calibration-patterns" class="slide level2" data-menu-title="Calibration patterns">
+<h2>Calibration targets</h2>
+<img class="fig full" src="assets/06_camera_calibration/g_patterns.jpg" alt="Chessboard, circle grid, asymmetric circles, ChArUco and ArUco grid board" style="max-height:330px;">
+<table class="simple" style="margin-top:0.5em;">
+<tr><th>Target</th><th>Detect with</th><th>+</th><th>−</th></tr>
+<tr><td>Chessboard</td><td><code>findChessboardCorners</code>, <code>findChessboardCornersSB</code></td><td>easy to print, very accurate saddle points</td><td>must be <b>fully visible</b>; 180° ambiguity if rows = cols</td></tr>
+<tr><td>(Asymmetric) circle grid</td><td><code>findCirclesGrid</code></td><td>robust to blur &amp; noise</td><td>circle centres biased under strong perspective/distortion</td></tr>
+<tr><td><b>ChArUco</b></td><td><code>cv2.aruco.CharucoDetector</code></td><td><b>partial views OK</b>, every corner has an <b>ID</b>: ideal for fisheye &amp; edges</td><td>needs the right dictionary &amp; a sharp print</td></tr>
+<tr><td>ArUco grid / AprilGrid</td><td><code>cv2.aruco.ArucoDetector</code></td><td>pose of each marker, multi-camera rigs (Kalibr)</td><td>marker corners less precise than saddles</td></tr>
+</table>
+</section>
+
+<section id="making-a-good-target" class="slide level2" data-menu-title="Making a good target">
+<h2>Making a good target (it matters more than the code)</h2>
+<div class="grid2">
+<div class="card"><h3>Do</h3>
+<ul class="tight">
+<li>Print at <b>100 % scale</b>, then <b>measure</b> a square with a ruler or caliper: that is <code>square_size</code></li>
+<li>Glue it to something <b>rigid and flat</b>: glass, aluminium, foam board</li>
+<li><b>Matte</b> paper: no glare spots on the corners</li>
+<li>Keep a <b>white border</b> around the pattern (the detector needs it)</li>
+<li>Use <b>different</b> row/column counts (9 × 6, not 8 × 8) so the orientation is unambiguous</li>
+</ul></div>
+<div class="card" style="border-left-color:#ea580c;"><h3>Don't</h3>
+<ul class="tight">
+<li>Use a board that bends or ripples: the model assumes <b>Z = 0</b> for every corner</li>
+<li>Show it on a laptop screen at an angle (moiré, refresh, reflections). OK only as a last resort</li>
+<li>Count <b>squares</b> instead of <b>inner corners</b></li>
+<li>Let auto-exposure / motion blur smear the corners</li>
+</ul>
+<p class="tiny muted">Pattern generators: <a href="https://calib.io/pages/camera-calibration-pattern-generator">calib.io</a>, OpenCV <code>gen_pattern.py</code>, or <code>board.generateImage()</code> in Lab 6E.</p></div>
+</div>
+</section>
+
+<!-- ============================ SECTION 6 ============================ -->
+
+
+<section id="charuco-calibration" class="slide level2" data-menu-title="ChArUco calibration">
+<h2>ChArUco: a chessboard with an ID on every square</h2>
+<img class="fig full" src="assets/06_camera_calibration/g_charuco_detect.jpg" alt="A rendered ChArUco board partly covered, and the detected corners with IDs" style="max-height:360px;">
+<div class="grid2" style="margin-top:0.4em;">
+<ul class="tight small">
+<li>ArUco markers inside the white squares tell the detector <b>which</b> corner it is seeing</li>
+<li>So <b>partial, occluded or out-of-frame</b> boards still give corners: perfect for covering image <b>edges</b> and fisheye lenses</li>
+<li>Corners are chessboard <b>saddle points</b> → as accurate as a chessboard</li>
+</ul>
+<p class="small">Watch: <a href="https://www.youtube.com/watch?v=EUvco3rjUdQ">How to do Camera Calibration with ChArUco Boards</a> (Nicolai Nielsen) · <a href="https://docs.opencv.org/4.13.0/da/d13/tutorial_aruco_calibration.html">OpenCV tutorial: calibration with ArUco and ChArUco</a></p>
+</div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/05-charuco-and-fisheye.ipynb" style="right:24px; top:6px;" title="Open notebook 6E in Google Colab">&#9654;&#xFE0E; Lab 6E in Colab</a>
+</section>
+
+<section id="charuco-code" class="slide level2" data-menu-title="ChArUco: the code">
+<h2>ChArUco calibration: the code (OpenCV ≥ 4.7 / 5)</h2>
+<div class="grid2 wide-left">
+<pre><code class="python" data-trim data-noescape>
+import cv2, glob
+
+aruco_dict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_5X5_100)
+board = cv2.aruco.CharucoBoard((7, 5),          # squares x, y
+                               0.040, 0.030,    # square, marker (m)
+                               aruco_dict)
+cv2.imwrite("board.png", board.generateImage((2100, 1500), marginSize=60))
+
+detector = cv2.aruco.CharucoDetector(board)
+all_obj, all_img = [], []
+for f in glob.glob("charuco/*.jpg"):
+    gray = cv2.imread(f, cv2.IMREAD_GRAYSCALE)
+    ch_corners, ch_ids, m_corners, m_ids = detector.detectBoard(gray)
+    if ch_ids is not None and len(ch_ids) >= 6:     # partial view is fine
+        obj, img = board.matchImagePoints(ch_corners, ch_ids)
+        all_obj.append(obj); all_img.append(img)
+
+rms, K, dist, rvecs, tvecs = cv2.calibrateCamera(
+    all_obj, all_img, gray.shape[::-1], None, None)
+</code></pre>
+<div class="card">
+<h3>Notes</h3>
+<ul class="tight">
+<li>The old <code>cv2.aruco.calibrateCameraCharuco</code> / <code>interpolateCornersCharuco</code> were removed in 4.7+. Use <code>CharucoDetector</code> + <code>matchImagePoints</code>.</li>
+<li>Measure both the square and marker size on the print.</li>
+<li>Pick a dictionary with few markers (e.g. 5×5_100) for better robustness.</li>
+<li>Lab 6E renders synthetic ChArUco views with a <b>known</b> camera, so you can check your calibration against the ground truth.</li>
+</ul>
+</div>
+</div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/05-charuco-and-fisheye.ipynb" style="right:24px; top:6px;" title="Open notebook 6E in Google Colab">&#9654;&#xFE0E; Lab 6E in Colab</a>
+</section>
+
+<section id="fisheye-calibration" class="slide level2" data-menu-title="Fisheye calibration">
+<h2>Fisheye lenses: <code>cv2.fisheye</code></h2>
+<img class="fig full" src="assets/06_camera_calibration/g_fisheye.jpg" alt="A fisheye view of a road scene and two undistorted versions" style="max-height:330px;">
+<div class="grid2 wide-left" style="margin-top:0.4em;">
+<pre><code class="python" data-trim data-noescape>
+# per view: objpoints (1,N,3) float64, imgpoints (1,N,2) float64
+# OpenCV 5: cv2.CALIB_*   (OpenCV 4: cv2.fisheye.CALIB_*)
+flags = cv2.CALIB_RECOMPUTE_EXTRINSIC | cv2.CALIB_FIX_SKEW
+rms, K, D, rvecs, tvecs = cv2.fisheye.calibrate(
+    objpoints, imgpoints, (w, h), None, None, flags=flags)   # D = [k1..k4]
+
+newK = cv2.fisheye.estimateNewCameraMatrixForUndistortRectify(
+    K, D, (w, h), np.eye(3), balance=0.0)                    # 0 crop … 1 keep all
+m1, m2 = cv2.fisheye.initUndistortRectifyMap(K, D, np.eye(3), newK, (w, h), cv2.CV_16SC2)
+und = cv2.remap(img, m1, m2, cv2.INTER_LINEAR)
+</code></pre>
+<ul class="tight small">
+<li>The whole 180° view <b>cannot</b> fit into one pinhole image: choose a narrower <b>newK</b> (middle) or accept stretched edges (right)</li>
+<li>Points must be float64, shape <b>(1, N, 3)</b>: OpenCV 5 rejects the old (N, 1, 3). The #1 fisheye error</li>
+<li>Very wide (&gt; 200°) or mirror cameras: <code>cv2.omnidir</code> (contrib)</li>
+</ul>
+</div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/05-charuco-and-fisheye.ipynb" style="right:24px; top:6px;" title="Open notebook 6E in Google Colab">&#9654;&#xFE0E; Lab 6E in Colab</a>
+</section>
+
+<section id="stereo-calibration" class="slide level2" data-menu-title="Stereo calibration">
+<h2>Stereo calibration: two cameras, one rig</h2>
+<div class="grid2 wide-left">
+<div><img class="fig h600" src="assets/06_camera_calibration/g_stereo_rect.jpg" alt="Raw and rectified stereo pairs with horizontal guide lines"></div>
+<div>
+<ol class="tight small">
+<li>Capture the board with <b>both cameras at the same moment</b> (hardware sync or a still board)</li>
+<li>Calibrate each camera → K<sub>1</sub>, D<sub>1</sub>, K<sub>2</sub>, D<sub>2</sub></li>
+<li><code>stereoCalibrate</code> → <b>R, T</b> between the cameras (+ E, F)</li>
+<li><code>stereoRectify</code> → rotations that make epipolar lines <b>horizontal</b></li>
+<li><code>initUndistortRectifyMap</code> + <code>remap</code> per frame → disparity → depth</li>
+</ol>
+<p class="small">OpenCV's left/right sample pair: RMS 0.45 px, baseline <b>3.3 squares</b> along −x.</p>
+<p class="tiny muted">Depth from disparity, <i>Z = fB/d</i>, is Lecture 10. Datasets: <a href="https://www.kaggle.com/datasets/danielwe14/stereocamera-chessboard-pictures">Kaggle stereo chessboard pictures</a>.</p>
+</div>
+</div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/07-stereo-calibration.ipynb" style="right:24px; top:6px;" title="Open notebook 6G in Google Colab">&#9654;&#xFE0E; Lab 6G in Colab</a>
+</section>
+
+<section id="stereo-code" class="slide level2" data-menu-title="Stereo calibration: the code">
+<h2>Stereo calibration: the code</h2>
+<pre><code class="python" data-trim data-noescape>
+# objpoints, imgL, imgR: corners found in BOTH images of each pair
+_, K1, D1, _, _ = cv2.calibrateCamera(objpoints, imgL, size, None, None)
+_, K2, D2, _, _ = cv2.calibrateCamera(objpoints, imgR, size, None, None)
+
+rms, K1, D1, K2, D2, R, T, E, F = cv2.stereoCalibrate(
+    objpoints, imgL, imgR, K1, D1, K2, D2, size,
+    flags=cv2.CALIB_FIX_INTRINSIC)           # keep the mono results, solve only R, T
+print("stereo RMS", rms, "baseline", np.linalg.norm(T) * square_mm, "mm")
+
+R1, R2, P1, P2, Q, roi1, roi2 = cv2.stereoRectify(K1, D1, K2, D2, size, R, T, alpha=0)
+mapL = cv2.initUndistortRectifyMap(K1, D1, R1, P1, size, cv2.CV_16SC2)
+mapR = cv2.initUndistortRectifyMap(K2, D2, R2, P2, size, cv2.CV_16SC2)
+rectL = cv2.remap(left,  *mapL, cv2.INTER_LINEAR)
+rectR = cv2.remap(right, *mapR, cv2.INTER_LINEAR)       # now matching points share a row
+</code></pre>
+<div class="grid2">
+<p class="note">Two Raspberry Pi cameras on a bracket (or the Pi 5's two CSI ports) make a cheap stereo rig. Keep them <b>rigidly</b> mounted: any movement invalidates R, T. See <a href="https://medium.com/@erencanbulut/raspberry-pi-stereo-camera-calibration-a-step-by-step-guide-23cc62d06716">Raspberry Pi stereo camera calibration</a>.</p>
+<p class="warn">Check the rectified pair: draw horizontal lines. If the same corner is on different rows, the calibration or the synchronisation is off.</p>
+</div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/07-stereo-calibration.ipynb" style="right:24px; top:6px;" title="Open notebook 6G in Google Colab">&#9654;&#xFE0E; Lab 6G in Colab</a>
+</section>
+
+<section id="calibrate-your-own-camera" class="slide level2" data-menu-title="Calibrate your own camera">
+<h2>Challenge: calibrate your own camera</h2>
+<div class="grid2 wide-left">
+<div>
+<pre><code class="python" data-trim data-noescape>
+# capture_calib.py  (Lab 6H): Pi camera or USB webcam
+from picamera2 import Picamera2           # USB: cv2.VideoCapture(0)
+import cv2, time, os
+
+picam2 = Picamera2()
+picam2.configure(picam2.create_still_configuration(
+    main={"size": (1920, 1080), "format": "RGB888"}))
+picam2.start()
+picam2.set_controls({"AfMode": 0, "LensPosition": 0.0})  # Module 3: lock focus
+
+os.makedirs("calib_images", exist_ok=True)
+for i in range(25):
+    time.sleep(3)                           # move the board, hold still
+    frame = picam2.capture_array()
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    ok, _ = cv2.findChessboardCorners(gray, (9, 6),
+                cv2.CALIB_CB_FAST_CHECK)
+    cv2.imwrite(f"calib_images/img_{i:02d}.jpg", frame)
+    print(i, "board found" if ok else "NO board: move it")
+</code></pre>
+</div>
+<div class="card">
+<h3>Recipe</h3>
+<ol class="tight">
+<li>Print a 9 × 6 board (<a href="https://github.com/opencv/opencv/blob/4.x/doc/pattern.png">pattern.png</a>), stick it to a flat board, measure a square</li>
+<li>Take 20–30 pictures over the <b>whole field of view</b>, especially near the edges</li>
+<li>Run <code>calibrate.py --board 9x6 --square 24.5</code> → <code>camera.yaml</code></li>
+<li>Check RMS &lt; 0.5–1 px and that straight lines are straight</li>
+<li>Commit <code>camera.yaml</code> next to your project code</li>
+</ol>
+<p class="tiny muted" style="margin-top:0.2em; font-size:0.45em;">Based on <a href="https://github.com/Petros626/Camera-Calibration-with-PiCamera2-OpenCV">Petros626/Camera-Calibration-with-PiCamera2-OpenCV</a>, <a href="https://github.com/niconielsen32/camera-calibration">niconielsen32/camera-calibration</a>, <a href="https://github.com/nuwandda/Checkerboard-Calibration">nuwandda/Checkerboard-Calibration</a>, <a href="https://github.com/ibois-epfl/rgb-camera-calibration">ibois-epfl/rgb-camera-calibration</a>.</p>
+</div>
+</div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/08-calibrate-your-camera.ipynb" style="right:24px; top:6px;" title="Open notebook 6H in Google Colab">&#9654;&#xFE0E; Lab 6H in Colab</a>
+</section>
+
+<section id="calibration-tools" class="slide level2" data-menu-title="Calibration tools">
+<h2>Calibration tools in the wild</h2>
+<table class="simple">
+<tr><th>Tool</th><th>Best for</th><th>Notes</th></tr>
+<tr><td><b>OpenCV calib3d</b> (<code>cv2.calibrateCamera</code>, <code>fisheye</code>, <code>stereoCalibrate</code>, <code>aruco</code>)</td><td>everything in this course</td><td><a href="https://docs.opencv.org/4.5.4/d9/d0c/group__calib3d.html">calib3d reference</a>: models, flags, functions</td></tr>
+<tr><td>OpenCV <code>interactive-calibration</code> app</td><td>guided live calibration</td><td>suggests the next pose, shows per-parameter uncertainty</td></tr>
+<tr><td><b>ROS 2</b> <code>camera_calibration</code></td><td>robots, mono/stereo, fisheye, ChArUco</td><td>X/Y/Size/Skew bars → <code>camera_info</code> YAML</td></tr>
+<tr><td>MATLAB Camera Calibrator / Stereo Camera Calibrator</td><td>teaching, quick visual checks</td><td>error plots and 3-D pose views</td></tr>
+<tr><td><b>Kalibr</b> (ETH Zürich)</td><td>multi-camera + IMU, rolling shutter</td><td>AprilGrid targets; the standard for VIO / SLAM rigs</td></tr>
+<tr><td>calib.io camera calibrator, <b>mrcal</b> (NASA JPL)</td><td>high-accuracy industrial / metrology</td><td>richer lens models, uncertainty maps</td></tr>
+</table>
+<p class="small" style="margin-top:0.5em;">Whatever the tool, the inputs and outputs are the same: <b>known 3-D target points + detected 2-D corners → K, distortion, poses, reprojection error</b>.</p>
+</section>
+
 <!-- ============================ WRAP-UP ============================ -->
 <section id="watch-and-learn" class="slide level2" data-menu-title="Watch and learn">
 <h2>Watch &amp; learn: recommended videos</h2>
@@ -1922,7 +2246,7 @@ python3 aruco_pose_test.py --size 200 --id 72 \
 <h2>Lab 6: all notebooks (click to open in Colab)</h2>
 <div class="labgrid"><a class="" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/01-pinhole-and-distortion.ipynb"><b>6A</b>Pinhole projection &amp; distortion</a><a class="" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/02-finding-corners.ipynb"><b>6B</b>Finding chessboard corners</a><a class="" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/03-calibrate-and-undistort.ipynb"><b>6C</b>Calibrate &amp; undistort (GoPro)</a><a class="" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/04-road-camera-birdseye.ipynb"><b>6D</b>Road camera: bird's-eye &amp; curvature</a><a class="" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/05-charuco-and-fisheye.ipynb"><b>6E</b>ChArUco &amp; fisheye (known truth)</a><a class="" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/06-bug-hunt.ipynb"><b>6F</b>Bug hunt 🐞 (pairs)</a><a class="" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/07-stereo-calibration.ipynb"><b>6G</b>Stereo calibration &amp; rectification</a><a class="" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/08-calibrate-your-camera.ipynb"><b>6H</b>Calibrate your own Pi / USB camera</a><a class="vid" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/09-pi-camera-in-15-minutes.ipynb"><b>6I</b>🎬 Pi camera in 15 minutes</a><a class="vid" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/10-nicolai-get-images-and-calibrate.ipynb"><b>6J</b>🎬 Get images → calibrate (Nicolai)</a><a class="vid" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/11-kevin-wood-calibration-app.ipynb"><b>6K</b>🎬 Calibration explained (Kevin Wood)</a><a class="vid" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/12-charuco-webcam-pipeline.ipynb"><b>6L</b>🎬 ChArUco pipeline (Nicolai)</a><a class="vid" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/13-zhang-method-from-scratch.ipynb"><b>6M</b>🎬 Zhang from scratch (Cyrill)</a><a href="../labs.html#lab-6-calibration"><b>📋</b>Labs page: Colab · View · Download for every notebook</a></div>
 <div class="grid2" style="margin-top:0.6em;">
-<p class="tiny muted">Scripts: <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/pi_calibrate_20.py">pi_calibrate_20.py</a> · <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/aruco_pose_test.py">aruco_pose_test.py</a> · <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/capture_calib.py">capture_calib.py</a> · <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/calibrate.py">calibrate.py</a> · <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/get_images.py">get_images.py</a> · <a href="https://github.com/Kazimbalti/intelligent-vision-systems/tree/main/LAB/Lab_6">all on GitHub</a> · <a href="../tutorials/08_camera_calibration_videos.html">video tutorials</a></p>
+<p class="tiny muted"><b><a href="06_webcam_calibration_studio.html">📷 Webcam Calibration Studio</a></b> (browser) · <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/webcam_calibration_studio.py">webcam_calibration_studio.py</a> (offline) · Scripts: <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/pi_calibrate_20.py">pi_calibrate_20.py</a> · <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/aruco_pose_test.py">aruco_pose_test.py</a> · <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/capture_calib.py">capture_calib.py</a> · <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/calibrate.py">calibrate.py</a> · <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_6/get_images.py">get_images.py</a> · <a href="https://github.com/Kazimbalti/intelligent-vision-systems/tree/main/LAB/Lab_6">all on GitHub</a> · <a href="../tutorials/08_camera_calibration_videos.html">video tutorials</a></p>
 <p class="tiny muted">Reading: <a href="https://docs.opencv.org/4.5.4/d9/d0c/group__calib3d.html">OpenCV calib3d</a> · <a href="https://docs.opencv.org/4.13.0/da/d13/tutorial_aruco_calibration.html">ArUco/ChArUco calibration</a> · <a href="https://docs.ros.org/en/rolling/p/camera_calibration/modules.html">ROS camera_calibration</a> · Zhang, TPAMI 2000 · Szeliski 2e §2.1, §11.1 · <a href="https://medium.com/@chaitalibh.cb/camera-calibration-with-checkerboard-54f93af742a0">Medium: checkerboard calibration</a> · <a href="https://github.com/udacity/CarND-Camera-Calibration">udacity/CarND-Camera-Calibration</a></p>
 </div>
 <p class="tiny muted" style="margin-top:0.3em;"><b>Credits.</b> Adapted and extended from the <i>Camera Calibration</i> lesson of the Udacity Self-Driving Car Engineer Nanodegree. Lesson illustrations and calibration images © Udacity, Inc. (MIT-licensed repositories); stereo sample images from OpenCV (Apache 2.0). Videos © their authors. Used here for teaching.</p>
@@ -2645,7 +2969,37 @@ python3 aruco_pose_test.py --size 200 --id 72 \
         el.addEventListener("keydown", function (e) { e.stopPropagation(); });
       });
     }
-    function init() { kcDemo(); pinDemo(); distDemo(); countDemo(); coverageDemo(); warpDemo(); lightbox(); guardInputs(); }
+
+    /* 8. Level 0 pixel explorer */
+    function pixelDemo() {
+      var cv = $("px-canvas"); if (!cv) return;
+      var ctx = cv.getContext("2d"), z = $("px-zoom").getContext("2d"), img = new Image(), data = null;
+      img.onload = function () {
+        ctx.drawImage(img, 0, 0, 800, 450);
+        var off = document.createElement("canvas"); off.width = 1280; off.height = 720;
+        var o = off.getContext("2d"); o.drawImage(img, 0, 0);
+        try { data = o.getImageData(0, 0, 1280, 720); } catch (e) { $("px-uv").textContent = "open from the website"; }
+      };
+      img.src = "assets/06_camera_calibration/calibration_test.png";
+      cv.addEventListener("mousemove", function (e) {
+        if (!data) return;
+        var r = cv.getBoundingClientRect(), u = Math.floor((e.clientX - r.left) / r.width * 1280), v = Math.floor((e.clientY - r.top) / r.height * 720);
+        u = Math.max(0, Math.min(1279, u)); v = Math.max(0, Math.min(719, v));
+        var k = 4 * (v * 1280 + u), g = Math.round((data.data[k] * 77 + data.data[k + 1] * 150 + data.data[k + 2] * 29) / 256);
+        $("px-uv").textContent = "(" + u + ", " + v + ")"; $("px-val").textContent = g;
+        z.imageSmoothingEnabled = false; z.clearRect(0, 0, 300, 300);
+        for (var dy = -7; dy <= 7; dy++) for (var dx = -7; dx <= 7; dx++) {
+          var uu = Math.max(0, Math.min(1279, u + dx)), vv = Math.max(0, Math.min(719, v + dy)), q = 4 * (vv * 1280 + uu);
+          z.fillStyle = "rgb(" + data.data[q] + "," + data.data[q + 1] + "," + data.data[q + 2] + ")"; z.fillRect((dx + 7) * 20, (dy + 7) * 20, 20, 20);
+        }
+        z.strokeStyle = "#ea580c"; z.lineWidth = 3; z.strokeRect(140, 140, 20, 20);
+        ctx.drawImage(img, 0, 0, 800, 450);
+        ctx.strokeStyle = "#ea580c"; ctx.lineWidth = 2; ctx.beginPath();
+        var x = u / 1280 * 800, y = v / 720 * 450; ctx.moveTo(x, 0); ctx.lineTo(x, 450); ctx.moveTo(0, y); ctx.lineTo(800, y); ctx.stroke();
+        ctx.fillStyle = "rgba(15,23,32,.75)"; ctx.fillRect(4, 4, 150, 26); ctx.fillStyle = "#fff"; ctx.font = "bold 16px sans-serif"; ctx.fillText("u →   v ↓   (0,0)", 10, 23);
+      });
+    }
+    function init() { pixelDemo(); kcDemo(); pinDemo(); distDemo(); countDemo(); coverageDemo(); warpDemo(); lightbox(); guardInputs(); }
     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init); else init();
   })();
   </script>
