@@ -328,6 +328,12 @@
   .reveal .grid4 img.fig { width: 100%; object-fit: contain; }
 
   /* Lecture 7 additions */
+  /* ---- paper title + abstract slides ---- */
+  .reveal .paper-title { font-size: 0.8em; font-weight: 800; color: var(--navy); line-height: 1.2; margin: 0 0 0.15em; }
+  .reveal .paper-meta { font-size: 0.52em; color: var(--muted); margin: 0 0 0.45em; line-height: 1.35; }
+  .reveal .paperbtns { display: flex; gap: 0.35em; flex-wrap: wrap; margin-top: 0.45em; }
+  .reveal .paperbtns a.lab-link { position: static; display: inline-block; }
+  .reveal img.abstract { border: 1px solid #d8e0ea; border-radius: 6px; box-shadow: 0 6px 18px rgba(0,0,0,0.12); background: #fff; padding: 6px; box-sizing: border-box; max-width: 100%; }
   /* ---- step-by-step rows (one fragment per step; same steps as the XMind mind map) ---- */
   .reveal .stepper { display: flex; flex-direction: column; gap: 0.22em; margin-top: 0.25em; }
   .reveal .stepper .row { display: grid; grid-template-columns: 1.9em 10.8em minmax(0, 1fr) 12.5em; align-items: center;
@@ -1111,6 +1117,42 @@ for n, l in net.named_children():
 <p class="sec-sub"><b>Level 4</b> · Vaswani et al., NeurIPS 2017 · attention, multi-head, positions, the full Transformer · Labs 7B &amp; 7C</p>
 </section>
 
+<section id="transformer-paper" class="slide level2" data-menu-title="Transformer: title &amp; abstract">
+<p class="kicker">Level 4 · paper 1 · title &amp; abstract</p>
+<h2>Transformer: the paper</h2>
+<div class="grid2" style="grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);">
+<div>
+<p class="paper-title">Attention Is All You Need</p>
+<p class="paper-meta">A. Vaswani, N. Shazeer, N. Parmar, J. Uszkoreit, L. Jones, A. N. Gomez, Ł. Kaiser, I. Polosukhin<br><b>NeurIPS 2017</b> · arXiv:1706.03762</p>
+<div class="stepper narrow" style="font-size:0.95em;">
+<div class="row fragment" style="--c:#dc2626;"><div class="num">?</div><div class="name"><b>Problem</b><small>what was wrong before</small></div><div class="chips"><span><i>1</i>RNNs read one word at a time</span><span><i>2</i>slow to train, forget long-range context</span></div></div>
+<div class="row fragment" style="--c:#2563eb;"><div class="num">💡</div><div class="name"><b>Key idea</b><small>the one new thing</small></div><div class="chips"><span><i>1</i>attention only: no recurrence, no convolution</span><span><i>2</i>every word looks at every word, in parallel</span></div></div>
+<div class="row fragment" style="--c:#1f7a4d;"><div class="num">✓</div><div class="name"><b>Result</b><small>the evidence</small></div><div class="chips"><span><i>1</i>28.4 BLEU English → German</span><span><i>2</i>41.8 BLEU English → French</span><span><i>3</i>3.5 days on 8 GPUs</span></div></div>
+</div>
+<div class="paperbtns"><a class="lab-link" href="https://arxiv.org/abs/1706.03762">📄 Read on arXiv</a><a class="lab-link" href="https://arxiv.org/pdf/1706.03762">⬇ Download PDF</a><a class="lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/02-attention-from-scratch.ipynb" style="background:#1f7a4d;">▶ Lab 7B in Colab</a></div>
+</div>
+<div><img class="fig abstract" src="assets/07_paper_implementation/pa_transformer.png" alt="Abstract of Transformer" style="max-height:640px;">
+<p class="cap">The abstract, exactly as published (arXiv version). Read it first: pass 1 of the three-pass method.</p></div>
+</div>
+</section>
+
+<section id="transformer-workflow" class="slide level2" data-menu-title="Transformer: the whole workflow">
+<p class="kicker">Level 4 · paper 1 · the whole workflow · Figure 1</p>
+<h2>Transformer: the whole workflow</h2>
+<div class="grid2" style="grid-template-columns:minmax(0,0.75fr) minmax(0,1fr);">
+<div><img class="fig" src="assets/07_paper_implementation/p_transformer_fig1.png" alt="Figure 1: the Transformer" style="max-height:600px;">
+<p class="plain" style="margin-top:0.35em;"><b>Analogy:</b> the encoder reads the whole sentence at once; the decoder writes one word at a time, looking back at the encoder.</p></div>
+<div class="stepper narrow" style="font-size:0.94em;">
+<div class="row fragment" style="--c:#2563eb;"><div class="num">1</div><div class="name"><b>Embed the tokens</b><small>words → vectors</small></div><div class="chips"><span><i>1</i>Embedding × √d_model</span><span><i>2</i>+ sin / cos positional encoding</span></div></div>
+<div class="row fragment" style="--c:#7c3aed;"><div class="num">2</div><div class="name"><b>Encoder × 6 (left)</b><small>read the input</small></div><div class="chips"><span><i>1</i>multi-head self-attention</span><span><i>2</i>Add &amp; Norm</span><span><i>3</i>feed-forward 512 → 2048 → 512</span></div></div>
+<div class="row fragment" style="--c:#0891b2;"><div class="num">3</div><div class="name"><b>Decoder × 6 (right)</b><small>write the output</small></div><div class="chips"><span><i>1</i>masked self-attention</span><span><i>2</i>cross-attention to the encoder</span><span><i>3</i>feed-forward</span></div></div>
+<div class="row fragment" style="--c:#dc2626;"><div class="num">4</div><div class="name"><b>Output</b><small>next-word probabilities</small></div><div class="chips"><span><i>1</i>Linear → vocabulary</span><span><i>2</i>Softmax</span></div></div>
+<div class="row fragment" style="--c:#b45309;"><div class="num">5</div><div class="name"><b>Train</b><small>teacher forcing</small></div><div class="chips"><span><i>1</i>targets shifted right</span><span><i>2</i>cross-entropy</span><span><i>3</i>Adam + warm-up</span></div></div>
+</div>
+</div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/02-attention-from-scratch.ipynb" style="right:24px; top:6px;">&#9654;&#xFE0E; Lab 7B in Colab</a>
+</section>
+
 <section id="why-attention" class="slide level2" data-menu-title="Why attention? The problem with RNNs">
 <p class="kicker">Level 4 · step 1 · the problem</p>
 <h2>Why attention? RNNs are slow and forgetful</h2>
@@ -1383,6 +1425,25 @@ tgt_out :  4   8  2  5  9  1  7  3 EOS
 <p class="sec-sub"><b>Level 5</b> · Ronneberger, Fischer &amp; Brox, MICCAI 2015 · segmentation from very little data · Lab 7D</p>
 </section>
 
+<section id="unet-paper" class="slide level2" data-menu-title="U-Net: title &amp; abstract">
+<p class="kicker">Level 5 · paper 2 · title &amp; abstract</p>
+<h2>U-Net: the paper</h2>
+<div class="grid2" style="grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);">
+<div>
+<p class="paper-title">U-Net: Convolutional Networks for Biomedical Image Segmentation</p>
+<p class="paper-meta">O. Ronneberger, P. Fischer, T. Brox · University of Freiburg<br><b>MICCAI 2015</b> · arXiv:1505.04597</p>
+<div class="stepper narrow" style="font-size:0.95em;">
+<div class="row fragment" style="--c:#dc2626;"><div class="num">?</div><div class="name"><b>Problem</b><small>what was wrong before</small></div><div class="chips"><span><i>1</i>few annotated medical images</span><span><i>2</i>sliding-window networks are slow</span></div></div>
+<div class="row fragment" style="--c:#2563eb;"><div class="num">💡</div><div class="name"><b>Key idea</b><small>the one new thing</small></div><div class="chips"><span><i>1</i>U-shape: contracting + expanding path</span><span><i>2</i>skip connections</span><span><i>3</i>strong data augmentation</span></div></div>
+<div class="row fragment" style="--c:#1f7a4d;"><div class="num">✓</div><div class="name"><b>Result</b><small>the evidence</small></div><div class="chips"><span><i>1</i>won ISBI cell tracking 2015</span><span><i>2</i>best on ISBI EM segmentation</span><span><i>3</i>&lt; 1 s per 512 × 512 image</span></div></div>
+</div>
+<div class="paperbtns"><a class="lab-link" href="https://arxiv.org/abs/1505.04597">📄 Read on arXiv</a><a class="lab-link" href="https://arxiv.org/pdf/1505.04597">⬇ Download PDF</a><a class="lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/04-unet-from-paper.ipynb" style="background:#1f7a4d;">▶ Lab 7D in Colab</a></div>
+</div>
+<div><img class="fig abstract" src="assets/07_paper_implementation/pa_unet.png" alt="Abstract of U-Net" style="max-height:640px;">
+<p class="cap">The abstract, exactly as published (arXiv version). Read it first: pass 1 of the three-pass method.</p></div>
+</div>
+</section>
+
 <section id="unet-figure-1" class="slide level2" data-menu-title="U-Net: Figure 1 is the paper">
 <p class="kicker">Level 5 · step 1 · Figure 1</p>
 <h2>U-Net: the figure <i>is</i> the paper</h2>
@@ -1518,6 +1579,43 @@ class UNetPaper(nn.Module):
 <p class="sec-sub"><b>Level 6</b> · He, Zhang, Ren &amp; Sun, CVPR 2016 (Best Paper) · why deeper was worse, and the fix · Lab 7E</p>
 </section>
 
+<section id="resnet-paper" class="slide level2" data-menu-title="ResNet: title &amp; abstract">
+<p class="kicker">Level 6 · paper 3 · title &amp; abstract</p>
+<h2>ResNet: the paper</h2>
+<div class="grid2" style="grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);">
+<div>
+<p class="paper-title">Deep Residual Learning for Image Recognition</p>
+<p class="paper-meta">K. He, X. Zhang, S. Ren, J. Sun · Microsoft Research<br><b>CVPR 2016 · Best Paper Award</b> · arXiv:1512.03385</p>
+<div class="stepper narrow" style="font-size:0.95em;">
+<div class="row fragment" style="--c:#dc2626;"><div class="num">?</div><div class="name"><b>Problem</b><small>what was wrong before</small></div><div class="chips"><span><i>1</i>deeper plain networks train worse</span><span><i>2</i>not overfitting: training error rises too</span></div></div>
+<div class="row fragment" style="--c:#2563eb;"><div class="num">💡</div><div class="name"><b>Key idea</b><small>the one new thing</small></div><div class="chips"><span><i>1</i>learn the residual F(x) = H(x) − x</span><span><i>2</i>add x back: y = F(x) + x</span></div></div>
+<div class="row fragment" style="--c:#1f7a4d;"><div class="num">✓</div><div class="name"><b>Result</b><small>the evidence</small></div><div class="chips"><span><i>1</i>152 layers, 8 × deeper than VGG</span><span><i>2</i>3.57 % ImageNet error</span><span><i>3</i>1st place ILSVRC 2015</span></div></div>
+</div>
+<div class="paperbtns"><a class="lab-link" href="https://arxiv.org/abs/1512.03385">📄 Read on arXiv</a><a class="lab-link" href="https://arxiv.org/pdf/1512.03385">⬇ Download PDF</a><a class="lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/05-resnet-from-paper.ipynb" style="background:#1f7a4d;">▶ Lab 7E in Colab</a></div>
+</div>
+<div><img class="fig abstract" src="assets/07_paper_implementation/pa_resnet.png" alt="Abstract of ResNet" style="max-height:640px;">
+<p class="cap">The abstract, exactly as published (arXiv version). Read it first: pass 1 of the three-pass method.</p></div>
+</div>
+</section>
+
+<section id="resnet-workflow" class="slide level2" data-menu-title="ResNet: the whole workflow">
+<p class="kicker">Level 6 · paper 3 · the whole workflow · Figures 2 and 5, Table 1</p>
+<h2>ResNet: the whole workflow</h2>
+<div class="grid2" style="grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);">
+<div><img class="fig" src="assets/07_paper_implementation/p_resnet_fig2.png" alt="Figure 2: residual block" style="max-height:250px;">
+<img class="fig" src="assets/07_paper_implementation/pc_r_fig5.png" alt="Figure 5: basic and bottleneck blocks" style="max-height:250px;">
+<p class="plain" style="margin-top:0.35em;"><b>Analogy:</b> editing an essay is easier than rewriting it: each block adds a small correction to x.</p></div>
+<div class="stepper narrow" style="font-size:0.94em;">
+<div class="row fragment" style="--c:#2563eb;"><div class="num">1</div><div class="name"><b>Stem</b><small>a first, coarse look</small></div><div class="chips"><span><i>1</i>7×7 conv, 64, stride 2</span><span><i>2</i>3×3 max-pool, stride 2</span><span><i>3</i>224 → 56</span></div></div>
+<div class="row fragment" style="--c:#dc2626;"><div class="num">2</div><div class="name"><b>Residual block</b><small>learn the change</small></div><div class="chips"><span><i>1</i>conv → BN → ReLU → conv → BN = F(x)</span><span><i>2</i>y = F(x) + x, then ReLU</span></div></div>
+<div class="row fragment" style="--c:#7c3aed;"><div class="num">3</div><div class="name"><b>Four stages</b><small>conv2_x … conv5_x</small></div><div class="chips"><span><i>1</i>64 → 128 → 256 → 512 channels</span><span><i>2</i>first block: stride 2</span><span><i>3</i>projection shortcut when shapes change</span></div></div>
+<div class="row fragment" style="--c:#059669;"><div class="num">4</div><div class="name"><b>Head</b><small>one score per class</small></div><div class="chips"><span><i>1</i>global average pool</span><span><i>2</i>1000-way fully connected</span></div></div>
+<div class="row fragment" style="--c:#b45309;"><div class="num">5</div><div class="name"><b>Pick a depth</b><small>Table 1</small></div><div class="chips"><span><i>1</i>18 / 34: basic blocks</span><span><i>2</i>50 / 101 / 152: bottleneck 1×1-3×3-1×1</span></div></div>
+</div>
+</div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/05-resnet-from-paper.ipynb" style="right:24px; top:6px;">&#9654;&#xFE0E; Lab 7E in Colab</a>
+</section>
+
 <section id="resnet-degradation" class="slide level2" data-menu-title="ResNet: the degradation problem">
 <p class="kicker">Level 6 · step 1 · Figure 1</p>
 <h2>The surprise: deeper was <i>worse</i>, even in training</h2>
@@ -1615,6 +1713,42 @@ class UNetPaper(nn.Module):
 <p class="sec-num">7</p>
 <p class="sec-title">Paper 4: An Image is Worth 16×16 Words</p>
 <p class="sec-sub"><b>Level 7</b> · Dosovitskiy et al., ICLR 2021 · the Vision Transformer (ViT) · Lab 7F</p>
+</section>
+
+<section id="vit-paper" class="slide level2" data-menu-title="Vision Transformer: title &amp; abstract">
+<p class="kicker">Level 7 · paper 4 · title &amp; abstract</p>
+<h2>Vision Transformer: the paper</h2>
+<div class="grid2" style="grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);">
+<div>
+<p class="paper-title">An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale</p>
+<p class="paper-meta">A. Dosovitskiy, L. Beyer, A. Kolesnikov, D. Weissenborn, X. Zhai, T. Unterthiner, M. Dehghani, M. Minderer, G. Heigold, S. Gelly, J. Uszkoreit, N. Houlsby · Google Research, Brain Team<br><b>ICLR 2021</b> · arXiv:2010.11929</p>
+<div class="stepper narrow" style="font-size:0.95em;">
+<div class="row fragment" style="--c:#dc2626;"><div class="num">?</div><div class="name"><b>Problem</b><small>what was wrong before</small></div><div class="chips"><span><i>1</i>attention in vision still relied on CNNs</span><span><i>2</i>can a pure Transformer see?</span></div></div>
+<div class="row fragment" style="--c:#2563eb;"><div class="num">💡</div><div class="name"><b>Key idea</b><small>the one new thing</small></div><div class="chips"><span><i>1</i>cut the image into 16 × 16 patches</span><span><i>2</i>treat patches as words</span><span><i>3</i>reuse the Transformer encoder</span></div></div>
+<div class="row fragment" style="--c:#1f7a4d;"><div class="num">✓</div><div class="name"><b>Result</b><small>the evidence</small></div><div class="chips"><span><i>1</i>beats CNNs with large pre-training</span><span><i>2</i>88.55 % ImageNet (ViT-H/14, JFT-300M)</span><span><i>3</i>less compute to train</span></div></div>
+</div>
+<div class="paperbtns"><a class="lab-link" href="https://arxiv.org/abs/2010.11929">📄 Read on arXiv</a><a class="lab-link" href="https://arxiv.org/pdf/2010.11929">⬇ Download PDF</a><a class="lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/06-vit-from-paper.ipynb" style="background:#1f7a4d;">▶ Lab 7F in Colab</a></div>
+</div>
+<div><img class="fig abstract" src="assets/07_paper_implementation/pa_vit.png" alt="Abstract of Vision Transformer" style="max-height:640px;">
+<p class="cap">The abstract, exactly as published (arXiv version). Read it first: pass 1 of the three-pass method.</p></div>
+</div>
+</section>
+
+<section id="vit-workflow" class="slide level2" data-menu-title="Vision Transformer: the whole workflow">
+<p class="kicker">Level 7 · paper 4 · the whole workflow · Figure 1, Eq. 1–4</p>
+<h2>Vision Transformer: the whole workflow</h2>
+<div class="grid2" style="grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);">
+<div><img class="fig" src="assets/07_paper_implementation/p_vit_fig1.png" alt="Figure 1: ViT model overview" style="max-height:380px;">
+<p class="plain" style="margin-top:0.35em;"><b>Analogy:</b> an image becomes a sentence of 196 words; the [class] token reads the whole sentence and gives the answer.</p></div>
+<div class="stepper narrow" style="font-size:0.94em;">
+<div class="row fragment" style="--c:#2563eb;"><div class="num">1</div><div class="name"><b>Patches</b><small>image → words</small></div><div class="chips"><span><i>1</i>224 × 224 image</span><span><i>2</i>16 × 16 patches → 196</span><span><i>3</i>768 numbers each</span></div></div>
+<div class="row fragment" style="--c:#0891b2;"><div class="num">2</div><div class="name"><b>Linear projection E</b><small>Eq. 1</small></div><div class="chips"><span><i>1</i>Conv2d(3, 768, 16, stride 16)</span><span><i>2</i>= flatten · E</span></div></div>
+<div class="row fragment" style="--c:#7c3aed;"><div class="num">3</div><div class="name"><b>Add tokens and positions</b><small>Eq. 1</small></div><div class="chips"><span><i>1</i>+ [class] token → 197</span><span><i>2</i>+ learned position embeddings</span></div></div>
+<div class="row fragment" style="--c:#dc2626;"><div class="num">4</div><div class="name"><b>Encoder × 12</b><small>Eq. 2–3</small></div><div class="chips"><span><i>1</i>LN → multi-head attention → +</span><span><i>2</i>LN → MLP (GELU) → +</span></div></div>
+<div class="row fragment" style="--c:#059669;"><div class="num">5</div><div class="name"><b>Classify</b><small>Eq. 4</small></div><div class="chips"><span><i>1</i>take token 0</span><span><i>2</i>LN → Linear → 1000 classes</span></div></div>
+</div>
+</div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/06-vit-from-paper.ipynb" style="right:24px; top:6px;">&#9654;&#xFE0E; Lab 7F in Colab</a>
 </section>
 
 <section id="vit-figure-1" class="slide level2" data-menu-title="ViT: Figure 1 and Equations 1–4">
@@ -1760,6 +1894,43 @@ for name in ["resnet50", "vit_b_16"]:
 <p class="tryit"><b>🖐 Choose now (10 min):</b> pick one ★☆☆ paper, open it on alphaXiv, and fill in the pass-1 card. That is the first cell of your Lab 7H notebook.</p>
 </section>
 
+<section id="senet-paper" class="slide level2" data-menu-title="SE-Net: title &amp; abstract">
+<p class="kicker">Level 8 · paper 5 · Lab 7H worked example · title &amp; abstract</p>
+<h2>SE-Net: the paper</h2>
+<div class="grid2" style="grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);">
+<div>
+<p class="paper-title">Squeeze-and-Excitation Networks</p>
+<p class="paper-meta">J. Hu, L. Shen, S. Albanie, G. Sun, E. Wu<br><b>CVPR 2018 · TPAMI 2019</b> · arXiv:1709.01507</p>
+<div class="stepper narrow" style="font-size:0.95em;">
+<div class="row fragment" style="--c:#dc2626;"><div class="num">?</div><div class="name"><b>Problem</b><small>what was wrong before</small></div><div class="chips"><span><i>1</i>CNNs treat every channel the same</span><span><i>2</i>no notion of which channels matter</span></div></div>
+<div class="row fragment" style="--c:#2563eb;"><div class="num">💡</div><div class="name"><b>Key idea</b><small>the one new thing</small></div><div class="chips"><span><i>1</i>squeeze each channel to one number</span><span><i>2</i>a tiny MLP gives each channel a weight</span><span><i>3</i>rescale the channels</span></div></div>
+<div class="row fragment" style="--c:#1f7a4d;"><div class="num">✓</div><div class="name"><b>Result</b><small>the evidence</small></div><div class="chips"><span><i>1</i>1st place ILSVRC 2017</span><span><i>2</i>top-5 error 2.251 %</span><span><i>3</i>≈ 25 % better than the 2016 winner</span></div></div>
+</div>
+<div class="paperbtns"><a class="lab-link" href="https://arxiv.org/abs/1709.01507">📄 Read on arXiv</a><a class="lab-link" href="https://arxiv.org/pdf/1709.01507">⬇ Download PDF</a><a class="lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/08-implement-your-own-paper.ipynb" style="background:#1f7a4d;">▶ Lab 7H in Colab</a></div>
+</div>
+<div><div class="abstract" style="font-family:Georgia, Times New Roman, serif; font-size:0.5em; line-height:1.45; text-align:justify; border:1px solid #d8e0ea; border-radius:6px; box-shadow:0 6px 18px rgba(0,0,0,0.12); background:#fff; padding:0.7em 0.9em;"><b>Abstract</b>—The central building block of convolutional neural networks (CNNs) is the convolution operator, which enables networks to construct informative features by fusing both spatial and channel-wise information within local receptive fields at each layer. A broad range of prior research has investigated the spatial component of this relationship, seeking to strengthen the representational power of a CNN by enhancing the quality of spatial encodings throughout its feature hierarchy. In this work, we focus instead on the channel relationship and propose a novel architectural unit, which we term the “Squeeze-and-Excitation” (SE) block, that adaptively recalibrates channel-wise feature responses by explicitly modelling interdependencies between channels. We show that these blocks can be stacked together to form SENet architectures that generalise extremely effectively across different datasets. We further demonstrate that SE blocks bring significant improvements in performance for existing state-of-the-art CNNs at slight additional computational cost. Squeeze-and-Excitation Networks formed the foundation of our ILSVRC 2017 classification submission which won first place and reduced the top-5 error to 2.251%, surpassing the winning entry of 2016 by a relative improvement of ∼25%. Models and code are available at https://github.com/hujie-frank/SENet.</div>
+<p class="cap">The abstract, exactly as published (arXiv version). Read it first: pass 1 of the three-pass method.</p></div>
+</div>
+</section>
+
+<section id="senet-workflow" class="slide level2" data-menu-title="SE-Net: the whole workflow">
+<p class="kicker">Level 8 · paper 5 · Lab 7H worked example · the whole workflow · Figures 1 and 3</p>
+<h2>SE-Net: the whole workflow</h2>
+<div class="grid2" style="grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);">
+<div><img class="fig" src="assets/07_paper_implementation/pc_s_fig1.png" alt="Figure 1: the SE block" style="max-height:200px;">
+<img class="fig" src="assets/07_paper_implementation/pc_s_fig3.png" alt="Figure 3: the SE-ResNet module" style="max-height:330px;">
+<p class="plain" style="margin-top:0.35em;"><b>Analogy:</b> a sound mixer: listen to every channel, then turn the useful ones up and the noisy ones down.</p></div>
+<div class="stepper narrow" style="font-size:0.94em;">
+<div class="row fragment" style="--c:#2563eb;"><div class="num">1</div><div class="name"><b>Input feature map</b><small>from any conv block</small></div><div class="chips"><span><i>1</i>U: (B, C, H, W)</span></div></div>
+<div class="row fragment" style="--c:#0891b2;"><div class="num">2</div><div class="name"><b>Squeeze</b><small>Eq. 2</small></div><div class="chips"><span><i>1</i>global average pool</span><span><i>2</i>(B, C, H, W) → (B, C)</span></div></div>
+<div class="row fragment" style="--c:#7c3aed;"><div class="num">3</div><div class="name"><b>Excitation</b><small>Eq. 3</small></div><div class="chips"><span><i>1</i>FC C → C/16, ReLU</span><span><i>2</i>FC C/16 → C, sigmoid</span></div></div>
+<div class="row fragment" style="--c:#dc2626;"><div class="num">4</div><div class="name"><b>Scale</b><small>Eq. 4</small></div><div class="chips"><span><i>1</i>channel c × weight s_c</span><span><i>2</i>same shape as the input</span></div></div>
+<div class="row fragment" style="--c:#b45309;"><div class="num">5</div><div class="name"><b>Plug into ResNet</b><small>Figure 3</small></div><div class="chips"><span><i>1</i>on the residual branch, before the +</span><span><i>2</i>≈ 10 % more parameters</span></div></div>
+</div>
+</div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/08-implement-your-own-paper.ipynb" style="right:24px; top:6px;">&#9654;&#xFE0E; Lab 7H in Colab</a>
+</section>
+
 <section id="bug-hunt" class="slide level2" data-menu-title="Bug hunt (Lab 7G)">
 <p class="kicker">Level 8 · step 2 · Lab 7G, in pairs</p>
 <h2>Bug hunt 🐞: eight bugs that do <i>not</i> crash</h2>
@@ -1783,6 +1954,55 @@ for name in ["resnet50", "vit_b_16"]:
 <a class="lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/07-paper-bug-hunt.ipynb" style="position:static; display:inline-block; margin-top:0.4em;">&#9654;&#xFE0E; Lab 7G in Colab</a>
 </div>
 </div>
+</section>
+
+<section id="assignment-brief" class="slide level2" data-menu-title="Assignment: the brief">
+<p class="kicker">Level 8 · assignment · individual · 2 weeks</p>
+<h2>Assignment: one new paper, from PDF to evidence</h2>
+<p class="small" style="margin:0 0 0.2em;"><b>Task:</b> implement one paper <b>we did not build in the labs</b> (★☆☆ or ★★☆ from the paper menu, or your own with approval), test it, and check whether its <b>main claim</b> holds at small scale.</p>
+<div class="stepper">
+<div class="row fragment" style="--c:#2563eb;"><div class="num">1</div><div class="name"><b>Choose</b><small>days 1–2</small></div><div class="chips"><span><i>1</i>one paper from the menu</span><span><i>2</i>e.g. MobileNetV2, VGG + BatchNorm, YOLO v1, DCGAN, CLIP</span><span><i>3</i>tell your instructor</span></div><div class="done">Done when: the paper is approved</div></div>
+<div class="row fragment" style="--c:#0891b2;"><div class="num">2</div><div class="name"><b>Read</b><small>days 2–3</small></div><div class="chips"><span><i>1</i>pass 1 + pass 2</span><span><i>2</i>paper card</span><span><i>3</i>shape table</span><span><i>4</i>key equations</span></div><div class="done">Done when: card + shape table in your notebook</div></div>
+<div class="row fragment" style="--c:#dc2626;"><div class="num">3</div><div class="name"><b>Build &amp; test</b><small>days 4–8</small></div><div class="chips"><span><i>1</i>one class per box</span><span><i>2</i>shape tests</span><span><i>3</i>hand example</span><span><i>4</i>parameter count vs paper</span><span><i>5</i>overfit one batch</span></div><div class="done">Done when: every test passes</div></div>
+<div class="row fragment" style="--c:#059669;"><div class="num">4</div><div class="name"><b>Experiment</b><small>days 9–12</small></div><div class="chips"><span><i>1</i>small data, Colab CPU / T4</span><span><i>2</i>test the main claim</span><span><i>3</i>one ablation</span><span><i>4</i>3 seeds, mean ± std</span></div><div class="done">Done when: a results table + plot</div></div>
+<div class="row fragment" style="--c:#b45309;"><div class="num">5</div><div class="name"><b>Report &amp; viva</b><small>days 13–14</small></div><div class="chips"><span><i>1</i>2-page reproduction report</span><span><i>2</i>AI-use declaration</span><span><i>3</i>3-minute viva</span></div><div class="done">Done when: submitted on time</div></div>
+</div>
+<p class="stepper-hint">Start from the template: <a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/08-implement-your-own-paper.ipynb">Lab 7H in Colab</a> (it walks through SE-Net exactly like this) · due 2 weeks after Lecture 7</p>
+</section>
+
+<section id="assignment-handin" class="slide level2" data-menu-title="Assignment: hand-in and marking">
+<p class="kicker">Level 8 · assignment · what to hand in, how it is marked</p>
+<h2>Assignment: hand-in, marks and a top-grade example</h2>
+<div class="grid2" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);">
+<div>
+<div class="card" style="font-size:0.84em;"><h3>Hand in (one GitHub repo link)</h3>
+<ul class="tight">
+<li><code>model.py</code>: your classes, citing the equations</li>
+<li><code>test_model.py</code>: shape, hand-example, parameter tests</li>
+<li><code>paper.ipynb</code>: card → tests → experiment, runs in Colab</li>
+<li><code>report.pdf</code>: 2 pages, results next to the paper's</li>
+</ul></div>
+<table class="simple" style="margin-top:0.4em; font-size:0.56em;">
+<tr><th>Marks</th><th class="r">%</th></tr>
+<tr><td>Paper card, shape table, equations → code</td><td class="r">20</td></tr>
+<tr><td>Correct implementation (tests, params, overfit)</td><td class="r">30</td></tr>
+<tr><td>Experiment + ablation, 3 seeds</td><td class="r">25</td></tr>
+<tr><td>Honest report + AI-use declaration</td><td class="r">15</td></tr>
+<tr><td>Clean, commented code</td><td class="r">10</td></tr>
+</table>
+</div>
+<div>
+<div class="card" style="border-left-color:#1f7a4d; font-size:0.84em;"><h3>A top-grade example: MobileNetV2</h3>
+<ul class="tight">
+<li><b>Claim tested:</b> the <i>linear bottleneck</i> (no activation after the last 1×1 conv) helps accuracy.</li>
+<li><b>Tests:</b> output <code>(2, 1000)</code>; parameters <b>3 504 872</b> = <code>torchvision.models.mobilenet_v2()</code>; loss → 0 on one batch.</li>
+<li><b>Experiment:</b> width-0.5 model on CIFAR-10, 10 epochs, 3 seeds.</li>
+<li><b>Ablation:</b> add ReLU6 after the bottleneck and compare.</li>
+<li><b>Report:</b> the gap as mean ± std; if it is inside the noise, say so and compare with the paper's own ablation (Figure 6).</li>
+</ul></div>
+</div>
+</div>
+<p class="warn" style="margin-top:0.35em; font-size:0.6em;"><b>Rules:</b> 3-minute viva: explain any line (code you cannot explain scores 0). AI may explain and review (tutor mode), not write your model. Copying code from GitHub = 0. Honest "it did not reproduce" with a good explanation earns full marks.</p>
 </section>
 
 <section id="paper-challenge" class="slide level2" data-menu-title="The Paper Implementation Challenge">
