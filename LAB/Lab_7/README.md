@@ -18,6 +18,7 @@ and against PyTorch's own implementation. Every notebook runs on a **free Colab 
 | 7F | `06-vit-from-paper.ipynb` | Dosovitskiy et al. 2021 | Patchify, patch embedding = strided conv, [class] token, ViT-B/16 (86 567 656 params), tiny ViT on digits, ablations | test accuracy ≥ 90 % (we get 98.6 %) |
 | 7G | `07-paper-bug-hunt.ipynb` | all four | **Bug hunt (pairs):** 8 silent bugs from real code | scoreboard 8/8 |
 | 7H | `08-implement-your-own-paper.ipynb` | Hu et al. 2018 (SE-Net) + yours | The 7-step recipe on a worked example, then a blank template for **your** paper | — |
+| 7I | `09-paper-math-workbook.ipynb` | all five | 20 pencil-first exercises for the [Paper ↔ Code handbook](https://kazimbalti.github.io/intelligent-vision-systems/tutorials/10_paper_code_side_by_side.html): attention by hand, √d_k, PE, LayerNorm, U-Net sizes, ViT/ResNet counts | every answer = PyTorch's value |
 
 `lab7_checks.py` holds the ✅/💡 auto-checks and helpers (`trace_shapes`, `count_params`, `overfit_one_batch`,
 `make_shapes_dataset`, `load_digits_tensors`, `make_reverse_batch`). The notebooks download it automatically.

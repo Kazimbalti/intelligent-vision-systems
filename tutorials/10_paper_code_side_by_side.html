@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paper ↔ Code Handbook – Intelligent Vision Systems</title>
+<meta name="description" content="A 3-hour lab and tutorial handbook: Attention Is All You Need, the Transformer, U-Net, the Vision Transformer and ResNet, with every paper passage next to its PyTorch code and every equation derived step by step with small numbers.">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+<script>
+window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, chtml: { scale: 1.0 } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js"></script>
+<style>
+:root {
+  --navy: #28568a; --navy-d: #1c3f66; --ink: #1f2933; --muted: #5b6b7b; --line: #d8e0ea; --soft: #eef3f9;
+  --paper: #fbf8f1; --paper-line: #e7dfcc; --ok: #1f7a4d; --okbg: #effaf3; --warn: #b45309; --warnbg: #fff7e6;
+  --orange: #ea580c; --codebg: #0d1117;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: #f6f8fb; color: var(--ink); font: 16px/1.6 "Source Sans 3", "Segoe UI", system-ui, -apple-system, sans-serif; }
+a { color: var(--navy); }
+header.top { background: var(--navy-d); color: #fff; }
+header.top .bar { max-width: 1480px; margin: 0 auto; padding: 10px 24px; display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+header.top .brand { font-weight: 700; letter-spacing: .02em; color: #fff; text-decoration: none; }
+header.top nav a { color: #dbe7f5; text-decoration: none; margin-right: 14px; font-size: .93em; }
+header.top nav a:hover { color: #fff; text-decoration: underline; }
+.hero { background: linear-gradient(135deg, #28568a, #1c3f66); color: #fff; }
+.hero .in { max-width: 1480px; margin: 0 auto; padding: 34px 24px 30px; }
+.hero .kick { text-transform: uppercase; letter-spacing: .12em; font-weight: 700; font-size: .8em; color: #bcd3ee; margin: 0; }
+.hero h1 { margin: 6px 0 8px; font-size: 2.3em; line-height: 1.15; }
+.hero p { margin: 0; max-width: 980px; color: #e4eef9; font-size: 1.08em; }
+.chips { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+.chips a { background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.35); color: #fff; padding: 5px 13px; border-radius: 999px; text-decoration: none; font-weight: 600; font-size: .92em; }
+.chips a:hover { background: rgba(255,255,255,.25); }
+.layout { max-width: 1480px; margin: 0 auto; display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 28px; padding: 24px; }
+aside.toc { position: sticky; top: 16px; align-self: start; max-height: calc(100vh - 32px); overflow: auto; font-size: .9em; }
+aside.toc h4 { margin: 0 0 8px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; font-size: .78em; }
+aside.toc a { display: block; padding: 4px 10px; border-left: 3px solid transparent; color: var(--ink); text-decoration: none; }
+aside.toc a.l2 { padding-left: 22px; color: var(--muted); font-size: .95em; }
+aside.toc a:hover, aside.toc a.on { border-left-color: var(--navy); background: var(--soft); color: var(--navy); }
+main { min-width: 0; }
+section.part { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 26px 30px; margin-bottom: 26px; box-shadow: 0 1px 3px rgba(16,24,40,.04); }
+h2 { color: var(--navy); font-size: 1.75em; margin: 0 0 4px; line-height: 1.2; }
+h2 .num { display: inline-block; background: var(--navy); color: #fff; border-radius: 8px; padding: 0 10px; margin-right: 10px; font-size: .8em; vertical-align: 3px; }
+h3 { color: var(--navy-d); font-size: 1.25em; margin: 28px 0 10px; padding-top: 6px; border-top: 1px solid var(--line); }
+h3:first-of-type { border-top: 0; }
+.sub { color: var(--muted); margin: 0 0 16px; }
+.card-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 14px 0 6px; }
+.card-row div { background: var(--soft); border-radius: 10px; padding: 10px 14px; font-size: .93em; }
+.card-row b { display: block; color: var(--navy); font-size: .78em; text-transform: uppercase; letter-spacing: .06em; }
+/* side-by-side pairs */
+.pair-head { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.3fr); gap: 0; margin-top: 14px; font-weight: 700; font-size: .8em; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.pair-head div { padding: 0 4px 6px; }
+.pair { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.3fr); gap: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin: 0 0 14px; break-inside: avoid; }
+.pair .paper { background: var(--paper); border-right: 1px solid var(--paper-line); padding: 14px 18px; font-family: "Times New Roman", Georgia, serif; font-size: 1.04em; line-height: 1.5; }
+.pair .paper .ref { font-family: "Source Sans 3", "Segoe UI", sans-serif; font-size: .74em; font-weight: 700; color: #8a6d2f; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 6px; }
+.pair .paper q { quotes: "“" "”"; font-style: italic; }
+.pair .paper .plain { font-family: "Source Sans 3", "Segoe UI", sans-serif; font-size: .9em; color: var(--ink); background: #fff; border-left: 4px solid var(--ok); padding: 6px 10px; border-radius: 6px; margin-top: 10px; }
+.pair .code { background: var(--codebg); display: flex; flex-direction: column; min-width: 0; }
+.pair .code pre { margin: 0; padding: 14px 16px; overflow-x: auto; flex: 1; }
+.pair .code pre code { font: 13px/1.55 "Cascadia Code", Consolas, "SF Mono", monospace; background: transparent !important; padding: 0 !important; }
+.pair .code .shape { background: #161b22; color: #9ecbff; font: 12.5px/1.5 Consolas, monospace; padding: 8px 16px; border-top: 1px solid #30363d; }
+.pair .code .shape b { color: #ffa657; font-weight: 600; }
+/* derivations */
+.derive { background: #fff; border: 2px solid var(--navy); border-radius: 12px; margin: 16px 0; break-inside: avoid; }
+.derive > .t { background: var(--navy); color: #fff; font-weight: 700; padding: 8px 16px; border-radius: 9px 9px 0 0; }
+.derive ol { margin: 0; padding: 12px 22px 12px 44px; }
+.derive li { margin: 6px 0; }
+.derive li::marker { color: var(--navy); font-weight: 700; }
+.derive .res { background: var(--okbg); border-top: 1px solid #cfe9da; padding: 8px 16px; border-radius: 0 0 10px 10px; color: var(--ok); font-weight: 600; }
+table.num { border-collapse: collapse; margin: 6px 0; font-size: .95em; }
+table.num td, table.num th { border: 1px solid var(--line); padding: 3px 10px; text-align: center; }
+table.num th { background: var(--soft); color: var(--navy); }
+table.grid { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: .94em; }
+table.grid th { background: var(--navy); color: #fff; text-align: left; padding: 7px 10px; }
+table.grid td { border-bottom: 1px solid var(--line); padding: 7px 10px; vertical-align: top; }
+table.grid tr:nth-child(even) td { background: #f8fafc; }
+table.grid td.r, table.grid th.r { text-align: right; font-variant-numeric: tabular-nums; }
+/* practice + notes */
+.practice { background: var(--warnbg); border: 1px solid #f3d39b; border-left: 6px solid #f2a900; border-radius: 10px; padding: 10px 16px; margin: 14px 0; break-inside: avoid; }
+.practice > b:first-child { color: #9a6700; }
+.practice ol { margin: 6px 0; padding-left: 22px; }
+.practice details { margin: 4px 0 8px; }
+.practice summary { cursor: pointer; color: #9a6700; font-weight: 600; }
+.practice details div { background: #fff; border-radius: 8px; padding: 6px 12px; margin-top: 4px; }
+.note { background: #eef6ff; border-left: 6px solid #2a76dd; border-radius: 8px; padding: 8px 14px; margin: 12px 0; }
+.warn { background: #fff4ec; border-left: 6px solid var(--orange); border-radius: 8px; padding: 8px 14px; margin: 12px 0; }
+.btn { display: inline-block; background: var(--navy); color: #fff; text-decoration: none; padding: 6px 14px; border-radius: 8px; font-weight: 600; font-size: .92em; margin: 4px 6px 4px 0; }
+.btn.alt { background: #fff; color: var(--navy); border: 2px solid var(--navy); }
+.btn:hover { opacity: .9; }
+.plan td:first-child { white-space: nowrap; font-weight: 700; color: var(--navy); }
+.tag { display: inline-block; font-size: .75em; font-weight: 700; border-radius: 999px; padding: 1px 9px; margin-right: 4px; vertical-align: 1px; }
+.tag.t { background: #dbe7f5; color: var(--navy-d); }
+.tag.s { background: #fde7cf; color: #9a3412; }
+.tag.b { background: #e5e7eb; color: #374151; }
+.legend { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 12px; }
+.legend div { border-radius: 10px; padding: 10px 14px; font-size: .92em; }
+.mini-flow { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin: 10px 0; }
+.mini-flow span { background: var(--soft); border: 2px solid var(--navy); border-radius: 8px; padding: 3px 10px; font-weight: 600; color: var(--navy-d); font-size: .92em; }
+.mini-flow i { color: var(--navy); font-style: normal; font-weight: 700; }
+footer { max-width: 1480px; margin: 0 auto; padding: 10px 24px 40px; color: var(--muted); font-size: .88em; }
+mjx-container[display="true"] { margin: .5em 0 !important; overflow-x: auto; overflow-y: hidden; }
+@media (max-width: 1100px) {
+  .layout { grid-template-columns: 1fr; }
+  aside.toc { display: none; }
+  .pair, .pair-head { grid-template-columns: 1fr; }
+  .pair-head { display: none; }
+  .pair .paper { border-right: 0; border-bottom: 1px solid var(--paper-line); }
+  .card-row, .legend { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 900px) {
+  table.grid, table.num { display: block; overflow-x: auto; max-width: 100%; }
+  .derive, .practice { overflow-x: auto; }
+}
+@media (max-width: 600px) {
+  .layout { padding: 12px; }
+  section.part { padding: 18px 16px; }
+  .card-row, .legend { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 1.7em; }
+}
+@media print {
+  header.top, aside.toc, .chips, .btn { display: none !important; }
+  body { background: #fff; font-size: 11pt; }
+  .layout { display: block; padding: 0; }
+  section.part { border: 0; box-shadow: none; padding: 0; page-break-before: always; }
+  section.part:first-of-type { page-break-before: auto; }
+  .practice details > div { display: block; }
+  .practice details:not([open]) > div { display: none; }
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="bar">
+<a class="brand" href="../index.html">Intelligent Vision Systems</a>
+<nav><a href="../lectures/07_Paper_Implementation.html">Lecture 7 slides</a><a href="../labs.html#lab-7-papers">Lab 7</a><a href="09_paper_implementation_setup.html">Setup &amp; reading list</a><a href="index.html">All tutorials</a></nav>
+</div></header>
+
+<div class="hero"><div class="in">
+<p class="kick">Lecture 7 · 3-hour lab &amp; tutorial · Dr. Muhammad Kazim, University of Lahore</p>
+<h1>Paper ↔ Code: four landmark papers, side by side</h1>
+<p>Every important sentence and equation of the paper on the left, the PyTorch line that implements it on the right, the tensor shape underneath, and every formula derived step by step with numbers small enough to check with a pencil. Less theory, more doing.</p>
+<div class="chips">
+<a href="#attention">1 · Attention</a><a href="#transformer">2 · Transformer</a><a href="#unet">3 · U-Net</a><a href="#vit">4 · Vision Transformer</a><a href="#resnet">5 · ResNet (bonus)</a><a href="#cheatsheet">Cheat sheet</a>
+</div>
+</div></div>
+
+<div class="layout">
+<aside class="toc" id="toc">
+<h4>Contents</h4>
+<a href="#plan">The 3-hour plan</a>
+<a href="#attention">1 · Attention</a>
+<a class="l2" href="#att-pairs">Paper ↔ code</a>
+<a class="l2" href="#att-derive">Derive it with numbers</a>
+<a class="l2" href="#att-sqrt">Why ÷ √d<sub>k</sub></a>
+<a class="l2" href="#att-mha">Multi-head</a>
+<a href="#transformer">2 · Transformer</a>
+<a class="l2" href="#tr-pe">Positional encoding</a>
+<a class="l2" href="#tr-ln">Add &amp; Norm, FFN</a>
+<a class="l2" href="#tr-layers">Encoder &amp; decoder</a>
+<a class="l2" href="#tr-count">Count 65 M parameters</a>
+<a href="#unet">3 · U-Net</a>
+<a class="l2" href="#un-pairs">Paper ↔ code</a>
+<a class="l2" href="#un-size">The size formula</a>
+<a class="l2" href="#un-params">Parameters &amp; Dice</a>
+<a href="#vit">4 · Vision Transformer</a>
+<a class="l2" href="#vit-pairs">Paper ↔ code</a>
+<a class="l2" href="#vit-count">Count 86.6 M parameters</a>
+<a href="#resnet">5 · ResNet (bonus)</a>
+<a href="#cheatsheet">Cheat sheet</a>
+<a href="#exit">Exit ticket</a>
+</aside>
+
+<main>
+<!-- ======================================================= PLAN -->
+<section class="part" id="plan">
+<h2>The 3-hour plan</h2>
+<p class="sub">One rhythm for every paper: <b>read the passage → see the code → derive with numbers → students practise → verify in Colab.</b></p>
+<table class="grid plan">
+<tr><th>Time</th><th>Block</th><th>Teacher <span class="tag t">T</span></th><th>Students <span class="tag s">S</span></th><th>Notebook</th></tr>
+<tr><td>0:00–0:10</td><td>Warm-up</td><td>How to read this page (legend below); open Colab</td><td>Open <a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/09-paper-math-workbook.ipynb">Lab 7I workbook</a>, <i>Save a copy in Drive</i></td><td>7I</td></tr>
+<tr><td>0:10–0:55</td><td><a href="#attention">1 · Attention</a></td><td>Pairs 1–4; derive Q Kᵀ, scaling, softmax, output on the board</td><td>Practice A1–A4 by hand, then check in 7I</td><td>7I §1 · 7B</td></tr>
+<tr><td>0:55–1:30</td><td><a href="#transformer">2 · Transformer</a></td><td>PE, Add &amp; Norm, FFN, masks; count the 65 M parameters together</td><td>Practice T1–T4; run 7C training (1 min)</td><td>7I §2 · 7C</td></tr>
+<tr><td>1:30–1:40</td><td><span class="tag b">break</span></td><td colspan="3">Let 7C finish training; look at the anti-diagonal cross-attention plot</td></tr>
+<tr><td>1:40–2:15</td><td><a href="#unet">3 · U-Net</a></td><td>Figure 1 ↔ code; derive <i>out = n − 184</i>; parameters; Dice</td><td>Practice U1–U4; build the paper U-Net in 7D</td><td>7I §3 · 7D</td></tr>
+<tr><td>2:15–2:45</td><td><a href="#vit">4 · ViT</a></td><td>Eq. 1–4 ↔ code; patches; count 86 567 656 parameters</td><td>Practice V1–V4; tiny ViT in 7F</td><td>7I §4 · 7F</td></tr>
+<tr><td>2:45–2:55</td><td><a href="#resnet">5 · ResNet</a> (bonus)</td><td>Why "+ x" keeps the gradient alive</td><td>Practice R1–R2</td><td>7I §5 · 7E</td></tr>
+<tr><td>2:55–3:00</td><td><a href="#exit">Exit ticket</a></td><td>Collect answers</td><td>5 questions, 5 minutes</td><td>—</td></tr>
+</table>
+<div class="legend">
+<div style="background:var(--paper); border:1px solid var(--paper-line);"><b style="color:#8a6d2f;">Paper</b><br>serif text, with the § / Eq. number so you can find it in the PDF</div>
+<div style="background:var(--codebg); color:#e6edf3;"><b style="color:#9ecbff;">Code</b><br>the PyTorch line(s) that implement that sentence; shapes underneath</div>
+<div style="background:#fff; border:2px solid var(--navy);"><b style="color:var(--navy);">Derive</b><br>numbered steps with tiny numbers; green line = the result</div>
+<div style="background:var(--warnbg); border-left:6px solid #f2a900;"><b style="color:#9a6700;">Practice</b><br>students do it by hand first; answers are folded</div>
+</div>
+<p class="note" style="margin-top:14px;"><b>Notation used everywhere:</b> B = batch, L = sequence length (tokens), d<sub>model</sub> = D = features per token, h = heads, d<sub>k</sub> = D / h, C = channels, H × W = image size, P = patch size, N = number of patches. Shapes are written (B, L, D).</p>
+</section>
+
+<!-- ======================================================= 1 ATTENTION -->
+<section class="part" id="attention">
+<h2><span class="num">1</span>Attention: the one equation behind every Transformer</h2>
+<p class="sub">Vaswani et al., <i>Attention Is All You Need</i>, NeurIPS 2017 · <a href="https://arxiv.org/abs/1706.03762">arXiv:1706.03762</a> · read §3.2 and Figure 2</p>
+<div class="card-row">
+<div><b>Input</b>Q (L<sub>q</sub>, d<sub>k</sub>), K (L<sub>k</sub>, d<sub>k</sub>), V (L<sub>k</sub>, d<sub>v</sub>)</div>
+<div><b>Output</b>(L<sub>q</sub>, d<sub>v</sub>): a new vector per query</div>
+<div><b>Idea</b>output = weighted mix of values; weights = query–key similarity</div>
+<div><b>Lab</b><a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/02-attention-from-scratch.ipynb">7B</a> · workbook 7I §1</div>
+</div>
+
+<h3 id="att-pairs">Paper ↔ code</h3>
+<div class="pair-head"><div>Paper</div><div>Code</div></div>
+<div class="pair">
+<div class="paper"><div class="ref">§3.2 · definition</div>
+<q>An attention function can be described as mapping a query and a set of key-value pairs to an output … The output is computed as a weighted sum of the values, where the weight assigned to each value is computed by a compatibility function of the query with the corresponding key.</q>
+<div class="plain"><b>In plain words:</b> like a YouTube search: your text = query, video titles = keys, videos = values. Better-matching titles get more of your attention.</div></div>
+<div class="code"><pre><code class="language-python">#   query  : what am I looking for?      q  (B, Lq, d_k)
+#   key    : what do I contain? (label)  k  (B, Lk, d_k)
+#   value  : what do I give if chosen?   v  (B, Lk, d_v)
+#   output = sum_j  weight_ij * v_j       out (B, Lq, d_v)</code></pre>
+<div class="shape">every query gets <b>its own</b> weighted mix of all values</div></div>
+</div>
+
+<div class="pair">
+<div class="paper"><div class="ref">§3.2.1 · Eq. (1)</div>
+\[ \mathrm{Attention}(Q,K,V) = \mathrm{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}}\right)V \]
+<q>We compute the dot products of the query with all keys, divide each by \(\sqrt{d_k}\), and apply a softmax function to obtain the weights on the values.</q></div>
+<div class="code"><pre><code class="language-python">def attention(q, k, v, mask=None):
+    d_k = q.size(-1)
+    scores = q @ k.transpose(-2, -1)         # MatMul   Q K^T
+    scores = scores / math.sqrt(d_k)         # Scale    / sqrt(d_k)
+    if mask is not None:                     # Mask (opt.)
+        scores = scores.masked_fill(~mask, float("-inf"))
+    weights = scores.softmax(dim=-1)         # SoftMax  over the keys
+    return weights @ v, weights              # MatMul   weights V</code></pre>
+<div class="shape">q (B, L<sub>q</sub>, d<sub>k</sub>) @ kᵀ (B, d<sub>k</sub>, L<sub>k</sub>) → scores <b>(B, L<sub>q</sub>, L<sub>k</sub>)</b> → @ v (B, L<sub>k</sub>, d<sub>v</sub>) → <b>(B, L<sub>q</sub>, d<sub>v</sub>)</b></div></div>
+</div>
+
+<div class="pair">
+<div class="paper"><div class="ref">Figure 2 (left) · read bottom-up</div>
+<div class="mini-flow"><span>MatMul</span><i>→</i><span>Scale</span><i>→</i><span>Mask (opt.)</span><i>→</i><span>SoftMax</span><i>→</i><span>MatMul</span></div>
+Five boxes in the figure = five lines of code. <b>Always map a figure box by box.</b>
+<div class="plain"><b>Three details the paper leaves to you:</b> transpose only the last two axes (tensors become 4-D later); softmax over the <b>last</b> axis (the keys); masked scores become −∞ <b>before</b> the softmax.</div></div>
+<div class="code"><pre><code class="language-python"># check against PyTorch's own implementation
+import torch.nn.functional as F
+out, w = attention(q, k, v)
+ref = F.scaled_dot_product_attention(q, k, v)
+assert torch.allclose(out, ref, atol=1e-5)    # ✅ identical
+assert torch.allclose(w.sum(-1), torch.ones(1)) # each row sums to 1</code></pre>
+<div class="shape">habit: <b>compare with a reference</b> after every block</div></div>
+</div>
+
+<div class="pair">
+<div class="paper"><div class="ref">§3.2.3 · masking in the decoder</div>
+<q>We need to prevent leftward information flow in the decoder … We implement this inside of scaled dot-product attention by masking out (setting to −∞) all values in the input of the softmax which correspond to illegal connections.</q>
+<div class="plain">Token <i>i</i> may look at tokens 0 … <i>i</i> only: a lower-triangular mask. Because \(e^{-\infty} = 0\), blocked tokens get weight exactly 0.</div></div>
+<div class="code"><pre><code class="language-python">def causal_mask(L):
+    return torch.tril(torch.ones(L, L, dtype=torch.bool))
+
+causal_mask(4).int()
+# tensor([[1, 0, 0, 0],
+#         [1, 1, 0, 0],
+#         [1, 1, 1, 0],
+#         [1, 1, 1, 1]])</code></pre>
+<div class="shape">mask (L, L) broadcasts over batch and heads: True = may attend</div></div>
+</div>
+
+<h3 id="att-derive">Derive it with numbers: 3 words, 2 features</h3>
+<p>The same example as Lab 7B. Each row is one word.</p>
+<table class="num" style="display:inline-table; margin-right:18px;"><tr><th></th><th colspan="2">Q</th></tr><tr><th>w0</th><td>1</td><td>0</td></tr><tr><th>w1</th><td>0</td><td>1</td></tr><tr><th>w2</th><td>1</td><td>1</td></tr></table>
+<table class="num" style="display:inline-table; margin-right:18px;"><tr><th></th><th colspan="2">K</th></tr><tr><th>w0</th><td>0</td><td>1</td></tr><tr><th>w1</th><td>1</td><td>0</td></tr><tr><th>w2</th><td>2</td><td>0</td></tr></table>
+<table class="num" style="display:inline-table;"><tr><th></th><th colspan="2">V</th></tr><tr><th>w0</th><td>10</td><td>0</td></tr><tr><th>w1</th><td>0</td><td>10</td></tr><tr><th>w2</th><td>5</td><td>5</td></tr></table>
+<div class="derive"><div class="t">Derivation A · attention for word 0, step by step</div>
+<ol>
+<li><b>Scores</b> = dot product of q<sub>0</sub> = (1, 0) with every key: \(q_0\cdot k_0 = 1\cdot0+0\cdot1 = 0,\;\; q_0\cdot k_1 = 1,\;\; q_0\cdot k_2 = 2\) → <b>(0, 1, 2)</b>.</li>
+<li><b>Scale</b> by \(\sqrt{d_k} = \sqrt 2 \approx 1.414\): (0, 0.707, 1.414).</li>
+<li><b>Exponentiate</b>: \(e^{0} = 1,\; e^{0.707} = 2.028,\; e^{1.414} = 4.113\). Sum = 7.141.</li>
+<li><b>Normalise</b> (softmax): 1/7.141, 2.028/7.141, 4.113/7.141 = <b>(0.140, 0.284, 0.576)</b>. They sum to 1.</li>
+<li><b>Mix the values</b>: \(0.140\,(10, 0) + 0.284\,(0, 10) + 0.576\,(5, 5) = (1.40 + 2.88,\; 2.84 + 2.88)\).</li>
+</ol>
+<div class="res">output₀ = (4.28, 5.72): word 0 took 58 % of its information from word 2, whose key matched best.</div></div>
+
+<div class="pair">
+<div class="paper"><div class="ref">all three words at once = matrices</div>
+\[ QK^\top = \begin{pmatrix}0&1&2\\1&0&0\\1&1&2\end{pmatrix},\quad
+\mathrm{softmax}\Big(\tfrac{QK^\top}{\sqrt2}\Big) = \begin{pmatrix}.140&.284&.576\\.504&.248&.248\\.248&.248&.504\end{pmatrix} \]
+\[ \text{output} = \begin{pmatrix}4.28&5.72\\6.28&3.72\\5.00&5.00\end{pmatrix} \]</div>
+<div class="code"><pre><code class="language-python">Q = torch.tensor([[1., 0], [0, 1], [1, 1]])
+K = torch.tensor([[0., 1], [1, 0], [2, 0]])
+V = torch.tensor([[10., 0], [0, 10], [5, 5]])
+out, w = attention(Q, K, V)
+print(w.round(decimals=3))
+# [[0.140, 0.284, 0.576],
+#  [0.504, 0.248, 0.248],
+#  [0.248, 0.248, 0.504]]
+print(out.round(decimals=2))
+# [[4.28, 5.72], [6.28, 3.72], [5.00, 5.00]]</code></pre>
+<div class="shape">the code reproduces the pencil result exactly: <b>that is how you test a block</b></div></div>
+</div>
+
+<div class="derive"><div class="t">Derivation B · the same with the causal mask</div>
+<ol>
+<li>Word 0 may only see word 0: scores (0, −∞, −∞) → weights (1, 0, 0) → output = v<sub>0</sub> = (10, 0).</li>
+<li>Word 1 sees words 0 and 1: scaled scores (0.707, 0) → \(e^{0.707} = 2.028,\; e^0 = 1\) → weights (0.670, 0.330, 0).</li>
+<li>Output₁ = 0.670·(10, 0) + 0.330·(0, 10) = (6.70, 3.30). Word 2 sees everything: unchanged (5, 5).</li>
+</ol>
+<div class="res">The mask changes rows 0 and 1 only. The first row of a causal attention matrix is always (1, 0, 0, …).</div></div>
+
+<h3 id="att-sqrt">Why divide by √d<sub>k</sub>? A 4-line derivation</h3>
+<div class="derive"><div class="t">Derivation C · footnote 4 of the paper</div>
+<ol>
+<li>Assume the entries \(q_i, k_i\) are independent with mean 0 and variance 1 (what initialisation gives).</li>
+<li>One product: \(\mathrm{Var}(q_i k_i) = E[q_i^2]\,E[k_i^2] = 1\cdot 1 = 1\).</li>
+<li>The dot product adds \(d_k\) independent terms: \(\mathrm{Var}(q\cdot k) = \sum_{i=1}^{d_k}\mathrm{Var}(q_i k_i) = d_k\), so its standard deviation is \(\sqrt{d_k}\).</li>
+<li>Dividing by \(\sqrt{d_k}\): \(\mathrm{Var}\big(q\cdot k/\sqrt{d_k}\big) = d_k / d_k = 1\), whatever \(d_k\) is.</li>
+</ol>
+<div class="res">Scaling keeps the scores around ±1 for every d<sub>k</sub>. Without it, at d<sub>k</sub> = 512 the scores have std ≈ 22.6.</div></div>
+<div class="pair">
+<div class="paper"><div class="ref">why big scores are bad · softmax saturates</div>
+The softmax gradient is \(\dfrac{\partial s_i}{\partial z_i} = s_i(1-s_i)\).
+<table class="num"><tr><th>scores z</th><th>softmax s</th><th>s(1 − s)</th></tr>
+<tr><td>(1, 2, 3)</td><td>(0.09, 0.24, 0.67)</td><td>(0.08, 0.18, 0.22)</td></tr>
+<tr><td>(10, 20, 30)</td><td>(0.00, 0.00, 1.00)</td><td><b>(0, 0, 0)</b></td></tr></table>
+<div class="plain">Large scores → one weight ≈ 1 → gradient ≈ 0 → attention stops learning.</div></div>
+<div class="code"><pre><code class="language-python">for d in [4, 64, 512]:
+    q, k = torch.randn(10000, d), torch.randn(10000, d)
+    dots = (q * k).sum(-1)
+    print(d, dots.std().item(), (dots / d**0.5).std().item())
+# 4    ≈ 2.0    ≈ 1.0
+# 64   ≈ 8.0    ≈ 1.0
+# 512  ≈ 22.6   ≈ 1.0        (std = sqrt(d_k), then 1)</code></pre>
+<div class="shape">experiment confirms the derivation: std(q·k) = √d<sub>k</sub></div></div>
+</div>
+
+<h3 id="att-mha">Multi-head attention</h3>
+<div class="pair">
+<div class="paper"><div class="ref">§3.2.2 · Eq. for MultiHead</div>
+\[ \mathrm{MultiHead}(Q,K,V) = \mathrm{Concat}(\mathrm{head}_1,\dots,\mathrm{head}_h)\,W^O \]
+\[ \mathrm{head}_i = \mathrm{Attention}(QW_i^Q,\,KW_i^K,\,VW_i^V) \]
+<q>In this work we employ h = 8 parallel attention layers, or heads. For each of these we use \(d_k = d_v = d_{model}/h = 64\).</q>
+<div class="plain">One big Linear computes all 8 heads at once; we then <b>cut</b> its 512 outputs into 8 pieces of 64.</div></div>
+<div class="code"><pre><code class="language-python">class MultiHeadAttention(nn.Module):
+    def __init__(self, d_model, n_heads):
+        super().__init__()
+        self.h, self.d_k = n_heads, d_model // n_heads
+        self.w_q = nn.Linear(d_model, d_model)   # all W_i^Q together
+        self.w_k = nn.Linear(d_model, d_model)
+        self.w_v = nn.Linear(d_model, d_model)
+        self.w_o = nn.Linear(d_model, d_model)   # W^O
+
+    def forward(self, q, k, v, mask=None):
+        B, Lq, D = q.shape; Lk = k.size(1)
+        q = self.w_q(q).view(B, Lq, self.h, self.d_k).transpose(1, 2)
+        k = self.w_k(k).view(B, Lk, self.h, self.d_k).transpose(1, 2)
+        v = self.w_v(v).view(B, Lk, self.h, self.d_k).transpose(1, 2)
+        out, _ = attention(q, k, v, mask)          # (B, h, Lq, d_k)
+        out = out.transpose(1, 2).reshape(B, Lq, D)  # Concat
+        return self.w_o(out)</code></pre>
+<div class="shape">(B, L, 512) →view→ (B, L, 8, 64) →transpose→ <b>(B, 8, L, 64)</b> → attention → back to <b>(B, L, 512)</b></div></div>
+</div>
+<div class="derive"><div class="t">Derivation D · parameters of one multi-head attention layer (d<sub>model</sub> = 512)</div>
+<ol>
+<li>One <code>nn.Linear(512, 512)</code> = 512 × 512 weights + 512 biases = 262 144 + 512 = 262 656.</li>
+<li>There are four of them (W<sup>Q</sup>, W<sup>K</sup>, W<sup>V</sup>, W<sup>O</sup>): 4 × 262 656.</li>
+</ol>
+<div class="res">4 · (d² + d) = 1 050 624 parameters, independent of h: 8 heads cost the same as 1.</div></div>
+<div class="warn"><b>Classic silent bug:</b> <code>q.view(B, h, L, d_k)</code> directly. The shape is right, but tokens and heads get mixed. Always <code>view(B, L, h, d_k)</code> then <code>transpose(1, 2)</code>, and undo both before W<sup>O</sup>. (Lab 7G, bug 4.)</div>
+
+<div class="practice"><b>🖐 Practice A (by hand, then check in 7I §1)</b>
+<ol>
+<li><b>A1.</b> Compute the attention weights and output for <b>word 2</b> of the example (q<sub>2</sub> = (1, 1)).
+<details><summary>Answer</summary><div>Scores (1, 1, 2) → /√2 = (0.707, 0.707, 1.414) → e: (2.028, 2.028, 4.113), sum 8.169 → weights (0.248, 0.248, 0.504) → output 0.248·(10,0) + 0.248·(0,10) + 0.504·(5,5) = (5.00, 5.00).</div></details></li>
+<li><b>A2.</b> Q is (2, 8, 10, 64), K and V are (2, 8, 12, 64). Shapes of the scores and of the output?
+<details><summary>Answer</summary><div>Scores (2, 8, 10, 12): one score per (query, key) per head. Output (2, 8, 10, 64).</div></details></li>
+<li><b>A3.</b> For d<sub>k</sub> = 256, what is the standard deviation of an unscaled dot product of two random unit-variance vectors?
+<details><summary>Answer</summary><div>√256 = 16. After dividing by √d<sub>k</sub> = 16 it is 1.</div></details></li>
+<li><b>A4.</b> How many parameters does multi-head attention have for d<sub>model</sub> = 768 (ViT-Base)?
+<details><summary>Answer</summary><div>4 · (768² + 768) = 4 · 590 592 = 2 362 368.</div></details></li>
+</ol></div>
+</section>
+
+<!-- ======================================================= 2 TRANSFORMER -->
+<section class="part" id="transformer">
+<h2><span class="num">2</span>The Transformer: building Figure 1 block by block</h2>
+<p class="sub">Same paper, §3.1, §3.3–3.5, Figure 1 · lab <a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/03-transformer-reverse-sequence.ipynb">7C</a> (a Transformer that learns to reverse sequences)</p>
+<div class="mini-flow"><span>Embedding × √d</span><i>+</i><span>Positional encoding</span><i>→</i><span>N × Encoder</span><i>→</i><span>N × Decoder</span><i>→</i><span>Linear</span><i>→</i><span>Softmax</span></div>
+
+<h3 id="tr-pe">Positional encoding</h3>
+<div class="pair">
+<div class="paper"><div class="ref">§3.5 · positional encoding</div>
+<q>Since our model contains no recurrence and no convolution, in order for the model to make use of the order of the sequence, we must inject some information about the relative or absolute position of the tokens.</q>
+\[ PE_{(pos,\,2i)} = \sin\!\big(pos/10000^{2i/d_{model}}\big) \]
+\[ PE_{(pos,\,2i+1)} = \cos\!\big(pos/10000^{2i/d_{model}}\big) \]
+<div class="plain">Attention alone sees a <b>set</b>: "dog bites man" = "man bites dog". Adding PE gives every position a unique fingerprint.</div></div>
+<div class="code"><pre><code class="language-python">def positional_encoding(max_len, d_model):
+    pe = torch.zeros(max_len, d_model)
+    pos = torch.arange(max_len).unsqueeze(1).float()  # (L, 1)
+    two_i = torch.arange(0, d_model, 2).float()       # 0, 2, 4, ...
+    div = 10000 ** (two_i / d_model)                  # (d/2,)
+    pe[:, 0::2] = torch.sin(pos / div)                # even dims
+    pe[:, 1::2] = torch.cos(pos / div)                # odd dims
+    return pe                                         # (L, d_model)
+
+x = embedding(tokens) * math.sqrt(d_model) + pe[:L]  # §3.4 + §3.5</code></pre>
+<div class="shape">pos (L, 1) / div (d/2,) broadcasts to <b>(L, d/2)</b>; pe is added to every sentence: (B, L, D) + (L, D)</div></div>
+</div>
+<div class="derive"><div class="t">Derivation E · the PE table for d<sub>model</sub> = 4, by hand</div>
+<ol>
+<li>Pairs of dimensions: 2i = 0 uses \(10000^{0/4} = 1\); 2i = 2 uses \(10000^{2/4} = 100\).</li>
+<li>pos = 0: (sin 0, cos 0, sin 0, cos 0) = (0, 1, 0, 1).</li>
+<li>pos = 1: (sin 1, cos 1, sin 0.01, cos 0.01) = (0.841, 0.540, 0.010, 1.000).</li>
+<li>pos = 2: (sin 2, cos 2, sin 0.02, cos 0.02) = (0.909, −0.416, 0.020, 1.000).</li>
+</ol>
+<div class="res">Dims 0–1 change fast (like a seconds hand), dims 2–3 slowly (like an hour hand): every position gets a different "time".</div></div>
+<div class="derive"><div class="t">Derivation F · why sin/cos helps with relative positions (§3.5: "PE<sub>pos+k</sub> can be represented as a linear function of PE<sub>pos</sub>")</div>
+<ol>
+<li>Write one dimension pair as \((\sin\omega p,\ \cos\omega p)\) with \(\omega = 1/10000^{2i/d}\).</li>
+<li>Angle addition: \(\sin\omega(p+k) = \sin\omega p\cos\omega k + \cos\omega p\sin\omega k\), and \(\cos\omega(p+k) = \cos\omega p\cos\omega k - \sin\omega p\sin\omega k\).</li>
+<li>In matrix form: \(\begin{pmatrix}\sin\omega(p+k)\\ \cos\omega(p+k)\end{pmatrix} = \begin{pmatrix}\cos\omega k & \sin\omega k\\ -\sin\omega k & \cos\omega k\end{pmatrix}\begin{pmatrix}\sin\omega p\\ \cos\omega p\end{pmatrix}\).</li>
+</ol>
+<div class="res">Moving k positions = a fixed rotation that depends only on k: a linear layer can learn "look 3 words back".</div></div>
+
+<h3 id="tr-ln">Add &amp; Norm, and the feed-forward network</h3>
+<div class="pair">
+<div class="paper"><div class="ref">§3.1 · residual + layer normalisation</div>
+<q>We employ a residual connection around each of the two sub-layers, followed by layer normalization. That is, the output of each sub-layer is LayerNorm(x + Sublayer(x)).</q>
+\[ \mathrm{LN}(x) = \gamma\odot\frac{x-\mu}{\sqrt{\sigma^2+\epsilon}}+\beta,\quad \mu,\sigma^2 \text{ over the } d_{model} \text{ features} \]</div>
+<div class="code"><pre><code class="language-python">class LayerNorm(nn.Module):
+    def __init__(self, d, eps=1e-5):
+        super().__init__()
+        self.gamma = nn.Parameter(torch.ones(d))
+        self.beta = nn.Parameter(torch.zeros(d))
+        self.eps = eps
+    def forward(self, x):                        # x (B, L, d)
+        mu = x.mean(-1, keepdim=True)            # per token
+        var = x.var(-1, keepdim=True, unbiased=False)
+        return self.gamma * (x - mu) / torch.sqrt(var + self.eps) + self.beta
+
+y = norm(x + dropout(sublayer(x)))               # "Add & Norm"</code></pre>
+<div class="shape">normalises the <b>last</b> axis (features of one token), not the batch: <b>(B, L, d) → (B, L, d)</b></div></div>
+</div>
+<div class="derive"><div class="t">Derivation G · LayerNorm of one token x = (1, 2, 3, 6), γ = 1, β = 0</div>
+<ol>
+<li>Mean: μ = (1 + 2 + 3 + 6) / 4 = 3.</li>
+<li>Variance: ((1−3)² + (2−3)² + (3−3)² + (6−3)²) / 4 = (4 + 1 + 0 + 9) / 4 = 3.5; σ = √3.5 = 1.871.</li>
+<li>Normalise: ((1−3), (2−3), (3−3), (6−3)) / 1.871.</li>
+</ol>
+<div class="res">LN(x) = (−1.069, −0.535, 0, 1.604): mean 0, variance 1. (Divide by N, not N − 1: <code>unbiased=False</code>.)</div></div>
+<div class="pair">
+<div class="paper"><div class="ref">§3.3 · Eq. (2) · position-wise feed-forward</div>
+\[ \mathrm{FFN}(x) = \max(0,\, xW_1 + b_1)\,W_2 + b_2 \]
+<q>The dimensionality of input and output is \(d_{model} = 512\), and the inner-layer has dimensionality \(d_{ff} = 2048\).</q>
+<div class="plain">Applied to <b>each token separately</b>. <code>nn.Linear</code> on (B, L, D) does exactly that.</div></div>
+<div class="code"><pre><code class="language-python">class FeedForward(nn.Module):
+    def __init__(self, d_model, d_ff, dropout=0.1):
+        super().__init__()
+        self.lin1 = nn.Linear(d_model, d_ff)    # W1, b1
+        self.lin2 = nn.Linear(d_ff, d_model)    # W2, b2
+        self.drop = nn.Dropout(dropout)
+    def forward(self, x):
+        return self.lin2(self.drop(torch.relu(self.lin1(x))))  # max(0, .)</code></pre>
+<div class="shape">(B, L, 512) → (B, L, 2048) → ReLU → (B, L, 512) · parameters 2·512·2048 + 2048 + 512 = <b>2 099 712</b></div></div>
+</div>
+
+<h3 id="tr-layers">Encoder and decoder layers</h3>
+<div class="pair">
+<div class="paper"><div class="ref">§3.1 · Figure 1 left · encoder</div>
+<q>Each layer has two sub-layers. The first is a multi-head self-attention mechanism, and the second is a simple, position-wise fully connected feed-forward network.</q>
+<div class="mini-flow"><span>Self-attn</span><i>→</i><span>Add &amp; Norm</span><i>→</i><span>FFN</span><i>→</i><span>Add &amp; Norm</span></div></div>
+<div class="code"><pre><code class="language-python">class EncoderLayer(nn.Module):
+    def __init__(self, d_model, n_heads, d_ff, dropout=0.1):
+        super().__init__()
+        self.self_attn = MultiHeadAttention(d_model, n_heads)
+        self.ffn = FeedForward(d_model, d_ff, dropout)
+        self.norm1, self.norm2 = LayerNorm(d_model), LayerNorm(d_model)
+        self.drop = nn.Dropout(dropout)
+    def forward(self, x, src_mask):
+        x = self.norm1(x + self.drop(self.self_attn(x, x, x, src_mask)))
+        x = self.norm2(x + self.drop(self.ffn(x)))
+        return x</code></pre>
+<div class="shape">shape never changes inside the stack: <b>(B, L<sub>src</sub>, 512) → (B, L<sub>src</sub>, 512)</b></div></div>
+</div>
+<div class="pair">
+<div class="paper"><div class="ref">§3.1 · Figure 1 right · decoder</div>
+<q>In addition to the two sub-layers in each encoder layer, the decoder inserts a third sub-layer, which performs multi-head attention over the output of the encoder stack.</q>
+<div class="mini-flow"><span>Masked self-attn</span><i>→</i><span>Cross-attn</span><i>→</i><span>FFN</span></div>
+<div class="plain"><b>Cross-attention:</b> queries from the decoder (what am I writing?), keys and values from the encoder (what did the input say?).</div></div>
+<div class="code"><pre><code class="language-python">class DecoderLayer(nn.Module):
+    # self_attn, cross_attn, ffn, norm1..3, drop  (as above)
+    def forward(self, y, memory, src_mask, tgt_mask):
+        y = self.norm1(y + self.drop(self.self_attn(y, y, y, tgt_mask)))
+        a = self.cross_attn(y, memory, memory, src_mask)  # Q from y; K, V from encoder
+        y = self.norm2(y + self.drop(a))
+        y = self.norm3(y + self.drop(self.ffn(y)))
+        return y
+
+# whole model
+memory = encoder(embed(src) + PE)                  # (B, L_src, 512)
+logits = out(decoder(embed(tgt_in) + PE, memory))  # (B, L_tgt, vocab)
+loss = F.cross_entropy(logits.reshape(-1, V), tgt_out.reshape(-1))</code></pre>
+<div class="shape">cross-attention scores: (B, h, <b>L<sub>tgt</sub></b>, <b>L<sub>src</sub></b>): every output word looks at every input word</div></div>
+</div>
+<div class="pair">
+<div class="paper"><div class="ref">§3.1 · Figure 1 · "Outputs (shifted right)"</div>
+<q>… the output embeddings are offset by one position …</q> At training time the decoder sees the correct answer shifted by one (<b>teacher forcing</b>) and predicts the next token at every position.
+<table class="num" style="margin-top:8px;"><tr><th>src</th><td></td><td>3</td><td>7</td><td>1</td><td>9</td></tr><tr><th>tgt_in</th><td>BOS</td><td>9</td><td>1</td><td>7</td><td>3</td></tr><tr><th>tgt_out</th><td>9</td><td>1</td><td>7</td><td>3</td><td>EOS</td></tr></table></div>
+<div class="code"><pre><code class="language-python"># Lab 7C: reverse a sequence of digits
+src, tgt_in, tgt_out = make_reverse_batch(64, seq_len=8)
+logits = model(src, tgt_in)                  # (64, 9, 13)
+loss = F.cross_entropy(logits.reshape(-1, 13), tgt_out.reshape(-1))
+
+# inference = greedy decoding, one token at a time
+y = BOS
+for _ in range(L + 1):
+    next_tok = model.decode(y, memory, src_mask)[:, -1].argmax(-1)
+    y = torch.cat([y, next_tok[:, None]], 1)</code></pre>
+<div class="shape">result in Lab 7C: <b>98.8 %</b> of new sequences reversed perfectly after 1 000 steps (≈ 1 min on CPU)</div></div>
+</div>
+
+<h3 id="tr-count">Count the paper's 65 M parameters yourself (Table 3, base model)</h3>
+<div class="derive"><div class="t">Derivation H · d<sub>model</sub> = 512, h = 8, d<sub>ff</sub> = 2048, N = 6</div>
+<ol>
+<li>Multi-head attention: 4(512² + 512) = <b>1 050 624</b>.</li>
+<li>Feed-forward: 512·2048 + 2048 + 2048·512 + 512 = <b>2 099 712</b>.</li>
+<li>LayerNorm: γ and β = 2 · 512 = 1 024 each.</li>
+<li>Encoder layer = 1 MHA + 1 FFN + 2 LN = 1 050 624 + 2 099 712 + 2 048 = <b>3 152 384</b>; × 6 = 18 914 304.</li>
+<li>Decoder layer = 2 MHA + 1 FFN + 3 LN = 2 101 248 + 2 099 712 + 3 072 = <b>4 204 032</b>; × 6 = 25 224 192.</li>
+<li>Embeddings: the paper shares one 37 000 × 512 matrix (§3.4: input, output and pre-softmax weights) = 18 944 000.</li>
+</ol>
+<div class="res">Total ≈ 18.9 M + 25.2 M + 18.9 M = 63.1 M. Paper: 65 M. The ≈ 2 M gap comes from the exact vocabulary size and counting details: a typical honest "what matched, what didn't" line for your report.</div></div>
+
+<div class="practice"><b>🖐 Practice T (by hand, then check in 7I §2)</b>
+<ol>
+<li><b>T1.</b> Write PE for pos = 3, d<sub>model</sub> = 4 (sin 3 = 0.141, cos 3 = −0.990).
+<details><summary>Answer</summary><div>(sin 3, cos 3, sin 0.03, cos 0.03) = (0.141, −0.990, 0.030, 1.000).</div></details></li>
+<li><b>T2.</b> LayerNorm of (2, 2, 2, 2)? Why is ε needed?
+<details><summary>Answer</summary><div>μ = 2, σ² = 0 → (0, 0, 0, 0). Without ε we would divide by √0 = 0.</div></details></li>
+<li><b>T3.</b> How many parameters does one encoder layer of a model with d<sub>model</sub> = 64, d<sub>ff</sub> = 128 have (Lab 7C's size)?
+<details><summary>Answer</summary><div>MHA 4(64² + 64) = 16 640; FFN 64·128 + 128 + 128·64 + 64 = 16 576; 2 LN = 256 → 33 472.</div></details></li>
+<li><b>T4.</b> Without positional encoding, can the model reverse a sequence? Why?
+<details><summary>Answer</summary><div>No. Attention treats the input as a set, so the encoder cannot tell which digit came first; accuracy drops to ≈ 0 (try it in 7C).</div></details></li>
+</ol></div>
+</section>
+
+<!-- ======================================================= 3 U-NET -->
+<section class="part" id="unet">
+<h2><span class="num">3</span>U-Net: segmentation in half a page</h2>
+<p class="sub">Ronneberger, Fischer &amp; Brox, MICCAI 2015 · <a href="https://arxiv.org/abs/1505.04597">arXiv:1505.04597</a> · read §2 and Figure 1 · lab <a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/04-unet-from-paper.ipynb">7D</a></p>
+<div class="card-row">
+<div><b>Input</b>(B, 1, 572, 572) grey tile</div>
+<div><b>Output</b>(B, 2, 388, 388): a class score per pixel</div>
+<div><b>Idea</b>encoder (what) + decoder (where) + skip connections (details)</div>
+<div><b>Numbers</b>23 conv layers · 31 030 658 parameters</div>
+</div>
+
+<h3 id="un-pairs">Paper ↔ code</h3>
+<div class="pair-head"><div>Paper</div><div>Code</div></div>
+<div class="pair">
+<div class="paper"><div class="ref">§2 · contracting path</div>
+<q>The contracting path … consists of the repeated application of two 3x3 convolutions (unpadded convolutions), each followed by a rectified linear unit (ReLU) and a 2x2 max pooling operation with stride 2 for downsampling. At each downsampling step we double the number of feature channels.</q></div>
+<div class="code"><pre><code class="language-python">class DoubleConvValid(nn.Module):                 # "two 3x3 convolutions (unpadded)"
+    def __init__(self, cin, cout):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Conv2d(cin, cout, 3), nn.ReLU(inplace=True),   # padding=0
+            nn.Conv2d(cout, cout, 3), nn.ReLU(inplace=True))
+    def forward(self, x):
+        return self.net(x)
+
+ch = [64, 128, 256, 512, 1024]                     # "double the channels"
+downs = [DoubleConvValid(([1] + ch)[i], ch[i]) for i in range(5)]
+pool = nn.MaxPool2d(2)                             # "2x2 max pooling, stride 2"</code></pre>
+<div class="shape">(1, 1, 572²) → conv → 570² → conv → <b>568² × 64</b> → pool → <b>284² × 64</b> → …</div></div>
+</div>
+<div class="pair">
+<div class="paper"><div class="ref">§2 · expansive path</div>
+<q>Every step in the expansive path consists of an upsampling of the feature map followed by a 2x2 convolution ("up-convolution") that halves the number of feature channels, a concatenation with the correspondingly cropped feature map from the contracting path, and two 3x3 convolutions, each followed by a ReLU.</q></div>
+<div class="code"><pre><code class="language-python">def center_crop(x, size):                         # "correspondingly cropped"
+    t = (x.shape[-1] - size) // 2
+    return x[..., t:t + size, t:t + size]
+
+ups = [nn.ConvTranspose2d(ch[i], ch[i-1], 2, stride=2) for i in (4, 3, 2, 1)]
+up_convs = [DoubleConvValid(ch[i], ch[i-1]) for i in (4, 3, 2, 1)]
+
+for up, conv, skip in zip(ups, up_convs, reversed(skips)):
+    x = up(x)                                                  # x2 size, /2 channels
+    x = torch.cat([center_crop(skip, x.shape[-1]), x], dim=1)  # concat on channels
+    x = conv(x)</code></pre>
+<div class="shape">bottom 28² × 1024 → up → <b>56² × 512</b> ⊕ crop(64² → 56²) × 512 → <b>56² × 1024</b> → convs → 52² × 512</div></div>
+</div>
+<div class="pair">
+<div class="paper"><div class="ref">§2 · final layer · §3 · loss</div>
+<q>At the final layer a 1x1 convolution is used to map each 64-component feature vector to the desired number of classes. In total the network has 23 convolutional layers.</q>
+<q>The energy function is computed by a pixel-wise soft-max over the final feature map combined with the cross entropy loss function.</q></div>
+<div class="code"><pre><code class="language-python">head = nn.Conv2d(64, n_classes, 1)                # "1x1 convolution"
+logits = head(x)                                  # (B, 2, 388, 388)
+
+# pixel-wise softmax + cross-entropy in one call:
+loss = F.cross_entropy(logits, masks)             # masks (B, 388, 388), long
+pred = logits.argmax(1)                           # (B, 388, 388) class per pixel</code></pre>
+<div class="shape">23 convs = 18 (in 9 DoubleConvs) + 4 up-convs + 1 head ✔ (count them in <code>trace_shapes</code>)</div></div>
+</div>
+
+<h3 id="un-size">The size formula: why 572 → 388, derived</h3>
+<div class="derive"><div class="t">Derivation I · output size of the 2015 U-Net for an input of n × n</div>
+<ol>
+<li>One unpadded 3 × 3 conv: n → n − 2 (conv formula with k = 3, p = 0, s = 1). Two of them: n → n − 4.</li>
+<li>Down path: \(s_1 = n-4,\; s_2 = s_1/2 - 4,\; s_3 = s_2/2-4,\; s_4 = s_3/2-4,\; s_5 = s_4/2-4\).</li>
+<li>Expand: \(s_5 = \frac{n}{16} - \frac{4}{16} - \frac{4}{8} - \frac{4}{4} - \frac{4}{2} - 4 = \frac{n}{16} - 7.75\). For n = 572: 35.75 − 7.75 = <b>28</b> ✔ (bottom of Figure 1).</li>
+<li>Up path, four times "×2 then −4": \(\text{out} = 16\,s_5 - 4(8 + 4 + 2 + 1) = 16\,s_5 - 60\).</li>
+<li>Substitute: \(\text{out} = 16\big(\tfrac{n}{16} - 7.75\big) - 60 = n - 124 - 60\).</li>
+</ol>
+<div class="res">out = n − 184. For 572: 388 ✔. Every pool needs an even size, i.e. s<sub>5</sub> must be a whole number: valid tiles are n = 16k + 124 (… 508, 524, 540, 556, 572, 588 …).</div></div>
+<table class="grid" style="max-width:820px;">
+<tr><th>Stage</th><th class="r">size</th><th class="r">channels</th><th>skip crop</th></tr>
+<tr><td>input</td><td class="r">572</td><td class="r">1</td><td></td></tr>
+<tr><td>down 1 → pool</td><td class="r">568 → 284</td><td class="r">64</td><td>568 → 392 (crop 88 each side)</td></tr>
+<tr><td>down 2 → pool</td><td class="r">280 → 140</td><td class="r">128</td><td>280 → 200 (crop 40)</td></tr>
+<tr><td>down 3 → pool</td><td class="r">136 → 68</td><td class="r">256</td><td>136 → 104 (crop 16)</td></tr>
+<tr><td>down 4 → pool</td><td class="r">64 → 32</td><td class="r">512</td><td>64 → 56 (crop 4)</td></tr>
+<tr><td>bottom</td><td class="r">28</td><td class="r">1024</td><td></td></tr>
+<tr><td>up 4 / 3 / 2 / 1</td><td class="r">56→52 · 104→100 · 200→196 · 392→388</td><td class="r">512 · 256 · 128 · 64</td><td></td></tr>
+<tr><td>head (1 × 1)</td><td class="r">388</td><td class="r">2</td><td></td></tr>
+</table>
+
+<h3 id="un-params">Parameters and the Dice score</h3>
+<div class="derive"><div class="t">Derivation J · parameters of a convolution, then of the whole network</div>
+<ol>
+<li>A conv with kernel k × k, C<sub>in</sub> inputs, C<sub>out</sub> filters: \(k^2 C_{in} C_{out} + C_{out}\) (one bias per filter).</li>
+<li>First DoubleConv: 9·1·64 + 64 = 640, then 9·64·64 + 64 = 36 928 → <b>37 568</b>.</li>
+<li>Up-conv 2 × 2 from 1024 to 512: 4·1024·512 + 512 = <b>2 097 664</b>.</li>
+<li>Head: 64·2 + 2 = 130. Adding all 23 layers (Lab 7D does it with code): down path 18 842 048 + up-convs 2 786 240 + up DoubleConvs 9 402 240 + head 130.</li>
+</ol>
+<div class="res">31 030 658 parameters; the deepest DoubleConv (512 → 1024) alone has 14.2 M of them.</div></div>
+<div class="pair">
+<div class="paper"><div class="ref">evaluation · Dice and IoU</div>
+\[ \mathrm{Dice} = \frac{2|A\cap B|}{|A|+|B|},\qquad \mathrm{IoU} = \frac{|A\cap B|}{|A\cup B|} \]
+A = predicted pixels of a class, B = true pixels.
+<div class="plain"><b>Relation:</b> since \(|A|+|B| = |A\cup B| + |A\cap B|\), Dice \(= \frac{2\,\mathrm{IoU}}{1+\mathrm{IoU}}\).</div></div>
+<div class="code"><pre><code class="language-python">def dice(pred, true, c):
+    a, b = (pred == c), (true == c)
+    total = a.sum() + b.sum()
+    if total == 0:
+        return torch.tensor(1.0)          # class absent in both: perfect
+    return 2 * (a &amp; b).sum().float() / total.float()
+
+# 40 predicted, 60 true, 30 overlap
+# Dice = 60 / 100 = 0.60 ; IoU = 30 / 70 = 0.43 ; 2·0.43/1.43 = 0.60 ✔</code></pre>
+<div class="shape">Lab 7D: mean Dice <b>0.94</b> with skips, <b>0.89</b> without (the ablation)</div></div>
+</div>
+<div class="note"><b>2015 → today (what you change in practice):</b> <code>padding=1</code> (output = input size, no crop), <code>BatchNorm2d</code> after each conv (then <code>bias=False</code>), fewer channels (base 16–64). The idea (encoder, decoder, skips) is unchanged.</div>
+
+<div class="practice"><b>🖐 Practice U (by hand, then check in 7I §3)</b>
+<ol>
+<li><b>U1.</b> The 2015 U-Net gets a 508 × 508 tile. Output size? Is 510 a valid input?
+<details><summary>Answer</summary><div>508 − 184 = 324. 510 − 124 = 386 is not divisible by 16 → invalid (a pool would see an odd size).</div></details></li>
+<li><b>U2.</b> Parameters of <code>nn.Conv2d(128, 256, 3)</code>? Of the same conv with <code>bias=False</code> followed by <code>BatchNorm2d(256)</code>?
+<details><summary>Answer</summary><div>9·128·256 + 256 = 295 168. Without bias 294 912, plus BN 2·256 = 512 → 295 424.</div></details></li>
+<li><b>U3.</b> The up-conv gives 256 channels and the skip has 256. How many channels enter the next DoubleConv?
+<details><summary>Answer</summary><div>512: concatenation adds channels.</div></details></li>
+<li><b>U4.</b> Prediction 50 pixels, truth 50 pixels, overlap 40. Dice and IoU?
+<details><summary>Answer</summary><div>Dice = 80 / 100 = 0.80. IoU = 40 / 60 = 0.667; check: 2·0.667/1.667 = 0.80.</div></details></li>
+</ol></div>
+</section>
+
+<!-- ======================================================= 4 ViT -->
+<section class="part" id="vit">
+<h2><span class="num">4</span>Vision Transformer: an image is a sentence of patches</h2>
+<p class="sub">Dosovitskiy et al., ICLR 2021 · <a href="https://arxiv.org/abs/2010.11929">arXiv:2010.11929</a> · read §3.1, Figure 1, Eq. 1–4, Table 1 · lab <a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/06-vit-from-paper.ipynb">7F</a></p>
+<div class="card-row">
+<div><b>Input</b>(B, 3, 224, 224)</div>
+<div><b>Tokens</b>14 × 14 = 196 patches + 1 [class] = 197</div>
+<div><b>Idea</b>reuse the Transformer encoder; patches = words</div>
+<div><b>ViT-B/16</b>L = 12, D = 768, MLP 3072, 12 heads, 86 M</div>
+</div>
+
+<h3 id="vit-pairs">Paper ↔ code</h3>
+<div class="pair-head"><div>Paper</div><div>Code</div></div>
+<div class="pair">
+<div class="paper"><div class="ref">§3.1 · patches</div>
+<q>To handle 2D images, we reshape the image \(x\in\mathbb{R}^{H\times W\times C}\) into a sequence of flattened 2D patches \(x_p\in\mathbb{R}^{N\times(P^2\cdot C)}\) … \(N = HW/P^2\) is the resulting number of patches.</q></div>
+<div class="code"><pre><code class="language-python">def patchify(x, P):                          # x (B, C, H, W)
+    B, C, H, W = x.shape
+    x = x.reshape(B, C, H // P, P, W // P, P)  # split rows and columns
+    x = x.permute(0, 2, 4, 3, 5, 1)            # (B, H/P, W/P, P, P, C)
+    return x.reshape(B, (H // P) * (W // P), P * P * C)</code></pre>
+<div class="shape">(B, 3, 224, 224) → <b>(B, 196, 768)</b>: N = 224·224 / 16² = 196, P²C = 16·16·3 = 768</div></div>
+</div>
+<div class="pair">
+<div class="paper"><div class="ref">Eq. (1) · patch + position embedding</div>
+\[ z_0 = [x_{class};\, x_p^1E;\, x_p^2E;\dots;\, x_p^NE] + E_{pos} \]
+\(E\in\mathbb{R}^{(P^2C)\times D},\; E_{pos}\in\mathbb{R}^{(N+1)\times D}\)
+<div class="plain">A Conv2d with kernel = stride = P sees each patch exactly once, so it <b>is</b> "flatten each patch, multiply by E" (Lab 7F proves it numerically).</div></div>
+<div class="code"><pre><code class="language-python">self.proj = nn.Conv2d(3, D, kernel_size=P, stride=P)       # E
+self.cls_token = nn.Parameter(torch.zeros(1, 1, D))        # x_class
+self.pos_embed = nn.Parameter(torch.randn(1, N + 1, D) * .02)  # E_pos
+
+x = self.proj(img).flatten(2).transpose(1, 2)              # (B, 196, 768)
+cls = self.cls_token.expand(B, -1, -1)                     # (B, 1, 768)
+z0 = torch.cat([cls, x], dim=1) + self.pos_embed           # (B, 197, 768)</code></pre>
+<div class="shape">conv output (B, 768, 14, 14) → flatten → (B, 768, 196) → transpose → <b>(B, 196, 768)</b></div></div>
+</div>
+<div class="pair">
+<div class="paper"><div class="ref">Eq. (2), (3) · encoder block (pre-norm)</div>
+\[ z'_\ell = \mathrm{MSA}(\mathrm{LN}(z_{\ell-1})) + z_{\ell-1} \]
+\[ z_\ell = \mathrm{MLP}(\mathrm{LN}(z'_\ell)) + z'_\ell \]
+<q>The MLP contains two layers with a GELU non-linearity.</q>
+<div class="plain">Difference from 2017: LayerNorm comes <b>before</b> each sub-layer ("pre-norm"), which trains deep stacks more stably.</div></div>
+<div class="code"><pre><code class="language-python">class EncoderBlock(nn.Module):
+    def __init__(self, D, heads, mlp_dim):
+        super().__init__()
+        self.norm1 = nn.LayerNorm(D, eps=1e-6)
+        self.attn = nn.MultiheadAttention(D, heads, batch_first=True)
+        self.norm2 = nn.LayerNorm(D, eps=1e-6)
+        self.mlp = nn.Sequential(nn.Linear(D, mlp_dim), nn.GELU(),
+                                 nn.Linear(mlp_dim, D))
+    def forward(self, z):
+        h = self.norm1(z)
+        z = z + self.attn(h, h, h, need_weights=False)[0]   # Eq. 2
+        z = z + self.mlp(self.norm2(z))                      # Eq. 3
+        return z</code></pre>
+<div class="shape">(B, 197, 768) → (B, 197, 768), twelve times</div></div>
+</div>
+<div class="pair">
+<div class="paper"><div class="ref">Eq. (4) · classification</div>
+\[ y = \mathrm{LN}(z_L^0) \]
+The [class] token (position 0) after the last block summarises the whole image; one Linear layer maps it to 1000 ImageNet classes.</div>
+<div class="code"><pre><code class="language-python">z = self.blocks(z0)                 # (B, 197, 768)
+y = self.norm(z)[:, 0]              # token 0 only: (B, 768)   Eq. 4
+logits = self.head(y)               # (B, 1000)</code></pre>
+<div class="shape">Lab 7F: a tiny ViT (16 tokens, D = 64) reads 8 × 8 digits at <b>98.6 %</b></div></div>
+</div>
+
+<h3 id="vit-count">Count ViT-B/16's parameters (Table 1 says 86 M)</h3>
+<div class="derive"><div class="t">Derivation K · D = 768, MLP = 3072, 12 heads, 12 layers, 1000 classes</div>
+<ol>
+<li>Patch embedding E: (16·16·3)·768 + 768 = 590 592.</li>
+<li>[class] token 768; position embeddings 197·768 = 151 296.</li>
+<li>One block: 2 LayerNorms 2·(2·768) = 3 072; MSA 4(768² + 768) = 2 362 368; MLP 768·3072 + 3072 + 3072·768 + 768 = 4 722 432 → <b>7 087 872</b>.</li>
+<li>12 blocks: 85 054 464. Final LayerNorm 1 536. Head 768·1000 + 1000 = 769 000.</li>
+</ol>
+<div class="res">590 592 + 768 + 151 296 + 85 054 464 + 1 536 + 769 000 = 86 567 656, exactly torchvision's vit_b_16 (Lab 7F checks it).</div></div>
+<div class="derive"><div class="t">Derivation L · how cost grows with resolution</div>
+<ol>
+<li>Tokens: \(N = (H/P)^2\). 224 → 196, 384 → 576.</li>
+<li>Attention matrix per head: \((N+1)^2\) entries: 197² = 38 809 vs 577² = 332 929.</li>
+</ol>
+<div class="res">384 × 384 costs ≈ 8.6 × more attention than 224 × 224: why high-resolution ViTs use bigger patches or local windows (Swin).</div></div>
+
+<div class="practice"><b>🖐 Practice V (by hand, then check in 7I §4)</b>
+<ol>
+<li><b>V1.</b> ViT-L/16 on a 224 image: number of tokens (with [class])? Patch vector length?
+<details><summary>Answer</summary><div>196 + 1 = 197 tokens (the patch size decides, not the model size); 16·16·3 = 768 numbers per patch.</div></details></li>
+<li><b>V2.</b> Patch embedding parameters for P = 32, D = 768?
+<details><summary>Answer</summary><div>32·32·3·768 + 768 = 2 359 296 + 768 = 2 360 064.</div></details></li>
+<li><b>V3.</b> In one ViT-B block, which part has the most parameters: MSA or MLP? By how much?
+<details><summary>Answer</summary><div>MLP: 4 722 432 vs 2 362 368, twice as many.</div></details></li>
+<li><b>V4.</b> An 8 × 8 digit with 2 × 2 patches (Lab 7F): how many tokens, and how many numbers per token?
+<details><summary>Answer</summary><div>(8/2)² = 16 patches + 1 [class] = 17 tokens; 2·2·1 = 4 numbers per patch.</div></details></li>
+</ol></div>
+</section>
+
+<!-- ======================================================= 5 ResNet -->
+<section class="part" id="resnet">
+<h2><span class="num">5</span>Bonus: ResNet in one equation</h2>
+<p class="sub">He, Zhang, Ren &amp; Sun, CVPR 2016 · <a href="https://arxiv.org/abs/1512.03385">arXiv:1512.03385</a> · Figure 2, §3.1–3.3 · lab <a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/05-resnet-from-paper.ipynb">7E</a> · the "+ x" also appears in every Transformer and ViT block above</p>
+<div class="pair">
+<div class="paper"><div class="ref">§1 (quote) · §3.2 Eq. (1) · Figure 2</div>
+\[ y = \mathcal{F}(x, \{W_i\}) + x \]
+<q>… we explicitly let these layers fit a residual mapping. … If an identity mapping were optimal, it would be easier to push the residual to zero than to fit an identity mapping by a stack of nonlinear layers.</q></div>
+<div class="code"><pre><code class="language-python">class BasicBlock(nn.Module):
+    def __init__(self, cin, cout, stride=1):
+        super().__init__()
+        self.conv1 = nn.Conv2d(cin, cout, 3, stride, 1, bias=False)
+        self.bn1 = nn.BatchNorm2d(cout)
+        self.conv2 = nn.Conv2d(cout, cout, 3, 1, 1, bias=False)
+        self.bn2 = nn.BatchNorm2d(cout)
+        self.downsample = None                       # identity
+        if stride != 1 or cin != cout:               # projection (§3.3)
+            self.downsample = nn.Sequential(
+                nn.Conv2d(cin, cout, 1, stride, bias=False), nn.BatchNorm2d(cout))
+    def forward(self, x):
+        identity = x if self.downsample is None else self.downsample(x)
+        out = torch.relu(self.bn1(self.conv1(x)))
+        out = self.bn2(self.conv2(out))              # F(x)
+        return torch.relu(out + identity)            # F(x) + x, then ReLU</code></pre>
+<div class="shape">BasicBlock(64, 64): 2·9·64·64 + 4·64 = <b>73 984</b> parameters · ResNet-18 total <b>11 689 512</b></div></div>
+</div>
+<div class="derive"><div class="t">Derivation M · why "+ x" keeps the gradient alive (backpropagation, chain rule)</div>
+<ol>
+<li>Plain layer: \(y = f(x)\) → \(\frac{\partial L}{\partial x} = \frac{\partial L}{\partial y}\, f'(x)\).</li>
+<li>Residual layer: \(y = F(x) + x\) → \(\frac{\partial L}{\partial x} = \frac{\partial L}{\partial y}\,\big(F'(x) + 1\big)\). The "+ 1" is a gradient highway.</li>
+<li>20 plain layers with \(f' = 0.5\): gradient × \(0.5^{20} \approx 9.5\times10^{-7}\): the first layers stop learning.</li>
+<li>20 residual layers with a small \(F'\) (say 0): gradient × \(1^{20} = 1\): the signal reaches the first layer.</li>
+</ol>
+<div class="res">That is why the 56-layer plain net in Lab 7E reaches only 36 % test accuracy while ResNet-56 reaches 98 % (the paper's Figure 1).</div></div>
+<div class="practice"><b>🖐 Practice R</b>
+<ol>
+<li><b>R1.</b> A block maps (B, 64, 56, 56) to (B, 128, 28, 28). Which shortcut, and how many parameters does it have?
+<details><summary>Answer</summary><div>A projection: 1 × 1 conv with stride 2 (64·128 = 8 192, no bias) + BatchNorm (2·128 = 256) = 8 448.</div></details></li>
+<li><b>R2.</b> Why <code>bias=False</code> in the convolutions?
+<details><summary>Answer</summary><div>BatchNorm subtracts the mean (removing any bias) and adds its own learned shift β; a conv bias would be wasted.</div></details></li>
+</ol></div>
+</section>
+
+<!-- ======================================================= CHEAT SHEET -->
+<section class="part" id="cheatsheet">
+<h2>Cheat sheet: formulas, shapes, numbers</h2>
+<table class="grid">
+<tr><th>What</th><th>Formula</th><th>PyTorch</th><th>Example</th></tr>
+<tr><td>Conv output size</td><td>\(\lfloor (n + 2p - d(k-1) - 1)/s \rfloor + 1\)</td><td><code>nn.Conv2d(cin, cout, k, s, p)</code></td><td>572 → 570; 224 → 112 (k 7, s 2, p 3)</td></tr>
+<tr><td>Conv parameters</td><td>\(k^2 C_{in} C_{out} + C_{out}\)</td><td><code>C.count_params(layer)</code></td><td>Conv2d(64, 64, 3): 36 928</td></tr>
+<tr><td>Linear parameters</td><td>\(d_{in} d_{out} + d_{out}\)</td><td><code>nn.Linear(d_in, d_out)</code></td><td>512 → 2048: 1 050 624</td></tr>
+<tr><td>Attention</td><td>\(\mathrm{softmax}(QK^\top/\sqrt{d_k})V\)</td><td><code>(q @ k.transpose(-2,-1) / d_k**.5).softmax(-1) @ v</code></td><td>scores (B, h, L<sub>q</sub>, L<sub>k</sub>)</td></tr>
+<tr><td>Multi-head params</td><td>\(4(d^2 + d)\)</td><td>4 × <code>nn.Linear(d, d)</code></td><td>d = 512: 1 050 624</td></tr>
+<tr><td>Split heads</td><td>(B, L, D) → (B, h, L, D/h)</td><td><code>.view(B, L, h, d_k).transpose(1, 2)</code></td><td>(2, 10, 512) → (2, 8, 10, 64)</td></tr>
+<tr><td>Positional encoding</td><td>sin/cos of \(pos/10000^{2i/d}\)</td><td><code>pe[:, 0::2] = sin, pe[:, 1::2] = cos</code></td><td>PE(1) = (0.841, 0.540, 0.010, 1.000)</td></tr>
+<tr><td>LayerNorm</td><td>\((x-\mu)/\sqrt{\sigma^2+\epsilon}\) per token</td><td><code>nn.LayerNorm(d)</code></td><td>(1,2,3,6) → (−1.07, −0.53, 0, 1.60)</td></tr>
+<tr><td>Causal mask</td><td>lower-triangular</td><td><code>torch.tril(torch.ones(L, L, dtype=torch.bool))</code></td><td>first row (1, 0, 0, …)</td></tr>
+<tr><td>U-Net size (2015)</td><td>out = n − 184; n = 16k + 124</td><td>valid convs + <code>center_crop</code></td><td>572 → 388</td></tr>
+<tr><td>Dice / IoU</td><td>\(2I/(|A|+|B|)\), \(I/U\); Dice = 2 IoU/(1 + IoU)</td><td><code>2 * (a &amp; b).sum() / (a.sum() + b.sum())</code></td><td>40, 60, 30 → 0.60</td></tr>
+<tr><td>ViT tokens</td><td>\(N = HW/P^2\), + 1 [class]</td><td><code>Conv2d(3, D, P, stride=P)</code></td><td>224, P 16 → 197</td></tr>
+<tr><td>Residual</td><td>\(y = F(x) + x\), \(\partial y/\partial x = F' + 1\)</td><td><code>relu(out + identity)</code></td><td>ResNet-18: 11 689 512</td></tr>
+</table>
+<table class="grid" style="margin-top:16px;">
+<tr><th>Model (as in the paper)</th><th class="r">Parameters</th><th>How you verify it in Lab 7</th></tr>
+<tr><td>Transformer base (d 512, h 8, N 6, d<sub>ff</sub> 2048)</td><td class="r">≈ 63 M by our count · 65 M in the paper</td><td>Derivation H</td></tr>
+<tr><td>U-Net 2015</td><td class="r">31 030 658</td><td>7D <code>check_unet_paper</code></td></tr>
+<tr><td>ResNet-18 / 34 / 50</td><td class="r">11 689 512 / 21 797 672 / 25 557 032</td><td>7E: equal to torchvision; official weights load with <code>strict=True</code></td></tr>
+<tr><td>ViT-B/16</td><td class="r">86 567 656</td><td>7F <code>check_vit_b16</code></td></tr>
+</table>
+</section>
+
+<!-- ======================================================= EXIT -->
+<section class="part" id="exit">
+<h2>Exit ticket (5 minutes, no notes)</h2>
+<div class="practice"><b>Write the answers on paper and hand them in</b>
+<ol>
+<li>Q is (1, 4, 64) and K is (1, 6, 64). Shape of the attention weights? What does each row sum to?</li>
+<li>Why does the paper divide by √d<sub>k</sub>? Answer in one sentence with the word "variance".</li>
+<li>The 2015 U-Net receives a 556 × 556 tile. Output size?</li>
+<li>How many tokens does ViT-B/16 process for a 224 × 224 image, and where does the extra one come from?</li>
+<li>Name one test you would run to check that your implementation of a new paper is correct.</li>
+</ol>
+<details><summary>Answers (teacher)</summary><div>1. (1, 4, 6); 1. — 2. The dot product of d<sub>k</sub> unit-variance terms has variance d<sub>k</sub>; dividing by √d<sub>k</sub> brings it back to 1 so the softmax does not saturate. — 3. 556 − 184 = 372. — 4. 197 = 196 patches + the learned [class] token. — 5. Any of: compare shapes with the paper's figure, a hand-computed example, the parameter count, equality with a reference implementation, overfit one batch.</div></details>
+</div>
+<p><a class="btn" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/09-paper-math-workbook.ipynb">▶ Open the Lab 7I workbook in Colab</a><a class="btn alt" href="../labs.html#lab-7-papers">All Lab 7 notebooks</a><a class="btn alt" href="../lectures/07_Paper_Implementation.html">Lecture 7 slides</a></p>
+</section>
+</main>
+</div>
+<footer>Intelligent Vision Systems · University of Lahore · Dr. Muhammad Kazim. Quotations and equations are from the cited papers (arXiv versions), reproduced for teaching and commentary; © their authors. All numbers on this page were computed and checked with the Lab 7 code.</footer>
+
+<script>
+hljs.highlightAll();
+(function () {
+  var links = Array.prototype.slice.call(document.querySelectorAll("#toc a"));
+  var targets = links.map(function (a) { return document.querySelector(a.getAttribute("href")); });
+  function onScroll() {
+    var y = window.scrollY + 120, cur = 0;
+    targets.forEach(function (t, i) { if (t && t.getBoundingClientRect().top + window.scrollY <= y) cur = i; });
+    links.forEach(function (a, i) { a.classList.toggle("on", i === cur); });
+  }
+  window.addEventListener("scroll", onScroll, { passive: true }); onScroll();
+  window.addEventListener("beforeprint", function () { document.querySelectorAll("details").forEach(function (d) { d.open = false; }); });
+})();
+</script>
+</body>
+</html>

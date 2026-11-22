@@ -260,7 +260,7 @@ window.Quarto = {
 <td style="text-align:center;">7</td>
 <td><strong><a href="#lab-7-papers">Lab 7</a></strong></td>
 <td><strong>Reading &amp; Implementing Research Papers.</strong> Hands-on companion to <a href="lectures/07_Paper_Implementation.html">Lecture&nbsp;7</a>.</td>
-<td>Eight notebooks: (7A) PyTorch for paper readers; (7B) attention from scratch; (7C) the Transformer, block by block, trained to reverse sequences; (7D) U-Net exactly as in the paper + a modern U-Net with a skip-connection ablation; (7E) ResNet with torchvision&rsquo;s exact parameter counts and the paper&rsquo;s Figure&nbsp;1 reproduced; (7F) the Vision Transformer; (7G) a pair-programming bug hunt; (7H) a template + worked example (SE-Net) for your own paper. Built-in &#x2705; auto-checks; all run on a free Colab CPU.</td>
+<td>Nine notebooks: (7A) PyTorch for paper readers; (7B) attention from scratch; (7C) the Transformer, block by block, trained to reverse sequences; (7D) U-Net exactly as in the paper + a modern U-Net with a skip-connection ablation; (7E) ResNet with torchvision&rsquo;s exact parameter counts and the paper&rsquo;s Figure&nbsp;1 reproduced; (7F) the Vision Transformer; (7G) a pair-programming bug hunt; (7H) a template + worked example (SE-Net) for your own paper; (7I) a paper-math workbook for the <a href="tutorials/10_paper_code_side_by_side.html">Paper &harr; Code handbook</a>. Built-in &#x2705; auto-checks; all run on a free Colab CPU.</td>
 <td>Notebooks 7A&ndash;7F with every check passing and the &ldquo;Your turn&rdquo; answers; the 7G scoreboard; the <a href="#lab-7-challenge">Paper Implementation Challenge</a> (3&ndash;5 papers).</td>
 </tr>
 <tr class="even">
@@ -605,6 +605,7 @@ window.Quarto = {
 <p class="mb-2"><strong>How to run:</strong> click <em>Colab</em>, then <em>File &rarr; Save a copy in Drive</em> and run the cells from the top. <strong>No GPU needed</strong>: every notebook trains in 1&ndash;2 minutes on the free CPU. Locally in <strong>Cursor or VS Code</strong>: <code>pip install -r <a href="LAB/Lab_7/requirements.txt">requirements.txt</a></code> in a virtual environment. Step-by-step guide for both: <a href="tutorials/09_paper_implementation_setup.html">Tutorial 09 &mdash; Colab, Cursor &amp; reading list</a>.</p>
 <p class="mb-2"><strong>Auto-checks:</strong> after each exercise a &#x2705; check compares your code with the paper (shapes, hand-computed values, parameter counts) or with PyTorch&rsquo;s reference implementation, or gives a &#x1F4A1; hint &mdash; never the answer. Stuck? Each exercise has collapsible hints.</p>
 <p class="mb-2"><strong>AI tutor mode:</strong> the folder contains <code>.cursor/rules/paper-tutor.mdc</code> and <a href="LAB/Lab_7/AGENTS.md"><code>AGENTS.md</code></a>, so Cursor&rsquo;s AI explains and gives hints instead of writing your TODOs. Print the <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/paper_reading_worksheet.md">paper reading worksheet</a> for passes 1&ndash;2.</p>
+<p class="mb-2"><strong>&#x1F4D6; 3-hour lab &amp; tutorial:</strong> the <a href="tutorials/10_paper_code_side_by_side.html">Paper &harr; Code handbook</a> puts every paper passage next to its PyTorch code and derives every equation step by step with small numbers (<a href="lectures/pdf/07_Paper_Code_Handbook.pdf">PDF handout</a>); students practise with the <a href="#lab-7i">7I workbook</a>.</p>
 <p class="mb-0"><strong>Deliverable:</strong> notebooks 7A&ndash;7F with every check passing and the <em>&ldquo;Your turn&rdquo;</em> questions answered; the 7G scoreboard shown in class; then the <a href="#lab-7-challenge">Paper Implementation Challenge</a>.</p>
 </div>
 </div>
@@ -660,6 +661,12 @@ window.Quarto = {
 <td><strong>Implement your own paper: template + worked example</strong><br><small>The 7-step recipe done end to end on <em>Squeeze-and-Excitation Networks</em> (paper card, shape table, tests, +2.53&nbsp;M parameters as in the paper, overfit-one-batch, a 3-seed experiment, an honest report), then a blank template for your paper.</small></td>
 <td>8 &middot; Challenge<br><a href="lectures/07_Paper_Implementation.html#/paper-challenge">lecture slide</a></td>
 <td style="white-space:nowrap;"><a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/08-implement-your-own-paper.ipynb">Colab</a> &middot; <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/08-implement-your-own-paper.ipynb">View</a> &middot; <a href="LAB/Lab_7/08-implement-your-own-paper.ipynb" download>Download</a></td>
+</tr>
+<tr id="lab-7i" class="odd">
+<td style="text-align:center;"><strong>7I</strong></td>
+<td><strong>Paper math workbook: derive by hand, verify in code</strong><br><small>20 short exercises that follow the <a href="tutorials/10_paper_code_side_by_side.html">Paper &harr; Code handbook</a>: attention weights and outputs for 3 words, the causal mask, why &divide;&radic;d<sub>k</sub> (std = &radic;d<sub>k</sub>), positional encoding and LayerNorm by hand, Transformer, U-Net (<i>out = n &minus; 184</i>), ViT-B/16 and ResNet parameter counts and gradients. Each pencil answer is checked against PyTorch.</small></td>
+<td>The 3-hour session<br><a href="tutorials/10_paper_code_side_by_side.html">handbook</a></td>
+<td style="white-space:nowrap;"><a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/09-paper-math-workbook.ipynb">Colab</a> &middot; <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/09-paper-math-workbook.ipynb">View</a> &middot; <a href="LAB/Lab_7/09-paper-math-workbook.ipynb" download>Download</a></td>
 </tr>
 </tbody>
 </table>
