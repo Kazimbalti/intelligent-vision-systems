@@ -4,8 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Paper ↔ Code Handbook – Intelligent Vision Systems</title>
-<meta name="description" content="A 3-hour lab and tutorial handbook: Attention Is All You Need, the Transformer, U-Net, the Vision Transformer and ResNet, with every paper passage next to its PyTorch code and every equation derived step by step with small numbers.">
+<meta name="description" content="An interactive 3-hour lab and tutorial handbook: Attention Is All You Need, the Transformer, U-Net, the Vision Transformer and ResNet, with every paper passage next to its PyTorch code and every equation derived step by step with small numbers.">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<link rel="stylesheet" href="10_interactive.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
 <script>
@@ -141,9 +142,9 @@ mjx-container[display="true"] { margin: .5em 0 !important; overflow-x: auto; ove
 <div class="hero"><div class="in">
 <p class="kick">Lecture 7 · 3-hour lab &amp; tutorial · Dr. Muhammad Kazim, University of Lahore</p>
 <h1>Paper ↔ Code: four landmark papers, side by side</h1>
-<p>Every important sentence and equation of the paper on the left, the PyTorch line that implements it on the right, the tensor shape underneath, and every formula derived step by step with numbers small enough to check with a pencil. Less theory, more doing.</p>
+<p>Every important sentence, equation and figure of the paper on the left, the PyTorch line that implements it on the right, the tensor shape underneath, and every formula derived step by step with numbers small enough to check with a pencil. <b>Hover a term in an equation or a box in a figure and its code lights up.</b> Each paper has live widgets, the paper's results next to yours, and a quick check. Less theory, more doing, with AI as a tutor, not a ghost-writer.</p>
 <div class="chips">
-<a href="#attention">1 · Attention</a><a href="#transformer">2 · Transformer</a><a href="#unet">3 · U-Net</a><a href="#vit">4 · Vision Transformer</a><a href="#resnet">5 · ResNet (bonus)</a><a href="#cheatsheet">Cheat sheet</a>
+<a href="#ai">0 · Learn with AI</a><a href="#attention">1 · Attention</a><a href="#transformer">2 · Transformer</a><a href="#unet">3 · U-Net</a><a href="#vit">4 · Vision Transformer</a><a href="#resnet">5 · ResNet (bonus)</a><a href="#cheatsheet">Cheat sheet</a>
 </div>
 </div></div>
 
@@ -151,7 +152,12 @@ mjx-container[display="true"] { margin: .5em 0 !important; overflow-x: auto; ove
 <aside class="toc" id="toc">
 <h4>Contents</h4>
 <a href="#plan">The 3-hour plan</a>
+<a href="#ai">0 · Learn papers with AI</a>
+<a class="l2" href="#ai-flow">The 7-step workflow</a>
+<a class="l2" href="#ai-prompt">Prompt builder</a>
+<a class="l2" href="#ai-traps">Where AI goes wrong</a>
 <a href="#attention">1 · Attention</a>
+<a class="l2" href="#att-play">▶ Playground</a>
 <a class="l2" href="#att-pairs">Paper ↔ code</a>
 <a class="l2" href="#att-derive">Derive it with numbers</a>
 <a class="l2" href="#att-sqrt">Why ÷ √d<sub>k</sub></a>
@@ -171,31 +177,80 @@ mjx-container[display="true"] { margin: .5em 0 !important; overflow-x: auto; ove
 <a href="#resnet">5 · ResNet (bonus)</a>
 <a href="#cheatsheet">Cheat sheet</a>
 <a href="#exit">Exit ticket</a>
+<div class="prog" id="t10prog"></div>
 </aside>
 
 <main>
 <!-- ======================================================= PLAN -->
 <section class="part" id="plan">
 <h2>The 3-hour plan</h2>
-<p class="sub">One rhythm for every paper: <b>read the passage → see the code → derive with numbers → students practise → verify in Colab.</b></p>
+<p class="sub">One rhythm for every paper: <b>read the passage → hover figure ↔ code → derive with numbers → play with the widget → practise by hand → quick check → verify in Colab.</b></p>
+<div data-widget="clock"></div>
 <table class="grid plan">
 <tr><th>Time</th><th>Block</th><th>Teacher <span class="tag t">T</span></th><th>Students <span class="tag s">S</span></th><th>Notebook</th></tr>
-<tr><td>0:00–0:10</td><td>Warm-up</td><td>How to read this page (legend below); open Colab</td><td>Open <a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/09-paper-math-workbook.ipynb">Lab 7I workbook</a>, <i>Save a copy in Drive</i></td><td>7I</td></tr>
-<tr><td>0:10–0:55</td><td><a href="#attention">1 · Attention</a></td><td>Pairs 1–4; derive Q Kᵀ, scaling, softmax, output on the board</td><td>Practice A1–A4 by hand, then check in 7I</td><td>7I §1 · 7B</td></tr>
-<tr><td>0:55–1:30</td><td><a href="#transformer">2 · Transformer</a></td><td>PE, Add &amp; Norm, FFN, masks; count the 65 M parameters together</td><td>Practice T1–T4; run 7C training (1 min)</td><td>7I §2 · 7C</td></tr>
-<tr><td>1:30–1:40</td><td><span class="tag b">break</span></td><td colspan="3">Let 7C finish training; look at the anti-diagonal cross-attention plot</td></tr>
-<tr><td>1:40–2:15</td><td><a href="#unet">3 · U-Net</a></td><td>Figure 1 ↔ code; derive <i>out = n − 184</i>; parameters; Dice</td><td>Practice U1–U4; build the paper U-Net in 7D</td><td>7I §3 · 7D</td></tr>
-<tr><td>2:15–2:45</td><td><a href="#vit">4 · ViT</a></td><td>Eq. 1–4 ↔ code; patches; count 86 567 656 parameters</td><td>Practice V1–V4; tiny ViT in 7F</td><td>7I §4 · 7F</td></tr>
-<tr><td>2:45–2:55</td><td><a href="#resnet">5 · ResNet</a> (bonus)</td><td>Why "+ x" keeps the gradient alive</td><td>Practice R1–R2</td><td>7I §5 · 7E</td></tr>
-<tr><td>2:55–3:00</td><td><a href="#exit">Exit ticket</a></td><td>Collect answers</td><td>5 questions, 5 minutes</td><td>—</td></tr>
+<tr data-t="0-15"><td>0:00–0:15</td><td>Warm-up + <a href="#ai">0 · AI rules</a></td><td>How to read this page (legend below); the 7-step AI workflow; tutor-mode prompts</td><td>Open <a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/09-paper-math-workbook.ipynb">Lab 7I workbook</a>, <i>Save a copy in Drive</i></td><td>7I</td></tr>
+<tr data-t="15-55"><td>0:15–0:55</td><td><a href="#attention">1 · Attention</a></td><td>Pairs 1–4 + Figure 2; derive Q Kᵀ, scaling, softmax, output on the board; playground</td><td>Practice A1–A4 by hand, check in the playground and 7I; quick check</td><td>7I §1 · 7B</td></tr>
+<tr data-t="55-90"><td>0:55–1:30</td><td><a href="#transformer">2 · Transformer</a></td><td>PE, Add &amp; Norm, FFN, masks; count the 65 M parameters together</td><td>Practice T1–T4; run 7C training (1 min)</td><td>7I §2 · 7C</td></tr>
+<tr data-t="90-100"><td>1:30–1:40</td><td><span class="tag b">break</span></td><td colspan="3">Let 7C finish training; look at the anti-diagonal cross-attention plot</td></tr>
+<tr data-t="100-135"><td>1:40–2:15</td><td><a href="#unet">3 · U-Net</a></td><td>Figure 1 ↔ code; derive <i>out = n − 184</i>; parameters; Dice</td><td>Practice U1–U4; build the paper U-Net in 7D</td><td>7I §3 · 7D</td></tr>
+<tr data-t="135-165"><td>2:15–2:45</td><td><a href="#vit">4 · ViT</a></td><td>Eq. 1–4 ↔ code; patches; count 86 567 656 parameters</td><td>Practice V1–V4; tiny ViT in 7F</td><td>7I §4 · 7F</td></tr>
+<tr data-t="165-175"><td>2:45–2:55</td><td><a href="#resnet">5 · ResNet</a> (bonus)</td><td>Why "+ x" keeps the gradient alive</td><td>Practice R1–R2</td><td>7I §5 · 7E</td></tr>
+<tr data-t="175-180"><td>2:55–3:00</td><td><a href="#exit">Exit ticket</a></td><td>Collect answers</td><td>5 questions, 5 minutes</td><td>—</td></tr>
 </table>
 <div class="legend">
 <div style="background:var(--paper); border:1px solid var(--paper-line);"><b style="color:#8a6d2f;">Paper</b><br>serif text, with the § / Eq. number so you can find it in the PDF</div>
 <div style="background:var(--codebg); color:#e6edf3;"><b style="color:#9ecbff;">Code</b><br>the PyTorch line(s) that implement that sentence; shapes underneath</div>
 <div style="background:#fff; border:2px solid var(--navy);"><b style="color:var(--navy);">Derive</b><br>numbered steps with tiny numbers; green line = the result</div>
 <div style="background:var(--warnbg); border-left:6px solid #f2a900;"><b style="color:#9a6700;">Practice</b><br>students do it by hand first; answers are folded</div>
+<div style="background:#fff; border:2px solid #0f766e;"><b style="color:#0f766e;">▶ Widget</b><br>live experiment: change the numbers, the paper's maths updates</div>
+<div style="background:#fff3e8; border:1px solid #fed7aa;"><b style="color:#d9480f;">Hover ↔ code</b><br>terms in equations and boxes in figures light up the code line</div>
+<div style="background:linear-gradient(90deg,var(--paper) 50%,#f0fdf4 50%); border:1px solid var(--line);"><b style="color:#8a6d2f;">Paper</b> <b style="color:var(--ok);">vs you</b><br>the paper's reported results next to what the lab gets</div>
+<div style="background:#f5f3ff; border-left:6px solid #7c3aed;"><b style="color:#6d28d9;">Quick check</b><br>instant feedback; progress shown in the sidebar</div>
 </div>
 <p class="note" style="margin-top:14px;"><b>Notation used everywhere:</b> B = batch, L = sequence length (tokens), d<sub>model</sub> = D = features per token, h = heads, d<sub>k</sub> = D / h, C = channels, H × W = image size, P = patch size, N = number of patches. Shapes are written (B, L, D).</p>
+</section>
+
+<!-- ======================================================= 0 AI -->
+<section class="part" id="ai">
+<h2><span class="num">0</span>Learn papers with AI: read, derive, code, verify</h2>
+<p class="sub">Claude, ChatGPT and Cursor can explain any paragraph in seconds. That makes them excellent <b>tutors</b> and dangerous <b>ghost-writers</b>. The rule for this lab: <b>AI may explain, question and review; you derive, write and verify.</b> You must be able to explain every line in the viva without notes.</p>
+<div class="card-row">
+<div><b>Use AI to</b>explain a term, quiz you, check one step, explain an error, suggest a test</div>
+<div><b>Never let AI</b>write your TODOs, invent numbers or quotes, or be your test</div>
+<div><b>Always</b>paste the paper's own text: the model then works from the paper, not from memory</div>
+<div><b>Declare</b>tools, what for, what you did yourself, how you verified it</div>
+</div>
+<h3 id="ai-flow">The 7-step workflow</h3>
+<div data-widget="flow"></div>
+<h3 id="ai-prompt">Prompt builder</h3>
+<div data-widget="prompt"></div>
+<div class="gb"><div><h4>✗ Weak prompts</h4>
+<p>Implement U-Net in PyTorch.</p><p>Explain attention.</p><p>Is my ViT correct?</p></div>
+<div><h4>✓ Tutor prompts</h4>
+<p>I'm implementing the 2015 U-Net (§2, Fig. 1). After down 1 my map is 568×568×64. What does "correspondingly cropped" mean? Give a hint, not code.</p>
+<p>Explain Eq. (1) with Q = [[1,0],[0,1],[1,1]], K = [[0,1],[1,0],[2,0]]. Stop after the scores and ask me to do the softmax.</p>
+<p>My ViT-B/16 has 86 567 656 parameters, output (2, 1000). Which tests besides the parameter count would show my patch embedding is right?</p></div></div>
+<h3 id="ai-traps">Where AI goes wrong on papers (open each)</h3>
+<div class="trap">
+<details><summary>Quotes and equation numbers that are not in the paper</summary><div>Models produce fluent "quotes" from memory. <b>Check:</b> Ctrl+F the sentence in the PDF. If it isn't there, it isn't a quote.</div></details>
+<details><summary>Mixing versions of an idea</summary><div>Post-norm (2017 Transformer) vs pre-norm (ViT); unpadded 2015 U-Net (572 → 388) vs modern padded U-Net (572 → 572). <b>Check:</b> your shape table against the paper's own figure.</div></details>
+<details><summary>Code that runs but is silently wrong</summary><div><code>q.view(B, h, L, d_k)</code> without the transpose has the right shape and the wrong content (see the head-split widget in §1). <b>Check:</b> a hand example + a reference implementation.</div></details>
+<details><summary>Confident wrong numbers</summary><div>Parameter counts, BLEU scores, accuracies "from the paper". <b>Check:</b> count with code (this page's calculators) and open the table yourself.</div></details>
+<details><summary>Functions that don't exist</summary><div>Plausible names such as <code>F.attention</code>, or old arguments. <b>Check:</b> the error message and the PyTorch docs.</div></details>
+<details><summary>Doing the whole lab for you</summary><div>Fast today, a failed viva later. Lab 7 ships <code>.cursor/rules/paper-tutor.mdc</code> and <code>AGENTS.md</code> so Cursor stays in tutor mode.</div></details>
+</div>
+<div class="pair"><div class="paper"><div class="ref">your report · AI-use declaration (copy into every Lab 7 notebook)</div>
+Honest use of AI is allowed and expected. Hidden use is not. The declaration takes two minutes and protects you.
+<div class="plain"><b>The test of good AI use:</b> could you redo the derivation and the code tomorrow without the AI? If yes, it was tutoring.</div></div>
+<div class="code"><pre><code class="language-markdown">## AI-use declaration
+- Tools: Claude / ChatGPT / Cursor (date: ____)
+- Used for: explaining §3.2.2; checking my shape table; explaining the
+  RuntimeError in cell 14
+- Done myself: all derivations; all code in TODO cells; experiments
+- Verified by: hand example (Derivation A), parameter count
+  (86 567 656 = torchvision), equality with F.scaled_dot_product_attention
+- Prompts: appendix A</code></pre>
+<div class="shape">the "verified by" line is the one examiners read first</div></div></div>
 </section>
 
 <!-- ======================================================= 1 ATTENTION -->
@@ -222,11 +277,13 @@ mjx-container[display="true"] { margin: .5em 0 !important; overflow-x: auto; ove
 <div class="shape">every query gets <b>its own</b> weighted mix of all values</div></div>
 </div>
 
-<div class="pair">
-<div class="paper"><div class="ref">§3.2.1 · Eq. (1)</div>
-\[ \mathrm{Attention}(Q,K,V) = \mathrm{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}}\right)V \]
-<q>We compute the dot products of the query with all keys, divide each by \(\sqrt{d_k}\), and apply a softmax function to obtain the weights on the values.</q></div>
-<div class="code"><pre><code class="language-python">def attention(q, k, v, mask=None):
+<div class="pair linked">
+<div class="paper"><div class="ref">§3.2.1 · Eq. (1) · Figure 2 (left)</div>
+\[ \mathrm{Attention}(Q,K,V) = \class{lk-att-soft}{\mathrm{softmax}}\!\left(\frac{\class{lk-att-qk}{QK^\top}}{\class{lk-att-scale}{\sqrt{d_k}}}\right)\class{lk-att-mix}{V} \]
+<q>We compute the dot products of the query with all keys, divide each by \(\sqrt{d_k}\), and apply a softmax function to obtain the weights on the values.</q>
+<div class="figpanel" data-fig="sdpa" data-label="Figure 2 left: scaled dot-product attention" style="max-width:270px; margin:8px auto 0;"></div>
+<p class="hint">Figure 2 (left), redrawn. <b>Hover</b> a box or a term of Eq. (1); click to pin it.</p></div>
+<div class="code"><pre data-map="att-qk:3 att-scale:2,4 att-mask:5-6 att-soft:7 att-mix:8"><code class="language-python">def attention(q, k, v, mask=None):
     d_k = q.size(-1)
     scores = q @ k.transpose(-2, -1)         # MatMul   Q K^T
     scores = scores / math.sqrt(d_k)         # Scale    / sqrt(d_k)
@@ -239,8 +296,7 @@ mjx-container[display="true"] { margin: .5em 0 !important; overflow-x: auto; ove
 
 <div class="pair">
 <div class="paper"><div class="ref">Figure 2 (left) · read bottom-up</div>
-<div class="mini-flow"><span>MatMul</span><i>→</i><span>Scale</span><i>→</i><span>Mask (opt.)</span><i>→</i><span>SoftMax</span><i>→</i><span>MatMul</span></div>
-Five boxes in the figure = five lines of code. <b>Always map a figure box by box.</b>
+Five boxes in the figure above = five lines of code. <b>Always map a figure box by box.</b>
 <div class="plain"><b>Three details the paper leaves to you:</b> transpose only the last two axes (tensors become 4-D later); softmax over the <b>last</b> axis (the keys); masked scores become −∞ <b>before</b> the softmax.</div></div>
 <div class="code"><pre><code class="language-python"># check against PyTorch's own implementation
 import torch.nn.functional as F
@@ -306,6 +362,7 @@ print(out.round(decimals=2))
 <li>Output₁ = 0.670·(10, 0) + 0.330·(0, 10) = (6.70, 3.30). Word 2 sees everything: unchanged (5, 5).</li>
 </ol>
 <div class="res">The mask changes rows 0 and 1 only. The first row of a causal attention matrix is always (1, 0, 0, …).</div></div>
+<div id="att-play" data-widget="attn"></div>
 
 <h3 id="att-sqrt">Why divide by √d<sub>k</sub>? A 4-line derivation</h3>
 <div class="derive"><div class="t">Derivation C · footnote 4 of the paper</div>
@@ -332,15 +389,17 @@ The softmax gradient is \(\dfrac{\partial s_i}{\partial z_i} = s_i(1-s_i)\).
 # 512  ≈ 22.6   ≈ 1.0        (std = sqrt(d_k), then 1)</code></pre>
 <div class="shape">experiment confirms the derivation: std(q·k) = √d<sub>k</sub></div></div>
 </div>
+<div data-widget="sqrt"></div>
 
 <h3 id="att-mha">Multi-head attention</h3>
-<div class="pair">
-<div class="paper"><div class="ref">§3.2.2 · Eq. for MultiHead</div>
-\[ \mathrm{MultiHead}(Q,K,V) = \mathrm{Concat}(\mathrm{head}_1,\dots,\mathrm{head}_h)\,W^O \]
-\[ \mathrm{head}_i = \mathrm{Attention}(QW_i^Q,\,KW_i^K,\,VW_i^V) \]
+<div class="pair linked">
+<div class="paper"><div class="ref">§3.2.2 · Eq. for MultiHead · Figure 2 (right)</div>
+\[ \mathrm{MultiHead}(Q,K,V) = \class{lk-mha-concat}{\mathrm{Concat}(\mathrm{head}_1,\dots,\mathrm{head}_h)}\,\class{lk-mha-out}{W^O} \]
+\[ \mathrm{head}_i = \class{lk-mha-att}{\mathrm{Attention}}(\class{lk-mha-proj}{QW_i^Q,\,KW_i^K,\,VW_i^V}) \]
+<div class="figpanel" data-fig="mha" data-label="Figure 2 right: multi-head attention" style="max-width:290px; margin:6px auto 0;"></div>
 <q>In this work we employ h = 8 parallel attention layers, or heads. For each of these we use \(d_k = d_v = d_{model}/h = 64\).</q>
 <div class="plain">One big Linear computes all 8 heads at once; we then <b>cut</b> its 512 outputs into 8 pieces of 64.</div></div>
-<div class="code"><pre><code class="language-python">class MultiHeadAttention(nn.Module):
+<div class="code"><pre data-map="mha-heads:4 mha-proj:5-7,12-14 mha-out:8,17 mha-att:15 mha-concat:16"><code class="language-python">class MultiHeadAttention(nn.Module):
     def __init__(self, d_model, n_heads):
         super().__init__()
         self.h, self.d_k = n_heads, d_model // n_heads
@@ -366,6 +425,7 @@ The softmax gradient is \(\dfrac{\partial s_i}{\partial z_i} = s_i(1-s_i)\).
 </ol>
 <div class="res">4 · (d² + d) = 1 050 624 parameters, independent of h: 8 heads cost the same as 1.</div></div>
 <div class="warn"><b>Classic silent bug:</b> <code>q.view(B, h, L, d_k)</code> directly. The shape is right, but tokens and heads get mixed. Always <code>view(B, L, h, d_k)</code> then <code>transpose(1, 2)</code>, and undo both before W<sup>O</sup>. (Lab 7G, bug 4.)</div>
+<div data-widget="heads"></div>
 
 <div class="practice"><b>🖐 Practice A (by hand, then check in 7I §1)</b>
 <ol>
@@ -378,13 +438,27 @@ The softmax gradient is \(\dfrac{\partial s_i}{\partial z_i} = s_i(1-s_i)\).
 <li><b>A4.</b> How many parameters does multi-head attention have for d<sub>model</sub> = 768 (ViT-Base)?
 <details><summary>Answer</summary><div>4 · (768² + 768) = 4 · 590 592 = 2 362 368.</div></details></li>
 </ol></div>
+<div data-quiz="att"></div>
 </section>
 
 <!-- ======================================================= 2 TRANSFORMER -->
 <section class="part" id="transformer">
 <h2><span class="num">2</span>The Transformer: building Figure 1 block by block</h2>
 <p class="sub">Same paper, §3.1, §3.3–3.5, Figure 1 · lab <a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/03-transformer-reverse-sequence.ipynb">7C</a> (a Transformer that learns to reverse sequences)</p>
-<div class="mini-flow"><span>Embedding × √d</span><i>+</i><span>Positional encoding</span><i>→</i><span>N × Encoder</span><i>→</i><span>N × Decoder</span><i>→</i><span>Linear</span><i>→</i><span>Softmax</span></div>
+<div class="pair"><div class="paper"><div class="ref">Figure 1 · the Transformer, redrawn · read bottom-up</div>
+<div class="figpanel" data-fig="transformer" data-label="Figure 1: the Transformer architecture" style="max-width:520px; margin:0 auto;"></div>
+<p class="hint"><b>Hover</b> a block: its code lights up on this page. <b>Click</b> it to jump there.</p></div>
+<div class="code"><pre><code class="language-python"># Figure 1 as a build plan: one class per box, in this order
+# 1. attention(q, k, v, mask)          Figure 2 left
+# 2. MultiHeadAttention                Figure 2 right
+# 3. positional_encoding + embedding   §3.4, §3.5
+# 4. LayerNorm, FeedForward            "Add & Norm", Eq. (2)
+# 5. EncoderLayer = self-attn + FFN, each with Add & Norm
+# 6. DecoderLayer = masked self-attn + cross-attn + FFN
+# 7. Transformer  = embed -> N x enc -> N x dec -> Linear
+#
+# test after EVERY step: shapes, a hand example, param count</code></pre>
+<div class="shape">the shape is <b>(B, L, 512)</b> between every pair of boxes; only the Linear at the top changes it to <b>(B, L, vocab)</b></div></div></div>
 
 <h3 id="tr-pe">Positional encoding</h3>
 <div class="pair">
@@ -393,7 +467,7 @@ The softmax gradient is \(\dfrac{\partial s_i}{\partial z_i} = s_i(1-s_i)\).
 \[ PE_{(pos,\,2i)} = \sin\!\big(pos/10000^{2i/d_{model}}\big) \]
 \[ PE_{(pos,\,2i+1)} = \cos\!\big(pos/10000^{2i/d_{model}}\big) \]
 <div class="plain">Attention alone sees a <b>set</b>: "dog bites man" = "man bites dog". Adding PE gives every position a unique fingerprint.</div></div>
-<div class="code"><pre><code class="language-python">def positional_encoding(max_len, d_model):
+<div class="code"><pre data-map="tr-pe:1-8,10 tr-emb:10"><code class="language-python">def positional_encoding(max_len, d_model):
     pe = torch.zeros(max_len, d_model)
     pos = torch.arange(max_len).unsqueeze(1).float()  # (L, 1)
     two_i = torch.arange(0, d_model, 2).float()       # 0, 2, 4, ...
@@ -420,13 +494,14 @@ x = embedding(tokens) * math.sqrt(d_model) + pe[:L]  # §3.4 + §3.5</code></pre
 <li>In matrix form: \(\begin{pmatrix}\sin\omega(p+k)\\ \cos\omega(p+k)\end{pmatrix} = \begin{pmatrix}\cos\omega k & \sin\omega k\\ -\sin\omega k & \cos\omega k\end{pmatrix}\begin{pmatrix}\sin\omega p\\ \cos\omega p\end{pmatrix}\).</li>
 </ol>
 <div class="res">Moving k positions = a fixed rotation that depends only on k: a linear layer can learn "look 3 words back".</div></div>
+<div data-widget="pe"></div>
 
 <h3 id="tr-ln">Add &amp; Norm, and the feed-forward network</h3>
 <div class="pair">
 <div class="paper"><div class="ref">§3.1 · residual + layer normalisation</div>
 <q>We employ a residual connection around each of the two sub-layers, followed by layer normalization. That is, the output of each sub-layer is LayerNorm(x + Sublayer(x)).</q>
 \[ \mathrm{LN}(x) = \gamma\odot\frac{x-\mu}{\sqrt{\sigma^2+\epsilon}}+\beta,\quad \mu,\sigma^2 \text{ over the } d_{model} \text{ features} \]</div>
-<div class="code"><pre><code class="language-python">class LayerNorm(nn.Module):
+<div class="code"><pre data-map="tr-addnorm:1-12"><code class="language-python">class LayerNorm(nn.Module):
     def __init__(self, d, eps=1e-5):
         super().__init__()
         self.gamma = nn.Parameter(torch.ones(d))
@@ -447,12 +522,13 @@ y = norm(x + dropout(sublayer(x)))               # "Add & Norm"</code></pre>
 <li>Normalise: ((1−3), (2−3), (3−3), (6−3)) / 1.871.</li>
 </ol>
 <div class="res">LN(x) = (−1.069, −0.535, 0, 1.604): mean 0, variance 1. (Divide by N, not N − 1: <code>unbiased=False</code>.)</div></div>
+<div data-widget="ln"></div>
 <div class="pair">
 <div class="paper"><div class="ref">§3.3 · Eq. (2) · position-wise feed-forward</div>
 \[ \mathrm{FFN}(x) = \max(0,\, xW_1 + b_1)\,W_2 + b_2 \]
 <q>The dimensionality of input and output is \(d_{model} = 512\), and the inner-layer has dimensionality \(d_{ff} = 2048\).</q>
 <div class="plain">Applied to <b>each token separately</b>. <code>nn.Linear</code> on (B, L, D) does exactly that.</div></div>
-<div class="code"><pre><code class="language-python">class FeedForward(nn.Module):
+<div class="code"><pre data-map="tr-ffn:1-8"><code class="language-python">class FeedForward(nn.Module):
     def __init__(self, d_model, d_ff, dropout=0.1):
         super().__init__()
         self.lin1 = nn.Linear(d_model, d_ff)    # W1, b1
@@ -468,7 +544,7 @@ y = norm(x + dropout(sublayer(x)))               # "Add & Norm"</code></pre>
 <div class="paper"><div class="ref">§3.1 · Figure 1 left · encoder</div>
 <q>Each layer has two sub-layers. The first is a multi-head self-attention mechanism, and the second is a simple, position-wise fully connected feed-forward network.</q>
 <div class="mini-flow"><span>Self-attn</span><i>→</i><span>Add &amp; Norm</span><i>→</i><span>FFN</span><i>→</i><span>Add &amp; Norm</span></div></div>
-<div class="code"><pre><code class="language-python">class EncoderLayer(nn.Module):
+<div class="code"><pre data-map="tr-self:4,9 tr-ffn:5,10 tr-addnorm:6,9,10"><code class="language-python">class EncoderLayer(nn.Module):
     def __init__(self, d_model, n_heads, d_ff, dropout=0.1):
         super().__init__()
         self.self_attn = MultiHeadAttention(d_model, n_heads)
@@ -486,7 +562,7 @@ y = norm(x + dropout(sublayer(x)))               # "Add & Norm"</code></pre>
 <q>In addition to the two sub-layers in each encoder layer, the decoder inserts a third sub-layer, which performs multi-head attention over the output of the encoder stack.</q>
 <div class="mini-flow"><span>Masked self-attn</span><i>→</i><span>Cross-attn</span><i>→</i><span>FFN</span></div>
 <div class="plain"><b>Cross-attention:</b> queries from the decoder (what am I writing?), keys and values from the encoder (what did the input say?).</div></div>
-<div class="code"><pre><code class="language-python">class DecoderLayer(nn.Module):
+<div class="code"><pre data-map="tr-masked:4 tr-addnorm:4,6,7 tr-cross:5 tr-ffn:7 tr-emb:11,12 tr-pe:11,12 tr-out:12 tr-soft:13"><code class="language-python">class DecoderLayer(nn.Module):
     # self_attn, cross_attn, ffn, norm1..3, drop  (as above)
     def forward(self, y, memory, src_mask, tgt_mask):
         y = self.norm1(y + self.drop(self.self_attn(y, y, y, tgt_mask)))
@@ -529,6 +605,19 @@ for _ in range(L + 1):
 <li>Embeddings: the paper shares one 37 000 × 512 matrix (§3.4: input, output and pre-softmax weights) = 18 944 000.</li>
 </ol>
 <div class="res">Total ≈ 18.9 M + 25.2 M + 18.9 M = 63.1 M. Paper: 65 M. The ≈ 2 M gap comes from the exact vocabulary size and counting details: a typical honest "what matched, what didn't" line for your report.</div></div>
+<div data-widget="trparams"></div>
+<div class="results"><div><h4>Paper reports (Tables 2 and 3)</h4><table>
+<tr><td>Transformer base, WMT14 EN→DE</td><td class="r">27.3 BLEU</td></tr>
+<tr><td>Transformer big, EN→DE / EN→FR</td><td class="r">28.4 / 41.8 BLEU</td></tr>
+<tr><td>Training, base model</td><td class="r">12 h on 8 P100 GPUs</td></tr>
+<tr><td>Parameters, base / big</td><td class="r">65 M / 213 M</td></tr></table>
+<p>Translation at scale: millions of sentence pairs, days of GPU time.</p></div>
+<div><h4>You get in Lab 7C</h4><table>
+<tr><td>Task: reverse 8 digits</td><td class="r">98.8 % exact</td></tr>
+<tr><td>Training</td><td class="r">1 000 steps · ≈ 1 min CPU</td></tr>
+<tr><td>Cross-attention map</td><td class="r">anti-diagonal ✓</td></tr>
+<tr><td>Parameters (calculator, Lab 7C preset)</td><td class="r">≈ 0.2 M</td></tr></table>
+<p>You reproduce the <b>mechanism</b> on a task where success is easy to check, not the BLEU score. Say exactly that in your report.</p></div></div>
 
 <div class="practice"><b>🖐 Practice T (by hand, then check in 7I §2)</b>
 <ol>
@@ -541,6 +630,7 @@ for _ in range(L + 1):
 <li><b>T4.</b> Without positional encoding, can the model reverse a sequence? Why?
 <details><summary>Answer</summary><div>No. Attention treats the input as a set, so the encoder cannot tell which digit came first; accuracy drops to ≈ 0 (try it in 7C).</div></details></li>
 </ol></div>
+<div data-quiz="tr"></div>
 </section>
 
 <!-- ======================================================= 3 U-NET -->
@@ -559,7 +649,7 @@ for _ in range(L + 1):
 <div class="pair">
 <div class="paper"><div class="ref">§2 · contracting path</div>
 <q>The contracting path … consists of the repeated application of two 3x3 convolutions (unpadded convolutions), each followed by a rectified linear unit (ReLU) and a 2x2 max pooling operation with stride 2 for downsampling. At each downsampling step we double the number of feature channels.</q></div>
-<div class="code"><pre><code class="language-python">class DoubleConvValid(nn.Module):                 # "two 3x3 convolutions (unpadded)"
+<div class="code"><pre data-map="un-conv:1-8 un-down:10-11 un-pool:12"><code class="language-python">class DoubleConvValid(nn.Module):                 # "two 3x3 convolutions (unpadded)"
     def __init__(self, cin, cout):
         super().__init__()
         self.net = nn.Sequential(
@@ -576,7 +666,7 @@ pool = nn.MaxPool2d(2)                             # "2x2 max pooling, stride 2"
 <div class="pair">
 <div class="paper"><div class="ref">§2 · expansive path</div>
 <q>Every step in the expansive path consists of an upsampling of the feature map followed by a 2x2 convolution ("up-convolution") that halves the number of feature channels, a concatenation with the correspondingly cropped feature map from the contracting path, and two 3x3 convolutions, each followed by a ReLU.</q></div>
-<div class="code"><pre><code class="language-python">def center_crop(x, size):                         # "correspondingly cropped"
+<div class="code"><pre data-map="un-crop:1-3,10 un-up:5,9 un-conv:6,11"><code class="language-python">def center_crop(x, size):                         # "correspondingly cropped"
     t = (x.shape[-1] - size) // 2
     return x[..., t:t + size, t:t + size]
 
@@ -593,7 +683,7 @@ for up, conv, skip in zip(ups, up_convs, reversed(skips)):
 <div class="paper"><div class="ref">§2 · final layer · §3 · loss</div>
 <q>At the final layer a 1x1 convolution is used to map each 64-component feature vector to the desired number of classes. In total the network has 23 convolutional layers.</q>
 <q>The energy function is computed by a pixel-wise soft-max over the final feature map combined with the cross entropy loss function.</q></div>
-<div class="code"><pre><code class="language-python">head = nn.Conv2d(64, n_classes, 1)                # "1x1 convolution"
+<div class="code"><pre data-map="un-head:1-2"><code class="language-python">head = nn.Conv2d(64, n_classes, 1)                # "1x1 convolution"
 logits = head(x)                                  # (B, 2, 388, 388)
 
 # pixel-wise softmax + cross-entropy in one call:
@@ -623,6 +713,7 @@ pred = logits.argmax(1)                           # (B, 388, 388) class per pixe
 <tr><td>up 4 / 3 / 2 / 1</td><td class="r">56→52 · 104→100 · 200→196 · 392→388</td><td class="r">512 · 256 · 128 · 64</td><td></td></tr>
 <tr><td>head (1 × 1)</td><td class="r">388</td><td class="r">2</td><td></td></tr>
 </table>
+<div data-widget="unet"></div>
 
 <h3 id="un-params">Parameters and the Dice score</h3>
 <div class="derive"><div class="t">Derivation J · parameters of a convolution, then of the whole network</div>
@@ -649,6 +740,18 @@ A = predicted pixels of a class, B = true pixels.
 # Dice = 60 / 100 = 0.60 ; IoU = 30 / 70 = 0.43 ; 2·0.43/1.43 = 0.60 ✔</code></pre>
 <div class="shape">Lab 7D: mean Dice <b>0.94</b> with skips, <b>0.89</b> without (the ablation)</div></div>
 </div>
+<div data-widget="dice"></div>
+<div class="results"><div><h4>Paper reports (§4, Tables 1 and 2)</h4><table>
+<tr><td>ISBI 2012 EM segmentation, warping error</td><td class="r">0.000353 (rank 1)</td></tr>
+<tr><td>PhC-U373 cells, IoU</td><td class="r">92.0 %</td></tr>
+<tr><td>DIC-HeLa cells, IoU</td><td class="r">77.6 %</td></tr>
+<tr><td>Training data (EM)</td><td class="r">30 images + heavy augmentation</td></tr></table>
+<p>The point of the paper: very few annotated images are enough, thanks to augmentation and the skip connections.</p></div>
+<div><h4>You get in Lab 7D</h4><table>
+<tr><td>Paper U-Net built and traced</td><td class="r">572 → 388 ✓ · 31 030 658 ✓</td></tr>
+<tr><td>Small U-Net, mean Dice</td><td class="r">0.94</td></tr>
+<tr><td>Ablation: no skip connections</td><td class="r">0.89</td></tr></table>
+<p>The ablation is your evidence that the paper's key idea (skips) matters. Report the difference, not just the best number.</p></div></div>
 <div class="note"><b>2015 → today (what you change in practice):</b> <code>padding=1</code> (output = input size, no crop), <code>BatchNorm2d</code> after each conv (then <code>bias=False</code>), fewer channels (base 16–64). The idea (encoder, decoder, skips) is unchanged.</div>
 
 <div class="practice"><b>🖐 Practice U (by hand, then check in 7I §3)</b>
@@ -662,6 +765,7 @@ A = predicted pixels of a class, B = true pixels.
 <li><b>U4.</b> Prediction 50 pixels, truth 50 pixels, overlap 40. Dice and IoU?
 <details><summary>Answer</summary><div>Dice = 80 / 100 = 0.80. IoU = 40 / 60 = 0.667; check: 2·0.667/1.667 = 0.80.</div></details></li>
 </ol></div>
+<div data-quiz="un"></div>
 </section>
 
 <!-- ======================================================= 4 ViT -->
@@ -674,25 +778,28 @@ A = predicted pixels of a class, B = true pixels.
 <div><b>Idea</b>reuse the Transformer encoder; patches = words</div>
 <div><b>ViT-B/16</b>L = 12, D = 768, MLP 3072, 12 heads, 86 M</div>
 </div>
+<div class="pair" style="grid-template-columns:minmax(0,1fr);"><div class="paper" style="border-right:0;"><div class="ref">Figure 1 · model overview, redrawn left to right · hover or click a box</div>
+<div class="figpanel" data-fig="vit" data-label="ViT Figure 1: model overview"></div></div></div>
 
 <h3 id="vit-pairs">Paper ↔ code</h3>
 <div class="pair-head"><div>Paper</div><div>Code</div></div>
 <div class="pair">
 <div class="paper"><div class="ref">§3.1 · patches</div>
 <q>To handle 2D images, we reshape the image \(x\in\mathbb{R}^{H\times W\times C}\) into a sequence of flattened 2D patches \(x_p\in\mathbb{R}^{N\times(P^2\cdot C)}\) … \(N = HW/P^2\) is the resulting number of patches.</q></div>
-<div class="code"><pre><code class="language-python">def patchify(x, P):                          # x (B, C, H, W)
+<div class="code"><pre data-map="vit-patch:1-5"><code class="language-python">def patchify(x, P):                          # x (B, C, H, W)
     B, C, H, W = x.shape
     x = x.reshape(B, C, H // P, P, W // P, P)  # split rows and columns
     x = x.permute(0, 2, 4, 3, 5, 1)            # (B, H/P, W/P, P, P, C)
     return x.reshape(B, (H // P) * (W // P), P * P * C)</code></pre>
 <div class="shape">(B, 3, 224, 224) → <b>(B, 196, 768)</b>: N = 224·224 / 16² = 196, P²C = 16·16·3 = 768</div></div>
 </div>
-<div class="pair">
+<div data-widget="patch"></div>
+<div class="pair linked">
 <div class="paper"><div class="ref">Eq. (1) · patch + position embedding</div>
-\[ z_0 = [x_{class};\, x_p^1E;\, x_p^2E;\dots;\, x_p^NE] + E_{pos} \]
+\[ z_0 = [\class{lk-vit-cls}{x_{class}};\, \class{lk-vit-proj}{x_p^1E;\, x_p^2E;\dots;\, x_p^NE}] + \class{lk-vit-pos}{E_{pos}} \]
 \(E\in\mathbb{R}^{(P^2C)\times D},\; E_{pos}\in\mathbb{R}^{(N+1)\times D}\)
 <div class="plain">A Conv2d with kernel = stride = P sees each patch exactly once, so it <b>is</b> "flatten each patch, multiply by E" (Lab 7F proves it numerically).</div></div>
-<div class="code"><pre><code class="language-python">self.proj = nn.Conv2d(3, D, kernel_size=P, stride=P)       # E
+<div class="code"><pre data-map="vit-proj:1,5 vit-cls:2,6,7 vit-pos:3,7"><code class="language-python">self.proj = nn.Conv2d(3, D, kernel_size=P, stride=P)       # E
 self.cls_token = nn.Parameter(torch.zeros(1, 1, D))        # x_class
 self.pos_embed = nn.Parameter(torch.randn(1, N + 1, D) * .02)  # E_pos
 
@@ -701,13 +808,13 @@ cls = self.cls_token.expand(B, -1, -1)                     # (B, 1, 768)
 z0 = torch.cat([cls, x], dim=1) + self.pos_embed           # (B, 197, 768)</code></pre>
 <div class="shape">conv output (B, 768, 14, 14) → flatten → (B, 768, 196) → transpose → <b>(B, 196, 768)</b></div></div>
 </div>
-<div class="pair">
+<div class="pair linked">
 <div class="paper"><div class="ref">Eq. (2), (3) · encoder block (pre-norm)</div>
-\[ z'_\ell = \mathrm{MSA}(\mathrm{LN}(z_{\ell-1})) + z_{\ell-1} \]
-\[ z_\ell = \mathrm{MLP}(\mathrm{LN}(z'_\ell)) + z'_\ell \]
+\[ z'_\ell = \class{lk-vit-msa}{\mathrm{MSA}}(\class{lk-vit-ln}{\mathrm{LN}}(z_{\ell-1})) + z_{\ell-1} \]
+\[ z_\ell = \class{lk-vit-mlp}{\mathrm{MLP}}(\class{lk-vit-ln}{\mathrm{LN}}(z'_\ell)) + z'_\ell \]
 <q>The MLP contains two layers with a GELU non-linearity.</q>
 <div class="plain">Difference from 2017: LayerNorm comes <b>before</b> each sub-layer ("pre-norm"), which trains deep stacks more stably.</div></div>
-<div class="code"><pre><code class="language-python">class EncoderBlock(nn.Module):
+<div class="code"><pre data-map="vit-ln:4,6,10,12 vit-msa:5,11 vit-mlp:7-8,12"><code class="language-python">class EncoderBlock(nn.Module):
     def __init__(self, D, heads, mlp_dim):
         super().__init__()
         self.norm1 = nn.LayerNorm(D, eps=1e-6)
@@ -722,11 +829,11 @@ z0 = torch.cat([cls, x], dim=1) + self.pos_embed           # (B, 197, 768)</code
         return z</code></pre>
 <div class="shape">(B, 197, 768) → (B, 197, 768), twelve times</div></div>
 </div>
-<div class="pair">
+<div class="pair linked">
 <div class="paper"><div class="ref">Eq. (4) · classification</div>
-\[ y = \mathrm{LN}(z_L^0) \]
+\[ y = \class{lk-vit-head}{\mathrm{LN}(z_L^0)} \]
 The [class] token (position 0) after the last block summarises the whole image; one Linear layer maps it to 1000 ImageNet classes.</div>
-<div class="code"><pre><code class="language-python">z = self.blocks(z0)                 # (B, 197, 768)
+<div class="code"><pre data-map="vit-head:2-3"><code class="language-python">z = self.blocks(z0)                 # (B, 197, 768)
 y = self.norm(z)[:, 0]              # token 0 only: (B, 768)   Eq. 4
 logits = self.head(y)               # (B, 1000)</code></pre>
 <div class="shape">Lab 7F: a tiny ViT (16 tokens, D = 64) reads 8 × 8 digits at <b>98.6 %</b></div></div>
@@ -741,12 +848,24 @@ logits = self.head(y)               # (B, 1000)</code></pre>
 <li>12 blocks: 85 054 464. Final LayerNorm 1 536. Head 768·1000 + 1000 = 769 000.</li>
 </ol>
 <div class="res">590 592 + 768 + 151 296 + 85 054 464 + 1 536 + 769 000 = 86 567 656, exactly torchvision's vit_b_16 (Lab 7F checks it).</div></div>
+<div data-widget="vitparams"></div>
 <div class="derive"><div class="t">Derivation L · how cost grows with resolution</div>
 <ol>
 <li>Tokens: \(N = (H/P)^2\). 224 → 196, 384 → 576.</li>
 <li>Attention matrix per head: \((N+1)^2\) entries: 197² = 38 809 vs 577² = 332 929.</li>
 </ol>
 <div class="res">384 × 384 costs ≈ 8.6 × more attention than 224 × 224: why high-resolution ViTs use bigger patches or local windows (Swin).</div></div>
+<div class="results"><div><h4>Paper reports (Table 2, Figure 3)</h4><table>
+<tr><td>ViT-H/14, pre-trained on JFT-300M, ImageNet top-1</td><td class="r">88.55 %</td></tr>
+<tr><td>ViT-L/16, JFT-300M</td><td class="r">87.76 %</td></tr>
+<tr><td>ViT-L/16, ImageNet-21k</td><td class="r">85.30 %</td></tr>
+<tr><td>Pre-trained on ImageNet-1k only</td><td class="r">below ResNets (Fig. 3)</td></tr></table>
+<p>The headline: with enough data, a plain Transformer beats CNNs. With little data, it does not.</p></div>
+<div><h4>You get in Lab 7F</h4><table>
+<tr><td>ViT-B/16 built, parameters</td><td class="r">86 567 656 ✓</td></tr>
+<tr><td>Conv2d patch embedding = flatten · E</td><td class="r">equal ✓</td></tr>
+<tr><td>Tiny ViT, 8 × 8 digits (17 tokens)</td><td class="r">98.6 %</td></tr></table>
+<p>Your tiny ViT works because the task is easy. Train 7F on fewer images and the gap to a CNN grows: Figure 3's lesson.</p></div></div>
 
 <div class="practice"><b>🖐 Practice V (by hand, then check in 7I §4)</b>
 <ol>
@@ -759,17 +878,19 @@ logits = self.head(y)               # (B, 1000)</code></pre>
 <li><b>V4.</b> An 8 × 8 digit with 2 × 2 patches (Lab 7F): how many tokens, and how many numbers per token?
 <details><summary>Answer</summary><div>(8/2)² = 16 patches + 1 [class] = 17 tokens; 2·2·1 = 4 numbers per patch.</div></details></li>
 </ol></div>
+<div data-quiz="vit"></div>
 </section>
 
 <!-- ======================================================= 5 ResNet -->
 <section class="part" id="resnet">
 <h2><span class="num">5</span>Bonus: ResNet in one equation</h2>
 <p class="sub">He, Zhang, Ren &amp; Sun, CVPR 2016 · <a href="https://arxiv.org/abs/1512.03385">arXiv:1512.03385</a> · Figure 2, §3.1–3.3 · lab <a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/05-resnet-from-paper.ipynb">7E</a> · the "+ x" also appears in every Transformer and ViT block above</p>
-<div class="pair">
+<div class="pair linked">
 <div class="paper"><div class="ref">§1 (quote) · §3.2 Eq. (1) · Figure 2</div>
-\[ y = \mathcal{F}(x, \{W_i\}) + x \]
+\[ y = \class{lk-rn-f}{\mathcal{F}(x, \{W_i\})} \class{lk-rn-add}{+} \class{lk-rn-id}{x} \]
+<div class="figpanel" data-fig="resblock" data-label="ResNet Figure 2: residual block" style="max-width:240px; margin:4px auto;"></div>
 <q>… we explicitly let these layers fit a residual mapping. … If an identity mapping were optimal, it would be easier to push the residual to zero than to fit an identity mapping by a stack of nonlinear layers.</q></div>
-<div class="code"><pre><code class="language-python">class BasicBlock(nn.Module):
+<div class="code"><pre data-map="rn-f:4-7,14-15 rn-id:8-11,13 rn-add:16"><code class="language-python">class BasicBlock(nn.Module):
     def __init__(self, cin, cout, stride=1):
         super().__init__()
         self.conv1 = nn.Conv2d(cin, cout, 3, stride, 1, bias=False)
@@ -795,6 +916,17 @@ logits = self.head(y)               # (B, 1000)</code></pre>
 <li>20 residual layers with a small \(F'\) (say 0): gradient × \(1^{20} = 1\): the signal reaches the first layer.</li>
 </ol>
 <div class="res">That is why the 56-layer plain net in Lab 7E reaches only 36 % test accuracy while ResNet-56 reaches 98 % (the paper's Figure 1).</div></div>
+<div data-widget="resgrad"></div>
+<div class="results"><div><h4>Paper reports (Figure 1, Table 6, §4)</h4><table>
+<tr><td>Plain 56 layers vs 20 layers, CIFAR-10</td><td class="r">deeper is <b>worse</b></td></tr>
+<tr><td>ResNet-56 / ResNet-110, CIFAR-10 error</td><td class="r">6.97 % / 6.43 %</td></tr>
+<tr><td>ILSVRC 2015 ensemble, top-5 error</td><td class="r">3.57 % (1st place)</td></tr></table>
+<p>Degradation is an optimisation problem, not overfitting: the deep plain net's <i>training</i> error is also higher.</p></div>
+<div><h4>You get in Lab 7E</h4><table>
+<tr><td>Plain-56 vs ResNet-56, test accuracy</td><td class="r">36 % vs 98 %</td></tr>
+<tr><td>ResNet-18 / 34 / 50 parameters</td><td class="r">= torchvision ✓</td></tr>
+<tr><td>Official weights load</td><td class="r"><code>strict=True</code> ✓</td></tr></table>
+<p>The same story as the paper's Figure 1, at lab scale.</p></div></div>
 <div class="practice"><b>🖐 Practice R</b>
 <ol>
 <li><b>R1.</b> A block maps (B, 64, 56, 56) to (B, 128, 28, 28). Which shortcut, and how many parameters does it have?
@@ -802,6 +934,7 @@ logits = self.head(y)               # (B, 1000)</code></pre>
 <li><b>R2.</b> Why <code>bias=False</code> in the convolutions?
 <details><summary>Answer</summary><div>BatchNorm subtracts the mean (removing any bias) and adds its own learned shift β; a conv bias would be wasted.</div></details></li>
 </ol></div>
+<div data-quiz="rn"></div>
 </section>
 
 <!-- ======================================================= CHEAT SHEET -->
@@ -865,5 +998,6 @@ hljs.highlightAll();
   window.addEventListener("beforeprint", function () { document.querySelectorAll("details").forEach(function (d) { d.open = false; }); });
 })();
 </script>
+<script src="10_interactive.js"></script>
 </body>
 </html>
