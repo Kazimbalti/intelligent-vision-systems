@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="Step-by-step setup for reading and implementing research papers: Google Colab and Cursor (Python, virtual environment, notebooks, AI tutor mode), the write-in-Cursor / train-in-Colab workflow, the three-pass reading method, and a verified reading list of vision papers, code and videos for Lecture 7 and Lab 7.">
+<meta name="description" content="Step-by-step setup for reading and implementing research papers: Google Colab and Google Antigravity (Python, virtual environment, notebooks, AI tutor mode), the write-in-Antigravity / train-in-Colab workflow, the three-pass reading method, and a verified reading list of vision papers, code and videos for Lecture 7 and Lab 7.">
 
-<title>09 — Paper Implementation Setup: Colab, Cursor &amp; Reading List – Intelligent Vision Systems</title>
+<title>09 — Paper Implementation Setup: Colab, Antigravity &amp; Reading List – Intelligent Vision Systems</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -184,8 +184,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#how-to-use" id="toc-how-to-use" class="nav-link active" data-scroll-target="#how-to-use">How to use this page</a></li>
   <li><a href="#colab" id="toc-colab" class="nav-link" data-scroll-target="#colab">1 · Google Colab</a></li>
-  <li><a href="#cursor" id="toc-cursor" class="nav-link" data-scroll-target="#cursor">2 · Cursor on your laptop</a></li>
-  <li><a href="#workflow" id="toc-workflow" class="nav-link" data-scroll-target="#workflow">3 · Write in Cursor, train in Colab</a></li>
+  <li><a href="#antigravity" id="toc-antigravity" class="nav-link" data-scroll-target="#antigravity">2 · Antigravity on your laptop</a></li>
+  <li><a href="#workflow" id="toc-workflow" class="nav-link" data-scroll-target="#workflow">3 · Write in Antigravity, train in Colab</a></li>
   <li><a href="#reading" id="toc-reading" class="nav-link" data-scroll-target="#reading">4 · How to read a paper</a></li>
   <li><a href="#reading-list" id="toc-reading-list" class="nav-link" data-scroll-target="#reading-list">5 · Reading list</a></li>
   <li><a href="#where" id="toc-where" class="nav-link" data-scroll-target="#where">6 · Where to find papers &amp; code</a></li>
@@ -198,18 +198,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">09 — Paper Implementation Setup: Colab, Cursor &amp; Reading List</h1>
+<h1 class="title">09 — Paper Implementation Setup: Colab, Antigravity &amp; Reading List</h1>
   <div class="quarto-categories">
     <div class="quarto-category">Research papers</div>
     <div class="quarto-category">PyTorch</div>
     <div class="quarto-category">Colab</div>
-    <div class="quarto-category">Cursor</div>
+    <div class="quarto-category">Antigravity</div>
   </div>
   </div>
 
 <div>
   <div class="description">
-    Step-by-step setup for reading and implementing research papers: Google Colab and Cursor (Python, virtual environment, notebooks, AI tutor mode), the write-in-Cursor / train-in-Colab workflow, the three-pass reading method, and a verified reading list of vision papers, code and videos for Lecture 7 and Lab 7.
+    Step-by-step setup for reading and implementing research papers: Google Colab and Google Antigravity (Python, virtual environment, notebooks, AI tutor mode), the write-in-Antigravity / train-in-Colab workflow, the three-pass reading method, and a verified reading list of vision papers, code and videos for Lecture 7 and Lab 7.
   </div>
 </div>
 
@@ -220,7 +220,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="how-to-use" class="level2">
 <h2 class="anchored" data-anchor-id="how-to-use">How to use this page</h2>
-<p>This page is the step-by-step companion to <a href="../lectures/07_Paper_Implementation.html"><strong>Lecture 7 — Reading &amp; Implementing Research Papers</strong></a> and <a href="../labs.html#lab-7-papers">Lab 7</a>. Do the sections in order the first time: set up <strong>Google Colab</strong> (10 minutes, nothing to install), then <strong>Cursor</strong> on your laptop (30 minutes, once), then learn the <strong>reading method</strong>, and keep the <strong>reading list</strong> for the Paper Implementation Challenge.</p>
+<p>This page is the step-by-step companion to <a href="../lectures/07_Paper_Implementation.html"><strong>Lecture 7 — Reading &amp; Implementing Research Papers</strong></a> and <a href="../labs.html#lab-7-papers">Lab 7</a>. Do the sections in order the first time: set up <strong>Google Colab</strong> (10 minutes, nothing to install), then <strong>Google Antigravity</strong> on your laptop (30 minutes, once), then learn the <strong>reading method</strong>, and keep the <strong>reading list</strong> for the Paper Implementation Challenge.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center"><div class="callout-icon-container"><i class="callout-icon"></i></div><div class="callout-title-container flex-fill">The idea in one sentence</div></div>
 <div class="callout-body-container callout-body"><p>Read a paper in three passes (10 minutes, 1 hour, then implement it), turn every box of its main figure into a small PyTorch class, <strong>test each one</strong> before using it, and finish with a small experiment and an honest report.</p></div>
@@ -229,8 +229,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <thead><tr><th>Step</th><th>What</th><th>Time</th><th>You need</th></tr></thead>
 <tbody>
 <tr><td>1</td><td><a href="#colab">Google Colab</a>: open, save, run Lab 7A</td><td>10 min</td><td>a Google account</td></tr>
-<tr><td>2</td><td><a href="#cursor">Cursor</a>: Python, editor, virtual environment, notebooks, AI chat</td><td>30 min, once</td><td>your laptop, internet</td></tr>
-<tr><td>3</td><td><a href="#workflow">The workflow</a>: write in Cursor, train in Colab</td><td>15 min</td><td>a GitHub account (<a href="02_git_github.html">Tutorial 02</a>)</td></tr>
+<tr><td>2</td><td><a href="#antigravity">Google Antigravity</a>: Python, editor, virtual environment, notebooks, AI agent</td><td>30 min, once</td><td>your laptop, internet</td></tr>
+<tr><td>3</td><td><a href="#workflow">The workflow</a>: write in Antigravity, train in Colab</td><td>15 min</td><td>a GitHub account (<a href="02_git_github.html">Tutorial 02</a>)</td></tr>
 <tr><td>4</td><td><a href="#reading">How to read a paper</a> + the <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/paper_reading_worksheet.md">worksheet</a></td><td>20 min</td><td>a PDF and a pen</td></tr>
 <tr><td>5</td><td><a href="#reading-list">Reading list</a>, <a href="#where">where to find papers and code</a>, <a href="#videos">videos</a></td><td>keep</td><td>—</td></tr>
 </tbody></table>
@@ -267,23 +267,23 @@ torch.save(model.state_dict(), '/content/drive/MyDrive/unet.pt')  # survives the
 </ol></div>
 </section>
 
-<section id="cursor" class="level2">
-<h2 class="anchored" data-anchor-id="cursor">2 · Cursor on your laptop, step by step</h2>
-<p><a href="https://cursor.com">Cursor</a> is a code editor built on VS Code with an AI assistant inside. You use it for real projects: several <code>.py</code> files, git, debugging, and code for the Raspberry Pi. (Prefer VS Code? Every step is the same; install the Python and Jupyter extensions.)</p>
+<section id="antigravity" class="level2">
+<h2 class="anchored" data-anchor-id="antigravity">2 · Google Antigravity on your laptop, step by step</h2>
+<p><a href="https://antigravity.google">Google Antigravity</a> is a code editor built on VS Code with an AI agent inside. You use it for real projects: several <code>.py</code> files, git, debugging, and code for the Raspberry Pi. (Prefer VS Code? Every step is the same; install the Python and Jupyter extensions.)</p>
 <h4>2.1 Install Python</h4>
 <ol>
 <li>Download Python <strong>3.11 or 3.12</strong> from <a href="https://www.python.org/downloads/">python.org/downloads</a>.</li>
 <li><strong>Windows:</strong> on the first screen of the installer tick <strong>"Add python.exe to PATH"</strong>, then <em>Install Now</em>.</li>
 <li>Check: open a terminal (Windows: <em>Start → "cmd"</em>) and type <code>python --version</code>. You should see <code>Python 3.12.x</code>.</li>
 </ol>
-<h4>2.2 Install Cursor and get the labs</h4>
+<h4>2.2 Install Antigravity and get the labs</h4>
 <ol>
-<li>Download and install Cursor from <a href="https://cursor.com">cursor.com</a>; sign in (the free plan is enough for this course).</li>
+<li>Download the installer for your system from <a href="https://antigravity.google/download">antigravity.google/download</a> (Windows 10 64-bit or newer, macOS 12 or newer, or Linux) and sign in with your Google account.</li>
 <li>Get the course files: in a terminal <code>git clone https://github.com/Kazimbalti/intelligent-vision-systems</code> (no git? on GitHub click <em>Code → Download ZIP</em> and unzip).</li>
-<li>In Cursor: <em>File → Open Folder…</em> → choose <code>intelligent-vision-systems/LAB/Lab_7</code>.</li>
+<li>In Antigravity: <em>File → Open Folder…</em> → choose <code>intelligent-vision-systems/LAB/Lab_7</code>.</li>
 </ol>
 <h4>2.3 A virtual environment (once per project)</h4>
-<p>Open the terminal inside Cursor with <strong>Ctrl + `</strong> (the key left of 1) and type:</p>
+<p>Open the terminal inside Antigravity with <strong>Ctrl + `</strong> (the key left of 1) and type:</p>
 <div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">python -m venv .venv
 .venv\Scripts\activate          # Windows  (macOS / Linux:  source .venv/bin/activate)
 pip install -r requirements.txt # PyTorch, torchvision, numpy, matplotlib, scikit-learn, OpenCV, Jupyter
@@ -292,19 +292,19 @@ pip install -r requirements.txt # PyTorch, torchvision, numpy, matplotlib, sciki
 <p><strong>Windows "running scripts is disabled" error?</strong> Run once: <code>Set-ExecutionPolicy -Scope CurrentUser RemoteSigned</code> in PowerShell, or use the <em>Command Prompt</em> terminal profile.</p>
 <h4>2.4 Run a notebook</h4>
 <ol>
-<li>Click <code>01-pytorch-for-papers.ipynb</code>. If Cursor asks to install the <strong>Python</strong> and <strong>Jupyter</strong> extensions, accept.</li>
+<li>Click <code>01-pytorch-for-papers.ipynb</code>. If Antigravity asks to install the <strong>Python</strong> and <strong>Jupyter</strong> extensions, accept.</li>
 <li>Top right: <strong>Select Kernel → Python Environments → .venv</strong>.</li>
 <li>Run cells with <strong>Shift + Enter</strong>, exactly as in Colab. Your files stay on your disk.</li>
 </ol>
-<h4>2.5 The AI assistant: a tutor, not a ghost-writer</h4>
+<h4>2.5 The AI agent: a tutor, not a ghost-writer</h4>
 <table class="table table-sm">
 <thead><tr><th>Shortcut</th><th>What it does</th><th>Use it to</th></tr></thead>
 <tbody>
-<tr><td><strong>Ctrl + L</strong></td><td>chat panel (choose <em>Ask</em> mode to learn)</td><td>ask about an equation, an error, a shape</td></tr>
-<tr><td><strong>Ctrl + K</strong></td><td>edit the selected code</td><td>boilerplate: plots, timing, file handling</td></tr>
-<tr><td><strong>@</strong> in the chat</td><td>attach a file, e.g. <code>@lab7_checks.py</code></td><td>give it context</td></tr>
+<tr><td><strong>Ctrl + L</strong></td><td>opens the <strong>Agent</strong> panel on the right</td><td>ask about an equation, an error, a shape</td></tr>
+<tr><td><strong>Review</strong></td><td>the agent shows the changes it proposes</td><td>read them before you accept; reject anything that writes your TODOs</td></tr>
+<tr><td><strong>Boilerplate</strong></td><td>ask it for plots, timing, file handling</td><td>save time on code that is not the learning goal</td></tr>
 </tbody></table>
-<p>The Lab 7 folder contains <code>.cursor/rules/paper-tutor.mdc</code> and <code>AGENTS.md</code>. They tell Cursor's AI (and other coding agents) to <strong>explain and give hints</strong> in this lab instead of writing the TODOs for you. Good prompts:</p>
+<p>The Lab 7 folder contains <code>AGENTS.md</code> and <code>.agents/rules/paper-tutor.md</code>. Antigravity loads them automatically (other coding agents read <code>AGENTS.md</code> too); they tell the AI to <strong>explain and give hints</strong> in this lab instead of writing the TODOs for you. Good prompts:</p>
 <ul>
 <li><em>"Explain Eq. 1 of Attention Is All You Need. Give the shape of every tensor for B = 2, L = 5, d_k = 8."</em></li>
 <li><em>"My U-Net output is 392 × 392 but the paper says 388. What should I check? Don't write the code."</em></li>
@@ -317,10 +317,10 @@ pip install -r requirements.txt # PyTorch, torchvision, numpy, matplotlib, sciki
 </section>
 
 <section id="workflow" class="level2">
-<h2 class="anchored" data-anchor-id="workflow">3 · The workflow: write in Cursor, train in Colab</h2>
+<h2 class="anchored" data-anchor-id="workflow">3 · The workflow: write in Antigravity, train in Colab</h2>
 <p>For the Paper Implementation Challenge, keep your model in a clean Python file and train it wherever the hardware is:</p>
 <ol>
-<li>In Cursor create a folder, e.g. <code>my-papers/se_net/</code> with <code>model.py</code> (the classes), <code>test_model.py</code> (shape and parameter checks) and a notebook from the <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/08-implement-your-own-paper.ipynb">Lab 7H template</a>.</li>
+<li>In Antigravity create a folder, e.g. <code>my-papers/se_net/</code> with <code>model.py</code> (the classes), <code>test_model.py</code> (shape and parameter checks) and a notebook from the <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/08-implement-your-own-paper.ipynb">Lab 7H template</a>.</li>
 <li>Run the tests locally on CPU: <code>python test_model.py</code>. Fix shapes until everything passes.</li>
 <li>Push to GitHub (<a href="02_git_github.html">Tutorial 02: Git &amp; GitHub</a>): <code>git add . &amp;&amp; git commit -m "SE block + tests" &amp;&amp; git push</code>.</li>
 <li>In Colab (GPU runtime): <code>!git clone https://github.com/&lt;you&gt;/my-papers</code>, then <code>import sys; sys.path.append('my-papers/se_net'); from model import SEBlock</code> and train.</li>

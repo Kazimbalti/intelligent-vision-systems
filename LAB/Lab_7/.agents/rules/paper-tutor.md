@@ -1,6 +1,6 @@
 ---
+trigger: always_on
 description: Tutor mode for Lab 7 (reading and implementing research papers)
-alwaysApply: true
 ---
 
 You are helping a student in a teaching lab where they implement research papers (Transformer, U-Net, ResNet, ViT and

@@ -4,7 +4,7 @@
 
 Hands-on companion to **Lecture 7 — Reading & Implementing Research Papers**
 ([slides](https://kazimbalti.github.io/intelligent-vision-systems/lectures/07_Paper_Implementation.html),
-[setup guide for Colab & Cursor](https://kazimbalti.github.io/intelligent-vision-systems/tutorials/09_paper_implementation_setup.html)).
+[setup guide for Colab & Antigravity](https://kazimbalti.github.io/intelligent-vision-systems/tutorials/09_paper_implementation_setup.html)).
 You read four landmark papers and build each model from scratch in PyTorch, testing every block against the paper
 and against PyTorch's own implementation. Every notebook runs on a **free Colab CPU in a few minutes** (a GPU only makes it faster).
 
@@ -28,7 +28,7 @@ and against PyTorch's own implementation. Every notebook runs on a **free Colab 
 Click a notebook on the [labs page](https://kazimbalti.github.io/intelligent-vision-systems/labs.html#lab-7-papers) →
 **Open in Colab** → *File → Save a copy in Drive* → *Runtime → Run all*. Optional: *Runtime → Change runtime type → T4 GPU*.
 
-## Run locally in Cursor or VS Code
+## Run locally in Google Antigravity or VS Code
 
 ```bash
 git clone https://github.com/Kazimbalti/intelligent-vision-systems
@@ -37,8 +37,8 @@ python -m venv .venv
 .venv\Scripts\activate            # Windows   (macOS/Linux: source .venv/bin/activate)
 pip install -r requirements.txt
 ```
-Open the folder in Cursor (*File → Open Folder*), open a notebook, **Select Kernel → .venv**.
-This folder contains `.cursor/rules/paper-tutor.mdc` and `AGENTS.md`: they ask Cursor's AI (and other coding agents) to
+Open the folder in Antigravity (*File → Open Folder*), open a notebook, **Select Kernel → .venv**.
+This folder contains `AGENTS.md` and `.agents/rules/paper-tutor.md`: they ask Antigravity's agent (and other coding agents) to
 act as a **tutor** in this lab — explain, give hints, review — instead of writing your TODOs.
 
 ## The Paper Implementation Challenge (3–5 papers)

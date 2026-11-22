@@ -709,7 +709,7 @@
     var box = h("div", { class: "promptbox" }), pre = h("pre"); box.appendChild(pre);
     box.appendChild(h("button", { class: "wbtn", text: "Copy", onclick: function (e) { copyText(pre.textContent, e.target); } }));
     body.appendChild(box);
-    body.appendChild(h("p", { class: "hint", html: "Paste the result into Claude, ChatGPT or Cursor. <b>Always paste the paper's own text</b> for the part you ask about: the model then works from the paper, not from memory." }));
+    body.appendChild(h("p", { class: "hint", html: "Paste the result into Claude, ChatGPT or Antigravity's agent. <b>Always paste the paper's own text</b> for the part you ask about: the model then works from the paper, not from memory." }));
     [paper, sec, task, have, other].forEach(function (x) { x.addEventListener("input", draw); x.addEventListener("change", draw); });
     function draw() {
       other.style.display = paper.value === "other…" ? "" : "none";

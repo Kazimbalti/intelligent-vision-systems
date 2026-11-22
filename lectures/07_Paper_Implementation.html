@@ -13,7 +13,7 @@
 
   <meta name="author" content="Dr. Muhammad Kazim">
   <title>Intelligent Vision Systems – Lecture 07 — Reading &amp; Implementing Research Papers</title>
-  <meta name="description" content="Lecture 7: how to find and read research papers (three-pass method), Google Colab and Cursor step by step, and implementing four landmark papers from scratch in PyTorch: Attention Is All You Need (the Transformer), U-Net, ResNet and the Vision Transformer, with live demos, quizzes, Lab 7 and the Paper Implementation Challenge.">
+  <meta name="description" content="Lecture 7: how to find and read research papers (three-pass method), Google Colab and Antigravity step by step, and implementing four landmark papers from scratch in PyTorch: Attention Is All You Need (the Transformer), U-Net, ResNet and the Vision Transformer, with live demos, quizzes, Lab 7 and the Paper Implementation Challenge.">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -328,6 +328,27 @@
   .reveal .grid4 img.fig { width: 100%; object-fit: contain; }
 
   /* Lecture 7 additions */
+  /* ---- step-by-step rows (one fragment per step; same steps as the XMind mind map) ---- */
+  .reveal .stepper { display: flex; flex-direction: column; gap: 0.22em; margin-top: 0.25em; }
+  .reveal .stepper .row { display: grid; grid-template-columns: 1.9em 10.8em minmax(0, 1fr) 12.5em; align-items: center;
+    column-gap: 0.7em; padding: 0.26em 0.7em; border-radius: 12px; background: #f6f8fb; border-left: 7px solid var(--c, #28568a);
+    font-size: 0.6em; line-height: 1.25; transition: background 0.25s, box-shadow 0.25s; }
+  .reveal .stepper .num { width: 1.75em; height: 1.75em; border-radius: 50%; background: var(--c, #28568a); color: #fff;
+    font-weight: 800; display: flex; align-items: center; justify-content: center; font-size: 1.15em; }
+  .reveal .stepper .name b { display: block; color: var(--navy); font-size: 1.08em; }
+  .reveal .stepper .name small { display: block; color: var(--muted); font-size: 0.82em; }
+  .reveal .stepper .chips { display: flex; flex-wrap: wrap; gap: 0.28em 0.32em; }
+  .reveal .stepper .chips span { background: #fff; border: 1.5px solid var(--c, #28568a); border-radius: 999px; padding: 0.04em 0.6em;
+    font-weight: 600; color: #1f2933; font-size: 0.9em; white-space: nowrap; }
+  .reveal .stepper .chips span i { font-style: normal; font-weight: 800; color: var(--c, #28568a); margin-right: 0.3em; }
+  .reveal .stepper .chips .lbl { border: 0; background: none; padding-left: 0; color: var(--muted); font-weight: 700; }
+  .reveal .stepper .done { font-size: 0.86em; color: #1f7a4d; font-weight: 600; }
+  .reveal .stepper .done::before { content: "✓ "; font-weight: 800; }
+  .reveal .stepper .row.fragment.current-fragment { background: #fff8e8; box-shadow: inset 0 0 0 2px var(--c, #28568a); }
+  .reveal .stepper.narrow .row { grid-template-columns: 1.9em minmax(0, 1fr); }
+  .reveal .stepper.narrow .row .chips { grid-column: 2; margin-top: 0.15em; }
+  .reveal .stepper.narrow .row .done { grid-column: 2; margin-top: 0.1em; }
+  .reveal .stepper-hint { font-size: 0.5em; color: var(--muted); margin: 0.35em 0 0; text-align: right; }
   .reveal .paperstack { position: relative; height: 560px; }
   .reveal .paperstack img { position: absolute; width: 46%; border: 1px solid #d8e0ea; border-radius: 4px; box-shadow: 0 6px 22px rgba(0,0,0,0.18); background: #fff; margin: 0; }
   .reveal .paperstack img:nth-child(1) { left: 0; top: 0; transform: rotate(-5deg); }
@@ -355,7 +376,7 @@
 <p class="t-kicker">LECTURE 7</p>
 <p class="t-main">Reading &amp; Implementing Research Papers</p>
 <p class="t-sub">From a PDF to working PyTorch: Attention, the Transformer, U-Net, ResNet and the Vision Transformer</p>
-<p class="muted" style="font-size:0.62em; margin:0;">How to read a paper · Google Colab &amp; Cursor step by step · build 4 landmark papers from scratch · Lab 7 &amp; the Paper Implementation Challenge</p>
+<p class="muted" style="font-size:0.62em; margin:0;">How to read a paper · Google Colab &amp; Antigravity step by step · build 4 landmark papers from scratch · Lab 7 &amp; the Paper Implementation Challenge</p>
 <div class="t-rule"></div>
 <p style="font-size:0.66em; font-weight:700; margin:0;">Dr. Muhammad Kazim</p>
 <p class="muted" style="font-size:0.56em; margin:0;">Department of Intelligent Systems<br>University of Lahore</p>
@@ -390,7 +411,7 @@
 <h3>Lecture 7 · today</h3>
 <ul class="tight">
 <li><b>Find</b> and <b>read</b> a research paper (the three-pass method)</li>
-<li>Set up <b>Google Colab</b> and <b>Cursor</b> for paper work</li>
+<li>Set up <b>Google Colab</b> and <b>Google Antigravity</b> for paper work</li>
 <li>Turn figures and equations into <b>PyTorch</b>, testing every block</li>
 <li>Build <b>Attention → Transformer</b>, <b>U-Net</b>, <b>ResNet</b>, <b>ViT</b></li>
 <li><b>Reproduce</b> a result, run an <b>ablation</b>, write a report</li>
@@ -405,7 +426,7 @@
 <p class="small muted">By the end of this lecture and Lab 7 you should be able to:</p>
 <ol>
 <li>Describe the <b>anatomy</b> of a research paper and read it in <b>three passes</b>; fill a one-page paper card.</li>
-<li>Find papers and code (arXiv, Hugging Face Papers, CVF, OpenReview, GitHub) and run them in <b>Colab</b> and <b>Cursor</b>.</li>
+<li>Find papers and code (arXiv, Hugging Face Papers, CVF, OpenReview, GitHub) and run them in <b>Colab</b> and <b>Antigravity</b>.</li>
 <li>Translate a <b>figure</b> into modules and an <b>equation</b> into PyTorch; predict every <b>tensor shape</b>.</li>
 <li>Implement <b>scaled dot-product and multi-head attention</b>, <b>positional encoding</b> and a full <b>Transformer</b>; train it.</li>
 <li>Implement the <b>U-Net</b> exactly as in the paper (572 → 388) and a modern U-Net; evaluate with <b>Dice</b>.</li>
@@ -422,7 +443,7 @@
 <tr><th>Level</th><th>Topic</th><th>Time</th><th>Hands-on</th></tr>
 <tr><td>0</td><td>What is a research paper?</td><td>10 min</td><td>quiz</td></tr>
 <tr><td>1</td><td>How to read a paper</td><td>20 min</td><td>paper anatomy demo · read 3 abstracts</td></tr>
-<tr><td>2</td><td>Tools: find, read, run (Colab, Cursor)</td><td>15 min</td><td>open Lab 7A in both</td></tr>
+<tr><td>2</td><td>Tools: find, read, run (Colab, Antigravity)</td><td>15 min</td><td>open Lab 7A in both</td></tr>
 <tr><td>3</td><td>The PyTorch you need</td><td>15 min</td><td>conv calculator · <b>7A</b></td></tr>
 <tr><td><b>4</b></td><td><b>Paper 1: Attention Is All You Need</b></td><td><b>40 min</b></td><td>attention &amp; PE demos · <b>7B, 7C</b></td></tr>
 <tr><td><b>5</b></td><td><b>Paper 2: U-Net</b></td><td><b>25 min</b></td><td>shape tracer · <b>7D</b></td></tr>
@@ -449,7 +470,7 @@
 <div class="pipe">
 <div class="st">0 · Papers<small>what &amp; why</small></div><div class="ar">→</div>
 <div class="st">1 · Read<small>3 passes</small></div><div class="ar">→</div>
-<div class="st">2 · Tools<small>Colab, Cursor</small></div><div class="ar">→</div>
+<div class="st">2 · Tools<small>Colab, Antigravity</small></div><div class="ar">→</div>
 <div class="st">3 · PyTorch<small>shapes!</small></div><div class="ar">→</div>
 <div class="st on">4 · Attention<small>Transformer</small></div><div class="ar">→</div>
 <div class="st on">5 · U-Net<small>segmentation</small></div><div class="ar">→</div>
@@ -473,7 +494,8 @@
 <div class="card" style="border-left-color:#ea580c;"><p class="big">🧱</p><h3>2 · Build bottom-up</h3><p>One box of the figure = one PyTorch class. Build the <b>smallest</b> box first and <b>test it</b> (shape, a value you can compute by hand, the parameter count) before the next.</p></div>
 <div class="card" style="border-left-color:#1f7a4d;"><p class="big">🔬</p><h3>3 · Reproduce small</h3><p>Overfit one batch, then a <b>small experiment</b> that tests the paper's main claim, with an <b>ablation</b>. Report honestly what matched and what didn't.</p></div>
 </div>
-<p class="plain" style="font-size:0.7em; margin-top:0.8em;"><b>Analogy:</b> a paper is a <b>recipe written by a chef for other chefs</b>. It skips "obvious" steps, uses jargon, and the photo (the figure) is the most useful part. You don't read it once and cook the whole banquet: you read it, cook one dish at a time, <b>taste after every step</b>, and compare with the photo.</p>
+<p class="plain" style="font-size:0.7em; margin-top:0.6em;"><b>Analogy:</b> a paper is a recipe written by a chef for other chefs: the photo (the figure) helps most. Cook one dish at a time and taste after every step.</p>
+<p class="tryit" style="margin-top:0.4em;"><b>🖐 Paper → code, one sentence at a time:</b> U-Net §2 says <i>"a 2x2 max pooling operation with stride 2"</i> → <code>nn.MaxPool2d(2)</code>; <i>"a 1x1 convolution … to the desired number of classes"</i> → <code>nn.Conv2d(64, 2, 1)</code>. That translation is the whole lecture.</p>
 </section>
 
 <section id="key-words" class="slide level2" data-menu-title="Key words in plain English">
@@ -489,6 +511,7 @@
 <tr><td>Reproduce · replicate</td><td>get the paper's result with their code · with <b>your own</b> code</td><td>cook the recipe yourself</td></tr>
 <tr><td>Tensor shape</td><td>the size of every axis, e.g. (B, C, H, W) = (8, 3, 224, 224)</td><td>the size of every box in the kitchen</td></tr>
 </table>
+<p class="tryit"><b>🖐 Spot them in a real paper (3 min):</b> in the U-Net PDF find the <b>benchmark</b> (ISBI EM challenge, Table 1), the <b>baseline</b> it beats (the sliding-window network of Ciresan et al.) and one <b>hyper-parameter</b> (momentum 0.99, §3).</p>
 </section>
 
 <!-- ============================ LEVEL 0 ============================ -->
@@ -528,6 +551,7 @@
 <text x="750" y="295" fill="#28568a" font-size="24" font-weight="700">U-Net (2015) → every medical segmentation tool · Transformer (2017) → ChatGPT, Claude, Gemini · ViT (2021) → SAM, CLIP, VLMs</text>
 </g></svg>
 <p class="plain"><b>In plain words:</b> in computer vision the newest ideas appear on <b>arXiv</b> first (free, anyone can read them), then at <b>conferences</b>. Most important papers come with code. The best ones end up inside products within 1–3 years.</p>
+<p class="tryit"><b>🖐 Try it (3 min):</b> open <a href="https://arxiv.org/abs/1706.03762">arxiv.org/abs/1706.03762</a>. When was version 1 submitted? How many versions are there? Where was it published (first page or "Comments")?</p>
 </section>
 
 <section id="vision-paper-timeline" class="slide level2" data-menu-title="The papers that built computer vision">
@@ -561,6 +585,9 @@
 <text x="40" y="500" fill="#28568a" font-weight="700" font-size="24">Learn these four and you can read almost every vision paper written since 2020.</text>
 </g>
 </g></svg>
+<pre class="code-sm" style="margin-top:0.3em;"><code class="python">import torchvision.models as M
+print(len(M.list_models()), "models")   # 121 models: alexnet, vgg16, resnet18, vit_b_16,
+                                        # swin_t, convnext_tiny ... every paper above is one line away</code></pre>
 <aside class="notes">Point at Lecture 4: the "magic" models students already ran are built from today's four papers. ViT appeared on arXiv in October 2020 and was published at ICLR 2021, which is why it sits between the two years.</aside>
 </section>
 
@@ -628,20 +655,13 @@
 <section id="three-pass-method" class="slide level2" data-menu-title="The three-pass method">
 <p class="kicker">Level 1 · step 2</p>
 <h2>The three-pass method (Keshav, 2007)</h2>
-<div class="grid3">
-<div class="card"><h3>Pass 1 · 10 minutes</h3>
-<p><b>Read:</b> title, abstract, introduction, section headings, <b>all figures</b>, conclusion. Skip the maths.</p>
-<p><b>Answer the 5 Cs:</b> <b>C</b>ategory (what kind of paper?), <b>C</b>ontext (built on which papers?), <b>C</b>orrectness (do the assumptions look valid?), <b>C</b>ontributions (what is new?), <b>C</b>larity (well written?)</p>
-<p><b>Decide:</b> keep reading or not?</p></div>
-<div class="card" style="border-left-color:#ea580c;"><h3>Pass 2 · ≈ 1 hour</h3>
-<p><b>Read the method carefully</b>, but skip proofs. Study every figure, axis and table. Mark the terms and references you don't know.</p>
-<p><b>Output:</b> a summary in your own words, the architecture drawn by hand, a <b>shape table</b>, the key equations.</p>
-<p>Enough to <b>explain</b> the paper to a friend.</p></div>
-<div class="card" style="border-left-color:#1f7a4d;"><h3>Pass 3 · hours</h3>
-<p><b>Virtually re-implement it:</b> make the same assumptions and rebuild the work in your head, then compare. Every detail counts: padding, bias, axis, initialisation, learning rate.</p>
-<p>For us, pass 3 = <b>writing the code</b>. That is what Lab 7 does.</p></div>
+<div class="stepper">
+<div class="row fragment" style="--c:#2563eb;"><div class="num">1</div><div class="name"><b>Pass 1 · bird's-eye view</b><small>10 minutes · skip the maths</small></div><div class="chips"><span><i>1</i>Title &amp; abstract</span><span><i>2</i>Introduction</span><span><i>3</i>Section headings</span><span><i>4</i>All figures</span><span><i>5</i>Conclusion</span></div><div class="done">Decide: keep reading or not?</div></div>
+<div class="row fragment" style="--c:#0891b2;"><div class="num">5C</div><div class="name"><b>…and answer the 5 Cs</b><small>still in pass 1</small></div><div class="chips"><span><i>1</i>Category · what kind of paper?</span><span><i>2</i>Context · built on which papers?</span><span><i>3</i>Correctness · do the assumptions hold?</span><span><i>4</i>Contributions · what is new?</span><span><i>5</i>Clarity · well written?</span></div></div>
+<div class="row fragment" style="--c:#ea580c;"><div class="num">2</div><div class="name"><b>Pass 2 · understand it</b><small>≈ 1 hour · skip the proofs</small></div><div class="chips"><span><i>1</i>Read the method carefully</span><span><i>2</i>Study every figure, axis, table</span><span><i>3</i>Mark unknown terms and references</span><span><i>4</i>Draw the architecture by hand</span></div><div class="done">Output: summary + shape table + key equations</div></div>
+<div class="row fragment" style="--c:#1f7a4d;"><div class="num">3</div><div class="name"><b>Pass 3 · re-implement</b><small>hours · every detail counts</small></div><div class="chips"><span><i>1</i>Same assumptions as the authors</span><span><i>2</i>Rebuild it, then compare</span><span><i>3</i>Padding, bias, axis, init, learning rate</span></div><div class="done">For us, pass 3 = writing the code: Lab 7</div></div>
 </div>
-<p class="note" style="margin-top:0.5em;">Free PDF: S. Keshav, <a href="https://web.stanford.edu/class/ee384m/Handouts/HowtoReadPaper.pdf">"How to Read a Paper"</a>, ACM SIGCOMM CCR 37(3), 2007 (two pages, read it tonight).</p>
+<p class="note" style="margin-top:0.45em;">Free PDF: S. Keshav, <a href="https://web.stanford.edu/class/ee384m/Handouts/HowtoReadPaper.pdf">"How to Read a Paper"</a>, ACM SIGCOMM CCR 37(3), 2007 (two pages, read it tonight).</p>
 </section>
 
 <section id="reading-tips" class="slide level2" data-menu-title="Reading tips for beginners">
@@ -672,6 +692,7 @@
 </div>
 </div>
 <p class="tiny muted">After Keshav (2007) and Andrew Ng's advice on reading papers (Stanford CS230, 2019).</p>
+<p class="tryit"><b>🖐 10-minute drill:</b> open the ViT paper (<a href="https://arxiv.org/abs/2010.11929">arXiv 2010.11929</a>) and answer questions 1, 3 and 4 on the right. Compare with your neighbour.</p>
 </section>
 
 <section id="example-neuralangelo" class="slide level2" data-menu-title="Example 1: Neuralangelo (pass 1 only)">
@@ -777,7 +798,7 @@
 <li>Trusting it blindly: assistants <b>invent</b> references, numbers and "facts" about papers. Check against the PDF.</li>
 <li>Asking about a paper without pasting its text: the answer comes from memory and may describe a different paper.</li>
 </ul>
-<p class="small" style="margin-top:0.4em;">Tools: <a href="https://www.alphaxiv.org">alphaXiv</a> (chat with any arXiv paper: replace "arxiv" with "alphaxiv" in the URL) · <a href="https://notebooklm.google.com">NotebookLM</a> · Claude / ChatGPT / Gemini · Cursor's chat (Level 2).</p></div>
+<p class="small" style="margin-top:0.4em;">Tools: <a href="https://www.alphaxiv.org">alphaXiv</a> (arxiv → alphaxiv in the URL) · <a href="https://notebooklm.google.com">NotebookLM</a> · Claude / ChatGPT / Gemini · Antigravity (Level 2).</p></div>
 </div>
 <p class="plain"><b>Course rule:</b> you may use AI to <b>understand</b> and to <b>review</b>. Every report ends with an <b>AI-use declaration</b>: what you asked, what you kept, what you checked yourself.</p>
 </section>
@@ -801,7 +822,7 @@
 <section id="level-2" class="slide level2 center" data-background-color="#28568a" data-menu-title="Level 2 · Tools: find, read, run">
 <p class="sec-num">2</p>
 <p class="sec-title">Tools: find, read, run</p>
-<p class="sec-sub"><b>Level 2</b> · where papers and code live, Google Colab and Cursor step by step</p>
+<p class="sec-sub"><b>Level 2</b> · where papers and code live, Google Colab and Antigravity step by step</p>
 </section>
 
 <section id="where-to-find-papers" class="slide level2" data-menu-title="Where to find papers">
@@ -835,9 +856,11 @@
 <tr><td><a href="https://github.com/niconielsen32/101-transformers">niconielsen32/101-transformers</a></td><td>15-topic Transformer course, notebooks</td></tr>
 </table>
 <div>
-<p class="note"><b>How to use other people's code:</b> read it <b>after</b> you tried yourself, to check details. Don't copy-paste: type it, and change names so you have to understand each line.</p>
-<p class="warn"><b>Licence &amp; honesty:</b> if you use or adapt code, <b>cite it</b> (repo + licence) in your report. Code you cannot explain earns no marks in the viva.</p>
-<p class="small">Videos that pair well with Lab 7: Andrej Karpathy, <a href="https://www.youtube.com/watch?v=kCc8FmEb1nY">"Let's build GPT: from scratch, in code, spelled out"</a> · Jay Alammar, <a href="https://jalammar.github.io/illustrated-transformer/">The Illustrated Transformer</a> (blog).</p>
+<p class="note"><b>Use other people's code to check, not to copy:</b> try first, then read it; type, don't paste. Cite the repo and licence in your report.</p>
+<pre class="code-sm" style="margin-top:0.6em;"><code class="python">import torchvision
+m = torchvision.models.resnet18()   # reference
+print(sum(p.numel() for p in m.parameters()))
+# 11689512: your Lab 7E code must match this</code></pre>
 </div>
 </div>
 </section>
@@ -845,20 +868,16 @@
 <section id="seven-step-recipe" class="slide level2" data-menu-title="The 7-step paper → code recipe">
 <p class="kicker">Level 2 · step 3 · the method we use for every paper</p>
 <h2>The 7-step recipe: from paper to working code</h2>
-<div class="pipe" style="font-size:1.05em;">
-<div class="st">1 · Pass 1<small>card, decide</small></div><div class="ar">→</div>
-<div class="st">2 · Pass 2<small>figure, shapes, equations</small></div><div class="ar">→</div>
-<div class="st">3 · Map<small>box → class, eq. → line</small></div><div class="ar">→</div>
-<div class="st on">4 · Build &amp; test<small>smallest block first</small></div><div class="ar">→</div>
-<div class="st">5 · Overfit<small>one batch → loss ≈ 0</small></div><div class="ar">→</div>
-<div class="st">6 · Experiment<small>small, + ablation</small></div><div class="ar">→</div>
-<div class="st">7 · Report<small>honest</small></div>
+<div class="stepper">
+<div class="row fragment" style="--c:#2563eb;"><div class="num">1</div><div class="name"><b>Pass 1 · read &amp; decide</b><small>10 minutes</small></div><div class="chips"><span><i>1</i>Title, abstract, figures</span><span><i>2</i>Fill the paper card</span><span><i>3</i>Decide: implement or not</span></div><div class="done">Done when: you can say the key idea in one sentence</div></div>
+<div class="row fragment" style="--c:#0891b2;"><div class="num">2</div><div class="name"><b>Pass 2 · understand</b><small>about 1 hour</small></div><div class="chips"><span><i>1</i>Study the figure</span><span><i>2</i>Write every tensor shape</span><span><i>3</i>Copy the key equations</span></div><div class="done">Done when: a shape table from input to output</div></div>
+<div class="row fragment" style="--c:#7c3aed;"><div class="num">3</div><div class="name"><b>Map · paper → modules</b><small>on paper, before coding</small></div><div class="chips"><span><i>1</i>One box → one class</span><span><i>2</i>One equation → one line</span></div><div class="done">Done when: every box has a class name</div></div>
+<div class="row fragment" style="--c:#dc2626;"><div class="num">4</div><div class="name"><b>Build &amp; test</b><small>smallest block first</small></div><div class="chips"><span><i>1</i>Shape check</span><span><i>2</i>Hand-computed example</span><span><i>3</i>Parameter count</span><span><i>4</i>Compare with a reference</span></div><div class="done">Done when: every ✅ check passes</div></div>
+<div class="row fragment" style="--c:#ea580c;"><div class="num">5</div><div class="name"><b>Overfit one batch</b><small>8–32 examples</small></div><div class="chips"><span><i>1</i>Train on a tiny batch</span><span><i>2</i>Loss must reach ≈ 0</span><span><i>3</i>If not: a bug, not data</span></div><div class="done">Done when: loss ≈ 0</div></div>
+<div class="row fragment" style="--c:#059669;"><div class="num">6</div><div class="name"><b>Small experiment</b><small>minutes on Colab</small></div><div class="chips"><span><i>1</i>Test the main claim</span><span><i>2</i>Add one ablation</span><span><i>3</i>Several seeds</span></div><div class="done">Done when: a table, mean ± std</div></div>
+<div class="row fragment" style="--c:#b45309;"><div class="num">7</div><div class="name"><b>Honest report</b><small>what you learned</small></div><div class="chips"><span><i>1</i>What matched</span><span><i>2</i>What didn't, and why</span><span><i>3</i>AI-use declaration</span></div><div class="done">Done when: every claim points to a number</div></div>
 </div>
-<div class="grid3" style="margin-top:0.5em;">
-<div class="card"><h3>Test every block with…</h3><ul class="tight"><li>its <b>output shape</b> (from your shape table)</li><li>a <b>tiny example</b> you can compute by hand</li><li>its <b>parameter count</b> (by hand or from the paper)</li><li>a <b>reference</b> (PyTorch's own layer, official code)</li></ul></div>
-<div class="card" style="border-left-color:#ea580c;"><h3>Overfit one batch</h3><p>Train on 8–32 examples only. Loss must go to ≈ 0. If not, there is a bug in shapes, masks, loss or the training loop, and more data will <b>not</b> help.</p></div>
-<div class="card" style="border-left-color:#1f7a4d;"><h3>Small experiment</h3><p>Shrink the problem until it trains in minutes on Colab, but still tests the <b>paper's main claim</b>. Change one thing at a time. Several seeds.</p></div>
-</div>
+<p class="stepper-hint">Press → to reveal the next step · the same steps as the Lecture 7 XMind mind map</p>
 </section>
 
 <section id="colab-step-by-step" class="slide level2" data-menu-title="Google Colab step by step">
@@ -890,42 +909,43 @@
 <aside class="notes">Do this live. Walk around: the most common problems are not being signed in, and forgetting to save a copy. Full illustrated guide: tutorials/09_paper_implementation_setup.html.</aside>
 </section>
 
-<section id="cursor-step-by-step" class="slide level2" data-menu-title="Cursor step by step">
+<section id="antigravity-step-by-step" class="slide level2" data-menu-title="Antigravity step by step">
 <p class="kicker">Level 2 · step 5 · tool 2</p>
-<h2>Cursor (AI code editor), step by step, on your laptop</h2>
+<h2>Google Antigravity, step by step, on your laptop</h2>
 <div class="grid2 wide-left">
 <ol class="tight small">
 <li>Install <b>Python 3.11 or 3.12</b> from <a href="https://www.python.org/downloads/">python.org</a> (Windows: tick <i>"Add python.exe to PATH"</i>).</li>
-<li>Install <b>Cursor</b> from <a href="https://cursor.com">cursor.com</a> (free plan is enough). It is VS Code with AI built in.</li>
+<li>Install <b>Antigravity</b> from <a href="https://antigravity.google/download">antigravity.google/download</a> and sign in with your Google account. It is an AI-agent code editor built on VS Code.</li>
 <li>Get the labs: <code>git clone https://github.com/Kazimbalti/intelligent-vision-systems</code> (or download the ZIP).</li>
 <li><i>File → Open Folder</i> → <code>LAB/Lab_7</code>.</li>
 <li>Open the terminal (<b>Ctrl + `</b>) and make a virtual environment:<br><code>python -m venv .venv</code> → <code>.venv\Scripts\activate</code> (Windows) or <code>source .venv/bin/activate</code><br><code>pip install -r requirements.txt</code></li>
 <li>Open <code>01-pytorch-for-papers.ipynb</code> → <b>Select Kernel</b> (top right) → <code>.venv</code>. Install the Python + Jupyter extensions if asked.</li>
-<li>AI: <b>Ctrl + L</b> chat (use <b>Ask</b> mode to learn), <b>Ctrl + K</b> edit a selection, <b>@file</b> to give it context.</li>
+<li>AI: the <b>Agent panel</b> on the right (<b>Ctrl + L</b>). Ask in plain English, and <b>read every change it proposes</b> before you accept it.</li>
 </ol>
 <div>
 <div class="card"><h3>Tutor mode is already set up</h3>
-<p>The Lab 7 folder contains <code>.cursor/rules/paper-tutor.mdc</code> and <code>AGENTS.md</code>: they tell Cursor's AI to <b>explain and give hints</b> in this course, not to write your TODOs for you.</p></div>
-<p class="tryit"><b>🖐 Try it:</b> select the attention equation in Lab 7B, press <b>Ctrl + L</b> and ask <i>"What is the shape of every tensor here if B = 2, L = 5, d_k = 8?"</i></p>
-<p class="tiny muted">Same steps work in VS Code (+ GitHub Copilot) or PyCharm.</p>
+<p>Lab 7 contains <code>AGENTS.md</code> and <code>.agents/rules/paper-tutor.md</code>. Antigravity loads them automatically, so its agent <b>explains and gives hints</b> in this course instead of writing your TODOs.</p></div>
+<p class="tryit"><b>🖐 Try it:</b> open Lab 7B, press <b>Ctrl + L</b> and ask <i>"What is the shape of every tensor in attention() if B = 2, L = 5, d_k = 8? Don't write code."</i></p>
+<p class="tiny muted">The same steps work in VS Code (+ GitHub Copilot) or PyCharm; most AI coding tools also read <code>AGENTS.md</code>.</p>
 </div>
 </div>
 </section>
 
-<section id="colab-vs-cursor" class="slide level2" data-menu-title="Colab or Cursor?">
+<section id="colab-vs-antigravity" class="slide level2" data-menu-title="Colab or Antigravity?">
 <p class="kicker">Level 2 · step 6</p>
-<h2>Colab or Cursor? Use both</h2>
+<h2>Colab or Antigravity? Use both</h2>
 <table class="simple">
-<tr><th></th><th>Google Colab</th><th>Cursor / VS Code on your laptop</th></tr>
-<tr><td>Setup</td><td>none, runs in the browser</td><td>Python + editor + venv (15 min once)</td></tr>
+<tr><th></th><th>Google Colab</th><th>Antigravity on your laptop</th></tr>
+<tr><td>Setup</td><td>none, runs in the browser</td><td>Python + Antigravity + venv (15 min once)</td></tr>
 <tr><td>GPU</td><td>free T4 (limited hours)</td><td>only if your laptop has one (CPU is fine for Lab 7)</td></tr>
 <tr><td>Best for</td><td>notebooks, quick experiments, training on GPU, sharing a link</td><td>real projects with many <code>.py</code> files, git, debugging, Raspberry Pi code</td></tr>
-<tr><td>AI help</td><td>Gemini in Colab</td><td>Cursor chat / agent, sees your whole project</td></tr>
+<tr><td>AI help</td><td>Gemini in Colab</td><td>Antigravity's agent: plans, explains, sees your whole project</td></tr>
 <tr><td>Files</td><td>vanish unless saved to Drive</td><td>stay on your disk, versioned with git</td></tr>
-<tr><td>Offline</td><td>✘</td><td>✔</td></tr>
+<tr><td>Offline</td><td>✘</td><td>✔ editor and code (the AI agent needs internet)</td></tr>
 </table>
-<p class="plain"><b>Our workflow:</b> do the Lab 7 notebooks in <b>Colab</b>. For the Paper Implementation Challenge write your model as a clean <code>model.py</code> in <b>Cursor</b>, push it to GitHub, and train it in Colab (<code>!git clone</code> your repo).</p>
-<p class="note">The full step-by-step guide, with troubleshooting and the paper reading list: <a href="../tutorials/09_paper_implementation_setup.html">Tutorial 09: Paper implementation setup (Colab &amp; Cursor)</a>.</p>
+<p class="plain"><b>Our workflow:</b> do the Lab 7 notebooks in <b>Colab</b>. For the Paper Implementation Challenge write your model as a clean <code>model.py</code> in <b>Antigravity</b>, push it to GitHub, and train it in Colab (<code>!git clone</code> your repo).</p>
+<p class="note">The full step-by-step guide, with troubleshooting and the paper reading list: <a href="../tutorials/09_paper_implementation_setup.html">Tutorial 09: Paper implementation setup (Colab &amp; Antigravity)</a>.</p>
+<p class="tryit"><b>🖐 Run the same cell in both:</b> <code>import torch; print(torch.__version__, torch.cuda.is_available())</code>. Colab with a T4 prints <code>True</code>; your laptop most likely <code>False</code>, and Lab 7 still runs.</p>
 </section>
 
 <section id="level-2-quiz" class="slide level2" data-menu-title="Level 2 quiz">
@@ -991,6 +1011,7 @@ x.to("cuda")           # on the GPU
 <p class="small">Five lines, in every lab, in every paper.</p>
 </div>
 </div>
+<a class="lab-link" href="../tutorials/11_pytorch_101_cookbook.html" style="position:static; display:inline-block; margin-top:0.35em;">📘 PyTorch 101 Cookbook: 8 runnable recipes</a>
 <p class="plain"><b>Remember:</b> a paper's figure gives you <code>__init__</code> (which layers) and <code>forward</code> (how they connect). The "Training" section gives you the loop's optimiser, learning rate and loss.</p>
 <a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/01-pytorch-for-papers.ipynb" style="right:24px; top:6px;">&#9654;&#xFE0E; Lab 7A in Colab</a>
 </section>
@@ -1052,14 +1073,20 @@ tokens = x.reshape(B, H * W, C)        # ✘ right shape,
 <p class="kicker">Level 3 · step 4</p>
 <h2>Six debugging habits of people who implement papers</h2>
 <div class="grid3">
-<div class="card"><h3>1 · Trace shapes</h3><p><code>C.trace_shapes(model, x)</code> prints every layer's output shape. Compare with the figure.</p></div>
+<div class="card"><h3>1 · Trace shapes</h3><pre class="code-sm" style="font-size:0.5em; margin:0.2em 0 0;"><code class="python">net = resnet18()
+x = torch.randn(2, 3, 224, 224)
+for n, l in net.named_children():
+    if n == "fc": x = x.flatten(1)
+    x = l(x)
+    print(n, tuple(x.shape))
+# conv1 (2,64,112,112) … fc (2,1000)</code></pre></div>
 <div class="card"><h3>2 · Assert shapes</h3><p><code>assert y.shape == (B, 64, 568, 568)</code> after every block, in the code itself.</p></div>
 <div class="card"><h3>3 · Tiny example by hand</h3><p>3 words, 2 numbers each: compute attention on paper, compare.</p></div>
 <div class="card" style="border-left-color:#ea580c;"><h3>4 · Compare with a reference</h3><p>Same weights into <code>nn.MultiheadAttention</code>; same parameter count as <code>torchvision</code>.</p></div>
 <div class="card" style="border-left-color:#ea580c;"><h3>5 · Overfit one batch</h3><p>8–32 examples, loss → ≈ 0. Otherwise: a bug.</p></div>
 <div class="card" style="border-left-color:#ea580c;"><h3>6 · Fix the seed, change one thing</h3><p><code>C.seed_everything(0)</code>; one change per run; write results in a table.</p></div>
 </div>
-<p class="plain"><b>All six are built into the Lab 7 checks.</b> When a check says 💡, it is pointing at one of these habits.</p>
+
 </section>
 
 <section id="level-3-quiz" class="slide level2" data-menu-title="Level 3 quiz">
@@ -1105,6 +1132,8 @@ tokens = x.reshape(B, H * W, C)        # ✘ right shape,
 <text x="1065" y="300" font-size="20" fill="#5b6b7b">every word looks at every word at once: parallel on a GPU, path length O(1)</text>
 </g></svg>
 <p class="plain"><b>In plain words:</b> an RNN is like passing a message along a line of students; by the 20th student the message is garbled. Attention lets every student <b>ask everyone directly</b>. The paper's Table 1 says exactly this: maximum path length O(n) for recurrent layers, O(1) for self-attention.</p>
+<pre class="code-sm"><code class="python">q, k = torch.randn(20, 64), torch.randn(20, 64)   # 20 words, 64 numbers each
+print((q @ k.T).shape)   # torch.Size([20, 20]): every word vs every word in ONE matrix multiply</code></pre>
 </section>
 
 <section id="attention-equation" class="slide level2" data-menu-title="The attention equation">
@@ -1126,6 +1155,7 @@ tokens = x.reshape(B, H * W, C)        # ✘ right shape,
 </div>
 <div><img class="fig" src="assets/07_paper_implementation/p_transformer_fig2.png" alt="Figure 2: scaled dot-product attention and multi-head attention"><p class="cap">Figure 2 of the paper. Read it bottom-up: MatMul → Scale → Mask → SoftMax → MatMul. Each box is one line of code.</p></div>
 </div>
+<p class="tryit"><b>🖐 By hand (2 min):</b> q = (1, 0), keys (0, 1), (1, 0), (2, 0). The scores q·k are? → (0, 1, 2). Then check yourself in <a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/09-paper-math-workbook.ipynb">Lab 7I, A1</a>.</p>
 <a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/02-attention-from-scratch.ipynb" style="right:24px; top:6px;">&#9654;&#xFE0E; Lab 7B in Colab</a>
 </section>
 
@@ -1249,7 +1279,11 @@ pe[:, 1::2] = torch.cos(pos / div)           # odd dims
 <tr><td>N×</td><td>stack N = 6 identical layers</td></tr>
 <tr><td>Linear + Softmax</td><td>scores over the output vocabulary</td></tr>
 </table>
-<p class="small muted">Base model: N = 6, d<sub>model</sub> = 512, h = 8, d<sub>ff</sub> = 2048, dropout 0.1 → 65 M parameters (Table 3).</p>
+<pre class="code-sm" style="margin-top:0.5em;"><code class="python">t = nn.Transformer(d_model=512, nhead=8, num_encoder_layers=6,
+                   num_decoder_layers=6, dim_feedforward=2048)
+print(sum(p.numel() for p in t.parameters()))   # 44140544
+# + one shared 37 000 × 512 embedding (18.9 M) ≈ 63 M  ·  Table 3 says 65 M</code></pre>
+
 </div>
 <div><img class="fig" src="assets/07_paper_implementation/p_transformer_fig1.png" alt="Figure 1 of Attention Is All You Need: the Transformer architecture" style="max-height:700px;"></div>
 </div>
@@ -1352,17 +1386,15 @@ tgt_out :  4   8  2  5  9  1  7  3 EOS
 <section id="unet-figure-1" class="slide level2" data-menu-title="U-Net: Figure 1 is the paper">
 <p class="kicker">Level 5 · step 1 · Figure 1</p>
 <h2>U-Net: the figure <i>is</i> the paper</h2>
-<div class="grid2 img-wide">
-<div><img class="fig" src="assets/07_paper_implementation/p_unet_fig1.png" alt="Figure 1 of the U-Net paper"></div>
-<div>
-<ul class="tight small">
-<li><b>Left (contracting):</b> 2 × [3 × 3 conv, ReLU] then 2 × 2 max-pool. Channels <b>double</b>: 64 → 128 → 256 → 512 → 1024. Learns <i>what</i> is in the image.</li>
-<li><b>Right (expansive):</b> 2 × 2 up-conv (channels halve), <b>concatenate</b> the cropped left map, 2 × [3 × 3 conv, ReLU]. Recovers <i>where</i>.</li>
-<li><b>Grey arrows = skip connections:</b> sharp details jump straight across the U.</li>
-<li><b>Last layer:</b> 1 × 1 conv → 2 classes per pixel.</li>
-<li>Numbers on the boxes: <b>channels</b> (top) and <b>size</b> (bottom left). Unpadded convs: every conv loses 2 pixels.</li>
-</ul>
-<p class="plain"><b>Analogy:</b> the left side zooms out to understand the scene; the right side zooms back in to draw the outline, copying the fine details from the left side through the skip connections.</p>
+<div class="grid2" style="grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);">
+<div><img class="fig" src="assets/07_paper_implementation/p_unet_fig1.png" alt="Figure 1 of the U-Net paper">
+<p class="plain" style="margin-top:0.4em;"><b>Analogy:</b> the left side zooms out to understand the scene; the right side zooms back in to draw the outline, copying fine details across the skip connections.</p></div>
+<div class="stepper narrow" style="font-size:0.94em;">
+<div class="row fragment" style="--c:#2563eb;"><div class="num">1</div><div class="name"><b>Contracting path (left) · <i>what</i></b><small>read the U top-left → bottom</small></div><div class="chips"><span><i>1</i>2 × [3×3 conv, ReLU]</span><span><i>2</i>2×2 max-pool</span><span><i>3</i>channels × 2: 64 → 1024</span></div></div>
+<div class="row fragment" style="--c:#7c3aed;"><div class="num">2</div><div class="name"><b>Bottom of the U</b><small>the widest view</small></div><div class="chips"><span><i>1</i>28 × 28 × 1024: most context, least detail</span></div></div>
+<div class="row fragment" style="--c:#059669;"><div class="num">3</div><div class="name"><b>Expansive path (right) · <i>where</i></b><small>read bottom → top-right</small></div><div class="chips"><span><i>1</i>2×2 up-conv, channels ÷ 2</span><span><i>2</i>2 × [3×3 conv, ReLU]</span></div></div>
+<div class="row fragment" style="--c:#64748b;"><div class="num">4</div><div class="name"><b>Skip connections (grey arrows)</b><small>sharp details jump across the U</small></div><div class="chips"><span><i>1</i>copy → crop → concatenate on channels</span></div></div>
+<div class="row fragment" style="--c:#dc2626;"><div class="num">5</div><div class="name"><b>Output layer</b><small>one class score per pixel</small></div><div class="chips"><span><i>1</i>1×1 conv → 2 classes</span><span><i>2</i>572 → 388 (each conv: −2 px)</span></div></div>
 </div>
 </div>
 <a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/04-unet-from-paper.ipynb" style="right:24px; top:6px;">&#9654;&#xFE0E; Lab 7D in Colab</a>
@@ -1500,6 +1532,7 @@ class UNetPaper(nn.Module):
 </div>
 </div>
 <p class="plain"><b>Why is this strange?</b> A 56-layer net could copy the 20-layer net and make the other 36 layers do nothing (identity). So it should be <i>at least as good</i>. It isn't: plain layers find it hard to learn "do nothing". This is <b>not overfitting</b> (training error is higher too).</p>
+<p class="tryit"><b>🖐 Predict first:</b> write down which trains better in Lab 7E, plain-20 or plain-56. Then run §4 and compare with your guess.</p>
 </section>
 
 <section id="resnet-residual-block" class="slide level2" data-menu-title="The residual block">
@@ -1665,20 +1698,24 @@ class ViT(nn.Module):
 <div class="grid2">
 <div class="card"><h3>CNN (ResNet)</h3>
 <ul class="tight">
-<li>Built-in assumptions ("inductive bias"): <b>locality</b> (3 × 3 neighbours) and <b>translation equivariance</b></li>
+<li>Built-in <b>locality</b>: looks at 3 × 3 neighbours</li>
 <li>Learns well from <b>small</b> datasets</li>
-<li>Cheap at high resolution (cost ∝ pixels)</li>
+
 <li>Best for: Raspberry Pi, small custom datasets</li>
 </ul></div>
 <div class="card" style="border-left-color:#ea580c;"><h3>ViT</h3>
 <ul class="tight">
-<li>Almost no built-in assumptions: must <b>learn</b> that nearby patches matter</li>
-<li>Paper: on ImageNet alone (1.3 M images), a few points <b>below</b> comparable ResNets; pre-trained on <b>JFT-300M</b> it beats them (ViT-H/14: 88.55 % top-1)</li>
-<li>Attention cost ∝ N² tokens</li>
+<li>Must <b>learn</b> that nearby patches matter</li>
+<li>ImageNet only: <b>below</b> ResNets; JFT-300M: <b>beats</b> them (88.55 %)</li>
+
 <li>Best for: large pre-trained models (CLIP, SAM, DINOv2, VLMs), then fine-tune</li>
 </ul></div>
 </div>
-<p class="plain"><b>Practical rule:</b> small data and no pre-training → CNN. Pre-trained ViT available (most are, on Hugging Face) → fine-tune the ViT. Lecture 4's SmolVLM and SAM use ViT encoders for exactly this reason.</p>
+<p class="plain"><b>Practical rule:</b> small data, no pre-training → CNN. A pre-trained ViT exists (most are on Hugging Face) → fine-tune it.</p>
+<pre class="code-sm"><code class="python">import torchvision.models as M
+for name in ["resnet50", "vit_b_16"]:
+    print(name, sum(p.numel() for p in getattr(M, name)().parameters()) / 1e6)
+# resnet50 25.6 · vit_b_16 86.6 (million parameters): ViT needs far more data to fill them</code></pre>
 </section>
 
 <section id="level-7-quiz" class="slide level2" data-menu-title="Level 7 quiz">
@@ -1720,6 +1757,7 @@ class ViT(nn.Module):
 <tr><td><a href="https://arxiv.org/abs/2103.14030">Swin</a> · <a href="https://arxiv.org/abs/2111.06377">MAE</a> · <a href="https://arxiv.org/abs/2304.02643">SAM</a></td><td>2021–23</td><td>windowed attention · masked pre-training · promptable segmentation</td><td>★★★</td><td>GPU</td></tr>
 </table>
 <p class="small">More: <a href="https://arxiv.org/abs/1411.4038">FCN</a> · <a href="https://arxiv.org/abs/1703.06870">Mask R-CNN</a> · <a href="https://arxiv.org/abs/2002.05709">SimCLR</a> · <a href="https://arxiv.org/abs/2201.03545">ConvNeXt</a> · <a href="https://arxiv.org/abs/2304.07193">DINOv2</a> · <a href="https://arxiv.org/abs/2308.04079">3D Gaussian Splatting</a> · <a href="https://arxiv.org/abs/2306.03092">Neuralangelo</a> · <a href="https://arxiv.org/abs/2408.00714">SAM 2</a></p>
+<p class="tryit"><b>🖐 Choose now (10 min):</b> pick one ★☆☆ paper, open it on alphaXiv, and fill in the pass-1 card. That is the first cell of your Lab 7H notebook.</p>
 </section>
 
 <section id="bug-hunt" class="slide level2" data-menu-title="Bug hunt (Lab 7G)">
@@ -1824,7 +1862,7 @@ class ViT(nn.Module):
 <div class="grid2">
 <div>
 <table class="simple">
-<tr><th>Step</th><th>You</th><th>AI assistant (Cursor, Claude, Copilot, Gemini)</th></tr>
+<tr><th>Step</th><th>You</th><th>AI assistant (Antigravity, Claude, Copilot, Gemini)</th></tr>
 <tr><td>Understand</td><td>read the paper, write the card</td><td>explains terms and equations</td></tr>
 <tr><td>Specify</td><td><b>shape table, tests, parameter counts</b></td><td>reviews your table</td></tr>
 <tr><td>Code</td><td>write the core (Lab 7); later, supervise</td><td>boilerplate: data loading, plotting, logging</td></tr>
@@ -1838,6 +1876,7 @@ class ViT(nn.Module):
 <p class="plain"><b>Stay ahead:</b> paper reading + PyTorch + testing + an AI assistant you know how to direct. That combination is what employers and MSc supervisors look for in 2026.</p>
 </div>
 </div>
+<p class="tryit"><b>🖐 Test an AI agent:</b> ask Antigravity's agent to write <code>attention(q, k, v)</code>. Paste its code into Lab 7G and run the bug 1 and bug 2 checks. Does it pass?</p>
 </section>
 
 <section id="faq" class="slide level2" data-menu-title="Questions students always ask">
@@ -1899,7 +1938,8 @@ class ViT(nn.Module):
 <a href="../labs.html#lab-7-papers"><b>📋</b>Labs page: Colab · View · Download, the Challenge</a>
 <a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/09-paper-math-workbook.ipynb"><b>7I</b>Paper math workbook (derive, then verify)</a>
 <a href="../tutorials/10_paper_code_side_by_side.html"><b>📖</b>Paper ↔ Code handbook: interactive (3-hour session)</a>
-<a href="../tutorials/09_paper_implementation_setup.html"><b>🛠</b>Tutorial 09: Colab &amp; Cursor setup, reading list</a>
+<a href="../tutorials/09_paper_implementation_setup.html"><b>🛠</b>Tutorial 09: Colab &amp; Antigravity setup, reading list</a>
+<a href="../tutorials/11_pytorch_101_cookbook.html"><b>📘</b>Tutorial 11: PyTorch 101 Cookbook (8 recipes)</a>
 </div>
 <div class="grid2" style="margin-top:0.6em;">
 <p class="tiny muted"><b>The four papers:</b> Vaswani et al., <a href="https://arxiv.org/abs/1706.03762">Attention Is All You Need</a>, NeurIPS 2017 · Ronneberger et al., <a href="https://arxiv.org/abs/1505.04597">U-Net</a>, MICCAI 2015 · He et al., <a href="https://arxiv.org/abs/1512.03385">Deep Residual Learning</a>, CVPR 2016 · Dosovitskiy et al., <a href="https://arxiv.org/abs/2010.11929">An Image is Worth 16x16 Words</a>, ICLR 2021 · Hu et al., <a href="https://arxiv.org/abs/1709.01507">Squeeze-and-Excitation Networks</a>, CVPR 2018.</p>
