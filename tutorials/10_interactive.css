@@ -1,5 +1,11 @@
 /* Interactive layer for Tutorial 10 (Paper <-> Code handbook) */
 
+/* ---------- links to the Lecture 7 slides */
+a.slide-pill { display: inline-block; vertical-align: 3px; margin-left: 0.5em; font: 700 0.74rem/1.7 "Source Sans 3", "Segoe UI", sans-serif;
+  color: #0f766e; background: #f0fdfa; border: 1.5px solid #0f766e; border-radius: 999px; padding: 0 0.7em; text-decoration: none; white-space: nowrap; }
+a.slide-pill:hover { background: #0f766e; color: #fff; }
+@media print { a.slide-pill { display: none; } }
+
 /* ---------- linked highlighting: equation term <-> figure box <-> code line */
 .pair .code pre code .ln { display: block; margin: 0 -16px; padding: 0 16px; border-left: 3px solid transparent; transition: background .12s; }
 .pair .code pre code .ln.lit, .pair .code pre code .ln.pin { background: rgba(255, 166, 87, .18); border-left-color: #ffa657; }

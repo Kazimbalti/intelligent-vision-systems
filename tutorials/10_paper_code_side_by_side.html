@@ -136,7 +136,7 @@ mjx-container[display="true"] { margin: .5em 0 !important; overflow-x: auto; ove
 <body>
 <header class="top"><div class="bar">
 <a class="brand" href="../index.html">Intelligent Vision Systems</a>
-<nav><a href="../lectures/07_Paper_Implementation.html">Lecture 7 slides</a><a href="../labs.html#lab-7-papers">Lab 7</a><a href="09_paper_implementation_setup.html">Setup &amp; reading list</a><a href="index.html">All tutorials</a></nav>
+<nav><a href="../lectures/07_Paper_Implementation.html">Lecture 7 slides</a><a href="../labs.html#lab-7-papers">Lab 7</a><a href="09_paper_implementation_setup.html">Setup &amp; reading list</a><a class="hb-extra" href="../lectures/07_mindmap.html">Mind map</a><a class="hb-extra" href="../lectures/assets/07_paper_implementation/Lecture7_MindMap.xmind" download>XMind file</a><a href="index.html">All tutorials</a></nav>
 </div></header>
 
 <div class="hero"><div class="in">
@@ -144,7 +144,7 @@ mjx-container[display="true"] { margin: .5em 0 !important; overflow-x: auto; ove
 <h1>Paper ↔ Code: four landmark papers, side by side</h1>
 <p>Every important sentence, equation and figure of the paper on the left, the PyTorch line that implements it on the right, the tensor shape underneath, and every formula derived step by step with numbers small enough to check with a pencil. <b>Hover a term in an equation or a box in a figure and its code lights up.</b> Each paper has live widgets, the paper's results next to yours, and a quick check. Less theory, more doing, with AI as a tutor, not a ghost-writer.</p>
 <div class="chips">
-<a href="#ai">0 · Learn with AI</a><a href="#attention">1 · Attention</a><a href="#transformer">2 · Transformer</a><a href="#unet">3 · U-Net</a><a href="#vit">4 · Vision Transformer</a><a href="#resnet">5 · ResNet (bonus)</a><a href="#cheatsheet">Cheat sheet</a>
+<a href="#ai">0 · Learn with AI</a><a href="#attention">1 · Attention</a><a href="#transformer">2 · Transformer</a><a href="#unet">3 · U-Net</a><a href="#vit">4 · Vision Transformer</a><a href="#resnet">5 · ResNet (bonus)</a><a href="#cheatsheet">Cheat sheet</a><a class="hb-extra" href="../lectures/07_Paper_Implementation.html">🎞 Lecture 7 slides</a><a class="hb-extra" href="../lectures/07_mindmap.html">🧠 Mind map</a><a class="hb-extra" href="../lectures/assets/07_paper_implementation/Lecture7_MindMap.xmind" download>⬇ XMind file</a>
 </div>
 </div></div>
 
@@ -213,14 +213,14 @@ mjx-container[display="true"] { margin: .5em 0 !important; overflow-x: auto; ove
 <!-- ======================================================= 0 AI -->
 <section class="part" id="ai">
 <h2><span class="num">0</span>Learn papers with AI: read, derive, code, verify</h2>
-<p class="sub">Claude, ChatGPT and Antigravity can explain any paragraph in seconds. That makes them excellent <b>tutors</b> and dangerous <b>ghost-writers</b>. The rule for this lab: <b>AI may explain, question and review; you derive, write and verify.</b> You must be able to explain every line in the viva without notes.</p>
+<p class="sub">Claude, ChatGPT and Antigravity can explain any paragraph in seconds. That makes them excellent <b>tutors</b> and dangerous <b>ghost-writers</b>. The rule for this lab: <b>AI may explain, question and review; you derive, write and verify.</b> You must be able to explain every line in the viva without notes. <a class="slide-pill" href="../lectures/07_Paper_Implementation.html#/reading-with-ai" title="Lecture 7 slide: Reading papers with AI">🎞 Slide: Reading papers with AI</a></p>
 <div class="card-row">
 <div><b>Use AI to</b>explain a term, quiz you, check one step, explain an error, suggest a test</div>
 <div><b>Never let AI</b>write your TODOs, invent numbers or quotes, or be your test</div>
 <div><b>Always</b>paste the paper's own text: the model then works from the paper, not from memory</div>
 <div><b>Declare</b>tools, what for, what you did yourself, how you verified it</div>
 </div>
-<h3 id="ai-flow">The 7-step workflow</h3>
+<h3 id="ai-flow">The 7-step workflow <a class="slide-pill" href="../lectures/07_Paper_Implementation.html#/seven-step-recipe" title="Lecture 7 slide: The 7-step recipe">🎞 Slide: The 7-step recipe</a></h3>
 <div data-widget="flow"></div>
 <h3 id="ai-prompt">Prompt builder</h3>
 <div data-widget="prompt"></div>
@@ -256,7 +256,7 @@ Honest use of AI is allowed and expected. Hidden use is not. The declaration tak
 <!-- ======================================================= 1 ATTENTION -->
 <section class="part" id="attention">
 <h2><span class="num">1</span>Attention: the one equation behind every Transformer</h2>
-<p class="sub">Vaswani et al., <i>Attention Is All You Need</i>, NeurIPS 2017 · <a href="https://arxiv.org/abs/1706.03762">arXiv:1706.03762</a> · read §3.2 and Figure 2</p>
+<p class="sub">Vaswani et al., <i>Attention Is All You Need</i>, NeurIPS 2017 · <a href="https://arxiv.org/abs/1706.03762">arXiv:1706.03762</a> · read §3.2 and Figure 2 <a class="slide-pill" href="../lectures/07_Paper_Implementation.html#/transformer-paper" title="Lecture 7 slide: Transformer: the paper">🎞 Slide: Transformer: the paper</a></p>
 <div class="card-row">
 <div><b>Input</b>Q (L<sub>q</sub>, d<sub>k</sub>), K (L<sub>k</sub>, d<sub>k</sub>), V (L<sub>k</sub>, d<sub>v</sub>)</div>
 <div><b>Output</b>(L<sub>q</sub>, d<sub>v</sub>): a new vector per query</div>
@@ -264,7 +264,7 @@ Honest use of AI is allowed and expected. Hidden use is not. The declaration tak
 <div><b>Lab</b><a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/02-attention-from-scratch.ipynb">7B</a> · workbook 7I §1</div>
 </div>
 
-<h3 id="att-pairs">Paper ↔ code</h3>
+<h3 id="att-pairs">Paper ↔ code <a class="slide-pill" href="../lectures/07_Paper_Implementation.html#/attention-equation" title="Lecture 7 slide: Scaled dot-product attention">🎞 Slide: Scaled dot-product attention</a></h3>
 <div class="pair-head"><div>Paper</div><div>Code</div></div>
 <div class="pair">
 <div class="paper"><div class="ref">§3.2 · definition</div>
@@ -322,7 +322,7 @@ causal_mask(4).int()
 <div class="shape">mask (L, L) broadcasts over batch and heads: True = may attend</div></div>
 </div>
 
-<h3 id="att-derive">Derive it with numbers: 3 words, 2 features</h3>
+<h3 id="att-derive">Derive it with numbers: 3 words, 2 features <a class="slide-pill" href="../lectures/07_Paper_Implementation.html#/attention-code" title="Lecture 7 slide: Five boxes, five lines">🎞 Slide: Five boxes, five lines</a></h3>
 <p>The same example as Lab 7B. Each row is one word.</p>
 <table class="num" style="display:inline-table; margin-right:18px;"><tr><th></th><th colspan="2">Q</th></tr><tr><th>w0</th><td>1</td><td>0</td></tr><tr><th>w1</th><td>0</td><td>1</td></tr><tr><th>w2</th><td>1</td><td>1</td></tr></table>
 <table class="num" style="display:inline-table; margin-right:18px;"><tr><th></th><th colspan="2">K</th></tr><tr><th>w0</th><td>0</td><td>1</td></tr><tr><th>w1</th><td>1</td><td>0</td></tr><tr><th>w2</th><td>2</td><td>0</td></tr></table>
@@ -364,7 +364,7 @@ print(out.round(decimals=2))
 <div class="res">The mask changes rows 0 and 1 only. The first row of a causal attention matrix is always (1, 0, 0, …).</div></div>
 <div id="att-play" data-widget="attn"></div>
 
-<h3 id="att-sqrt">Why divide by √d<sub>k</sub>? A 4-line derivation</h3>
+<h3 id="att-sqrt">Why divide by √d<sub>k</sub>? A 4-line derivation <a class="slide-pill" href="../lectures/07_Paper_Implementation.html#/demo-attention" title="Lecture 7 slide: Attention playground">🎞 Slide: Attention playground</a></h3>
 <div class="derive"><div class="t">Derivation C · footnote 4 of the paper</div>
 <ol>
 <li>Assume the entries \(q_i, k_i\) are independent with mean 0 and variance 1 (what initialisation gives).</li>
@@ -391,7 +391,7 @@ The softmax gradient is \(\dfrac{\partial s_i}{\partial z_i} = s_i(1-s_i)\).
 </div>
 <div data-widget="sqrt"></div>
 
-<h3 id="att-mha">Multi-head attention</h3>
+<h3 id="att-mha">Multi-head attention <a class="slide-pill" href="../lectures/07_Paper_Implementation.html#/multi-head-attention" title="Lecture 7 slide: Multi-head attention">🎞 Slide: Multi-head attention</a></h3>
 <div class="pair linked">
 <div class="paper"><div class="ref">§3.2.2 · Eq. for MultiHead · Figure 2 (right)</div>
 \[ \mathrm{MultiHead}(Q,K,V) = \class{lk-mha-concat}{\mathrm{Concat}(\mathrm{head}_1,\dots,\mathrm{head}_h)}\,\class{lk-mha-out}{W^O} \]
@@ -444,7 +444,7 @@ The softmax gradient is \(\dfrac{\partial s_i}{\partial z_i} = s_i(1-s_i)\).
 <!-- ======================================================= 2 TRANSFORMER -->
 <section class="part" id="transformer">
 <h2><span class="num">2</span>The Transformer: building Figure 1 block by block</h2>
-<p class="sub">Same paper, §3.1, §3.3–3.5, Figure 1 · lab <a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/03-transformer-reverse-sequence.ipynb">7C</a> (a Transformer that learns to reverse sequences)</p>
+<p class="sub">Same paper, §3.1, §3.3–3.5, Figure 1 · lab <a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/03-transformer-reverse-sequence.ipynb">7C</a> (a Transformer that learns to reverse sequences) <a class="slide-pill" href="../lectures/07_Paper_Implementation.html#/transformer-figure-1" title="Lecture 7 slide: Figure 1, step by step">🎞 Slide: Figure 1, step by step</a></p>
 <div class="pair"><div class="paper"><div class="ref">Figure 1 · the Transformer, redrawn · read bottom-up</div>
 <div class="figpanel" data-fig="transformer" data-label="Figure 1: the Transformer architecture" style="max-width:520px; margin:0 auto;"></div>
 <p class="hint"><b>Hover</b> a block: its code lights up on this page. <b>Click</b> it to jump there.</p></div>
@@ -460,7 +460,7 @@ The softmax gradient is \(\dfrac{\partial s_i}{\partial z_i} = s_i(1-s_i)\).
 # test after EVERY step: shapes, a hand example, param count</code></pre>
 <div class="shape">the shape is <b>(B, L, 512)</b> between every pair of boxes; only the Linear at the top changes it to <b>(B, L, vocab)</b></div></div></div>
 
-<h3 id="tr-pe">Positional encoding</h3>
+<h3 id="tr-pe">Positional encoding <a class="slide-pill" href="../lectures/07_Paper_Implementation.html#/positional-encoding" title="Lecture 7 slide: Positional encoding">🎞 Slide: Positional encoding</a></h3>
 <div class="pair">
 <div class="paper"><div class="ref">§3.5 · positional encoding</div>
 <q>Since our model contains no recurrence and no convolution, in order for the model to make use of the order of the sequence, we must inject some information about the relative or absolute position of the tokens.</q>
@@ -539,7 +539,7 @@ y = norm(x + dropout(sublayer(x)))               # "Add & Norm"</code></pre>
 <div class="shape">(B, L, 512) → (B, L, 2048) → ReLU → (B, L, 512) · parameters 2·512·2048 + 2048 + 512 = <b>2 099 712</b></div></div>
 </div>
 
-<h3 id="tr-layers">Encoder and decoder layers</h3>
+<h3 id="tr-layers">Encoder and decoder layers <a class="slide-pill" href="../lectures/07_Paper_Implementation.html#/transformer-figure-1" title="Lecture 7 slide: Figure 1, step by step">🎞 Slide: Figure 1, step by step</a></h3>
 <div class="pair">
 <div class="paper"><div class="ref">§3.1 · Figure 1 left · encoder</div>
 <q>Each layer has two sub-layers. The first is a multi-head self-attention mechanism, and the second is a simple, position-wise fully connected feed-forward network.</q>
@@ -636,7 +636,7 @@ for _ in range(L + 1):
 <!-- ======================================================= 3 U-NET -->
 <section class="part" id="unet">
 <h2><span class="num">3</span>U-Net: segmentation in half a page</h2>
-<p class="sub">Ronneberger, Fischer &amp; Brox, MICCAI 2015 · <a href="https://arxiv.org/abs/1505.04597">arXiv:1505.04597</a> · read §2 and Figure 1 · lab <a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/04-unet-from-paper.ipynb">7D</a></p>
+<p class="sub">Ronneberger, Fischer &amp; Brox, MICCAI 2015 · <a href="https://arxiv.org/abs/1505.04597">arXiv:1505.04597</a> · read §2 and Figure 1 · lab <a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/04-unet-from-paper.ipynb">7D</a> <a class="slide-pill" href="../lectures/07_Paper_Implementation.html#/unet-paper" title="Lecture 7 slide: U-Net: the paper">🎞 Slide: U-Net: the paper</a></p>
 <div class="card-row">
 <div><b>Input</b>(B, 1, 572, 572) grey tile</div>
 <div><b>Output</b>(B, 2, 388, 388): a class score per pixel</div>
@@ -644,7 +644,7 @@ for _ in range(L + 1):
 <div><b>Numbers</b>23 conv layers · 31 030 658 parameters</div>
 </div>
 
-<h3 id="un-pairs">Paper ↔ code</h3>
+<h3 id="un-pairs">Paper ↔ code <a class="slide-pill" href="../lectures/07_Paper_Implementation.html#/unet-figure-1" title="Lecture 7 slide: U-Net, step by step">🎞 Slide: U-Net, step by step</a></h3>
 <div class="pair-head"><div>Paper</div><div>Code</div></div>
 <div class="pair">
 <div class="paper"><div class="ref">§2 · contracting path</div>
@@ -692,7 +692,7 @@ pred = logits.argmax(1)                           # (B, 388, 388) class per pixe
 <div class="shape">23 convs = 18 (in 9 DoubleConvs) + 4 up-convs + 1 head ✔ (count them in <code>trace_shapes</code>)</div></div>
 </div>
 
-<h3 id="un-size">The size formula: why 572 → 388, derived</h3>
+<h3 id="un-size">The size formula: why 572 → 388, derived <a class="slide-pill" href="../lectures/07_Paper_Implementation.html#/demo-unet-shapes" title="Lecture 7 slide: U-Net shape tracer">🎞 Slide: U-Net shape tracer</a></h3>
 <div class="derive"><div class="t">Derivation I · output size of the 2015 U-Net for an input of n × n</div>
 <ol>
 <li>One unpadded 3 × 3 conv: n → n − 2 (conv formula with k = 3, p = 0, s = 1). Two of them: n → n − 4.</li>
@@ -715,7 +715,7 @@ pred = logits.argmax(1)                           # (B, 388, 388) class per pixe
 </table>
 <div data-widget="unet"></div>
 
-<h3 id="un-params">Parameters and the Dice score</h3>
+<h3 id="un-params">Parameters and the Dice score <a class="slide-pill" href="../lectures/07_Paper_Implementation.html#/unet-experiment" title="Lecture 7 slide: Our experiment">🎞 Slide: Our experiment</a></h3>
 <div class="derive"><div class="t">Derivation J · parameters of a convolution, then of the whole network</div>
 <ol>
 <li>A conv with kernel k × k, C<sub>in</sub> inputs, C<sub>out</sub> filters: \(k^2 C_{in} C_{out} + C_{out}\) (one bias per filter).</li>
@@ -771,7 +771,7 @@ A = predicted pixels of a class, B = true pixels.
 <!-- ======================================================= 4 ViT -->
 <section class="part" id="vit">
 <h2><span class="num">4</span>Vision Transformer: an image is a sentence of patches</h2>
-<p class="sub">Dosovitskiy et al., ICLR 2021 · <a href="https://arxiv.org/abs/2010.11929">arXiv:2010.11929</a> · read §3.1, Figure 1, Eq. 1–4, Table 1 · lab <a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/06-vit-from-paper.ipynb">7F</a></p>
+<p class="sub">Dosovitskiy et al., ICLR 2021 · <a href="https://arxiv.org/abs/2010.11929">arXiv:2010.11929</a> · read §3.1, Figure 1, Eq. 1–4, Table 1 · lab <a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/06-vit-from-paper.ipynb">7F</a> <a class="slide-pill" href="../lectures/07_Paper_Implementation.html#/vit-paper" title="Lecture 7 slide: ViT: the paper">🎞 Slide: ViT: the paper</a></p>
 <div class="card-row">
 <div><b>Input</b>(B, 3, 224, 224)</div>
 <div><b>Tokens</b>14 × 14 = 196 patches + 1 [class] = 197</div>
@@ -781,7 +781,7 @@ A = predicted pixels of a class, B = true pixels.
 <div class="pair" style="grid-template-columns:minmax(0,1fr);"><div class="paper" style="border-right:0;"><div class="ref">Figure 1 · model overview, redrawn left to right · hover or click a box</div>
 <div class="figpanel" data-fig="vit" data-label="ViT Figure 1: model overview"></div></div></div>
 
-<h3 id="vit-pairs">Paper ↔ code</h3>
+<h3 id="vit-pairs">Paper ↔ code <a class="slide-pill" href="../lectures/07_Paper_Implementation.html#/vit-workflow" title="Lecture 7 slide: ViT, step by step">🎞 Slide: ViT, step by step</a></h3>
 <div class="pair-head"><div>Paper</div><div>Code</div></div>
 <div class="pair">
 <div class="paper"><div class="ref">§3.1 · patches</div>
@@ -839,7 +839,7 @@ logits = self.head(y)               # (B, 1000)</code></pre>
 <div class="shape">Lab 7F: a tiny ViT (16 tokens, D = 64) reads 8 × 8 digits at <b>98.6 %</b></div></div>
 </div>
 
-<h3 id="vit-count">Count ViT-B/16's parameters (Table 1 says 86 M)</h3>
+<h3 id="vit-count">Count ViT-B/16's parameters (Table 1 says 86 M) <a class="slide-pill" href="../lectures/07_Paper_Implementation.html#/vit-code" title="Lecture 7 slide: ViT in 25 lines">🎞 Slide: ViT in 25 lines</a></h3>
 <div class="derive"><div class="t">Derivation K · D = 768, MLP = 3072, 12 heads, 12 layers, 1000 classes</div>
 <ol>
 <li>Patch embedding E: (16·16·3)·768 + 768 = 590 592.</li>
@@ -884,7 +884,7 @@ logits = self.head(y)               # (B, 1000)</code></pre>
 <!-- ======================================================= 5 ResNet -->
 <section class="part" id="resnet">
 <h2><span class="num">5</span>Bonus: ResNet in one equation</h2>
-<p class="sub">He, Zhang, Ren &amp; Sun, CVPR 2016 · <a href="https://arxiv.org/abs/1512.03385">arXiv:1512.03385</a> · Figure 2, §3.1–3.3 · lab <a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/05-resnet-from-paper.ipynb">7E</a> · the "+ x" also appears in every Transformer and ViT block above</p>
+<p class="sub">He, Zhang, Ren &amp; Sun, CVPR 2016 · <a href="https://arxiv.org/abs/1512.03385">arXiv:1512.03385</a> · Figure 2, §3.1–3.3 · lab <a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/05-resnet-from-paper.ipynb">7E</a> · the "+ x" also appears in every Transformer and ViT block above <a class="slide-pill" href="../lectures/07_Paper_Implementation.html#/resnet-workflow" title="Lecture 7 slide: ResNet, step by step">🎞 Slide: ResNet, step by step</a></p>
 <div class="pair linked">
 <div class="paper"><div class="ref">§1 (quote) · §3.2 Eq. (1) · Figure 2</div>
 \[ y = \class{lk-rn-f}{\mathcal{F}(x, \{W_i\})} \class{lk-rn-add}{+} \class{lk-rn-id}{x} \]

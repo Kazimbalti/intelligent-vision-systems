@@ -342,6 +342,14 @@
   .reveal .stepper.compact .row { padding: 0.16em 0.6em; grid-template-columns: 1.9em minmax(0, 0.95fr) minmax(0, 1fr); }
   .reveal .stepper.compact .row .chips { grid-column: auto; margin: 0; }
   .reveal .stepper.compact .row .chips span { font-family: "Source Code Pro", Consolas, monospace; font-size: 0.8em; white-space: normal; overflow-wrap: anywhere; }
+  /* ---- top-right links: handbook pill (+ Colab button) ---- */
+  .reveal .toplinks { position: absolute; right: 24px; top: 6px; display: flex; gap: 10px; align-items: center; z-index: 6; }
+  .reveal .toplinks a.lab-link { position: static; display: inline-block; }
+  .reveal a.hb-link { display: inline-block; font-size: 0.5em; font-weight: 700; color: #0f766e; background: #f0fdfa; border: 2px solid #0f766e;
+    border-radius: 6px; padding: 0.32em 0.8em; text-decoration: none; white-space: nowrap; box-shadow: 0 2px 6px rgba(15,118,110,0.18); }
+  .reveal a.hb-link:hover { background: #0f766e; color: #fff; }
+  .reveal .kicker a.hb-link.kick { font-size: 0.95em; text-transform: none; letter-spacing: 0.01em; margin-left: 0.9em; padding: 0.08em 0.7em;
+    border-width: 1.5px; border-radius: 999px; box-shadow: none; vertical-align: 1px; }
   /* ---- interactive quizzes: click-to-reveal answers and multiple choice ---- */
   .reveal .qa { margin: 0.22em 0; border-radius: 10px; background: #fffdf5; border: 1px solid #f3d39b; overflow: hidden; }
   .reveal .qa-q { display: flex; gap: 0.6em; align-items: flex-start; width: 100%; text-align: left; background: none; border: 0;
@@ -501,7 +509,7 @@
 </section>
 
 <section id="papers-in-one-minute" class="slide level2" data-menu-title="Paper implementation in one minute">
-<p class="kicker">The big picture first</p>
+<p class="kicker">The big picture first<a class="hb-link kick" href="../tutorials/10_paper_code_side_by_side.html#plan" title="Paper ↔ Code handbook: the 3-hour plan">📖 Handbook: the 3-hour plan</a></p>
 <h2>Implementing a paper in one minute</h2>
 <div class="steps3">
 <div class="card"><p class="big">📖</p><h3>1 · Read smart</h3><p>Not front to back! Abstract, figures, conclusion first. Then the method. Write a <b>one-page card</b>: problem, idea, figure, equations, shapes.</p></div>
@@ -767,7 +775,7 @@ print(len(M.list_models()), "models")   # 121 models: alexnet, vgg16, resnet18, 
 </section>
 
 <section id="reading-with-ai" class="slide level2" data-menu-title="Reading papers with AI (responsibly)">
-<p class="kicker">Level 1 · step 5</p>
+<p class="kicker">Level 1 · step 5<a class="hb-link kick" href="../tutorials/10_paper_code_side_by_side.html#ai" title="Paper ↔ Code handbook: learn papers with AI">📖 Handbook: learn papers with AI</a></p>
 <h2>Reading papers with AI: a tutor, not a ghost-writer</h2>
 <div class="grid2">
 <div class="card" style="border-left-color:#1f7a4d;"><h3>✔ Good prompts</h3>
@@ -845,7 +853,7 @@ print(sum(p.numel() for p in m.parameters()))
 </section>
 
 <section id="seven-step-recipe" class="slide level2" data-menu-title="The 7-step paper → code recipe">
-<p class="kicker">Level 2 · step 3 · the method we use for every paper</p>
+<p class="kicker">Level 2 · step 3 · the method we use for every paper<a class="hb-link kick" href="../tutorials/10_paper_code_side_by_side.html#ai-flow" title="Paper ↔ Code handbook: the 7-step AI workflow">📖 Handbook: the 7-step AI workflow</a></p>
 <h2>The 7-step recipe: from paper to working code</h2>
 <div class="stepper">
 <div class="row fragment" style="--c:#2563eb;"><div class="num">1</div><div class="name"><b>Pass 1 · read &amp; decide</b><small>10 minutes</small></div><div class="chips"><span><i>1</i>Title, abstract, figures</span><span><i>2</i>Fill the paper card</span><span><i>3</i>Decide: implement or not</span></div><div class="done">Done when: you can say the key idea in one sentence</div></div>
@@ -972,7 +980,7 @@ x.to("cuda")           # on the GPU
 </section>
 
 <section id="conv-arithmetic" class="slide level2" data-menu-title="Live demo: conv arithmetic">
-<p class="kicker">Level 3 · step 2 · live demo</p>
+<p class="kicker">Level 3 · step 2 · live demo<a class="hb-link kick" href="../tutorials/10_paper_code_side_by_side.html#cheatsheet" title="Paper ↔ Code handbook: cheat sheet">📖 Handbook: cheat sheet</a></p>
 <h2>Conv arithmetic: one formula, every shape</h2>
 <div class="grid2">
 <div>
@@ -1000,7 +1008,7 @@ x.to("cuda")           # on the GPU
 </section>
 
 <section id="reshape-vs-permute" class="slide level2" data-menu-title="Reshape vs permute: images to tokens">
-<p class="kicker">Level 3 · step 3</p>
+<p class="kicker">Level 3 · step 3<a class="hb-link kick" href="../tutorials/10_paper_code_side_by_side.html#att-mha" title="Paper ↔ Code handbook: view + transpose">📖 Handbook: view + transpose</a></p>
 <h2>Reshape vs permute: the #1 silent bug</h2>
 <div class="grid2">
 <div>
@@ -1060,7 +1068,7 @@ for n, l in net.named_children():
 </section>
 
 <section id="transformer-paper" class="slide level2" data-menu-title="Transformer: title &amp; abstract">
-<p class="kicker">Level 4 · paper 1 · title &amp; abstract</p>
+<p class="kicker">Level 4 · paper 1 · title &amp; abstract<a class="hb-link kick" href="../tutorials/10_paper_code_side_by_side.html#attention" title="Paper ↔ Code handbook: Part 1 · Attention">📖 Handbook: Part 1 · Attention</a></p>
 <h2>Transformer: the paper</h2>
 <div class="grid2" style="grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);">
 <div>
@@ -1121,7 +1129,7 @@ print((q @ k.T).shape)   # torch.Size([20, 20]): every word vs every word in ONE
 </section>
 
 <section id="attention-equation" class="slide level2" data-menu-title="The attention equation">
-<p class="kicker">Level 4 · step 2 · the core equation (§3.2.1, Eq. 1)</p>
+<p class="kicker">Level 4 · step 2 · the core equation (§3.2.1, Eq. 1)<a class="hb-link kick" href="../tutorials/10_paper_code_side_by_side.html#att-pairs" title="Paper ↔ Code handbook: Eq. 1 ↔ code">📖 Handbook: Eq. 1 ↔ code</a></p>
 <h2>Scaled dot-product attention: one line of maths</h2>
 <div class="grid2">
 <div>
@@ -1144,7 +1152,7 @@ print((q @ k.T).shape)   # torch.Size([20, 20]): every word vs every word in ONE
 </section>
 
 <section id="attention-code" class="slide level2" data-menu-title="Attention: figure → code">
-<p class="kicker">Level 4 · step 3 · figure 2 (left) → code</p>
+<p class="kicker">Level 4 · step 3 · figure 2 (left) → code<a class="hb-link kick" href="../tutorials/10_paper_code_side_by_side.html#att-derive" title="Paper ↔ Code handbook: derive it by hand">📖 Handbook: derive it by hand</a></p>
 <h2>Five boxes, five lines</h2>
 <div class="grid2 wide-left">
 <pre><code class="python">def attention(q, k, v, mask=None):
@@ -1170,7 +1178,7 @@ print((q @ k.T).shape)   # torch.Size([20, 20]): every word vs every word in ONE
 </section>
 
 <section id="demo-attention" class="slide level2" data-menu-title="Live demo: attention playground">
-<p class="kicker">Level 4 · step 4 · live demo</p>
+<p class="kicker">Level 4 · step 4 · live demo<a class="hb-link kick" href="../tutorials/10_paper_code_side_by_side.html#att-sqrt" title="Paper ↔ Code handbook: why ÷ √dₖ">📖 Handbook: why ÷ √dₖ</a></p>
 <h2>Attention playground</h2>
 <div class="grid2">
 <div>
@@ -1196,7 +1204,7 @@ print((q @ k.T).shape)   # torch.Size([20, 20]): every word vs every word in ONE
 </section>
 
 <section id="multi-head-attention" class="slide level2" data-menu-title="Multi-head attention">
-<p class="kicker">Level 4 · step 5 · §3.2.2</p>
+<p class="kicker">Level 4 · step 5 · §3.2.2<a class="hb-link kick" href="../tutorials/10_paper_code_side_by_side.html#att-mha" title="Paper ↔ Code handbook: multi-head">📖 Handbook: multi-head</a></p>
 <h2>Multi-head attention: 8 small heads, not 1 big one</h2>
 <div class="grid2 wide-left">
 <div>
@@ -1222,7 +1230,7 @@ return self.w_o(out)               # W^O
 </section>
 
 <section id="positional-encoding" class="slide level2" data-menu-title="Live demo: positional encoding">
-<p class="kicker">Level 4 · step 6 · §3.5 · live demo</p>
+<p class="kicker">Level 4 · step 6 · §3.5 · live demo<a class="hb-link kick" href="../tutorials/10_paper_code_side_by_side.html#tr-pe" title="Paper ↔ Code handbook: positional encoding">📖 Handbook: positional encoding</a></p>
 <h2>Positional encoding: <i>where</i> is each word?</h2>
 <div class="grid2 wide-right">
 <div>
@@ -1247,7 +1255,7 @@ pe[:, 1::2] = torch.cos(pos / div)           # odd dims
 </section>
 
 <section id="transformer-figure-1" class="slide level2" data-menu-title="The Transformer: Figure 1 step by step">
-<p class="kicker">Level 4 · step 7 · Figure 1, step by step</p>
+<p class="kicker">Level 4 · step 7 · Figure 1, step by step<a class="hb-link kick" href="../tutorials/10_paper_code_side_by_side.html#tr-layers" title="Paper ↔ Code handbook: encoder &amp; decoder">📖 Handbook: encoder &amp; decoder</a></p>
 <h2>Follow the data through Figure 1, step by step</h2>
 <div class="grid2" style="grid-template-columns:minmax(0,0.85fr) minmax(0,1fr); align-items:start;">
 <div><div class="figwalk" style="max-width:520px;"><img src="assets/07_paper_implementation/p_transformer_fig1.png" alt="The Transformer: Figure 1 step by step"><div class="step fragment" data-fragment-index="0" style="--c:#e11d48; --bg:rgba(225,29,72,0.13);"><div class="hl" style="left:22.99%; top:81.36%; width:22.19%; height:7.21%;"></div><div class="badge" style="left:20.05%; top:84.97%;">1</div></div>
@@ -1277,7 +1285,7 @@ pe[:, 1::2] = torch.cos(pos / div)           # odd dims
 </section>
 
 <section id="reverse-task" class="slide level2" data-menu-title="Experiment: teach it to reverse a sequence">
-<p class="kicker">Level 4 · step 9 · the experiment</p>
+<p class="kicker">Level 4 · step 9 · the experiment<a class="hb-link kick" href="../tutorials/10_paper_code_side_by_side.html#tr-count" title="Paper ↔ Code handbook: count the 65 M parameters">📖 Handbook: count the 65 M parameters</a></p>
 <h2>A 1-minute experiment: reverse a sequence</h2>
 <div class="grid2">
 <div>
@@ -1308,6 +1316,7 @@ tgt_out :  4   8  2  5  9  1  7  3 EOS
 <div class="qa"><button class="qa-q"><span class="qn">1</span><span>Q is (2, 8, 10, 64) and K is (2, 8, 12, 64). What is the shape of QKᵀ? Of the output if V is (2, 8, 12, 64)?</span><span class="qa-tag">answer ▾</span></button><div class="qa-a">QKᵀ: (2, 8, 10, 12) = one score per (query, key) pair in every head. Output: (2, 8, 10, 64).</div></div>
 <div class="qa"><button class="qa-q"><span class="qn">2</span><span>Without the positional encoding, can the Transformer reverse a sequence? Why?</span><span class="qa-tag">answer ▾</span></button><div class="qa-a">No: attention treats the input as a <b>set</b>, so the encoder cannot tell which digit came first. Accuracy collapses to ≈ 0 % (try it in Lab 7C).</div></div>
 <div class="qa"><button class="qa-q"><span class="qn">3</span><span>Why does the decoder's first attention need a causal mask during training, but the encoder's does not?</span><span class="qa-tag">answer ▾</span></button><div class="qa-a">With teacher forcing the decoder sees the whole correct answer. Without the mask, position <i>i</i> would just copy token <i>i</i>+1. The encoder reads the input, which is allowed to be seen completely.</div></div>
+<div class="toplinks"><a class="hb-link" href="../tutorials/10_paper_code_side_by_side.html#att-play" title="Paper ↔ Code handbook: attention playground">📖 Handbook: attention playground</a></div>
 </section>
 
 <!-- ============================ LEVEL 5 ============================ -->
@@ -1318,7 +1327,7 @@ tgt_out :  4   8  2  5  9  1  7  3 EOS
 </section>
 
 <section id="unet-paper" class="slide level2" data-menu-title="U-Net: title &amp; abstract">
-<p class="kicker">Level 5 · paper 2 · title &amp; abstract</p>
+<p class="kicker">Level 5 · paper 2 · title &amp; abstract<a class="hb-link kick" href="../tutorials/10_paper_code_side_by_side.html#unet" title="Paper ↔ Code handbook: Part 3 · U-Net">📖 Handbook: Part 3 · U-Net</a></p>
 <h2>U-Net: the paper</h2>
 <div class="grid2" style="grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);">
 <div>
@@ -1337,7 +1346,7 @@ tgt_out :  4   8  2  5  9  1  7  3 EOS
 </section>
 
 <section id="unet-figure-1" class="slide level2" data-menu-title="U-Net: Figure 1 step by step">
-<p class="kicker">Level 5 · paper 2 · Figure 1, step by step</p>
+<p class="kicker">Level 5 · paper 2 · Figure 1, step by step<a class="hb-link kick" href="../tutorials/10_paper_code_side_by_side.html#un-pairs" title="Paper ↔ Code handbook: Figure 1 ↔ code">📖 Handbook: Figure 1 ↔ code</a></p>
 <h2>U-Net, step by step: follow the image around the U</h2>
 <div class="grid2" style="grid-template-columns:minmax(0,1.3fr) minmax(0,1fr); align-items:start;">
 <div><div class="figwalk" style="max-width:900px;"><img src="assets/07_paper_implementation/p_unet_fig1.png" alt="U-Net: Figure 1 step by step"><div class="step fragment" data-fragment-index="0" style="--c:#2563eb; --bg:rgba(37,99,235,0.13);"><div class="hl" style="left:9.08%; top:4.72%; width:8.00%; height:37.88%;"></div><div class="badge" style="left:7.69%; top:43.25%;">1</div></div>
@@ -1361,7 +1370,7 @@ tgt_out :  4   8  2  5  9  1  7  3 EOS
 </section>
 
 <section id="demo-unet-shapes" class="slide level2" data-menu-title="Live demo: U-Net shape tracer">
-<p class="kicker">Level 5 · step 2 · live demo</p>
+<p class="kicker">Level 5 · step 2 · live demo<a class="hb-link kick" href="../tutorials/10_paper_code_side_by_side.html#un-size" title="Paper ↔ Code handbook: the size formula">📖 Handbook: the size formula</a></p>
 <h2>U-Net shape tracer: predict every size, then check</h2>
 <div class="grid2 wide-right">
 <div class="demo-box">
@@ -1380,7 +1389,7 @@ tgt_out :  4   8  2  5  9  1  7  3 EOS
 </section>
 
 <section id="unet-code" class="slide level2" data-menu-title="U-Net: the code">
-<p class="kicker">Level 5 · step 3 · paper → code</p>
+<p class="kicker">Level 5 · step 3 · paper → code<a class="hb-link kick" href="../tutorials/10_paper_code_side_by_side.html#un-pairs" title="Paper ↔ Code handbook: paper ↔ code">📖 Handbook: paper ↔ code</a></p>
 <h2>U-Net in 30 lines</h2>
 <div class="grid2" style="grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);">
 <pre class="code-sm" style="font-size:0.395em; line-height:1.2;"><code class="python">class DoubleConvValid(nn.Module):              # 2 × [3×3 conv (unpadded), ReLU]
@@ -1435,7 +1444,7 @@ class UNetPaper(nn.Module):
 </section>
 
 <section id="unet-experiment" class="slide level2" data-menu-title="U-Net: data, training, ablation">
-<p class="kicker">Level 5 · step 4 · the experiment</p>
+<p class="kicker">Level 5 · step 4 · the experiment<a class="hb-link kick" href="../tutorials/10_paper_code_side_by_side.html#un-params" title="Paper ↔ Code handbook: parameters &amp; Dice">📖 Handbook: parameters &amp; Dice</a></p>
 <h2>Our experiment: shapes, Dice and an ablation</h2>
 <div class="grid2 wide-right">
 <div>
@@ -1462,6 +1471,7 @@ class UNetPaper(nn.Module):
 <div class="qa"><button class="qa-q"><span class="qn">1</span><span>Fourth level: 64 × 64 × 512 → 2 × 2 max-pool → ? → two unpadded 3 × 3 convs with 1024 filters → ? → 2 × 2 up-conv → ?</span><span class="qa-tag">answer ▾</span></button><div class="qa-a">64² × 512 → pool → <b>32² × 512</b> → 30² → <b>28² × 1024</b> → up-conv → <b>56² × 512</b> (check against the bottom of Figure 1).</div></div>
 <div class="qa"><button class="qa-q"><span class="qn">2</span><span>The up-conv gives 512 channels and the skip has 512 channels. How many channels go into the next DoubleConv?</span><span class="qa-tag">answer ▾</span></button><div class="qa-a"><b>1024</b>: concatenation adds channels (512 + 512). Then the DoubleConv brings it back to 512.</div></div>
 <div class="qa"><button class="qa-q"><span class="qn">3</span><span>Your prediction for class "triangle" has 40 pixels, the truth has 60, and 30 pixels overlap. Dice?</span><span class="qa-tag">answer ▾</span></button><div class="qa-a">2 · 30 / (40 + 60) = 60 / 100 = <b>0.60</b>.</div></div>
+<div class="toplinks"><a class="hb-link" href="../tutorials/10_paper_code_side_by_side.html#un-size" title="Paper ↔ Code handbook: the size formula">📖 Handbook: the size formula</a></div>
 </section>
 
 <!-- ============================ LEVEL 6 ============================ -->
@@ -1472,7 +1482,7 @@ class UNetPaper(nn.Module):
 </section>
 
 <section id="resnet-paper" class="slide level2" data-menu-title="ResNet: title &amp; abstract">
-<p class="kicker">Level 6 · paper 3 · title &amp; abstract</p>
+<p class="kicker">Level 6 · paper 3 · title &amp; abstract<a class="hb-link kick" href="../tutorials/10_paper_code_side_by_side.html#resnet" title="Paper ↔ Code handbook: Part 5 · ResNet">📖 Handbook: Part 5 · ResNet</a></p>
 <h2>ResNet: the paper</h2>
 <div class="grid2" style="grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);">
 <div>
@@ -1491,7 +1501,7 @@ class UNetPaper(nn.Module):
 </section>
 
 <section id="resnet-workflow" class="slide level2" data-menu-title="ResNet: Figure 2 step by step">
-<p class="kicker">Level 6 · paper 3 · Figure 2, step by step</p>
+<p class="kicker">Level 6 · paper 3 · Figure 2, step by step<a class="hb-link kick" href="../tutorials/10_paper_code_side_by_side.html#resnet" title="Paper ↔ Code handbook: residual block ↔ code">📖 Handbook: residual block ↔ code</a></p>
 <h2>ResNet, step by step: one residual block</h2>
 <div class="grid2" style="grid-template-columns:minmax(0,1.1fr) minmax(0,1fr); align-items:start;">
 <div><div class="figwalk" style="max-width:760px;"><img src="assets/07_paper_implementation/p_resnet_fig2.png" alt="ResNet: Figure 2 step by step"><div class="step fragment" data-fragment-index="0" style="--c:#2563eb; --bg:rgba(37,99,235,0.13);"><div class="hl" style="left:40.05%; top:26.03%; width:8.68%; height:11.43%;"></div><div class="badge" style="left:37.65%; top:31.75%;">1</div></div>
@@ -1530,7 +1540,7 @@ class UNetPaper(nn.Module):
 </section>
 
 <section id="resnet-residual-block" class="slide level2" data-menu-title="The residual block">
-<p class="kicker">Level 6 · step 2 · Figure 2</p>
+<p class="kicker">Level 6 · step 2 · Figure 2<a class="hb-link kick" href="../tutorials/10_paper_code_side_by_side.html#resnet" title="Paper ↔ Code handbook: why “+ x” helps">📖 Handbook: why “+ x” helps</a></p>
 <h2>The fix: learn the <i>change</i>, then add x back</h2>
 <div class="grid2">
 <div>
@@ -1605,7 +1615,7 @@ class UNetPaper(nn.Module):
 </section>
 
 <section id="vit-paper" class="slide level2" data-menu-title="Vision Transformer: title &amp; abstract">
-<p class="kicker">Level 7 · paper 4 · title &amp; abstract</p>
+<p class="kicker">Level 7 · paper 4 · title &amp; abstract<a class="hb-link kick" href="../tutorials/10_paper_code_side_by_side.html#vit" title="Paper ↔ Code handbook: Part 4 · ViT">📖 Handbook: Part 4 · ViT</a></p>
 <h2>Vision Transformer: the paper</h2>
 <div class="grid2" style="grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);">
 <div>
@@ -1624,7 +1634,7 @@ class UNetPaper(nn.Module):
 </section>
 
 <section id="vit-workflow" class="slide level2" data-menu-title="ViT: Figure 1 step by step">
-<p class="kicker">Level 7 · paper 4 · Figure 1, step by step</p>
+<p class="kicker">Level 7 · paper 4 · Figure 1, step by step<a class="hb-link kick" href="../tutorials/10_paper_code_side_by_side.html#vit-pairs" title="Paper ↔ Code handbook: Eq. 1–4 ↔ code">📖 Handbook: Eq. 1–4 ↔ code</a></p>
 <h2>ViT, step by step: from an image to a class</h2>
 <div class="grid2" style="grid-template-columns:minmax(0,1.3fr) minmax(0,1fr); align-items:start;">
 <div><div class="figwalk" style="max-width:880px;"><img src="assets/07_paper_implementation/p_vit_fig1.png" alt="ViT: Figure 1 step by step"><div class="step fragment" data-fragment-index="0" style="--c:#2563eb; --bg:rgba(37,99,235,0.13);"><div class="hl" style="left:11.57%; top:66.79%; width:8.82%; height:19.39%;"></div><div class="hl" style="left:28.48%; top:71.45%; width:34.79%; height:8.62%;"></div><svg viewBox="0 0 1236 557" preserveAspectRatio="none"><defs><marker id="vit-workflow-a0" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2563eb"/></marker></defs><path d="M255,423 L347,423" fill="none" stroke="#2563eb" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#vit-workflow-a0)" opacity="0.9"/></svg><div class="badge" style="left:10.36%; top:64.99%;">1</div></div>
@@ -1660,7 +1670,7 @@ class UNetPaper(nn.Module):
 </section>
 
 <section id="demo-patchify" class="slide level2" data-menu-title="Live demo: an image as a sequence of patches">
-<p class="kicker">Level 7 · step 2 · live demo</p>
+<p class="kicker">Level 7 · step 2 · live demo<a class="hb-link kick" href="../tutorials/10_paper_code_side_by_side.html#vit" title="Paper ↔ Code handbook: patch explorer">📖 Handbook: patch explorer</a></p>
 <h2>An image as a sentence of patches</h2>
 <div class="grid2 wide-left">
 <div><canvas id="vp-canvas" width="640" height="640"></canvas></div>
@@ -1678,7 +1688,7 @@ class UNetPaper(nn.Module):
 </section>
 
 <section id="vit-code" class="slide level2" data-menu-title="ViT: the code">
-<p class="kicker">Level 7 · step 3 · paper → code</p>
+<p class="kicker">Level 7 · step 3 · paper → code<a class="hb-link kick" href="../tutorials/10_paper_code_side_by_side.html#vit-count" title="Paper ↔ Code handbook: count 86.6 M parameters">📖 Handbook: count 86.6 M parameters</a></p>
 <h2>ViT in 25 lines (reusing the Transformer encoder)</h2>
 <div class="grid2 wide-left">
 <pre class="code-sm" style="font-size:0.44em;"><code class="python"># Eq. 1: "linear projection of flattened patches"
@@ -1752,6 +1762,7 @@ for name in ["resnet50", "vit_b_16"]:
 <div class="qa"><button class="qa-q"><span class="qn">1</span><span>ViT-B/16 at 224 × 224: how many patch tokens? What is the sequence length after adding [class]?</span><span class="qa-tag">answer ▾</span></button><div class="qa-a">(224/16)² = 14² = <b>196</b> patches; + 1 [class] = <b>197</b>.</div></div>
 <div class="qa"><button class="qa-q"><span class="qn">2</span><span>Same model at 384 × 384: how many tokens? About how much more attention compute?</span><span class="qa-tag">answer ▾</span></button><div class="qa-a">(384/16)² = 24² = <b>576</b> tokens; attention ∝ N², so (577/197)² ≈ <b>8.6 ×</b> more.</div></div>
 <div class="qa"><button class="qa-q"><span class="qn">3</span><span>What does the [class] token "see" at the input, and why can it summarise the image at the output?</span><span class="qa-tag">answer ▾</span></button><div class="qa-a">Nothing image-specific: it starts as a learned vector. Through attention in every layer it gathers information from all patches, so after 12 layers it is a summary of the whole image.</div></div>
+<div class="toplinks"><a class="hb-link" href="../tutorials/10_paper_code_side_by_side.html#vit-count" title="Paper ↔ Code handbook: count the parameters">📖 Handbook: count the parameters</a></div>
 </section>
 
 <!-- ============================ LEVEL 8 ============================ -->
@@ -1927,7 +1938,7 @@ for name in ["resnet50", "vit_b_16"]:
 </section>
 
 <section id="ai-and-the-future-of-coding" class="slide level2" data-menu-title="AI coding tools and the future of coding">
-<p class="kicker">Level 8 · step 6</p>
+<p class="kicker">Level 8 · step 6<a class="hb-link kick" href="../tutorials/10_paper_code_side_by_side.html#ai-traps" title="Paper ↔ Code handbook: where AI goes wrong">📖 Handbook: where AI goes wrong</a></p>
 <h2>AI coding agents: what changes, and what does not</h2>
 <div class="grid2">
 <div>
@@ -1980,7 +1991,7 @@ for name in ["resnet50", "vit_b_16"]:
 </section>
 
 <section id="class-quiz-2" class="slide level2" data-menu-title="Class quiz 2">
-<p class="kicker">Class quiz · part 2 of 2 · teams of two</p>
+<p class="kicker">Class quiz · part 2 of 2 · teams of two<a class="hb-link kick" href="../tutorials/10_paper_code_side_by_side.html#exit" title="Paper ↔ Code handbook: exit ticket">📖 Handbook: exit ticket</a></p>
 <h2>Quick quiz: U-Net, ResNet, ViT &amp; SE-Net</h2>
 <p class="quiz-intro">Pick an answer: green = right, red = wrong, and the reason appears. One try per question!</p>
 <div class="mcqgrid">
@@ -2014,6 +2025,7 @@ for name in ["resnet50", "vit_b_16"]:
 </div>
 <p class="note" style="margin-top:0.5em;"><b>Practise it all, interactively:</b> <a href="../tutorials/10_paper_code_side_by_side.html">Paper ↔ Code handbook</a>: paper figures and equations linked to the code, live widgets and quick checks.</p>
 <p class="tiny muted" style="margin-top:0.25em;">Next: <b>Project 1</b> (one new paper, 2 weeks). Later lectures reuse U-Net, DETR/YOLO and ViT-based models.</p>
+<div class="toplinks"><a class="hb-link" href="../tutorials/10_paper_code_side_by_side.html#plan" title="Paper ↔ Code handbook: the 3-hour session">📖 Handbook: the 3-hour session</a></div>
 </section>
 
 <section id="lab-7-and-resources" class="slide level2" data-menu-title="Lab 7 &amp; resources">
