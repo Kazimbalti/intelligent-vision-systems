@@ -367,7 +367,7 @@
 <img src="assets/07_paper_implementation/p_resnet_page1.jpg" alt="First page of the ResNet paper">
 <img src="assets/07_paper_implementation/p_vit_page1.jpg" alt="First page of the Vision Transformer paper">
 </div>
-<p class="cap">Four papers, ≈ 500 000 citations together, and you will build all four from scratch today.</p>
+<p class="cap">Four papers with more than 500 000 citations between them. Today you build all four from scratch.</p>
 </div>
 </div>
 <aside class="notes">Lectures 3 and 4 used models as black boxes (ResNet, RF-DETR, SAM, SmolVLM). Today we open the box: read the original papers and write the models ourselves. The message for weak students: a paper is a recipe; you will follow four recipes step by step, with a check after every step. Nobody needs to understand everything on the first read.</aside>
@@ -380,8 +380,8 @@
 <div class="card">
 <h3>Lectures 3–6 · you can already</h3>
 <ul class="tight">
+<li>Explain neurons, layers, CNNs and training (Lecture 3)</li>
 <li>Run a <b>pretrained</b> ResNet, RF-DETR, SAM or a VLM (Lecture 4)</li>
-<li>Explain neurons, layers, CNNs, training (Lecture 3)</li>
 <li>Build classic pipelines: colour, Canny, Hough, calibration (Lectures 5–6)</li>
 </ul>
 <p class="small muted" style="margin-top:0.6em;">…but the deep models are <b>black boxes</b>: you call <code>model(x)</code> and hope.</p>
@@ -397,7 +397,7 @@
 </ul>
 </div>
 </div>
-<p class="plain"><b>Why this matters:</b> every model you will ever use started as a PDF. Engineers who can read the PDF can fix, adapt and trust the model, and they get the MSc places and the jobs.</p>
+<p class="plain"><b>Why this matters:</b> every model you will ever use started as a PDF. Engineers who can read the PDF can fix, adapt and trust the model, and that is exactly the skill employers and MSc programmes look for.</p>
 </section>
 
 <section id="learning-outcomes" class="slide level2" data-menu-title="Learning outcomes">
@@ -423,12 +423,12 @@
 <tr><td>0</td><td>What is a research paper?</td><td>10 min</td><td>quiz</td></tr>
 <tr><td>1</td><td>How to read a paper</td><td>20 min</td><td>paper anatomy demo · read 3 abstracts</td></tr>
 <tr><td>2</td><td>Tools: find, read, run (Colab, Cursor)</td><td>15 min</td><td>open Lab 7A in both</td></tr>
-<tr><td>3</td><td>PyTorch you need</td><td>15 min</td><td>conv calculator · <b>7A</b></td></tr>
+<tr><td>3</td><td>The PyTorch you need</td><td>15 min</td><td>conv calculator · <b>7A</b></td></tr>
 <tr><td><b>4</b></td><td><b>Paper 1: Attention Is All You Need</b></td><td><b>40 min</b></td><td>attention &amp; PE demos · <b>7B, 7C</b></td></tr>
 <tr><td><b>5</b></td><td><b>Paper 2: U-Net</b></td><td><b>25 min</b></td><td>shape tracer · <b>7D</b></td></tr>
 <tr><td>6</td><td>Paper 3: ResNet</td><td>15 min</td><td><b>7E</b></td></tr>
 <tr><td>7</td><td>Paper 4: Vision Transformer</td><td>15 min</td><td>patchify demo · <b>7F</b></td></tr>
-<tr><td>8</td><td>Advanced: your next paper, research</td><td>pick</td><td><b>7G</b> bug hunt · <b>7H</b> challenge</td></tr>
+<tr><td>8</td><td>Advanced: your next paper and your own research</td><td>flexible</td><td><b>7G</b> bug hunt · <b>7H</b> your own paper</td></tr>
 </table>
 <div>
 <div class="card"><h3>Teacher checklist</h3>
@@ -436,7 +436,7 @@
 <li>Open <a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/01-pytorch-for-papers.ipynb">Lab 7A in Colab</a> once before class (sign-in)</li>
 <li>Print or share the <a href="https://arxiv.org/pdf/1505.04597">U-Net PDF</a>: students annotate it in Level 1</li>
 <li>Press <b>S</b> for speaker notes (timing and tips)</li>
-<li>Pairs for the 7G bug hunt</li>
+<li>Form pairs for the 7G bug hunt</li>
 </ul></div>
 <p class="plain" style="margin-top:0.6em;"><b>Students:</b> every level ends with a <b>quiz</b>; 🖐 boxes are things to try now; ▶ buttons open the matching Colab notebook. You do <b>not</b> need a GPU: every lab runs on a free Colab CPU in a few minutes.</p>
 </div>
@@ -575,7 +575,7 @@
 <li><b>Debugging skill:</b> the #1 skill of an ML engineer. Your bugs teach you more than any lecture.</li>
 <li><b>Adapting:</b> to change a model for <i>your</i> data (Urdu text, local roads, X-rays) you must know its insides.</li>
 <li><b>Careers:</b> "implemented U-Net and ViT from the papers" is a strong CV line for jobs and MSc/PhD applications.</li>
-<li><b>AI tools era:</b> AI can write code, but someone must <b>check</b> it against the paper. That person is you.</li>
+<li><b>In the era of AI tools:</b> AI can write code, but someone must <b>check</b> it against the paper. That person is you.</li>
 </ul>
 </div>
 <div>
@@ -627,7 +627,7 @@
 
 <section id="three-pass-method" class="slide level2" data-menu-title="The three-pass method">
 <p class="kicker">Level 1 · step 2</p>
-<h2>The three-pass method (S. Keshav, <i>How to Read a Paper</i>, 2007)</h2>
+<h2>The three-pass method (Keshav, 2007)</h2>
 <div class="grid3">
 <div class="card"><h3>Pass 1 · 10 minutes</h3>
 <p><b>Read:</b> title, abstract, introduction, section headings, <b>all figures</b>, conclusion. Skip the maths.</p>
@@ -761,7 +761,7 @@
 
 <section id="reading-with-ai" class="slide level2" data-menu-title="Reading papers with AI (responsibly)">
 <p class="kicker">Level 1 · step 5</p>
-<h2>Reading papers with an AI assistant: a tutor, not a ghost-writer</h2>
+<h2>Reading papers with AI: a tutor, not a ghost-writer</h2>
 <div class="grid2">
 <div class="card" style="border-left-color:#1f7a4d;"><h3>✔ Good prompts</h3>
 <ul class="tight">
@@ -775,7 +775,7 @@
 <ul class="tight">
 <li>Asking it to write the whole implementation: you learn nothing, and you cannot defend it in a viva.</li>
 <li>Trusting it blindly: assistants <b>invent</b> references, numbers and "facts" about papers. Check against the PDF.</li>
-<li>Pasting a paper it has not seen and asking for results it cannot know.</li>
+<li>Asking about a paper without pasting its text: the answer comes from memory and may describe a different paper.</li>
 </ul>
 <p class="small" style="margin-top:0.4em;">Tools: <a href="https://www.alphaxiv.org">alphaXiv</a> (chat with any arXiv paper: replace "arxiv" with "alphaxiv" in the URL) · <a href="https://notebooklm.google.com">NotebookLM</a> · Claude / ChatGPT / Gemini · Cursor's chat (Level 2).</p></div>
 </div>
@@ -881,7 +881,7 @@
 <li>Free sessions <b>disconnect</b> after ~90 min idle and end after at most ~12 h: save often.</li>
 <li>Files in <code>/content</code> disappear when the session ends; Drive files stay.</li>
 <li>Check the GPU: <code>!nvidia-smi</code> or <code>torch.cuda.is_available()</code>.</li>
-<li>Colab has a built-in AI helper (Gemini): same rules as before, <b>explain, don't write</b>.</li>
+<li>Colab has a built-in AI helper (Gemini): same rule as before: let it <b>explain</b>, not write your code.</li>
 </ul></div>
 <p class="tryit"><b>🖐 Do it now:</b> open Lab 7A in Colab, save a copy in Drive, run the first two cells. Raise your hand when you see <code>PyTorch 2.x · device: cpu</code>.</p>
 </div>
@@ -925,7 +925,7 @@
 <tr><td>Offline</td><td>✘</td><td>✔</td></tr>
 </table>
 <p class="plain"><b>Our workflow:</b> do the Lab 7 notebooks in <b>Colab</b>. For the Paper Implementation Challenge write your model as a clean <code>model.py</code> in <b>Cursor</b>, push it to GitHub, and train it in Colab (<code>!git clone</code> your repo).</p>
-<p class="note">Full step-by-step guide with screenshots-in-words, troubleshooting and the paper reading list: <a href="../tutorials/09_paper_implementation_setup.html">Tutorial 09: Paper implementation setup (Colab &amp; Cursor)</a>.</p>
+<p class="note">The full step-by-step guide, with troubleshooting and the paper reading list: <a href="../tutorials/09_paper_implementation_setup.html">Tutorial 09: Paper implementation setup (Colab &amp; Cursor)</a>.</p>
 </section>
 
 <section id="level-2-quiz" class="slide level2" data-menu-title="Level 2 quiz">
@@ -952,14 +952,14 @@
 
 <section id="pytorch-in-10-minutes" class="slide level2" data-menu-title="PyTorch in 10 minutes">
 <p class="kicker">Level 3 · step 1</p>
-<h2>PyTorch in 10 minutes: the three things every paper needs</h2>
+<h2>PyTorch in 10 minutes: three essentials</h2>
 <div class="grid3">
 <div>
 <h3>1 · Tensors (B, C, H, W)</h3>
-<pre><code class="python">x = torch.rand(8, 3, 32, 32)  # batch of
-x.shape   # 8 RGB 32×32 images
-x[0]      # one image (3, 32, 32)
-x.permute(0, 2, 3, 1)  # → (B,H,W,C)
+<pre><code class="python">x = torch.rand(8, 3, 32, 32)
+x.shape     # 8 RGB images, 32×32
+x[0]        # one image (3, 32, 32)
+x.permute(0, 2, 3, 1)  # (B,H,W,C)
 x.to("cuda")           # on the GPU
 </code></pre>
 <p class="small">NumPy / OpenCV: (H, W, C). PyTorch: <b>channels first</b>.</p>
@@ -970,7 +970,8 @@ x.to("cuda")           # on the GPU
     def __init__(self):
         super().__init__()
         self.net = nn.Sequential(
-            nn.Linear(2, 32), nn.ReLU(),
+            nn.Linear(2, 32),
+            nn.ReLU(),
             nn.Linear(32, 2))
 
     def forward(self, x):
@@ -996,7 +997,7 @@ x.to("cuda")           # on the GPU
 
 <section id="conv-arithmetic" class="slide level2" data-menu-title="Live demo: conv arithmetic">
 <p class="kicker">Level 3 · step 2 · live demo</p>
-<h2>Conv arithmetic: the one formula behind every shape</h2>
+<h2>Conv arithmetic: one formula, every shape</h2>
 <div class="grid2">
 <div>
 <p>\[ n_{out} = \left\lfloor \frac{n + 2p - d\,(k-1) - 1}{s} \right\rfloor + 1 \]</p>
@@ -1030,13 +1031,13 @@ x.to("cuda")           # on the GPU
 <pre><code class="python">t = torch.arange(6).reshape(2, 3)
 # tensor([[0, 1, 2],
 #         [3, 4, 5]])
-t.reshape(3, 2)  # [[0,1],[2,3],[4,5]]  re-cut!
-t.T              # [[0,3],[1,4],[2,5]]  real transpose
+t.reshape(3, 2)  # [[0,1],[2,3],[4,5]] re-cut!
+t.T              # [[0,3],[1,4],[2,5]] transposed
 
 # feature map (B, C, H, W) → tokens (B, H·W, C)
-tokens = x.flatten(2).transpose(1, 2)   # ✔
-tokens = x.reshape(B, H * W, C)         # ✘ right shape,
-                                        #   wrong numbers!
+tokens = x.flatten(2).transpose(1, 2)  # ✔
+tokens = x.reshape(B, H * W, C)        # ✘ right shape,
+                                       #  wrong numbers!
 </code></pre>
 </div>
 <div>
@@ -1085,7 +1086,7 @@ tokens = x.reshape(B, H * W, C)         # ✘ right shape,
 
 <section id="why-attention" class="slide level2" data-menu-title="Why attention? The problem with RNNs">
 <p class="kicker">Level 4 · step 1 · the problem</p>
-<h2>Why attention? Reading one word at a time is slow and forgetful</h2>
+<h2>Why attention? RNNs are slow and forgetful</h2>
 <svg viewBox="0 0 1500 330" class="stack-svg" role="img" aria-label="An RNN passes information word by word; attention connects every word to every other word directly">
 <g font-family="Source Sans Pro, sans-serif" font-size="24" text-anchor="middle">
 <defs><marker id="arB" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10z" fill="#28568a"/></marker>
@@ -1182,18 +1183,18 @@ tokens = x.reshape(B, H * W, C)         # ✘ right shape,
 
 <section id="multi-head-attention" class="slide level2" data-menu-title="Multi-head attention">
 <p class="kicker">Level 4 · step 5 · §3.2.2</p>
-<h2>Multi-head attention: 8 small attentions instead of 1 big one</h2>
+<h2>Multi-head attention: 8 small heads, not 1 big one</h2>
 <div class="grid2 wide-left">
 <div>
-<p>\[ \mathrm{MultiHead}(Q,K,V) = \mathrm{Concat}(\mathrm{head}_1,\dots,\mathrm{head}_h)\,W^O \]</p>
-<pre><code class="python">B, L, D = x.shape                       # e.g. (2, 10, 512), h = 8
-q = self.w_q(x)                          # (B, L, 512)  one Linear for all heads
-q = q.view(B, L, h, D // h)              # (B, L, 8, 64)
-q = q.transpose(1, 2)                    # (B, 8, L, 64)  heads = extra batch axis
-#   … same for k, v …
-out, w = attention(q, k, v, mask)        # (B, 8, L, 64)
-out = out.transpose(1, 2).reshape(B, L, D)   # undo: (B, L, 512)
-return self.w_o(out)                     # W^O
+<p style="font-size:0.82em;">\[ \mathrm{MultiHead}(Q,K,V) = \mathrm{Concat}(\mathrm{head}_1,\dots,\mathrm{head}_h)\,W^O \]</p>
+<pre><code class="python">B, L, D = x.shape                  # (2, 10, 512), h = 8
+q = self.w_q(x)                    # (B, L, 512): all heads
+q = q.view(B, L, h, D // h)        # (B, L, 8, 64)
+q = q.transpose(1, 2)              # (B, 8, L, 64)
+# … the same for k and v …
+out, w = attention(q, k, v, mask)  # (B, 8, L, 64)
+out = out.transpose(1, 2).reshape(B, L, D)   # (B, L, 512)
+return self.w_o(out)               # W^O
 </code></pre>
 </div>
 <div>
@@ -1208,7 +1209,7 @@ return self.w_o(out)                     # W^O
 
 <section id="positional-encoding" class="slide level2" data-menu-title="Live demo: positional encoding">
 <p class="kicker">Level 4 · step 6 · §3.5 · live demo</p>
-<h2>Positional encoding: telling the model <i>where</i> each word is</h2>
+<h2>Positional encoding: <i>where</i> is each word?</h2>
 <div class="grid2 wide-right">
 <div>
 <p class="small">Attention sees a <b>set</b>, not a sequence: "dog bites man" = "man bites dog". So the paper <b>adds</b> a pattern to every word's embedding:</p>
@@ -1269,29 +1270,32 @@ pe[:, 1::2] = torch.cos(pos / div)           # odd dims
 </div>
 <div class="grid2" style="margin-top:0.3em;">
 <pre class="code-sm"><code class="python">class EncoderLayer(nn.Module):
-    def __init__(self, d_model, n_heads, d_ff, dropout=0.1):
+    def __init__(self, d, h, d_ff, p=0.1):
         super().__init__()
-        self.self_attn = MultiHeadAttention(d_model, n_heads, dropout)
-        self.ffn = FeedForward(d_model, d_ff, dropout)
-        self.norm1, self.norm2 = LayerNorm(d_model), LayerNorm(d_model)
-        self.drop = nn.Dropout(dropout)
+        self.self_attn = MultiHeadAttention(d, h, p)
+        self.ffn = FeedForward(d, d_ff, p)
+        self.norm1, self.norm2 = LayerNorm(d), LayerNorm(d)
+        self.drop = nn.Dropout(p)
 
-    def forward(self, x, src_mask):           # "LayerNorm(x + Sublayer(x))"
-        x = self.norm1(x + self.drop(self.self_attn(x, x, x, src_mask)))
+    def forward(self, x, src_mask):  # LayerNorm(x + Sublayer(x))
+        a = self.self_attn(x, x, x, src_mask)
+        x = self.norm1(x + self.drop(a))
         x = self.norm2(x + self.drop(self.ffn(x)))
         return x
 </code></pre>
 <pre class="code-sm"><code class="python">class DecoderLayer(nn.Module):
     ...
     def forward(self, y, memory, src_mask, tgt_mask):
-        y = self.norm1(y + self.drop(self.self_attn(y, y, y, tgt_mask)))   # masked
-        y = self.norm2(y + self.drop(self.cross_attn(y, memory, memory, src_mask)))
+        a = self.self_attn(y, y, y, tgt_mask)          # masked
+        y = self.norm1(y + self.drop(a))
+        a = self.cross_attn(y, memory, memory, src_mask)  # cross
+        y = self.norm2(y + self.drop(a))
         y = self.norm3(y + self.drop(self.ffn(y)))
         return y
 
 # Transformer.forward(src, tgt):
 #   memory = encoder(embed(src) + PE)
-#   return linear(decoder(embed(tgt) + PE, memory))   # (B, L_tgt, vocab)
+#   return linear(decoder(embed(tgt) + PE, memory))
 </code></pre>
 </div>
 <a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/03-transformer-reverse-sequence.ipynb" style="right:24px; top:6px;">&#9654;&#xFE0E; Lab 7C in Colab</a>
@@ -1299,12 +1303,13 @@ pe[:, 1::2] = torch.cos(pos / div)           # odd dims
 
 <section id="reverse-task" class="slide level2" data-menu-title="Experiment: teach it to reverse a sequence">
 <p class="kicker">Level 4 · step 9 · the experiment</p>
-<h2>A task you can train in 1 minute: reverse a sequence</h2>
+<h2>A 1-minute experiment: reverse a sequence</h2>
 <div class="grid2">
 <div>
 <pre><code class="text">src     :      3  7  1  9  5  2  8  4
-tgt_in  : BOS  4  8  2  5  9  1  7  3      (teacher forcing:
-tgt_out :  4   8  2  5  9  1  7  3 EOS      shifted by one)
+tgt_in  : BOS  4  8  2  5  9  1  7  3
+tgt_out :  4   8  2  5  9  1  7  3 EOS
+# teacher forcing: tgt_in = tgt_out shifted by one
 </code></pre>
 <ul class="tight small">
 <li>Tiny model: d<sub>model</sub> = 64, 4 heads, 2 + 2 layers, <b>170 k</b> parameters (the paper's base: 65 M)</li>
@@ -1341,7 +1346,7 @@ tgt_out :  4   8  2  5  9  1  7  3 EOS      shifted by one)
 <section id="level-5" class="slide level2 center" data-background-color="#28568a" data-menu-title="Level 5 · Paper 2: U-Net">
 <p class="sec-num">5</p>
 <p class="sec-title">Paper 2: U-Net</p>
-<p class="sec-sub"><b>Level 5</b> · Ronneberger, Fischer &amp; Brox, MICCAI 2015 · segmentation with very little data · Lab 7D</p>
+<p class="sec-sub"><b>Level 5</b> · Ronneberger, Fischer &amp; Brox, MICCAI 2015 · segmentation from very little data · Lab 7D</p>
 </section>
 
 <section id="unet-figure-1" class="slide level2" data-menu-title="U-Net: Figure 1 is the paper">
@@ -1386,7 +1391,7 @@ tgt_out :  4   8  2  5  9  1  7  3 EOS      shifted by one)
 <p class="kicker">Level 5 · step 3 · paper → code</p>
 <h2>U-Net in 30 lines</h2>
 <div class="grid2" style="grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);">
-<pre class="code-sm" style="font-size:0.42em; line-height:1.2;"><code class="python">class DoubleConvValid(nn.Module):              # 2 × [3×3 conv (unpadded), ReLU]
+<pre class="code-sm" style="font-size:0.395em; line-height:1.2;"><code class="python">class DoubleConvValid(nn.Module):              # 2 × [3×3 conv (unpadded), ReLU]
     def __init__(self, cin, cout):
         super().__init__()
         self.net = nn.Sequential(nn.Conv2d(cin, cout, 3), nn.ReLU(inplace=True),
@@ -1402,9 +1407,11 @@ class UNetPaper(nn.Module):
     def __init__(self, in_ch=1, n_classes=2):
         super().__init__()
         ch = [64, 128, 256, 512, 1024]
-        self.downs = nn.ModuleList([DoubleConvValid(([in_ch] + ch)[i], ch[i]) for i in range(5)])
+        self.downs = nn.ModuleList([DoubleConvValid(([in_ch] + ch)[i], ch[i])
+                                    for i in range(5)])
         self.pool = nn.MaxPool2d(2)
-        self.ups = nn.ModuleList([nn.ConvTranspose2d(ch[i], ch[i-1], 2, stride=2) for i in (4, 3, 2, 1)])
+        self.ups = nn.ModuleList([nn.ConvTranspose2d(ch[i], ch[i-1], 2, stride=2)
+                                  for i in (4, 3, 2, 1)])
         self.up_convs = nn.ModuleList([DoubleConvValid(ch[i], ch[i-1]) for i in (4, 3, 2, 1)])
         self.head = nn.Conv2d(64, n_classes, 1)                 # 1×1 conv
 
@@ -1429,7 +1436,7 @@ class UNetPaper(nn.Module):
 <tr><td>64 … 1024 channels</td><td>base 16–64</td></tr>
 <tr><td>overlap-tile for big images</td><td>whole image at once</td></tr>
 </table>
-<p class="small muted">Idea unchanged since 2015: encoder, decoder, skip connections. nnU-Net (2021) is still the medical benchmark winner.</p>
+<p class="small muted">Idea unchanged since 2015: encoder, decoder, skip connections. nnU-Net (2021), a self-configuring U-Net, is still one of the strongest baselines in medical segmentation.</p>
 </div>
 </div>
 <a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/04-unet-from-paper.ipynb" style="right:24px; top:6px;">&#9654;&#xFE0E; Lab 7D in Colab</a>
@@ -1437,7 +1444,7 @@ class UNetPaper(nn.Module):
 
 <section id="unet-experiment" class="slide level2" data-menu-title="U-Net: data, training, ablation">
 <p class="kicker">Level 5 · step 4 · the experiment</p>
-<h2>Our experiment: shapes dataset, Dice, and an ablation</h2>
+<h2>Our experiment: shapes, Dice and an ablation</h2>
 <div class="grid2 wide-right">
 <div>
 <ul class="tight small">
@@ -1481,7 +1488,7 @@ class UNetPaper(nn.Module):
 
 <section id="resnet-degradation" class="slide level2" data-menu-title="ResNet: the degradation problem">
 <p class="kicker">Level 6 · step 1 · Figure 1</p>
-<h2>The surprise: a deeper network was <i>worse</i>, even on training data</h2>
+<h2>The surprise: deeper was <i>worse</i>, even in training</h2>
 <div class="grid2">
 <div>
 <img class="fig" src="assets/07_paper_implementation/p_resnet_fig1.png" alt="Figure 1 of ResNet: 56-layer plain network has higher training and test error than 20-layer">
@@ -1497,12 +1504,12 @@ class UNetPaper(nn.Module):
 
 <section id="resnet-residual-block" class="slide level2" data-menu-title="The residual block">
 <p class="kicker">Level 6 · step 2 · Figure 2</p>
-<h2>The fix: learn the <i>change</i>, F(x) = H(x) − x, and add x back</h2>
+<h2>The fix: learn the <i>change</i>, then add x back</h2>
 <div class="grid2">
 <div>
 <img class="fig" src="assets/07_paper_implementation/p_resnet_fig2.png" alt="Figure 2 of ResNet: the residual block" style="max-height:260px;">
 <p>\[ y = \mathcal{F}(x, \{W_i\}) + x \]</p>
-<p class="small">If the best thing a block can do is nothing, it only has to push F(x) to 0: easy. Gradients also flow straight through the "+ x" path to early layers.</p>
+<p class="small">The layers learn only the <b>change</b>, F(x) = H(x) − x, where H(x) is the mapping we want. If the best thing a block can do is nothing, it only has to push F(x) to 0: easy. Gradients also flow straight through the "+ x" path to early layers.</p>
 <p class="plain"><b>Analogy:</b> editing an essay is easier than rewriting it. Each block makes a small <b>edit</b> to x instead of producing a whole new x.</p>
 </div>
 <pre class="code-sm"><code class="python">class BasicBlock(nn.Module):
@@ -1513,17 +1520,19 @@ class UNetPaper(nn.Module):
         self.conv2 = nn.Conv2d(cout, cout, 3, 1, 1, bias=False)
         self.bn2 = nn.BatchNorm2d(cout)
         self.relu = nn.ReLU(inplace=True)
-        self.downsample = None                       # identity shortcut
-        if stride != 1 or cin != cout:               # projection shortcut
-            self.downsample = nn.Sequential(          # (option B, §3.3)
+        self.downsample = None           # identity shortcut
+        if stride != 1 or cin != cout:   # projection, §3.3 (B)
+            self.downsample = nn.Sequential(
                 nn.Conv2d(cin, cout, 1, stride, bias=False),
                 nn.BatchNorm2d(cout))
 
     def forward(self, x):
-        identity = x if self.downsample is None else self.downsample(x)
+        identity = x
+        if self.downsample is not None:
+            identity = self.downsample(x)
         out = self.relu(self.bn1(self.conv1(x)))
         out = self.bn2(self.conv2(out))
-        return self.relu(out + identity)             # ReLU AFTER the add
+        return self.relu(out + identity)   # ReLU AFTER the add
 </code></pre>
 </div>
 <a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/05-resnet-from-paper.ipynb" style="right:24px; top:6px;">&#9654;&#xFE0E; Lab 7E in Colab</a>
@@ -1531,7 +1540,7 @@ class UNetPaper(nn.Module):
 
 <section id="resnet-table-1" class="slide level2" data-menu-title="ResNet: Table 1 and the ultimate test">
 <p class="kicker">Level 6 · step 3 · Table 1</p>
-<h2>Table 1 → ResNet-18/34/50, and the ultimate correctness test</h2>
+<h2>Table 1 → ResNet-18/34/50, and the ultimate test</h2>
 <div class="grid2">
 <div>
 <table class="simple">
@@ -1577,7 +1586,7 @@ class UNetPaper(nn.Module):
 
 <section id="vit-figure-1" class="slide level2" data-menu-title="ViT: Figure 1 and Equations 1–4">
 <p class="kicker">Level 7 · step 1 · Figure 1, Eq. 1–4</p>
-<h2>ViT: cut the image into patches and treat them as words</h2>
+<h2>ViT: image patches as words</h2>
 <img class="fig" src="assets/07_paper_implementation/p_vit_fig1.png" alt="Figure 1 of the ViT paper" style="max-height:330px;">
 <table class="simple" style="margin-top:0.3em;">
 <tr><th>Eq.</th><th>Formula</th><th>In plain words</th><th>Code</th></tr>
@@ -1611,7 +1620,8 @@ class UNetPaper(nn.Module):
 <p class="kicker">Level 7 · step 3 · paper → code</p>
 <h2>ViT in 25 lines (reusing the Transformer encoder)</h2>
 <div class="grid2 wide-left">
-<pre class="code-sm"><code class="python">class PatchEmbedding(nn.Module):        # "linear projection of flattened patches"
+<pre class="code-sm" style="font-size:0.44em;"><code class="python"># Eq. 1: "linear projection of flattened patches"
+class PatchEmbedding(nn.Module):
     def __init__(self, img_size, patch, in_ch, dim):
         super().__init__()
         self.n_patches = (img_size // patch) ** 2
@@ -1633,10 +1643,11 @@ class ViT(nn.Module):
         self.head = nn.Linear(dim, n_classes)
 
     def forward(self, x):
-        x = self.patch_embed(x)                                        # Eq. 1
-        x = torch.cat([self.cls_token.expand(x.size(0), -1, -1), x], 1) + self.pos_embed
-        x = self.blocks(x)                                             # Eq. 2–3
-        return self.head(self.norm(x)[:, 0])                           # Eq. 4
+        x = self.patch_embed(x)                          # x_p E
+        cls = self.cls_token.expand(x.size(0), -1, -1)   # x_class
+        x = torch.cat([cls, x], dim=1) + self.pos_embed  # Eq. 1
+        x = self.blocks(x)                               # Eq. 2–3
+        return self.head(self.norm(x)[:, 0])             # Eq. 4
 </code></pre>
 <div>
 <p class="small">✅ Lab 7F: <code>ViT()</code> has <b>86 567 656</b> parameters, identical to <code>torchvision.models.vit_b_16()</code> (the paper's "ViT-Base, 86M").</p>
@@ -1766,7 +1777,7 @@ class ViT(nn.Module):
 <li><b>Results:</b> a table with your numbers next to the paper's; mean ± std over 3 seeds.</li>
 <li><b>Ablation:</b> what happens without the paper's key idea?</li>
 <li><b>Discussion:</b> what matched, what didn't, your best explanation.</li>
-<li><b>Next steps</b> with more compute.</li>
+<li><b>Next steps:</b> what you would try with more compute.</li>
 <li><b>AI-use declaration</b> and references.</li>
 </ol>
 </div>
@@ -1847,8 +1858,8 @@ class ViT(nn.Module):
 
 <section id="mind-map" class="slide level2" data-menu-title="The whole lecture on one page">
 <h2>The whole lecture on one page</h2>
-<img class="fig" src="assets/07_paper_implementation/mindmap_lecture7.png" alt="Mind map of Lecture 7: reading papers, tools, the 7-step recipe, PyTorch, Attention and Transformer, U-Net, ResNet, ViT, Lab 7" style="max-height:740px;">
-<p class="cap">Click to zoom · <a href="07_mindmap.html">open the mind map page</a> · <a href="assets/07_paper_implementation/mindmap_lecture7.png" download>download PNG</a></p>
+<img class="fig" src="assets/07_paper_implementation/mindmap_lecture7.png" alt="Mind map of Lecture 7: reading papers, tools, the 7-step recipe, PyTorch, Attention and Transformer, U-Net, ResNet, ViT, Lab 7" style="max-height:715px;">
+<p class="cap">Click to zoom · <a href="07_mindmap.html">mind map page</a> · <a href="assets/07_paper_implementation/mindmap_lecture7.png" download>PNG</a> · <a href="assets/07_paper_implementation/Lecture7_MindMap.xmind" download>XMind file: the lecture step by step (works offline)</a></p>
 </section>
 
 <section id="summary" class="slide level2" data-menu-title="Summary">
@@ -1870,8 +1881,8 @@ class ViT(nn.Module):
 <li>Verify with shapes, hand examples, references, parameter counts, ablations</li>
 </ul></div>
 </div>
-<p class="note" style="margin-top:0.6em;"><b>Practise it all, interactively:</b> <a href="../tutorials/10_paper_code_side_by_side.html">Paper ↔ Code handbook</a>. Paper figures and equations linked to the code, live widgets for every paper, the AI-era workflow and quick checks.</p>
-<p class="tiny muted" style="margin-top:0.3em;">Next: the Paper Implementation Challenge (3–5 papers). Later lectures use these models directly: segmentation (U-Net), detection (DETR/YOLO) and ViT-based foundation models.</p>
+<p class="note" style="margin-top:0.5em;"><b>Practise it all, interactively:</b> <a href="../tutorials/10_paper_code_side_by_side.html">Paper ↔ Code handbook</a>: paper figures and equations linked to the code, live widgets and quick checks.</p>
+<p class="tiny muted" style="margin-top:0.25em;">Next: the Paper Implementation Challenge (3–5 papers). Later lectures reuse U-Net, DETR/YOLO and ViT-based models.</p>
 </section>
 
 <section id="lab-7-and-resources" class="slide level2" data-menu-title="Lab 7 &amp; resources">
