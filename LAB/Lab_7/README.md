@@ -41,23 +41,27 @@ Open the folder in Antigravity (*File → Open Folder*), open a notebook, **Sele
 This folder contains `AGENTS.md` and `.agents/rules/paper-tutor.md`: they ask Antigravity's agent (and other coding agents) to
 act as a **tutor** in this lab — explain, give hints, review — instead of writing your TODOs.
 
-## The Paper Implementation Challenge (3–5 papers)
+## Project 1: implement one new paper (individual, 2 weeks)
 
-| Level | Papers |
+Implement one paper we did not build in the labs (★☆☆ or ★★☆ from the lecture's menu, or your own with approval),
+test it, and check whether its main claim holds at small scale. Start from `08-implement-your-own-paper.ipynb` (Lab 7H).
+
+| Step | Days |
 |---|---|
-| 🥉 Bronze | Transformer (7B + 7C), U-Net (7D), and ResNet (7E) **or** ViT (7F) |
-| 🥈 Silver | Bronze + both ResNet and ViT, **or** Bronze + one ★☆☆/★★☆ paper from the lecture's menu |
-| 🥇 Gold | all four lab papers + one ★★☆/★★★ menu paper (YOLO v1, DDPM, CLIP, DETR, NeRF …) |
+| 1 · Choose a paper, get it approved | 1–2 |
+| 2 · Read it: paper card, shape table, key equations | 2–3 |
+| 3 · Build & test: shape, hand-example and parameter tests, overfit one batch | 4–8 |
+| 4 · Experiment: the main claim + one ablation, 3 seeds | 9–12 |
+| 5 · 2-page report with an AI-use declaration + 3-minute viva | 13–14 |
 
-For every paper: paper card + shape table (20 %), correct implementation with tests (30 %), small experiment + ablation
-(25 %), honest reproduction report with an AI-use declaration (15 %), clean code (10 %), and a 3-minute viva.
-Use `08-implement-your-own-paper.ipynb` as the template and `paper_reading_worksheet.md` for passes 1–2.
+Marks: paper card + shape table 20 %, implementation + tests 30 %, experiment + ablation 25 %, honest report 15 %,
+clean code 10 %. Details: [labs page](https://kazimbalti.github.io/intelligent-vision-systems/labs.html#lab-7-project-1).
 
 ## Deliverables
 
 * **7A–7F:** every ✅ check passing and the **"Your turn"** questions answered in the notebook.
 * **7G:** the 8/8 scoreboard and one line per bug (what · how found · which habit would have caught it).
-* **Challenge:** one notebook per paper from the 7H template, submitted as your teacher announces.
+* **Project 1:** one GitHub repo (model.py, test_model.py, paper.ipynb, report.pdf), submitted as your teacher announces.
 
 ## Papers and credits
 

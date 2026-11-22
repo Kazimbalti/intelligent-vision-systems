@@ -13,7 +13,7 @@
 
   <meta name="author" content="Dr. Muhammad Kazim">
   <title>Intelligent Vision Systems – Lecture 07 — Reading &amp; Implementing Research Papers</title>
-  <meta name="description" content="Lecture 7: how to find and read research papers (three-pass method), Google Colab and Antigravity step by step, and implementing four landmark papers from scratch in PyTorch: Attention Is All You Need (the Transformer), U-Net, ResNet and the Vision Transformer, with live demos, quizzes, Lab 7 and the Paper Implementation Challenge.">
+  <meta name="description" content="Lecture 7: how to find and read research papers (three-pass method), Google Colab and Antigravity step by step, and implementing four landmark papers from scratch in PyTorch: Attention Is All You Need (the Transformer), U-Net, ResNet and the Vision Transformer, with live demos, quizzes, Lab 7 and Project 1.">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -328,6 +328,44 @@
   .reveal .grid4 img.fig { width: 100%; object-fit: contain; }
 
   /* Lecture 7 additions */
+  /* ---- figure walkthrough: frames, badges and arrows over a paper figure ---- */
+  .reveal .figwalk { position: relative; width: 100%; margin: 0 auto; }
+  .reveal .figwalk > img { display: block; width: 100%; margin: 0; }
+  .reveal .figwalk .step { position: absolute; inset: 0; pointer-events: none; }
+  .reveal .figwalk .hl { position: absolute; border: 3px solid var(--c); border-radius: 8px; background: var(--bg); }
+  .reveal .figwalk .badge { position: absolute; width: 30px; height: 30px; margin: -15px 0 0 -15px; border-radius: 50%;
+    background: var(--c); color: #fff; font: 800 17px/30px "Source Sans Pro", sans-serif; text-align: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3); }
+  .reveal .figwalk svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .reveal .figwalk .step.current-fragment .hl { animation: figpulse 1.2s ease-in-out infinite; }
+  @keyframes figpulse { 0%, 100% { box-shadow: 0 0 0 0 var(--c); } 50% { box-shadow: 0 0 0 6px var(--bg); } }
+  .reveal .stepper.compact .row { padding: 0.16em 0.6em; grid-template-columns: 1.9em minmax(0, 0.95fr) minmax(0, 1fr); }
+  .reveal .stepper.compact .row .chips { grid-column: auto; margin: 0; }
+  .reveal .stepper.compact .row .chips span { font-family: "Source Code Pro", Consolas, monospace; font-size: 0.8em; white-space: normal; overflow-wrap: anywhere; }
+  /* ---- interactive quizzes: click-to-reveal answers and multiple choice ---- */
+  .reveal .qa { margin: 0.22em 0; border-radius: 10px; background: #fffdf5; border: 1px solid #f3d39b; overflow: hidden; }
+  .reveal .qa-q { display: flex; gap: 0.6em; align-items: flex-start; width: 100%; text-align: left; background: none; border: 0;
+    padding: 0.4em 0.8em; font: inherit; font-size: 0.74em; color: #1f2933; cursor: pointer; line-height: 1.35; }
+  .reveal .qa-q:hover { background: #fff3d6; }
+  .reveal .qa .qn { flex: none; width: 1.6em; height: 1.6em; border-radius: 50%; background: #f2a900; color: #fff; font-weight: 800;
+    display: flex; align-items: center; justify-content: center; }
+  .reveal .qa .qa-tag { margin-left: auto; flex: none; font-size: 0.82em; color: #9a6700; font-weight: 700; white-space: nowrap; }
+  .reveal .qa .qa-a { display: none; padding: 0.32em 0.9em 0.4em 2.9em; font-size: 0.7em; background: #e9f7ef; border-top: 1px solid #cfe9da; line-height: 1.4; }
+  .reveal .qa.open .qa-a { display: block; }
+  .reveal .qa.open { border-color: #1f7a4d; }
+  .reveal .quiz-intro { font-size: 0.62em; color: var(--muted); margin: 0 0 0.3em; }
+  .reveal .mcqgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.35em 0.8em; align-items: start; }
+  .reveal .mcq { background: #f5f3ff; border: 1px solid #ddd6fe; border-left: 6px solid #7c3aed; border-radius: 10px; padding: 0.3em 0.65em; font-size: 0.57em; }
+  .reveal .mcq .mq { margin: 0 0 0.25em; font-weight: 700; color: #1f2933; }
+  .reveal .mcq .opts { display: grid; grid-template-columns: 1fr 1fr; gap: 0.22em; }
+  .reveal .mcq button { font: inherit; text-align: left; background: #fff; border: 1px solid #c4b5fd; border-radius: 8px; padding: 0.14em 0.5em; cursor: pointer; color: #1f2933; }
+  .reveal .mcq button:hover { border-color: #7c3aed; }
+  .reveal .mcq button.right { background: #dcfce7; border-color: #16a34a; font-weight: 700; }
+  .reveal .mcq button.wrong { background: #fee2e2; border-color: #dc2626; }
+  .reveal .mcq .why { display: none; margin: 0.2em 0 0; color: #374151; font-size: 0.92em; line-height: 1.3; }
+  .reveal .mcq.done .why { display: block; }
+  .reveal .mcq-score { font-size: 0.62em; font-weight: 800; color: #6d28d9; margin: 0.3em 0 0; }
+  .reveal .mcq-score button { font: inherit; font-size: 0.8em; font-weight: 600; margin-left: 0.6em; background: #fff; border: 1px solid #c4b5fd; border-radius: 6px; cursor: pointer; color: #6d28d9; }
   /* ---- paper title + abstract slides ---- */
   .reveal .paper-title { font-size: 0.8em; font-weight: 800; color: var(--navy); line-height: 1.2; margin: 0 0 0.15em; }
   .reveal .paper-meta { font-size: 0.52em; color: var(--muted); margin: 0 0 0.45em; line-height: 1.35; }
@@ -382,7 +420,7 @@
 <p class="t-kicker">LECTURE 7</p>
 <p class="t-main">Reading &amp; Implementing Research Papers</p>
 <p class="t-sub">From a PDF to working PyTorch: Attention, the Transformer, U-Net, ResNet and the Vision Transformer</p>
-<p class="muted" style="font-size:0.62em; margin:0;">How to read a paper · Google Colab &amp; Antigravity step by step · build 4 landmark papers from scratch · Lab 7 &amp; the Paper Implementation Challenge</p>
+<p class="muted" style="font-size:0.62em; margin:0;">How to read a paper · Google Colab &amp; Antigravity step by step · build 4 landmark papers from scratch · Lab 7 &amp; Project 1</p>
 <div class="t-rule"></div>
 <p style="font-size:0.66em; font-weight:700; margin:0;">Dr. Muhammad Kazim</p>
 <p class="muted" style="font-size:0.56em; margin:0;">Department of Intelligent Systems<br>University of Lahore</p>
@@ -439,36 +477,6 @@
 <li>Implement <b>ResNet</b> and <b>ViT</b> with parameter counts identical to torchvision; reproduce a paper's <b>key figure</b>.</li>
 <li>Debug with <b>shape tracing</b>, <b>reference checks</b> and <b>overfit-one-batch</b>; write an honest <b>reproduction report</b>.</li>
 </ol>
-</section>
-
-<section id="how-to-teach-this-lecture" class="slide level2" data-menu-title="How to teach (and learn) this lecture">
-<p class="kicker">For the teacher and the student</p>
-<h2>How this lecture works: 9 levels, basics → advanced</h2>
-<div class="grid2 wide-left">
-<table class="simple" style="font-size:0.52em;">
-<tr><th>Level</th><th>Topic</th><th>Time</th><th>Hands-on</th></tr>
-<tr><td>0</td><td>What is a research paper?</td><td>10 min</td><td>quiz</td></tr>
-<tr><td>1</td><td>How to read a paper</td><td>20 min</td><td>paper anatomy demo · read 3 abstracts</td></tr>
-<tr><td>2</td><td>Tools: find, read, run (Colab, Antigravity)</td><td>15 min</td><td>open Lab 7A in both</td></tr>
-<tr><td>3</td><td>The PyTorch you need</td><td>15 min</td><td>conv calculator · <b>7A</b></td></tr>
-<tr><td><b>4</b></td><td><b>Paper 1: Attention Is All You Need</b></td><td><b>40 min</b></td><td>attention &amp; PE demos · <b>7B, 7C</b></td></tr>
-<tr><td><b>5</b></td><td><b>Paper 2: U-Net</b></td><td><b>25 min</b></td><td>shape tracer · <b>7D</b></td></tr>
-<tr><td>6</td><td>Paper 3: ResNet</td><td>15 min</td><td><b>7E</b></td></tr>
-<tr><td>7</td><td>Paper 4: Vision Transformer</td><td>15 min</td><td>patchify demo · <b>7F</b></td></tr>
-<tr><td>8</td><td>Advanced: your next paper and your own research</td><td>flexible</td><td><b>7G</b> bug hunt · <b>7H</b> your own paper</td></tr>
-</table>
-<div>
-<div class="card"><h3>Teacher checklist</h3>
-<ul class="tight">
-<li>Open <a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/01-pytorch-for-papers.ipynb">Lab 7A in Colab</a> once before class (sign-in)</li>
-<li>Print or share the <a href="https://arxiv.org/pdf/1505.04597">U-Net PDF</a>: students annotate it in Level 1</li>
-<li>Press <b>S</b> for speaker notes (timing and tips)</li>
-<li>Form pairs for the 7G bug hunt</li>
-</ul></div>
-<p class="plain" style="margin-top:0.6em;"><b>Students:</b> every level ends with a <b>quiz</b>; 🖐 boxes are things to try now; ▶ buttons open the matching Colab notebook. You do <b>not</b> need a GPU: every lab runs on a free Colab CPU in a few minutes.</p>
-</div>
-</div>
-<aside class="notes">Three sessions work well: (1) Levels 0–3 + Lab 7A; (2) Level 4 + Labs 7B/7C; (3) Levels 5–7 + Labs 7D–7F, with 7G as a warm-up game. Level 8 and the challenge are for the following weeks.</aside>
 </section>
 
 <section id="roadmap" class="slide level2" data-menu-title="Roadmap">
@@ -621,17 +629,10 @@ print(len(M.list_models()), "models")   # 121 models: alexnet, vgg16, resnet18, 
 
 <section id="level-0-quiz" class="slide level2" data-menu-title="Level 0 quiz">
 <h2>Level 0 check: three quick questions</h2>
-<div class="quiz">
-<p class="q">Answer out loud, then click</p>
-<ol class="tight">
-<li>Is a paper on arXiv always peer-reviewed?</li>
-<li>Which of today's four papers is inside a Large Language Model like ChatGPT? Which one is inside most medical-image segmentation tools?</li>
-<li>Your friend says "an ablation study is when you train the model longer". Correct them.</li>
-</ol>
-<div class="answer fragment"><b>1.</b> No. arXiv is a <b>preprint</b> server: anyone with an account can post. Check where it was <b>published</b> (e.g. "MICCAI 2015", "ICLR 2021"); be careful with unreviewed claims.</div>
-<div class="answer fragment"><b>2.</b> The <b>Transformer</b> (Attention Is All You Need) is the core of every LLM; <b>U-Net</b> (or a descendant like nnU-Net) is in most medical segmentation tools.</div>
-<div class="answer fragment"><b>3.</b> An ablation <b>removes or changes one component</b> (skip connections, positional encoding…) and measures how much worse the model gets. It proves which parts matter.</div>
-</div>
+<p class="quiz-intro">Think, discuss with your neighbour, then <b>click a question</b> to check the answer.</p>
+<div class="qa"><button class="qa-q"><span class="qn">1</span><span>Is a paper on arXiv always peer-reviewed?</span><span class="qa-tag">answer ▾</span></button><div class="qa-a">No. arXiv is a <b>preprint</b> server: anyone with an account can post. Check where it was <b>published</b> (e.g. "MICCAI 2015", "ICLR 2021"); be careful with unreviewed claims.</div></div>
+<div class="qa"><button class="qa-q"><span class="qn">2</span><span>Which of today's four papers is inside a Large Language Model like ChatGPT? Which one is inside most medical-image segmentation tools?</span><span class="qa-tag">answer ▾</span></button><div class="qa-a">The <b>Transformer</b> (Attention Is All You Need) is the core of every LLM; <b>U-Net</b> (or a descendant like nnU-Net) is in most medical segmentation tools.</div></div>
+<div class="qa"><button class="qa-q"><span class="qn">3</span><span>Your friend says "an ablation study is when you train the model longer". Correct them.</span><span class="qa-tag">answer ▾</span></button><div class="qa-a">An ablation <b>removes or changes one component</b> (skip connections, positional encoding…) and measures how much worse the model gets. It proves which parts matter.</div></div>
 </section>
 
 <!-- ============================ LEVEL 1 ============================ -->
@@ -701,27 +702,6 @@ print(len(M.list_models()), "models")   # 121 models: alexnet, vgg16, resnet18, 
 <p class="tryit"><b>🖐 10-minute drill:</b> open the ViT paper (<a href="https://arxiv.org/abs/2010.11929">arXiv 2010.11929</a>) and answer questions 1, 3 and 4 on the right. Compare with your neighbour.</p>
 </section>
 
-<section id="example-neuralangelo" class="slide level2" data-menu-title="Example 1: Neuralangelo (pass 1 only)">
-<p class="kicker">Level 1 · worked example 1 · pass 1 only</p>
-<h2>Example 1: <i>Neuralangelo</i>: read, decide, don't implement</h2>
-<div class="grid2 wide-right">
-<div><img class="fig" src="assets/07_paper_implementation/p_neuralangelo_page1.jpg" alt="Page 1 of the Neuralangelo paper" style="max-height:600px; border:1px solid #d8e0ea;"></div>
-<div>
-<table class="simple" style="font-size:0.54em;">
-<tr><th colspan="2">Pass-1 card (10 minutes)</th></tr>
-<tr><td><b>Category</b></td><td>3-D reconstruction from video (neural surface reconstruction)</td></tr>
-<tr><td><b>Context</b></td><td>NeRF, NeuS (SDF surfaces), Instant-NGP (multi-resolution hash grids)</td></tr>
-<tr><td><b>Input → output</b></td><td>RGB video of an object/scene (+ camera poses) → detailed 3-D surface mesh</td></tr>
-<tr><td><b>New idea</b></td><td>hash-grid SDF + <b>numerical</b> gradients + <b>coarse-to-fine</b> training → fine detail</td></tr>
-<tr><td><b>Evidence</b></td><td>DTU and Tanks &amp; Temples benchmarks, big improvement over NeuS</td></tr>
-<tr><td><b>Implement?</b></td><td>❌ not in this course: needs camera poses (COLMAP), CUDA hash grids and many GPU-hours per scene. ✔ But we <b>understood it</b> in 10 minutes.</td></tr>
-</table>
-<p class="tiny muted">Z. Li et al., <a href="https://arxiv.org/abs/2306.03092">arXiv:2306.03092</a> · <a href="https://research.nvidia.com/labs/dir/neuralangelo/">project page</a> · <a href="https://github.com/NVlabs/neuralangelo">code</a></p>
-</div>
-</div>
-<p class="plain"><b>Lesson:</b> pass 1 is also for <b>saying no</b>. Most papers you read you will not implement. Choose papers whose compute and data you can afford.</p>
-</section>
-
 <section id="example-attention-pass1" class="slide level2" data-menu-title="Example 2: Attention Is All You Need (pass 1)">
 <p class="kicker">Level 1 · worked example 2</p>
 <h2>Example 2: <i>Attention Is All You Need</i>: pass 1 in 10 minutes</h2>
@@ -778,7 +758,7 @@ print(len(M.list_models()), "models")   # 121 models: alexnet, vgg16, resnet18, 
 <tr><td>Can I implement it?</td><td>compute, data, time</td></tr>
 </table>
 <div>
-<p class="small">The card is the first cell of every Lab 7 notebook and of the <b>Paper Implementation Challenge</b> template (Lab 7H).</p>
+<p class="small">The card is the first cell of every Lab 7 notebook and of the <b>Project 1</b> template (Lab 7H).</p>
 <p class="note">A good card is <b>short</b>. If you cannot say the key idea in one sentence, you have not understood it yet: read Figure 1 again.</p>
 <p class="warn"><b>Don't</b> copy the abstract into the card. Re-writing in your own words is where understanding happens (and copy-pasted text is plagiarism in a report).</p>
 <a class="lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/08-implement-your-own-paper.ipynb" style="position:static; display:inline-block; margin-top:0.5em;">&#9654;&#xFE0E; Template: Lab 7H in Colab</a>
@@ -811,17 +791,10 @@ print(len(M.list_models()), "models")   # 121 models: alexnet, vgg16, resnet18, 
 
 <section id="level-1-quiz" class="slide level2" data-menu-title="Level 1 quiz">
 <h2>Level 1 check</h2>
-<div class="quiz">
-<p class="q">Answer out loud, then click</p>
-<ol class="tight">
-<li>You have 10 minutes before class to decide whether a paper is useful for your project. What do you read?</li>
-<li>The ViT paper says "the Transformer encoder (Vaswani et al., 2017)" and gives no detail. What do you do?</li>
-<li>Where do you usually find the learning rate, batch size and number of epochs?</li>
-</ol>
-<div class="answer fragment"><b>1.</b> Pass 1: title, abstract, figures (especially the architecture figure), section headings, conclusion. Then answer the 5 Cs.</div>
-<div class="answer fragment"><b>2.</b> Follow the reference: the detail is in the Transformer paper (or its official code). Papers build on papers.</div>
-<div class="answer fragment"><b>3.</b> In "Experiments" / "Implementation details" / "Training", the appendix, and the official code's config files.</div>
-</div>
+<p class="quiz-intro">Think, discuss with your neighbour, then <b>click a question</b> to check the answer.</p>
+<div class="qa"><button class="qa-q"><span class="qn">1</span><span>You have 10 minutes before class to decide whether a paper is useful for your project. What do you read?</span><span class="qa-tag">answer ▾</span></button><div class="qa-a">Pass 1: title, abstract, figures (especially the architecture figure), section headings, conclusion. Then answer the 5 Cs.</div></div>
+<div class="qa"><button class="qa-q"><span class="qn">2</span><span>The ViT paper says "the Transformer encoder (Vaswani et al., 2017)" and gives no detail. What do you do?</span><span class="qa-tag">answer ▾</span></button><div class="qa-a">Follow the reference: the detail is in the Transformer paper (or its official code). Papers build on papers.</div></div>
+<div class="qa"><button class="qa-q"><span class="qn">3</span><span>Where do you usually find the learning rate, batch size and number of epochs?</span><span class="qa-tag">answer ▾</span></button><div class="qa-a">In "Experiments" / "Implementation details" / "Training", the appendix, and the official code's config files.</div></div>
 </section>
 
 <!-- ============================ LEVEL 2 ============================ -->
@@ -932,41 +905,17 @@ print(sum(p.numel() for p in m.parameters()))
 <div class="card"><h3>Tutor mode is already set up</h3>
 <p>Lab 7 contains <code>AGENTS.md</code> and <code>.agents/rules/paper-tutor.md</code>. Antigravity loads them automatically, so its agent <b>explains and gives hints</b> in this course instead of writing your TODOs.</p></div>
 <p class="tryit"><b>🖐 Try it:</b> open Lab 7B, press <b>Ctrl + L</b> and ask <i>"What is the shape of every tensor in attention() if B = 2, L = 5, d_k = 8? Don't write code."</i></p>
-<p class="tiny muted">The same steps work in VS Code (+ GitHub Copilot) or PyCharm; most AI coding tools also read <code>AGENTS.md</code>.</p>
+<p class="tiny muted">The same steps work in VS Code (+ GitHub Copilot) or PyCharm. Full guide: <a href="../tutorials/09_paper_implementation_setup.html">Tutorial 09</a>.</p>
 </div>
 </div>
-</section>
-
-<section id="colab-vs-antigravity" class="slide level2" data-menu-title="Colab or Antigravity?">
-<p class="kicker">Level 2 · step 6</p>
-<h2>Colab or Antigravity? Use both</h2>
-<table class="simple">
-<tr><th></th><th>Google Colab</th><th>Antigravity on your laptop</th></tr>
-<tr><td>Setup</td><td>none, runs in the browser</td><td>Python + Antigravity + venv (15 min once)</td></tr>
-<tr><td>GPU</td><td>free T4 (limited hours)</td><td>only if your laptop has one (CPU is fine for Lab 7)</td></tr>
-<tr><td>Best for</td><td>notebooks, quick experiments, training on GPU, sharing a link</td><td>real projects with many <code>.py</code> files, git, debugging, Raspberry Pi code</td></tr>
-<tr><td>AI help</td><td>Gemini in Colab</td><td>Antigravity's agent: plans, explains, sees your whole project</td></tr>
-<tr><td>Files</td><td>vanish unless saved to Drive</td><td>stay on your disk, versioned with git</td></tr>
-<tr><td>Offline</td><td>✘</td><td>✔ editor and code (the AI agent needs internet)</td></tr>
-</table>
-<p class="plain"><b>Our workflow:</b> do the Lab 7 notebooks in <b>Colab</b>. For the Paper Implementation Challenge write your model as a clean <code>model.py</code> in <b>Antigravity</b>, push it to GitHub, and train it in Colab (<code>!git clone</code> your repo).</p>
-<p class="note">The full step-by-step guide, with troubleshooting and the paper reading list: <a href="../tutorials/09_paper_implementation_setup.html">Tutorial 09: Paper implementation setup (Colab &amp; Antigravity)</a>.</p>
-<p class="tryit"><b>🖐 Run the same cell in both:</b> <code>import torch; print(torch.__version__, torch.cuda.is_available())</code>. Colab with a T4 prints <code>True</code>; your laptop most likely <code>False</code>, and Lab 7 still runs.</p>
 </section>
 
 <section id="level-2-quiz" class="slide level2" data-menu-title="Level 2 quiz">
 <h2>Level 2 check</h2>
-<div class="quiz">
-<p class="q">Answer out loud, then click</p>
-<ol class="tight">
-<li>You trained a model in Colab for 40 minutes, closed the laptop, came back the next day: the trained weights are gone. Why, and how do you prevent it?</li>
-<li>Where can you read what reviewers criticised about an ICLR paper?</li>
-<li>Your loss does not go down when training on the full dataset. What is the first test from the 7-step recipe?</li>
-</ol>
-<div class="answer fragment"><b>1.</b> Files in <code>/content</code> live only as long as the session. Mount Google Drive and <code>torch.save(model.state_dict(), '/content/drive/MyDrive/…')</code>.</div>
-<div class="answer fragment"><b>2.</b> On <b>OpenReview</b> (ICLR and NeurIPS publish the reviews).</div>
-<div class="answer fragment"><b>3.</b> <b>Overfit one batch.</b> If the model cannot memorise 8–32 examples, there is a bug (shape, mask, loss, missing <code>zero_grad</code>…).</div>
-</div>
+<p class="quiz-intro">Think, discuss with your neighbour, then <b>click a question</b> to check the answer.</p>
+<div class="qa"><button class="qa-q"><span class="qn">1</span><span>You trained a model in Colab for 40 minutes, closed the laptop, came back the next day: the trained weights are gone. Why, and how do you prevent it?</span><span class="qa-tag">answer ▾</span></button><div class="qa-a">Files in <code>/content</code> live only as long as the session. Mount Google Drive and <code>torch.save(model.state_dict(), '/content/drive/MyDrive/…')</code>.</div></div>
+<div class="qa"><button class="qa-q"><span class="qn">2</span><span>Where can you read what reviewers criticised about an ICLR paper?</span><span class="qa-tag">answer ▾</span></button><div class="qa-a">On <b>OpenReview</b> (ICLR and NeurIPS publish the reviews).</div></div>
+<div class="qa"><button class="qa-q"><span class="qn">3</span><span>Your loss does not go down when training on the full dataset. What is the first test from the 7-step recipe?</span><span class="qa-tag">answer ▾</span></button><div class="qa-a"><b>Overfit one batch.</b> If the model cannot memorise 8–32 examples, there is a bug (shape, mask, loss, missing <code>zero_grad</code>…).</div></div>
 </section>
 
 <!-- ============================ LEVEL 3 ============================ -->
@@ -1097,17 +1046,10 @@ for n, l in net.named_children():
 
 <section id="level-3-quiz" class="slide level2" data-menu-title="Level 3 quiz">
 <h2>Level 3 check</h2>
-<div class="quiz">
-<p class="q">Use the formula, then click</p>
-<ol class="tight">
-<li>A 64 × 64 feature map goes through a 3 × 3 conv with stride 2 and padding 1. Output size?</li>
-<li>U-Net: 568 × 568 → 2 × 2 max-pool, stride 2 → ? → two unpadded 3 × 3 convs → ?</li>
-<li>A <code>Linear(512 → 2048)</code> layer: how many parameters?</li>
-</ol>
-<div class="answer fragment"><b>1.</b> ⌊(64 + 2 − 2 − 1)/2⌋ + 1 = ⌊63/2⌋ + 1 = 31 + 1 = <b>32</b>.</div>
-<div class="answer fragment"><b>2.</b> 568 → <b>284</b> → 282 → <b>280</b> (exactly the numbers in Figure 1 of the paper).</div>
-<div class="answer fragment"><b>3.</b> 512 · 2048 weights + 2048 biases = <b>1 050 624</b>. (Two of these make the Transformer's feed-forward block.)</div>
-</div>
+<p class="quiz-intro">Think, discuss with your neighbour, then <b>click a question</b> to check the answer.</p>
+<div class="qa"><button class="qa-q"><span class="qn">1</span><span>A 64 × 64 feature map goes through a 3 × 3 conv with stride 2 and padding 1. Output size?</span><span class="qa-tag">answer ▾</span></button><div class="qa-a">⌊(64 + 2 − 2 − 1)/2⌋ + 1 = ⌊63/2⌋ + 1 = 31 + 1 = <b>32</b>.</div></div>
+<div class="qa"><button class="qa-q"><span class="qn">2</span><span>U-Net: 568 × 568 → 2 × 2 max-pool, stride 2 → ? → two unpadded 3 × 3 convs → ?</span><span class="qa-tag">answer ▾</span></button><div class="qa-a">568 → <b>284</b> → 282 → <b>280</b> (exactly the numbers in Figure 1 of the paper).</div></div>
+<div class="qa"><button class="qa-q"><span class="qn">3</span><span>A <code>Linear(512 → 2048)</code> layer: how many parameters?</span><span class="qa-tag">answer ▾</span></button><div class="qa-a">512 · 2048 weights + 2048 biases = <b>1 050 624</b>. (Two of these make the Transformer's feed-forward block.)</div></div>
 </section>
 
 <!-- ============================ LEVEL 4 ============================ -->
@@ -1304,75 +1246,32 @@ pe[:, 1::2] = torch.cos(pos / div)           # odd dims
 <a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/03-transformer-reverse-sequence.ipynb" style="right:24px; top:6px;">&#9654;&#xFE0E; Lab 7C in Colab</a>
 </section>
 
-<section id="transformer-figure-1" class="slide level2" data-menu-title="The Transformer: Figure 1">
-<p class="kicker">Level 4 · step 7 · Figure 1</p>
-<h2>The whole Transformer is made of the blocks you now know</h2>
-<div class="grid2 wide-left">
-<div>
-<table class="simple" style="font-size:0.5em;">
-<tr><th>Box in Figure 1</th><th>What it is</th></tr>
-<tr><td>Input / Output Embedding</td><td><code>nn.Embedding(vocab, 512)</code> × √d<sub>model</sub></td></tr>
-<tr><td>Positional Encoding ⊕</td><td>add the sin/cos pattern</td></tr>
-<tr><td>Multi-Head Attention</td><td>encoder self-attention</td></tr>
-<tr><td>Masked Multi-Head Attention</td><td>decoder self-attention + causal mask</td></tr>
-<tr><td>Multi-Head Attention (decoder, middle)</td><td><b>cross</b>-attention: Q from decoder, K, V from encoder</td></tr>
-<tr><td>Feed Forward</td><td>Linear(512→2048) → ReLU → Linear(2048→512)</td></tr>
-<tr><td>Add &amp; Norm</td><td><code>LayerNorm(x + Sublayer(x))</code></td></tr>
-<tr><td>N×</td><td>stack N = 6 identical layers</td></tr>
-<tr><td>Linear + Softmax</td><td>scores over the output vocabulary</td></tr>
-</table>
-<pre class="code-sm" style="margin-top:0.5em;"><code class="python">t = nn.Transformer(d_model=512, nhead=8, num_encoder_layers=6,
-                   num_decoder_layers=6, dim_feedforward=2048)
-print(sum(p.numel() for p in t.parameters()))   # 44140544
-# + one shared 37 000 × 512 embedding (18.9 M) ≈ 63 M  ·  Table 3 says 65 M</code></pre>
-
+<section id="transformer-figure-1" class="slide level2" data-menu-title="The Transformer: Figure 1 step by step">
+<p class="kicker">Level 4 · step 7 · Figure 1, step by step</p>
+<h2>Follow the data through Figure 1, step by step</h2>
+<div class="grid2" style="grid-template-columns:minmax(0,0.85fr) minmax(0,1fr); align-items:start;">
+<div><div class="figwalk" style="max-width:520px;"><img src="assets/07_paper_implementation/p_transformer_fig1.png" alt="The Transformer: Figure 1 step by step"><div class="step fragment" data-fragment-index="0" style="--c:#e11d48; --bg:rgba(225,29,72,0.13);"><div class="hl" style="left:22.99%; top:81.36%; width:22.19%; height:7.21%;"></div><div class="badge" style="left:20.05%; top:84.97%;">1</div></div>
+<div class="step fragment" data-fragment-index="1" style="--c:#d97706; --bg:rgba(217,119,6,0.13);"><div class="hl" style="left:21.66%; top:74.55%; width:16.31%; height:6.01%;"></div><svg viewBox="0 0 748 998" preserveAspectRatio="none"><defs><marker id="transformer-figure-1-a1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#d97706"/></marker></defs><path d="M255,812 L255,732" fill="none" stroke="#d97706" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#transformer-figure-1-a1)" opacity="0.9"/></svg><div class="badge" style="left:40.91%; top:77.56%;">2</div></div>
+<div class="step fragment" data-fragment-index="2" style="--c:#7c3aed; --bg:rgba(124,58,237,0.13);"><div class="hl" style="left:22.99%; top:56.31%; width:22.19%; height:10.62%;"></div><svg viewBox="0 0 748 998" preserveAspectRatio="none"><defs><marker id="transformer-figure-1-a2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7c3aed"/></marker></defs><path d="M255,728 L255,672" fill="none" stroke="#7c3aed" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#transformer-figure-1-a2)" opacity="0.9"/></svg><div class="badge" style="left:20.05%; top:61.62%;">3</div></div>
+<div class="step fragment" data-fragment-index="3" style="--c:#2563eb; --bg:rgba(37,99,235,0.13);"><div class="hl" style="left:22.99%; top:39.98%; width:22.19%; height:10.42%;"></div><svg viewBox="0 0 748 998" preserveAspectRatio="none"><defs><marker id="transformer-figure-1-a3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2563eb"/></marker></defs><path d="M255,562 L255,506" fill="none" stroke="#2563eb" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#transformer-figure-1-a3)" opacity="0.9"/></svg><div class="badge" style="left:20.05%; top:45.19%;">4</div></div>
+<div class="step fragment" data-fragment-index="4" style="--c:#e11d48; --bg:rgba(225,29,72,0.13);"><div class="hl" style="left:54.81%; top:74.35%; width:26.47%; height:14.23%;"></div><div class="badge" style="left:84.49%; top:86.77%;">5</div></div>
+<div class="step fragment" data-fragment-index="5" style="--c:#9333ea; --bg:rgba(147,51,234,0.13);"><div class="hl" style="left:54.81%; top:53.61%; width:22.06%; height:13.33%;"></div><svg viewBox="0 0 748 998" preserveAspectRatio="none"><defs><marker id="transformer-figure-1-a5" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#9333ea"/></marker></defs><path d="M492,742 L492,672" fill="none" stroke="#9333ea" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#transformer-figure-1-a5)" opacity="0.9"/></svg><div class="badge" style="left:79.95%; top:60.22%;">6</div></div>
+<div class="step fragment" data-fragment-index="6" style="--c:#0891b2; --bg:rgba(8,145,178,0.13);"><div class="hl" style="left:54.81%; top:37.47%; width:22.06%; height:10.42%;"></div><svg viewBox="0 0 748 998" preserveAspectRatio="none"><defs><marker id="transformer-figure-1-a6" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#0891b2"/></marker></defs><path d="M255,399 L255,366 L376,366 L376,506 L436,506 L436,482" fill="none" stroke="#0891b2" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#transformer-figure-1-a6)" opacity="0.9"/></svg><div class="badge" style="left:79.95%; top:42.69%;">7</div></div>
+<div class="step fragment" data-fragment-index="7" style="--c:#2563eb; --bg:rgba(37,99,235,0.13);"><div class="hl" style="left:54.81%; top:23.75%; width:22.06%; height:10.82%;"></div><svg viewBox="0 0 748 998" preserveAspectRatio="none"><defs><marker id="transformer-figure-1-a7" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2563eb"/></marker></defs><path d="M492,374 L492,348" fill="none" stroke="#2563eb" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#transformer-figure-1-a7)" opacity="0.9"/></svg><div class="badge" style="left:79.95%; top:29.16%;">8</div></div>
+<div class="step fragment" data-fragment-index="8" style="--c:#059669; --bg:rgba(5,150,105,0.13);"><div class="hl" style="left:54.81%; top:10.52%; width:22.06%; height:9.82%;"></div><svg viewBox="0 0 748 998" preserveAspectRatio="none"><defs><marker id="transformer-figure-1-a8" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#059669"/></marker></defs><path d="M492,237 L492,206" fill="none" stroke="#059669" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#transformer-figure-1-a8)" opacity="0.9"/></svg><div class="badge" style="left:79.95%; top:15.43%;">9</div></div></div></div>
+<div><div class="stepper compact" style="font-size:0.9em;">
+<div class="row fragment" data-fragment-index="0" style="--c:#e11d48;"><div class="num">1</div><div class="name"><b>Input Embedding</b><small>each word → 512 numbers</small></div><div class="chips"><span>nn.Embedding(vocab, 512) × √512</span></div></div>
+<div class="row fragment" data-fragment-index="1" style="--c:#d97706;"><div class="num">2</div><div class="name"><b>Positional Encoding ⊕</b><small>add word order (sin / cos)</small></div><div class="chips"><span>x = x + PE[:L]</span></div></div>
+<div class="row fragment" data-fragment-index="2" style="--c:#7c3aed;"><div class="num">3</div><div class="name"><b>Encoder self-attention</b><small>every word looks at every other · then Add &amp; Norm</small></div><div class="chips"><span>MultiHeadAttention(512, 8)</span></div></div>
+<div class="row fragment" data-fragment-index="3" style="--c:#2563eb;"><div class="num">4</div><div class="name"><b>Encoder feed-forward</b><small>each word alone · repeat ×6 → memory</small></div><div class="chips"><span>FeedForward(512, 2048) + Add &amp; Norm</span></div></div>
+<div class="row fragment" data-fragment-index="4" style="--c:#e11d48;"><div class="num">5</div><div class="name"><b>Output Embedding + ⊕</b><small>the answer so far, shifted right</small></div><div class="chips"><span>[BOS] + target[:-1] → embed + PE</span></div></div>
+<div class="row fragment" data-fragment-index="5" style="--c:#9333ea;"><div class="num">6</div><div class="name"><b>Masked self-attention</b><small>no peeking at future words</small></div><div class="chips"><span>causal mask: torch.tril(…)</span></div></div>
+<div class="row fragment" data-fragment-index="6" style="--c:#0891b2;"><div class="num">7</div><div class="name"><b>Cross-attention</b><small>Q from the decoder · K, V from the encoder</small></div><div class="chips"><span>attn(q=y, k=memory, v=memory)</span></div></div>
+<div class="row fragment" data-fragment-index="7" style="--c:#2563eb;"><div class="num">8</div><div class="name"><b>Decoder feed-forward</b><small>each word alone · repeat ×6</small></div><div class="chips"><span>FeedForward(512, 2048) + Add &amp; Norm</span></div></div>
+<div class="row fragment" data-fragment-index="8" style="--c:#059669;"><div class="num">9</div><div class="name"><b>Linear + Softmax</b><small>a probability for every word</small></div><div class="chips"><span>nn.Linear(512, vocab) → softmax</span></div></div>
 </div>
-<div><img class="fig" src="assets/07_paper_implementation/p_transformer_fig1.png" alt="Figure 1 of Attention Is All You Need: the Transformer architecture" style="max-height:700px;"></div>
+<p class="stepper-hint" style="text-align:left;">Press → for the next step: its box lights up and the arrow shows where the data goes. Whole model: <code>nn.Transformer(512, 8, 6, 6, 2048)</code> = 44.1 M parameters (+ 18.9 M shared embedding ≈ 63 M; Table 3: 65 M).</p>
 </div>
-</section>
-
-<section id="transformer-build-order" class="slide level2" data-menu-title="Build order: smallest block first">
-<p class="kicker">Level 4 · step 8 · Lab 7C</p>
-<h2>Build order: smallest block first, test each one</h2>
-<div class="pipe">
-<div class="st">Scaled dot-product attention<small>7B ✅ = F.sdpa</small></div><div class="ar">→</div>
-<div class="st">Multi-head attention<small>7B ✅ = nn.MHA</small></div><div class="ar">→</div>
-<div class="st">Positional encoding<small>7C ✅ = formula</small></div><div class="ar">→</div>
-<div class="st">Feed-forward<small>7C ✅ params</small></div><div class="ar">→</div>
-<div class="st">Layer norm<small>7C ✅ = nn.LayerNorm</small></div><div class="ar">→</div>
-<div class="st on">Encoder layer<small>✅ mask respected</small></div><div class="ar">→</div>
-<div class="st on">Decoder layer<small>✅ no future peeking</small></div><div class="ar">→</div>
-<div class="st on">Transformer<small>✅ shapes</small></div>
-</div>
-<div class="grid2" style="margin-top:0.3em;">
-<pre class="code-sm"><code class="python">class EncoderLayer(nn.Module):
-    def __init__(self, d, h, d_ff, p=0.1):
-        super().__init__()
-        self.self_attn = MultiHeadAttention(d, h, p)
-        self.ffn = FeedForward(d, d_ff, p)
-        self.norm1, self.norm2 = LayerNorm(d), LayerNorm(d)
-        self.drop = nn.Dropout(p)
-
-    def forward(self, x, src_mask):  # LayerNorm(x + Sublayer(x))
-        a = self.self_attn(x, x, x, src_mask)
-        x = self.norm1(x + self.drop(a))
-        x = self.norm2(x + self.drop(self.ffn(x)))
-        return x
-</code></pre>
-<pre class="code-sm"><code class="python">class DecoderLayer(nn.Module):
-    ...
-    def forward(self, y, memory, src_mask, tgt_mask):
-        a = self.self_attn(y, y, y, tgt_mask)          # masked
-        y = self.norm1(y + self.drop(a))
-        a = self.cross_attn(y, memory, memory, src_mask)  # cross
-        y = self.norm2(y + self.drop(a))
-        y = self.norm3(y + self.drop(self.ffn(y)))
-        return y
-
-# Transformer.forward(src, tgt):
-#   memory = encoder(embed(src) + PE)
-#   return linear(decoder(embed(tgt) + PE, memory))
-</code></pre>
 </div>
 <a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/03-transformer-reverse-sequence.ipynb" style="right:24px; top:6px;">&#9654;&#xFE0E; Lab 7C in Colab</a>
 </section>
@@ -1405,17 +1304,10 @@ tgt_out :  4   8  2  5  9  1  7  3 EOS
 
 <section id="level-4-quiz" class="slide level2" data-menu-title="Level 4 quiz">
 <h2>Level 4 check: the Transformer</h2>
-<div class="quiz">
-<p class="q">Answer out loud, then click</p>
-<ol class="tight">
-<li>Q is (2, 8, 10, 64) and K is (2, 8, 12, 64). What is the shape of QKᵀ? Of the output if V is (2, 8, 12, 64)?</li>
-<li>Without the positional encoding, can the Transformer reverse a sequence? Why?</li>
-<li>Why does the decoder's first attention need a causal mask during training, but the encoder's does not?</li>
-</ol>
-<div class="answer fragment"><b>1.</b> QKᵀ: (2, 8, 10, 12) = one score per (query, key) pair in every head. Output: (2, 8, 10, 64).</div>
-<div class="answer fragment"><b>2.</b> No: attention treats the input as a <b>set</b>, so the encoder cannot tell which digit came first. Accuracy collapses to ≈ 0 % (try it in Lab 7C).</div>
-<div class="answer fragment"><b>3.</b> With teacher forcing the decoder sees the whole correct answer. Without the mask, position <i>i</i> would just copy token <i>i</i>+1. The encoder reads the input, which is allowed to be seen completely.</div>
-</div>
+<p class="quiz-intro">Think, discuss with your neighbour, then <b>click a question</b> to check the answer.</p>
+<div class="qa"><button class="qa-q"><span class="qn">1</span><span>Q is (2, 8, 10, 64) and K is (2, 8, 12, 64). What is the shape of QKᵀ? Of the output if V is (2, 8, 12, 64)?</span><span class="qa-tag">answer ▾</span></button><div class="qa-a">QKᵀ: (2, 8, 10, 12) = one score per (query, key) pair in every head. Output: (2, 8, 10, 64).</div></div>
+<div class="qa"><button class="qa-q"><span class="qn">2</span><span>Without the positional encoding, can the Transformer reverse a sequence? Why?</span><span class="qa-tag">answer ▾</span></button><div class="qa-a">No: attention treats the input as a <b>set</b>, so the encoder cannot tell which digit came first. Accuracy collapses to ≈ 0 % (try it in Lab 7C).</div></div>
+<div class="qa"><button class="qa-q"><span class="qn">3</span><span>Why does the decoder's first attention need a causal mask during training, but the encoder's does not?</span><span class="qa-tag">answer ▾</span></button><div class="qa-a">With teacher forcing the decoder sees the whole correct answer. Without the mask, position <i>i</i> would just copy token <i>i</i>+1. The encoder reads the input, which is allowed to be seen completely.</div></div>
 </section>
 
 <!-- ============================ LEVEL 5 ============================ -->
@@ -1444,18 +1336,25 @@ tgt_out :  4   8  2  5  9  1  7  3 EOS
 </div>
 </section>
 
-<section id="unet-figure-1" class="slide level2" data-menu-title="U-Net: Figure 1 is the paper">
-<p class="kicker">Level 5 · step 1 · Figure 1</p>
-<h2>U-Net: the figure <i>is</i> the paper</h2>
-<div class="grid2" style="grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);">
-<div><img class="fig" src="assets/07_paper_implementation/p_unet_fig1.png" alt="Figure 1 of the U-Net paper">
-<p class="plain" style="margin-top:0.4em;"><b>Analogy:</b> the left side zooms out to understand the scene; the right side zooms back in to draw the outline, copying fine details across the skip connections.</p></div>
-<div class="stepper narrow" style="font-size:0.94em;">
-<div class="row fragment" style="--c:#2563eb;"><div class="num">1</div><div class="name"><b>Contracting path (left) · <i>what</i></b><small>read the U top-left → bottom</small></div><div class="chips"><span><i>1</i>2 × [3×3 conv, ReLU]</span><span><i>2</i>2×2 max-pool</span><span><i>3</i>channels × 2: 64 → 1024</span></div></div>
-<div class="row fragment" style="--c:#7c3aed;"><div class="num">2</div><div class="name"><b>Bottom of the U</b><small>the widest view</small></div><div class="chips"><span><i>1</i>28 × 28 × 1024: most context, least detail</span></div></div>
-<div class="row fragment" style="--c:#059669;"><div class="num">3</div><div class="name"><b>Expansive path (right) · <i>where</i></b><small>read bottom → top-right</small></div><div class="chips"><span><i>1</i>2×2 up-conv, channels ÷ 2</span><span><i>2</i>2 × [3×3 conv, ReLU]</span></div></div>
-<div class="row fragment" style="--c:#64748b;"><div class="num">4</div><div class="name"><b>Skip connections (grey arrows)</b><small>sharp details jump across the U</small></div><div class="chips"><span><i>1</i>copy → crop → concatenate on channels</span></div></div>
-<div class="row fragment" style="--c:#dc2626;"><div class="num">5</div><div class="name"><b>Output layer</b><small>one class score per pixel</small></div><div class="chips"><span><i>1</i>1×1 conv → 2 classes</span><span><i>2</i>572 → 388 (each conv: −2 px)</span></div></div>
+<section id="unet-figure-1" class="slide level2" data-menu-title="U-Net: Figure 1 step by step">
+<p class="kicker">Level 5 · paper 2 · Figure 1, step by step</p>
+<h2>U-Net, step by step: follow the image around the U</h2>
+<div class="grid2" style="grid-template-columns:minmax(0,1.3fr) minmax(0,1fr); align-items:start;">
+<div><div class="figwalk" style="max-width:900px;"><img src="assets/07_paper_implementation/p_unet_fig1.png" alt="U-Net: Figure 1 step by step"><div class="step fragment" data-fragment-index="0" style="--c:#2563eb; --bg:rgba(37,99,235,0.13);"><div class="hl" style="left:9.08%; top:4.72%; width:8.00%; height:37.88%;"></div><div class="badge" style="left:7.69%; top:43.25%;">1</div></div>
+<div class="step fragment" data-fragment-index="1" style="--c:#b91c1c; --bg:rgba(185,28,28,0.13);"><div class="hl" style="left:13.23%; top:44.30%; width:8.15%; height:20.18%;"></div><div class="hl" style="left:17.85%; top:65.92%; width:9.69%; height:11.66%;"></div><div class="hl" style="left:23.69%; top:77.98%; width:11.85%; height:7.47%;"></div><svg viewBox="0 0 1300 763" preserveAspectRatio="none"><defs><marker id="unet-figure-1-a1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#b91c1c"/></marker></defs><path d="M198,326 L198,350 M258,492 L258,516 M335,592 L335,613 M437,652 L437,673" fill="none" stroke="#b91c1c" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#unet-figure-1-a1)" opacity="0.9"/></svg><div class="badge" style="left:11.54%; top:54.39%;">2</div></div>
+<div class="step fragment" data-fragment-index="2" style="--c:#7c3aed; --bg:rgba(124,58,237,0.13);"><div class="hl" style="left:31.69%; top:86.76%; width:17.69%; height:4.59%;"></div><div class="badge" style="left:30.15%; top:88.99%;">3</div></div>
+<div class="step fragment" data-fragment-index="3" style="--c:#059669; --bg:rgba(5,150,105,0.13);"><div class="hl" style="left:41.69%; top:78.11%; width:14.23%; height:7.08%;"></div><div class="hl" style="left:52.15%; top:66.58%; width:9.54%; height:9.70%;"></div><div class="hl" style="left:58.31%; top:46.92%; width:7.69%; height:14.94%;"></div><svg viewBox="0 0 1300 763" preserveAspectRatio="none"><defs><marker id="unet-figure-1-a3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#059669"/></marker></defs><path d="M600,666 L600,646 M707,600 L707,584 M785,506 L785,478 M843,356 L843,298" fill="none" stroke="#059669" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#unet-figure-1-a3)" opacity="0.9"/></svg><div class="badge" style="left:57.54%; top:81.78%;">4</div></div>
+<div class="step fragment" data-fragment-index="4" style="--c:#64748b; --bg:rgba(100,116,139,0.13);"><div class="hl" style="left:19.08%; top:23.33%; width:42.31%; height:2.49%;"></div><div class="hl" style="left:24.00%; top:54.26%; width:32.77%; height:2.49%;"></div><div class="hl" style="left:29.38%; top:71.30%; width:19.85%; height:2.49%;"></div><div class="hl" style="left:36.31%; top:81.78%; width:4.46%; height:2.36%;"></div><div class="badge" style="left:40.38%; top:21.23%;">5</div></div>
+<div class="step fragment" data-fragment-index="5" style="--c:#dc2626; --bg:rgba(220,38,38,0.13);"><div class="hl" style="left:62.92%; top:10.22%; width:9.54%; height:26.74%;"></div><div class="badge" style="left:74.46%; top:39.32%;">6</div></div></div><p class="plain" style="margin-top:0.35em;"><b>Analogy:</b> the left side zooms out to understand the scene; the right side zooms back in to draw the outline, copying fine details across the skip connections.</p></div>
+<div><div class="stepper compact" style="font-size:0.9em;">
+<div class="row fragment" data-fragment-index="0" style="--c:#2563eb;"><div class="num">1</div><div class="name"><b>Input tile</b><small>572 × 572 grey image → 2 convs</small></div><div class="chips"><span>DoubleConvValid(1, 64)</span></div></div>
+<div class="row fragment" data-fragment-index="1" style="--c:#b91c1c;"><div class="num">2</div><div class="name"><b>Contracting path ↓</b><small>max-pool, then 2 convs; channels × 2</small></div><div class="chips"><span>nn.MaxPool2d(2)</span></div></div>
+<div class="row fragment" data-fragment-index="2" style="--c:#7c3aed;"><div class="num">3</div><div class="name"><b>Bottom of the U</b><small>28 × 28 × 1024: most context</small></div><div class="chips"><span>DoubleConvValid(512, 1024)</span></div></div>
+<div class="row fragment" data-fragment-index="3" style="--c:#059669;"><div class="num">4</div><div class="name"><b>Expansive path ↑</b><small>up-conv 2 × 2: size × 2, channels ÷ 2</small></div><div class="chips"><span>nn.ConvTranspose2d(c, c // 2, 2, 2)</span></div></div>
+<div class="row fragment" data-fragment-index="4" style="--c:#64748b;"><div class="num">5</div><div class="name"><b>Skip connections</b><small>copy, crop, concatenate</small></div><div class="chips"><span>torch.cat([crop(skip), x], dim=1)</span></div></div>
+<div class="row fragment" data-fragment-index="5" style="--c:#dc2626;"><div class="num">6</div><div class="name"><b>Output map</b><small>1 × 1 conv → 388 × 388 × 2 classes</small></div><div class="chips"><span>nn.Conv2d(64, 2, kernel_size=1)</span></div></div>
+</div>
+<p class="stepper-hint" style="text-align:left;">Press → for the next step. 2015 paper: 572 × 572 in, 388 × 388 out (every unpadded 3 × 3 conv loses 2 pixels).</p>
 </div>
 </div>
 <a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/04-unet-from-paper.ipynb" style="right:24px; top:6px;">&#9654;&#xFE0E; Lab 7D in Colab</a>
@@ -1559,17 +1458,10 @@ class UNetPaper(nn.Module):
 
 <section id="level-5-quiz" class="slide level2" data-menu-title="Level 5 quiz">
 <h2>Level 5 check: U-Net</h2>
-<div class="quiz">
-<p class="q">Answer out loud, then click</p>
-<ol class="tight">
-<li>Fourth level: 64 × 64 × 512 → 2 × 2 max-pool → ? → two unpadded 3 × 3 convs with 1024 filters → ? → 2 × 2 up-conv → ?</li>
-<li>The up-conv gives 512 channels and the skip has 512 channels. How many channels go into the next DoubleConv?</li>
-<li>Your prediction for class "triangle" has 40 pixels, the truth has 60, and 30 pixels overlap. Dice?</li>
-</ol>
-<div class="answer fragment"><b>1.</b> 64² × 512 → pool → <b>32² × 512</b> → 30² → <b>28² × 1024</b> → up-conv → <b>56² × 512</b> (check against the bottom of Figure 1).</div>
-<div class="answer fragment"><b>2.</b> <b>1024</b>: concatenation adds channels (512 + 512). Then the DoubleConv brings it back to 512.</div>
-<div class="answer fragment"><b>3.</b> 2 · 30 / (40 + 60) = 60 / 100 = <b>0.60</b>.</div>
-</div>
+<p class="quiz-intro">Think, discuss with your neighbour, then <b>click a question</b> to check the answer.</p>
+<div class="qa"><button class="qa-q"><span class="qn">1</span><span>Fourth level: 64 × 64 × 512 → 2 × 2 max-pool → ? → two unpadded 3 × 3 convs with 1024 filters → ? → 2 × 2 up-conv → ?</span><span class="qa-tag">answer ▾</span></button><div class="qa-a">64² × 512 → pool → <b>32² × 512</b> → 30² → <b>28² × 1024</b> → up-conv → <b>56² × 512</b> (check against the bottom of Figure 1).</div></div>
+<div class="qa"><button class="qa-q"><span class="qn">2</span><span>The up-conv gives 512 channels and the skip has 512 channels. How many channels go into the next DoubleConv?</span><span class="qa-tag">answer ▾</span></button><div class="qa-a"><b>1024</b>: concatenation adds channels (512 + 512). Then the DoubleConv brings it back to 512.</div></div>
+<div class="qa"><button class="qa-q"><span class="qn">3</span><span>Your prediction for class "triangle" has 40 pixels, the truth has 60, and 30 pixels overlap. Dice?</span><span class="qa-tag">answer ▾</span></button><div class="qa-a">2 · 30 / (40 + 60) = 60 / 100 = <b>0.60</b>.</div></div>
 </section>
 
 <!-- ============================ LEVEL 6 ============================ -->
@@ -1598,19 +1490,23 @@ class UNetPaper(nn.Module):
 </div>
 </section>
 
-<section id="resnet-workflow" class="slide level2" data-menu-title="ResNet: the whole workflow">
-<p class="kicker">Level 6 · paper 3 · the whole workflow · Figures 2 and 5, Table 1</p>
-<h2>ResNet: the whole workflow</h2>
-<div class="grid2" style="grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);">
-<div><img class="fig" src="assets/07_paper_implementation/p_resnet_fig2.png" alt="Figure 2: residual block" style="max-height:250px;">
-<img class="fig" src="assets/07_paper_implementation/pc_r_fig5.png" alt="Figure 5: basic and bottleneck blocks" style="max-height:250px;">
-<p class="plain" style="margin-top:0.35em;"><b>Analogy:</b> editing an essay is easier than rewriting it: each block adds a small correction to x.</p></div>
-<div class="stepper narrow" style="font-size:0.94em;">
-<div class="row fragment" style="--c:#2563eb;"><div class="num">1</div><div class="name"><b>Stem</b><small>a first, coarse look</small></div><div class="chips"><span><i>1</i>7×7 conv, 64, stride 2</span><span><i>2</i>3×3 max-pool, stride 2</span><span><i>3</i>224 → 56</span></div></div>
-<div class="row fragment" style="--c:#dc2626;"><div class="num">2</div><div class="name"><b>Residual block</b><small>learn the change</small></div><div class="chips"><span><i>1</i>conv → BN → ReLU → conv → BN = F(x)</span><span><i>2</i>y = F(x) + x, then ReLU</span></div></div>
-<div class="row fragment" style="--c:#7c3aed;"><div class="num">3</div><div class="name"><b>Four stages</b><small>conv2_x … conv5_x</small></div><div class="chips"><span><i>1</i>64 → 128 → 256 → 512 channels</span><span><i>2</i>first block: stride 2</span><span><i>3</i>projection shortcut when shapes change</span></div></div>
-<div class="row fragment" style="--c:#059669;"><div class="num">4</div><div class="name"><b>Head</b><small>one score per class</small></div><div class="chips"><span><i>1</i>global average pool</span><span><i>2</i>1000-way fully connected</span></div></div>
-<div class="row fragment" style="--c:#b45309;"><div class="num">5</div><div class="name"><b>Pick a depth</b><small>Table 1</small></div><div class="chips"><span><i>1</i>18 / 34: basic blocks</span><span><i>2</i>50 / 101 / 152: bottleneck 1×1-3×3-1×1</span></div></div>
+<section id="resnet-workflow" class="slide level2" data-menu-title="ResNet: Figure 2 step by step">
+<p class="kicker">Level 6 · paper 3 · Figure 2, step by step</p>
+<h2>ResNet, step by step: one residual block</h2>
+<div class="grid2" style="grid-template-columns:minmax(0,1.1fr) minmax(0,1fr); align-items:start;">
+<div><div class="figwalk" style="max-width:760px;"><img src="assets/07_paper_implementation/p_resnet_fig2.png" alt="ResNet: Figure 2 step by step"><div class="step fragment" data-fragment-index="0" style="--c:#2563eb; --bg:rgba(37,99,235,0.13);"><div class="hl" style="left:40.05%; top:26.03%; width:8.68%; height:11.43%;"></div><div class="badge" style="left:37.65%; top:31.75%;">1</div></div>
+<div class="step fragment" data-fragment-index="1" style="--c:#7c3aed; --bg:rgba(124,58,237,0.13);"><div class="hl" style="left:34.98%; top:41.27%; width:22.70%; height:19.68%;"></div><svg viewBox="0 0 749 315" preserveAspectRatio="none"><defs><marker id="resnet-workflow-a1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7c3aed"/></marker></defs><path d="M345,100 L345,128" fill="none" stroke="#7c3aed" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#resnet-workflow-a1)" opacity="0.9"/></svg><div class="badge" style="left:32.31%; top:47.62%;">2</div></div>
+<div class="step fragment" data-fragment-index="2" style="--c:#0891b2; --bg:rgba(8,145,178,0.13);"><div class="hl" style="left:34.98%; top:64.13%; width:22.70%; height:10.79%;"></div><svg viewBox="0 0 749 315" preserveAspectRatio="none"><defs><marker id="resnet-workflow-a2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#0891b2"/></marker></defs><path d="M345,192 L345,201" fill="none" stroke="#0891b2" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#resnet-workflow-a2)" opacity="0.9"/></svg><div class="badge" style="left:32.31%; top:69.52%;">3</div></div>
+<div class="step fragment" data-fragment-index="3" style="--c:#d97706; --bg:rgba(217,119,6,0.13);"><div class="hl" style="left:65.69%; top:57.78%; width:13.08%; height:22.22%;"></div><svg viewBox="0 0 749 315" preserveAspectRatio="none"><defs><marker id="resnet-workflow-a3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#d97706"/></marker></defs><path d="M352,98 C480,95 505,230 368,270" fill="none" stroke="#d97706" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#resnet-workflow-a3)" opacity="0.9"/></svg><div class="badge" style="left:81.71%; top:68.89%;">4</div></div>
+<div class="step fragment" data-fragment-index="4" style="--c:#dc2626; --bg:rgba(220,38,38,0.13);"><div class="hl" style="left:43.79%; top:81.27%; width:9.35%; height:16.51%;"></div><svg viewBox="0 0 749 315" preserveAspectRatio="none"><defs><marker id="resnet-workflow-a4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#dc2626"/></marker></defs><path d="M345,236 L345,258" fill="none" stroke="#dc2626" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#resnet-workflow-a4)" opacity="0.9"/></svg><div class="badge" style="left:55.81%; top:95.24%;">5</div></div></div><p class="plain" style="margin-top:0.35em;"><b>Analogy:</b> editing an essay is easier than rewriting it: the block only learns the small correction F(x) and adds it to x.</p></div>
+<div><div class="stepper compact" style="font-size:0.9em;">
+<div class="row fragment" data-fragment-index="0" style="--c:#2563eb;"><div class="num">1</div><div class="name"><b>Input x</b><small>a feature map</small></div><div class="chips"><span>x: (B, C, H, W)</span></div></div>
+<div class="row fragment" data-fragment-index="1" style="--c:#7c3aed;"><div class="num">2</div><div class="name"><b>Weight layer 1 + ReLU</b><small>3 × 3 conv → BatchNorm → ReLU</small></div><div class="chips"><span>relu(bn1(conv1(x)))</span></div></div>
+<div class="row fragment" data-fragment-index="2" style="--c:#0891b2;"><div class="num">3</div><div class="name"><b>Weight layer 2 = F(x)</b><small>3 × 3 conv → BatchNorm</small></div><div class="chips"><span>bn2(conv2(out))</span></div></div>
+<div class="row fragment" data-fragment-index="3" style="--c:#d97706;"><div class="num">4</div><div class="name"><b>Identity shortcut</b><small>x skips both layers unchanged</small></div><div class="chips"><span>identity = x</span></div></div>
+<div class="row fragment" data-fragment-index="4" style="--c:#dc2626;"><div class="num">5</div><div class="name"><b>Add, then ReLU</b><small>y = F(x) + x</small></div><div class="chips"><span>relu(out + identity)</span></div></div>
+</div>
+<p class="stepper-hint" style="text-align:left;">Press → for the next step. Stack this block: conv2_x … conv5_x with 64 → 128 → 256 → 512 channels (Table 1). ResNet-18 = a 7 × 7 stem + 8 blocks + average pool + fc.</p>
 </div>
 </div>
 <a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/05-resnet-from-paper.ipynb" style="right:24px; top:6px;">&#9654;&#xFE0E; Lab 7E in Colab</a>
@@ -1695,17 +1591,10 @@ class UNetPaper(nn.Module):
 
 <section id="level-6-quiz" class="slide level2" data-menu-title="Level 6 quiz">
 <h2>Level 6 check: ResNet</h2>
-<div class="quiz">
-<p class="q">Answer out loud, then click</p>
-<ol class="tight">
-<li>Why do ResNet convolutions use <code>bias=False</code>?</li>
-<li>A block maps (B, 64, 56, 56) to (B, 128, 28, 28). Why can't you just add x, and what does the paper do?</li>
-<li>The 56-layer plain net has a <i>higher training error</i> than the 20-layer one. Is it overfitting?</li>
-</ol>
-<div class="answer fragment"><b>1.</b> Each conv is followed by BatchNorm, which subtracts the mean (removing any bias) and has its own learned shift β. A bias would be wasted parameters.</div>
-<div class="answer fragment"><b>2.</b> Shapes differ (channels and size). The shortcut becomes a <b>1 × 1 conv with stride 2</b> (+ BN): a "projection shortcut".</div>
-<div class="answer fragment"><b>3.</b> No. Overfitting = low training error, high test error. Here <b>training</b> error is higher: an <b>optimisation</b> problem, which residual connections solve.</div>
-</div>
+<p class="quiz-intro">Think, discuss with your neighbour, then <b>click a question</b> to check the answer.</p>
+<div class="qa"><button class="qa-q"><span class="qn">1</span><span>Why do ResNet convolutions use <code>bias=False</code>?</span><span class="qa-tag">answer ▾</span></button><div class="qa-a">Each conv is followed by BatchNorm, which subtracts the mean (removing any bias) and has its own learned shift β. A bias would be wasted parameters.</div></div>
+<div class="qa"><button class="qa-q"><span class="qn">2</span><span>A block maps (B, 64, 56, 56) to (B, 128, 28, 28). Why can't you just add x, and what does the paper do?</span><span class="qa-tag">answer ▾</span></button><div class="qa-a">Shapes differ (channels and size). The shortcut becomes a <b>1 × 1 conv with stride 2</b> (+ BN): a "projection shortcut".</div></div>
+<div class="qa"><button class="qa-q"><span class="qn">3</span><span>The 56-layer plain net has a <i>higher training error</i> than the 20-layer one. Is it overfitting?</span><span class="qa-tag">answer ▾</span></button><div class="qa-a">No. Overfitting = low training error, high test error. Here <b>training</b> error is higher: an <b>optimisation</b> problem, which residual connections solve.</div></div>
 </section>
 
 <!-- ============================ LEVEL 7 ============================ -->
@@ -1734,18 +1623,23 @@ class UNetPaper(nn.Module):
 </div>
 </section>
 
-<section id="vit-workflow" class="slide level2" data-menu-title="Vision Transformer: the whole workflow">
-<p class="kicker">Level 7 · paper 4 · the whole workflow · Figure 1, Eq. 1–4</p>
-<h2>Vision Transformer: the whole workflow</h2>
-<div class="grid2" style="grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);">
-<div><img class="fig" src="assets/07_paper_implementation/p_vit_fig1.png" alt="Figure 1: ViT model overview" style="max-height:380px;">
-<p class="plain" style="margin-top:0.35em;"><b>Analogy:</b> an image becomes a sentence of 196 words; the [class] token reads the whole sentence and gives the answer.</p></div>
-<div class="stepper narrow" style="font-size:0.94em;">
-<div class="row fragment" style="--c:#2563eb;"><div class="num">1</div><div class="name"><b>Patches</b><small>image → words</small></div><div class="chips"><span><i>1</i>224 × 224 image</span><span><i>2</i>16 × 16 patches → 196</span><span><i>3</i>768 numbers each</span></div></div>
-<div class="row fragment" style="--c:#0891b2;"><div class="num">2</div><div class="name"><b>Linear projection E</b><small>Eq. 1</small></div><div class="chips"><span><i>1</i>Conv2d(3, 768, 16, stride 16)</span><span><i>2</i>= flatten · E</span></div></div>
-<div class="row fragment" style="--c:#7c3aed;"><div class="num">3</div><div class="name"><b>Add tokens and positions</b><small>Eq. 1</small></div><div class="chips"><span><i>1</i>+ [class] token → 197</span><span><i>2</i>+ learned position embeddings</span></div></div>
-<div class="row fragment" style="--c:#dc2626;"><div class="num">4</div><div class="name"><b>Encoder × 12</b><small>Eq. 2–3</small></div><div class="chips"><span><i>1</i>LN → multi-head attention → +</span><span><i>2</i>LN → MLP (GELU) → +</span></div></div>
-<div class="row fragment" style="--c:#059669;"><div class="num">5</div><div class="name"><b>Classify</b><small>Eq. 4</small></div><div class="chips"><span><i>1</i>take token 0</span><span><i>2</i>LN → Linear → 1000 classes</span></div></div>
+<section id="vit-workflow" class="slide level2" data-menu-title="ViT: Figure 1 step by step">
+<p class="kicker">Level 7 · paper 4 · Figure 1, step by step</p>
+<h2>ViT, step by step: from an image to a class</h2>
+<div class="grid2" style="grid-template-columns:minmax(0,1.3fr) minmax(0,1fr); align-items:start;">
+<div><div class="figwalk" style="max-width:880px;"><img src="assets/07_paper_implementation/p_vit_fig1.png" alt="ViT: Figure 1 step by step"><div class="step fragment" data-fragment-index="0" style="--c:#2563eb; --bg:rgba(37,99,235,0.13);"><div class="hl" style="left:11.57%; top:66.79%; width:8.82%; height:19.39%;"></div><div class="hl" style="left:28.48%; top:71.45%; width:34.79%; height:8.62%;"></div><svg viewBox="0 0 1236 557" preserveAspectRatio="none"><defs><marker id="vit-workflow-a0" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2563eb"/></marker></defs><path d="M255,423 L347,423" fill="none" stroke="#2563eb" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#vit-workflow-a0)" opacity="0.9"/></svg><div class="badge" style="left:10.36%; top:64.99%;">1</div></div>
+<div class="step fragment" data-fragment-index="1" style="--c:#0891b2; --bg:rgba(8,145,178,0.13);"><div class="hl" style="left:28.72%; top:59.25%; width:34.95%; height:7.72%;"></div><svg viewBox="0 0 1236 557" preserveAspectRatio="none"><defs><marker id="vit-workflow-a1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#0891b2"/></marker></defs><path d="M378,400 L378,376" fill="none" stroke="#0891b2" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#vit-workflow-a1)" opacity="0.9"/></svg><div class="badge" style="left:65.21%; top:63.20%;">2</div></div>
+<div class="step fragment" data-fragment-index="2" style="--c:#7c3aed; --bg:rgba(124,58,237,0.13);"><div class="hl" style="left:23.95%; top:50.27%; width:38.92%; height:7.72%;"></div><div class="badge" style="left:64.40%; top:53.86%;">3</div></div>
+<div class="step fragment" data-fragment-index="3" style="--c:#dc2626; --bg:rgba(220,38,38,0.13);"><div class="hl" style="left:22.90%; top:28.73%; width:40.61%; height:16.70%;"></div><div class="hl" style="left:72.49%; top:7.90%; width:17.31%; height:69.66%;"></div><svg viewBox="0 0 1236 557" preserveAspectRatio="none"><defs><marker id="vit-workflow-a3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#dc2626"/></marker></defs><path d="M325,280 L325,256" fill="none" stroke="#dc2626" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#vit-workflow-a3)" opacity="0.9"/></svg><div class="badge" style="left:65.21%; top:36.98%;">4</div></div>
+<div class="step fragment" data-fragment-index="4" style="--c:#059669; --bg:rgba(5,150,105,0.13);"><div class="hl" style="left:22.90%; top:12.21%; width:7.04%; height:11.49%;"></div><div class="hl" style="left:13.11%; top:7.54%; width:6.15%; height:21.54%;"></div><svg viewBox="0 0 1236 557" preserveAspectRatio="none"><defs><marker id="vit-workflow-a4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#059669"/></marker></defs><path d="M325,160 L325,135 M282,100 L242,100" fill="none" stroke="#059669" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#vit-workflow-a4)" opacity="0.9"/></svg><div class="badge" style="left:31.72%; top:12.57%;">5</div></div></div><p class="plain" style="margin-top:0.35em;"><b>Analogy:</b> an image becomes a sentence of 196 words; the [class] token reads the whole sentence and gives the answer.</p></div>
+<div><div class="stepper compact" style="font-size:0.9em;">
+<div class="row fragment" data-fragment-index="0" style="--c:#2563eb;"><div class="num">1</div><div class="name"><b>Split into patches</b><small>224² image → 196 patches of 16 × 16</small></div><div class="chips"><span>patchify(x, P=16)</span></div></div>
+<div class="row fragment" data-fragment-index="1" style="--c:#0891b2;"><div class="num">2</div><div class="name"><b>Linear projection E</b><small>each patch → 768 numbers</small></div><div class="chips"><span>nn.Conv2d(3, 768, 16, stride=16)</span></div></div>
+<div class="row fragment" data-fragment-index="2" style="--c:#7c3aed;"><div class="num">3</div><div class="name"><b>[class] token + positions</b><small>197 tokens, each + its position</small></div><div class="chips"><span>cat([cls, x]) + pos_embed</span></div></div>
+<div class="row fragment" data-fragment-index="3" style="--c:#dc2626;"><div class="num">4</div><div class="name"><b>Transformer encoder × 12</b><small>Norm → attention → + · Norm → MLP → +</small></div><div class="chips"><span>EncoderBlock(768, 12, 3072)</span></div></div>
+<div class="row fragment" data-fragment-index="4" style="--c:#059669;"><div class="num">5</div><div class="name"><b>MLP head</b><small>token 0 → one of 1000 classes</small></div><div class="chips"><span>head(norm(x)[:, 0])</span></div></div>
+</div>
+<p class="stepper-hint" style="text-align:left;">Press → for the next step. ViT-B/16: 224 × 224 image, 16 × 16 patches, D = 768, 12 layers, 12 heads = 86.6 M parameters.</p>
 </div>
 </div>
 <a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/06-vit-from-paper.ipynb" style="right:24px; top:6px;">&#9654;&#xFE0E; Lab 7F in Colab</a>
@@ -1854,24 +1748,17 @@ for name in ["resnet50", "vit_b_16"]:
 
 <section id="level-7-quiz" class="slide level2" data-menu-title="Level 7 quiz">
 <h2>Level 7 check: ViT</h2>
-<div class="quiz">
-<p class="q">Answer out loud, then click</p>
-<ol class="tight">
-<li>ViT-B/16 at 224 × 224: how many patch tokens? What is the sequence length after adding [class]?</li>
-<li>Same model at 384 × 384: how many tokens? About how much more attention compute?</li>
-<li>What does the [class] token "see" at the input, and why can it summarise the image at the output?</li>
-</ol>
-<div class="answer fragment"><b>1.</b> (224/16)² = 14² = <b>196</b> patches; + 1 [class] = <b>197</b>.</div>
-<div class="answer fragment"><b>2.</b> (384/16)² = 24² = <b>576</b> tokens; attention ∝ N², so (577/197)² ≈ <b>8.6 ×</b> more.</div>
-<div class="answer fragment"><b>3.</b> Nothing image-specific: it starts as a learned vector. Through attention in every layer it gathers information from all patches, so after 12 layers it is a summary of the whole image.</div>
-</div>
+<p class="quiz-intro">Think, discuss with your neighbour, then <b>click a question</b> to check the answer.</p>
+<div class="qa"><button class="qa-q"><span class="qn">1</span><span>ViT-B/16 at 224 × 224: how many patch tokens? What is the sequence length after adding [class]?</span><span class="qa-tag">answer ▾</span></button><div class="qa-a">(224/16)² = 14² = <b>196</b> patches; + 1 [class] = <b>197</b>.</div></div>
+<div class="qa"><button class="qa-q"><span class="qn">2</span><span>Same model at 384 × 384: how many tokens? About how much more attention compute?</span><span class="qa-tag">answer ▾</span></button><div class="qa-a">(384/16)² = 24² = <b>576</b> tokens; attention ∝ N², so (577/197)² ≈ <b>8.6 ×</b> more.</div></div>
+<div class="qa"><button class="qa-q"><span class="qn">3</span><span>What does the [class] token "see" at the input, and why can it summarise the image at the output?</span><span class="qa-tag">answer ▾</span></button><div class="qa-a">Nothing image-specific: it starts as a learned vector. Through attention in every layer it gathers information from all patches, so after 12 layers it is a summary of the whole image.</div></div>
 </section>
 
 <!-- ============================ LEVEL 8 ============================ -->
 <section id="level-8" class="slide level2 center" data-background-color="#28568a" data-menu-title="Level 8 · Advanced: your next paper">
 <p class="sec-num">8</p>
 <p class="sec-title">Advanced: your next paper and your own research</p>
-<p class="sec-sub"><b>Level 8</b> · a menu of vision papers, the bug hunt, the Paper Implementation Challenge, from implementing to research</p>
+<p class="sec-sub"><b>Level 8</b> · a menu of vision papers, the bug hunt, Project 1 and AI coding agents</p>
 </section>
 
 <section id="paper-menu" class="slide level2" data-menu-title="Paper menu for Intelligent Vision students">
@@ -1913,22 +1800,33 @@ for name in ["resnet50", "vit_b_16"]:
 </div>
 </section>
 
-<section id="senet-workflow" class="slide level2" data-menu-title="SE-Net: the whole workflow">
-<p class="kicker">Level 8 · paper 5 · Lab 7H worked example · the whole workflow · Figures 1 and 3</p>
-<h2>SE-Net: the whole workflow</h2>
-<div class="grid2" style="grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);">
-<div><img class="fig" src="assets/07_paper_implementation/pc_s_fig1.png" alt="Figure 1: the SE block" style="max-height:200px;">
-<img class="fig" src="assets/07_paper_implementation/pc_s_fig3.png" alt="Figure 3: the SE-ResNet module" style="max-height:330px;">
-<p class="plain" style="margin-top:0.35em;"><b>Analogy:</b> a sound mixer: listen to every channel, then turn the useful ones up and the noisy ones down.</p></div>
-<div class="stepper narrow" style="font-size:0.94em;">
-<div class="row fragment" style="--c:#2563eb;"><div class="num">1</div><div class="name"><b>Input feature map</b><small>from any conv block</small></div><div class="chips"><span><i>1</i>U: (B, C, H, W)</span></div></div>
-<div class="row fragment" style="--c:#0891b2;"><div class="num">2</div><div class="name"><b>Squeeze</b><small>Eq. 2</small></div><div class="chips"><span><i>1</i>global average pool</span><span><i>2</i>(B, C, H, W) → (B, C)</span></div></div>
-<div class="row fragment" style="--c:#7c3aed;"><div class="num">3</div><div class="name"><b>Excitation</b><small>Eq. 3</small></div><div class="chips"><span><i>1</i>FC C → C/16, ReLU</span><span><i>2</i>FC C/16 → C, sigmoid</span></div></div>
-<div class="row fragment" style="--c:#dc2626;"><div class="num">4</div><div class="name"><b>Scale</b><small>Eq. 4</small></div><div class="chips"><span><i>1</i>channel c × weight s_c</span><span><i>2</i>same shape as the input</span></div></div>
-<div class="row fragment" style="--c:#b45309;"><div class="num">5</div><div class="name"><b>Plug into ResNet</b><small>Figure 3</small></div><div class="chips"><span><i>1</i>on the residual branch, before the +</span><span><i>2</i>≈ 10 % more parameters</span></div></div>
+<section id="senet-workflow" class="slide level2" data-menu-title="SE-Net: Figure 1 step by step">
+<p class="kicker">Level 8 · paper 5 · Figure 1, step by step</p>
+<h2>SE-Net, step by step: squeeze, excite, scale</h2>
+<div class="grid2" style="grid-template-columns:minmax(0,1.35fr) minmax(0,1fr); align-items:start;">
+<div><div class="figwalk" style="max-width:900px;"><img src="assets/07_paper_implementation/pc_s_fig1.png" alt="SE-Net: Figure 1 step by step"><div class="step fragment" data-fragment-index="0" style="--c:#2563eb; --bg:rgba(37,99,235,0.13);"><div class="hl" style="left:29.46%; top:10.90%; width:11.03%; height:59.40%;"></div><div class="badge" style="left:28.24%; top:11.99%;">1</div></div>
+<div class="step fragment" data-fragment-index="1" style="--c:#0891b2; --bg:rgba(8,145,178,0.13);"><div class="hl" style="left:47.88%; top:9.26%; width:6.05%; height:14.71%;"></div><svg viewBox="0 0 1487 367" preserveAspectRatio="none"><defs><marker id="senet-workflow-a1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#0891b2"/></marker></defs><path d="M598,126 L708,58" fill="none" stroke="#0891b2" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#senet-workflow-a1)" opacity="0.9"/></svg><div class="badge" style="left:46.40%; top:28.34%;">2</div></div>
+<div class="step fragment" data-fragment-index="2" style="--c:#7c3aed; --bg:rgba(124,58,237,0.13);"><div class="hl" style="left:60.66%; top:9.26%; width:6.32%; height:14.71%;"></div><svg viewBox="0 0 1487 367" preserveAspectRatio="none"><defs><marker id="senet-workflow-a2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7c3aed"/></marker></defs><path d="M806,55 L898,55" fill="none" stroke="#7c3aed" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#senet-workflow-a2)" opacity="0.9"/></svg><div class="badge" style="left:68.19%; top:7.08%;">3</div></div>
+<div class="step fragment" data-fragment-index="3" style="--c:#dc2626; --bg:rgba(220,38,38,0.13);"><div class="hl" style="left:75.45%; top:17.98%; width:11.43%; height:45.78%;"></div><svg viewBox="0 0 1487 367" preserveAspectRatio="none"><defs><marker id="senet-workflow-a3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#dc2626"/></marker></defs><path d="M999,62 L1120,133 M602,160 L1120,160" fill="none" stroke="#dc2626" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#senet-workflow-a3)" opacity="0.9"/></svg><div class="badge" style="left:74.51%; top:16.35%;">4</div></div></div><img class="fig" src="assets/07_paper_implementation/pc_s_fig3.png" alt="more figures" style="max-height:300px; margin-top:0.3em;"><p class="plain" style="margin-top:0.35em;"><b>Analogy:</b> a sound mixer: listen to every channel, then turn the useful ones up and the noisy ones down.</p></div>
+<div><div class="stepper compact" style="font-size:0.9em;">
+<div class="row fragment" data-fragment-index="0" style="--c:#2563eb;"><div class="num">1</div><div class="name"><b>Feature map U</b><small>the output of any conv block</small></div><div class="chips"><span>U: (B, C, H, W)</span></div></div>
+<div class="row fragment" data-fragment-index="1" style="--c:#0891b2;"><div class="num">2</div><div class="name"><b>Squeeze</b><small>global average pool → 1 × 1 × C</small></div><div class="chips"><span>z = u.mean(dim=(2, 3))</span></div></div>
+<div class="row fragment" data-fragment-index="2" style="--c:#7c3aed;"><div class="num">3</div><div class="name"><b>Excitation</b><small>FC → ReLU → FC → sigmoid</small></div><div class="chips"><span>s = sigmoid(fc2(relu(fc1(z))))</span></div></div>
+<div class="row fragment" data-fragment-index="3" style="--c:#dc2626;"><div class="num">4</div><div class="name"><b>Scale</b><small>each channel × its weight → same shape</small></div><div class="chips"><span>u * s.view(B, C, 1, 1)</span></div></div>
+</div>
+<p class="stepper-hint" style="text-align:left;">Press → for the next step. In SE-ResNet the block sits on the residual branch, before the +; it adds ≈ 10 % parameters (Figure 3).</p>
 </div>
 </div>
 <a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/08-implement-your-own-paper.ipynb" style="right:24px; top:6px;">&#9654;&#xFE0E; Lab 7H in Colab</a>
+</section>
+
+<section id="senet-quiz" class="slide level2" data-menu-title="SE-Net practice">
+<h2>Practice: SE-Net</h2>
+<p class="quiz-intro">Work it out on paper first, then <b>click a question</b> to check.</p>
+<div class="qa"><button class="qa-q"><span class="qn">1</span><span>A feature map is (8, 256, 14, 14) and r = 16. What is the shape after the squeeze? After FC1? After FC2 + sigmoid? At the output?</span><span class="qa-tag">answer ▾</span></button><div class="qa-a">Squeeze (global average pool): (8, 256). FC1: (8, 16). FC2 + sigmoid: (8, 256) → view (8, 256, 1, 1). Output: (8, 256, 14, 14), the same as the input.</div></div>
+<div class="qa"><button class="qa-q"><span class="qn">2</span><span>How many parameters does that SE block have (C = 256, r = 16, with biases)?</span><span class="qa-tag">answer ▾</span></button><div class="qa-a">FC1: 256 · 16 + 16 = 4 112. FC2: 16 · 256 + 256 = 4 352. Total <b>8 464</b>.</div></div>
+<div class="qa"><button class="qa-q"><span class="qn">3</span><span>Why does the excitation end with a sigmoid and not a softmax?</span><span class="qa-tag">answer ▾</span></button><div class="qa-a">Each channel gets its own weight between 0 and 1, so many channels can be important at once. A softmax would make the channels compete (weights summing to 1).</div></div>
+<div class="qa"><button class="qa-q"><span class="qn">4</span><span>Where exactly does the SE block go inside a ResNet block (Figure 3)?</span><span class="qa-tag">answer ▾</span></button><div class="qa-a">On the residual branch: after the last conv + BN and <b>before</b> the addition with the shortcut. Then the ReLU.</div></div>
 </section>
 
 <section id="bug-hunt" class="slide level2" data-menu-title="Bug hunt (Lab 7G)">
@@ -1956,9 +1854,9 @@ for name in ["resnet50", "vit_b_16"]:
 </div>
 </section>
 
-<section id="assignment-brief" class="slide level2" data-menu-title="Assignment: the brief">
-<p class="kicker">Level 8 · assignment · individual · 2 weeks</p>
-<h2>Assignment: one new paper, from PDF to evidence</h2>
+<section id="project-1-brief" class="slide level2" data-menu-title="Project 1: the brief">
+<p class="kicker">Level 8 · Project 1 · individual · 2 weeks</p>
+<h2>Project 1: one new paper, from PDF to evidence</h2>
 <p class="small" style="margin:0 0 0.2em;"><b>Task:</b> implement one paper <b>we did not build in the labs</b> (★☆☆ or ★★☆ from the paper menu, or your own with approval), test it, and check whether its <b>main claim</b> holds at small scale.</p>
 <div class="stepper">
 <div class="row fragment" style="--c:#2563eb;"><div class="num">1</div><div class="name"><b>Choose</b><small>days 1–2</small></div><div class="chips"><span><i>1</i>one paper from the menu</span><span><i>2</i>e.g. MobileNetV2, VGG + BatchNorm, YOLO v1, DCGAN, CLIP</span><span><i>3</i>tell your instructor</span></div><div class="done">Done when: the paper is approved</div></div>
@@ -1970,9 +1868,9 @@ for name in ["resnet50", "vit_b_16"]:
 <p class="stepper-hint">Start from the template: <a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/08-implement-your-own-paper.ipynb">Lab 7H in Colab</a> (it walks through SE-Net exactly like this) · due 2 weeks after Lecture 7</p>
 </section>
 
-<section id="assignment-handin" class="slide level2" data-menu-title="Assignment: hand-in and marking">
-<p class="kicker">Level 8 · assignment · what to hand in, how it is marked</p>
-<h2>Assignment: hand-in, marks and a top-grade example</h2>
+<section id="project-1-handin" class="slide level2" data-menu-title="Project 1: hand-in and marking">
+<p class="kicker">Level 8 · Project 1 · what to hand in, how it is marked</p>
+<h2>Project 1: hand-in, marks and a top-grade example</h2>
 <div class="grid2" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr);">
 <div>
 <div class="card" style="font-size:0.84em;"><h3>Hand in (one GitHub repo link)</h3>
@@ -2005,25 +1903,6 @@ for name in ["resnet50", "vit_b_16"]:
 <p class="warn" style="margin-top:0.35em; font-size:0.6em;"><b>Rules:</b> 3-minute viva: explain any line (code you cannot explain scores 0). AI may explain and review (tutor mode), not write your model. Copying code from GitHub = 0. Honest "it did not reproduce" with a good explanation earns full marks.</p>
 </section>
 
-<section id="paper-challenge" class="slide level2" data-menu-title="The Paper Implementation Challenge">
-<p class="kicker">Level 8 · step 3 · your project</p>
-<h2>The Paper Implementation Challenge: 3 to 5 papers</h2>
-<div class="grid3">
-<div class="card" style="border-left-color:#b08d57;"><h3>🥉 Bronze: 3 papers</h3><p><b>Transformer</b> (7B + 7C), <b>U-Net</b> (7D), and <b>ResNet</b> (7E) <i>or</i> <b>ViT</b> (7F). Each with a paper card, a shape table, all ✅ checks and the "Your turn" experiments.</p></div>
-<div class="card" style="border-left-color:#8a9aa9;"><h3>🥈 Silver: 4 papers</h3><p>Bronze + <b>both</b> ResNet and ViT, <b>or</b> Bronze + one ★☆☆ / ★★☆ paper from the menu, done with the Lab 7H template.</p></div>
-<div class="card" style="border-left-color:#d4a017;"><h3>🥇 Gold: 5 papers</h3><p>All four lab papers + one menu paper rated ★★☆ or ★★★ (YOLO v1, DDPM, CLIP, DETR, NeRF…), with an ablation and a reproduction report.</p></div>
-</div>
-<table class="simple" style="margin-top:0.4em; font-size:0.52em;">
-<tr><th>For every paper, hand in</th><th>Marks</th></tr>
-<tr><td>Paper card + shape table + equations → code table (your own words)</td><td>20 %</td></tr>
-<tr><td>Correct implementation: tests / ✅ checks / parameter counts / overfit-one-batch</td><td>30 %</td></tr>
-<tr><td>Small experiment + one ablation, with a table or plot (several seeds where possible)</td><td>25 %</td></tr>
-<tr><td>Reproduction report: what matched, what didn't and why, AI-use declaration</td><td>15 %</td></tr>
-<tr><td>Clean code (functions/classes, comments that cite the paper's equations)</td><td>10 %</td></tr>
-</table>
-<p class="small" style="margin-top:0.3em;">Plus a 3-minute <b>viva</b>: explain any line of your code. Template: <a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/08-implement-your-own-paper.ipynb">Lab 7H</a> · details on the <a href="../labs.html#lab-7-challenge">labs page</a>.</p>
-</section>
-
 <section id="reproduction-report" class="slide level2" data-menu-title="Writing a reproduction report">
 <p class="kicker">Level 8 · step 4</p>
 <h2>Writing an honest reproduction report</h2>
@@ -2044,35 +1923,6 @@ for name in ["resnet50", "vit_b_16"]:
 <p>In the Lab 7H worked example our small test does <b>not</b> show SE-Net's improvement: the difference is inside the seed-to-seed noise. Saying so, and explaining why (tiny data, 8 × 8 images), earns <b>full marks</b>. Hiding it or running seeds until it "works" is cheating.</p></div>
 <p class="note">The parameter count matched the paper exactly (+2.53 M, +9.9 %). Report what matched too: it shows your implementation is right.</p>
 </div>
-</div>
-</section>
-
-<section id="from-implementing-to-research" class="slide level2" data-menu-title="From implementing to research">
-<p class="kicker">Level 8 · step 5</p>
-<h2>From implementing papers to doing research</h2>
-<div class="pipe">
-<div class="st">Implement<small>a paper (today)</small></div><div class="ar">→</div>
-<div class="st">Apply<small>to new data</small></div><div class="ar">→</div>
-<div class="st">Find a weakness<small>where does it fail?</small></div><div class="ar">→</div>
-<div class="st on">Change one thing<small>your idea</small></div><div class="ar">→</div>
-<div class="st">Ablate &amp; compare<small>vs the baseline</small></div><div class="ar">→</div>
-<div class="st">Write it up<small>report, poster, paper</small></div>
-</div>
-<div class="grid2" style="margin-top:0.4em;">
-<div class="card"><h3>Mini-research ideas (FYP / MSc starters)</h3>
-<ul class="tight">
-<li>U-Net for <b>road crack / pothole</b> segmentation on local street photos; does the paper's weighted loss help thin cracks?</li>
-<li>ResNet vs ViT vs MobileNetV2 on a <b>small local dataset</b> (currency notes, crop disease, fruits): accuracy vs data size vs Pi 5 speed</li>
-<li>SE blocks inside a <b>Raspberry Pi</b> classifier: accuracy gain vs latency</li>
-<li>A small Transformer that reads <b>number plates</b> as sequences</li>
-</ul></div>
-<div class="card" style="border-left-color:#ea580c;"><h3>Habits of researchers</h3>
-<ul class="tight">
-<li>Read <b>one paper a week</b> (Hugging Face Daily Papers), pass 1 only; implement one a month</li>
-<li>Keep a <b>lab notebook</b>: every run, its settings, its result</li>
-<li>Put your implementations on <b>GitHub</b> with a README and results table: your portfolio</li>
-<li>Always have a <b>baseline</b> and an <b>ablation</b></li>
-</ul></div>
 </div>
 </section>
 
@@ -2115,10 +1965,32 @@ for name in ["resnet50", "vit_b_16"]:
 </div>
 </section>
 
-<section id="mind-map" class="slide level2" data-menu-title="The whole lecture on one page">
-<h2>The whole lecture on one page</h2>
-<img class="fig" src="assets/07_paper_implementation/mindmap_lecture7.png" alt="Mind map of Lecture 7: reading papers, tools, the 7-step recipe, PyTorch, Attention and Transformer, U-Net, ResNet, ViT, Lab 7" style="max-height:715px;">
-<p class="cap">Click to zoom · <a href="07_mindmap.html">mind map page</a> · <a href="assets/07_paper_implementation/mindmap_lecture7.png" download>PNG</a> · <a href="assets/07_paper_implementation/Lecture7_MindMap.xmind" download>XMind file (opens offline in XMind)</a></p>
+<section id="class-quiz-1" class="slide level2" data-menu-title="Class quiz 1">
+<p class="kicker">Class quiz · part 1 of 2 · teams of two</p>
+<h2>Quick quiz: reading &amp; the Transformer</h2>
+<p class="quiz-intro">Pick an answer: green = right, red = wrong, and the reason appears. One try per question!</p>
+<div class="mcqgrid">
+<div class="mcq" data-answer="b"><p class="mq">1. In <b>pass 1</b> of reading a paper you should…</p><div class="opts"><button data-k="a">a) read every equation carefully</button><button data-k="b">b) read title, abstract, figures and conclusion</button><button data-k="c">c) run the official code</button><button data-k="d">d) read all the references</button></div><p class="why">✓ Pass 1 is 10 minutes: the big picture, then decide whether to keep reading.</p></div>
+<div class="mcq" data-answer="b"><p class="mq">2. Attention divides the scores by √d<sub>k</sub> to…</p><div class="opts"><button data-k="a">a) make it faster</button><button data-k="b">b) keep the scores' variance ≈ 1 so softmax does not saturate</button><button data-k="c">c) normalise the values V</button><button data-k="d">d) match 8 heads</button></div><p class="why">✓ q·k has variance d<sub>k</sub>; dividing by √d<sub>k</sub> brings it back to 1 (footnote 4).</p></div>
+<div class="mcq" data-answer="a"><p class="mq">3. Q is (1, 5, 64) and K is (1, 7, 64). The attention weights are…</p><div class="opts"><button data-k="a">a) (1, 5, 7)</button><button data-k="b">b) (1, 7, 5)</button><button data-k="c">c) (1, 5, 64)</button><button data-k="d">d) (1, 7, 64)</button></div><p class="why">✓ One weight per (query, key) pair: (B, L<sub>q</sub>, L<sub>k</sub>).</p></div>
+<div class="mcq" data-answer="b"><p class="mq">4. The causal mask stops…</p><div class="opts"><button data-k="a">a) the encoder seeing the input</button><button data-k="b">b) the decoder seeing future words</button><button data-k="c">c) padding tokens</button><button data-k="d">d) overfitting</button></div><p class="why">✓ During training the decoder sees the whole answer; the mask hides positions after the current one.</p></div>
+<div class="mcq" data-answer="b"><p class="mq">5. Without positional encoding, a Transformer sees its input as…</p><div class="opts"><button data-k="a">a) a sequence</button><button data-k="b">b) a set</button><button data-k="c">c) an image</button><button data-k="d">d) a tree</button></div><p class="why">✓ Attention is order-blind: "dog bites man" = "man bites dog".</p></div>
+</div>
+<p class="mcq-score">Score: <b>0</b> / 5 <button class="mcq-reset">reset</button></p>
+</section>
+
+<section id="class-quiz-2" class="slide level2" data-menu-title="Class quiz 2">
+<p class="kicker">Class quiz · part 2 of 2 · teams of two</p>
+<h2>Quick quiz: U-Net, ResNet, ViT &amp; SE-Net</h2>
+<p class="quiz-intro">Pick an answer: green = right, red = wrong, and the reason appears. One try per question!</p>
+<div class="mcqgrid">
+<div class="mcq" data-answer="b"><p class="mq">6. The 2015 U-Net gets a 572 × 572 tile. The output is…</p><div class="opts"><button data-k="a">a) 572 × 572</button><button data-k="b">b) 388 × 388</button><button data-k="c">c) 284 × 284</button><button data-k="d">d) 568 × 568</button></div><p class="why">✓ Unpadded convs lose pixels: out = n − 184.</p></div>
+<div class="mcq" data-answer="b"><p class="mq">7. U-Net's skip connections combine features by…</p><div class="opts"><button data-k="a">a) addition</button><button data-k="b">b) concatenation on channels</button><button data-k="c">c) multiplication</button><button data-k="d">d) max-pooling</button></div><p class="why">✓ torch.cat([crop(skip), x], dim=1): channels add up (512 + 512 = 1024).</p></div>
+<div class="mcq" data-answer="b"><p class="mq">8. A ResNet block computes…</p><div class="opts"><button data-k="a">a) y = F(x) · x</button><button data-k="b">b) y = F(x) + x</button><button data-k="c">c) y = F(F(x))</button><button data-k="d">d) y = ReLU(x)</button></div><p class="why">✓ The block learns the residual F(x) and adds x back (Figure 2).</p></div>
+<div class="mcq" data-answer="b"><p class="mq">9. ViT-B/16 on a 224 × 224 image uses how many tokens (with [class])?</p><div class="opts"><button data-k="a">a) 196</button><button data-k="b">b) 197</button><button data-k="c">c) 224</button><button data-k="d">d) 768</button></div><p class="why">✓ (224 / 16)² = 196 patches + 1 [class] token.</p></div>
+<div class="mcq" data-answer="b"><p class="mq">10. An SE block's output, compared with its input, is…</p><div class="opts"><button data-k="a">a) smaller</button><button data-k="b">b) the same shape</button><button data-k="c">c) 1 × 1 × C</button><button data-k="d">d) twice the channels</button></div><p class="why">✓ It only rescales the channels: (B, C, H, W) in and out.</p></div>
+</div>
+<p class="mcq-score">Score: <b>0</b> / 5 <button class="mcq-reset">reset</button></p>
 </section>
 
 <section id="summary" class="slide level2" data-menu-title="Summary">
@@ -2141,7 +2013,7 @@ for name in ["resnet50", "vit_b_16"]:
 </ul></div>
 </div>
 <p class="note" style="margin-top:0.5em;"><b>Practise it all, interactively:</b> <a href="../tutorials/10_paper_code_side_by_side.html">Paper ↔ Code handbook</a>: paper figures and equations linked to the code, live widgets and quick checks.</p>
-<p class="tiny muted" style="margin-top:0.25em;">Next: the Paper Implementation Challenge (3–5 papers). Later lectures reuse U-Net, DETR/YOLO and ViT-based models.</p>
+<p class="tiny muted" style="margin-top:0.25em;">Next: <b>Project 1</b> (one new paper, 2 weeks). Later lectures reuse U-Net, DETR/YOLO and ViT-based models.</p>
 </section>
 
 <section id="lab-7-and-resources" class="slide level2" data-menu-title="Lab 7 &amp; resources">
@@ -2155,7 +2027,7 @@ for name in ["resnet50", "vit_b_16"]:
 <a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/06-vit-from-paper.ipynb"><b>7F</b>Vision Transformer from the paper</a>
 <a class="vid" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/07-paper-bug-hunt.ipynb"><b>7G</b>Bug hunt 🐞 (pairs)</a>
 <a class="vid" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/08-implement-your-own-paper.ipynb"><b>7H</b>Your own paper: template + SE-Net example</a>
-<a href="../labs.html#lab-7-papers"><b>📋</b>Labs page: Colab · View · Download, the Challenge</a>
+<a href="../labs.html#lab-7-papers"><b>📋</b>Labs page: Colab · View · Download, Project 1</a>
 <a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/09-paper-math-workbook.ipynb"><b>7I</b>Paper math workbook (derive, then verify)</a>
 <a href="../tutorials/10_paper_code_side_by_side.html"><b>📖</b>Paper ↔ Code handbook: interactive (3-hour session)</a>
 <a href="../tutorials/09_paper_implementation_setup.html"><b>🛠</b>Tutorial 09: Colab &amp; Antigravity setup, reading list</a>
@@ -2820,6 +2692,40 @@ for name in ["resnet50", "vit_b_16"]:
       img.onload = draw; img.src = "assets/07_paper_implementation/g_vit_input.jpg";
       reset(); draw();
     }
+
+  /* ---- interactive quizzes (click-to-reveal answers, multiple choice with score) ---- */
+  (function () {
+    function score(sec) {
+      var b = sec && sec.querySelector(".mcq-score b"); if (b) b.textContent = sec.querySelectorAll(".mcq[data-ok]").length;
+    }
+    document.addEventListener("click", function (e) {
+      var q = e.target.closest(".qa-q");
+      if (q) {
+        var qa = q.parentElement; qa.classList.toggle("open");
+        var t = q.querySelector(".qa-tag"); if (t) t.textContent = qa.classList.contains("open") ? "hide ▴" : "answer ▾";
+        return;
+      }
+      var r = e.target.closest(".mcq-reset");
+      if (r) {
+        var sec = r.closest("section");
+        sec.querySelectorAll(".mcq").forEach(function (m) {
+          m.classList.remove("done"); m.removeAttribute("data-ok");
+          m.querySelectorAll("button").forEach(function (x) { x.classList.remove("right", "wrong"); });
+        });
+        score(sec); return;
+      }
+      var b = e.target.closest(".mcq .opts button");
+      if (b) {
+        var m = b.closest(".mcq"); if (m.classList.contains("done")) return;
+        m.classList.add("done");
+        var ans = m.getAttribute("data-answer"), ok = b.getAttribute("data-k") === ans;
+        b.classList.add(ok ? "right" : "wrong");
+        m.querySelector('.opts button[data-k="' + ans + '"]').classList.add("right");
+        if (ok) m.setAttribute("data-ok", "1");
+        score(m.closest("section"));
+      }
+    });
+  })();
 
     /* 7. click any slide image to view it full screen */
     function lightbox() {

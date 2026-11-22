@@ -173,7 +173,7 @@ window.Quarto = {
   <li><a href="#lab-5-leaderboard" id="toc-lab-5-leaderboard" class="nav-link" data-scroll-target="#lab-5-leaderboard">Lab 5 Leaderboard</a></li>
   <li><a href="#lab-6-calibration" id="toc-lab-6-calibration" class="nav-link" data-scroll-target="#lab-6-calibration">Lab 6 Camera Calibration</a></li>
   <li><a href="#lab-7-papers" id="toc-lab-7-papers" class="nav-link" data-scroll-target="#lab-7-papers">Lab 7 Paper Implementation</a></li>
-  <li><a href="#lab-7-challenge" id="toc-lab-7-challenge" class="nav-link" data-scroll-target="#lab-7-challenge">Paper Implementation Challenge</a></li>
+  <li><a href="#lab-7-project-1" id="toc-lab-7-project-1" class="nav-link" data-scroll-target="#lab-7-project-1">Project 1: implement one new paper</a></li>
   <li><a href="#research-papers" id="toc-research-papers" class="nav-link" data-scroll-target="#research-papers">Reading &amp; Implementing Research Papers</a></li>
   <li><a href="#opencv5-deep-dive" id="toc-opencv5-deep-dive" class="nav-link" data-scroll-target="#opencv5-deep-dive">OpenCV 5.0 Deep Dive</a></li>
   <li><a href="#capstone-project" id="toc-capstone-project" class="nav-link" data-scroll-target="#capstone-project">Capstone Project</a>
@@ -261,7 +261,7 @@ window.Quarto = {
 <td><strong><a href="#lab-7-papers">Lab 7</a></strong></td>
 <td><strong>Reading &amp; Implementing Research Papers.</strong> Hands-on companion to <a href="lectures/07_Paper_Implementation.html">Lecture&nbsp;7</a>.</td>
 <td>Nine notebooks: (7A) PyTorch for paper readers; (7B) attention from scratch; (7C) the Transformer, block by block, trained to reverse sequences; (7D) U-Net exactly as in the paper + a modern U-Net with a skip-connection ablation; (7E) ResNet with torchvision&rsquo;s exact parameter counts and the paper&rsquo;s Figure&nbsp;1 reproduced; (7F) the Vision Transformer; (7G) a pair-programming bug hunt; (7H) a template + worked example (SE-Net) for your own paper; (7I) a paper-math workbook for the <a href="tutorials/10_paper_code_side_by_side.html">Paper &harr; Code handbook</a>. Built-in &#x2705; auto-checks; all run on a free Colab CPU.</td>
-<td>Notebooks 7A&ndash;7F with every check passing and the &ldquo;Your turn&rdquo; answers; the 7G scoreboard; the <a href="#lab-7-challenge">Paper Implementation Challenge</a> (3&ndash;5 papers).</td>
+<td>Notebooks 7A&ndash;7F with every check passing and the &ldquo;Your turn&rdquo; answers; the 7G scoreboard; <a href="#lab-7-project-1">Project 1</a> (one new paper).</td>
 </tr>
 <tr class="even">
 <td style="text-align:center;">8</td>
@@ -607,7 +607,7 @@ window.Quarto = {
 <p class="mb-2"><strong>Auto-checks:</strong> after each exercise a &#x2705; check compares your code with the paper (shapes, hand-computed values, parameter counts) or with PyTorch&rsquo;s reference implementation, or gives a &#x1F4A1; hint &mdash; never the answer. Stuck? Each exercise has collapsible hints.</p>
 <p class="mb-2"><strong>AI tutor mode:</strong> the folder contains <a href="LAB/Lab_7/AGENTS.md"><code>AGENTS.md</code></a> and <code>.agents/rules/paper-tutor.md</code>, so Antigravity&rsquo;s agent (and other AI tools) explains and gives hints instead of writing your TODOs. Print the <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/paper_reading_worksheet.md">paper reading worksheet</a> for passes 1&ndash;2.</p>
 <p class="mb-2"><strong>&#x1F4D6; 3-hour lab &amp; tutorial:</strong> the <a href="tutorials/10_paper_code_side_by_side.html">Paper &harr; Code handbook</a> puts every paper passage next to its PyTorch code and derives every equation step by step with small numbers (<a href="lectures/pdf/07_Paper_Code_Handbook.pdf">PDF handout</a>); students practise with the <a href="#lab-7i">7I workbook</a>.</p>
-<p class="mb-0"><strong>Deliverable:</strong> notebooks 7A&ndash;7F with every check passing and the <em>&ldquo;Your turn&rdquo;</em> questions answered; the 7G scoreboard shown in class; then the <a href="#lab-7-challenge">Paper Implementation Challenge</a>.</p>
+<p class="mb-0"><strong>Deliverable:</strong> notebooks 7A&ndash;7F with every check passing and the <em>&ldquo;Your turn&rdquo;</em> questions answered; the 7G scoreboard shown in class; then the <a href="#lab-7-project-1">Project 1</a>.</p>
 </div>
 </div>
 <div class="table-responsive">
@@ -630,7 +630,7 @@ window.Quarto = {
 <tr id="lab-7c" class="odd">
 <td style="text-align:center;"><strong>7C</strong></td>
 <td><strong>The Transformer, block by block: reverse a sequence</strong><br><small>Positional encoding, LayerNorm, the feed-forward network, encoder and decoder layers, the full encoder&ndash;decoder Transformer; teacher forcing, greedy decoding (98.8&nbsp;% of sequences reversed in &asymp;&nbsp;1&nbsp;min on CPU) and the anti-diagonal cross-attention it learns.</small></td>
-<td>4 &middot; Build order<br><a href="lectures/07_Paper_Implementation.html#/transformer-build-order">lecture slide</a></td>
+<td>4 &middot; Figure 1 step by step<br><a href="lectures/07_Paper_Implementation.html#/transformer-figure-1">lecture slide</a></td>
 <td style="white-space:nowrap;"><a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/03-transformer-reverse-sequence.ipynb">Colab</a> &middot; <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/03-transformer-reverse-sequence.ipynb">View</a> &middot; <a href="LAB/Lab_7/03-transformer-reverse-sequence.ipynb" download>Download</a></td>
 </tr>
 <tr id="lab-7d" class="even">
@@ -660,7 +660,7 @@ window.Quarto = {
 <tr id="lab-7h" class="even">
 <td style="text-align:center;"><strong>7H</strong></td>
 <td><strong>Implement your own paper: template + worked example</strong><br><small>The 7-step recipe done end to end on <em>Squeeze-and-Excitation Networks</em> (paper card, shape table, tests, +2.53&nbsp;M parameters as in the paper, overfit-one-batch, a 3-seed experiment, an honest report), then a blank template for your paper.</small></td>
-<td>8 &middot; Challenge<br><a href="lectures/07_Paper_Implementation.html#/paper-challenge">lecture slide</a></td>
+<td>8 &middot; Project 1<br><a href="lectures/07_Paper_Implementation.html#/project-1-brief">lecture slide</a></td>
 <td style="white-space:nowrap;"><a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/08-implement-your-own-paper.ipynb">Colab</a> &middot; <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/08-implement-your-own-paper.ipynb">View</a> &middot; <a href="LAB/Lab_7/08-implement-your-own-paper.ipynb" download>Download</a></td>
 </tr>
 <tr id="lab-7i" class="odd">
@@ -673,40 +673,43 @@ window.Quarto = {
 </table>
 </div>
 
-<section id="lab-7-challenge" class="level3">
-<h3 class="anchored" data-anchor-id="lab-7-challenge">Paper Implementation Challenge &mdash; implement 3 to 5 papers</h3>
-<p>Turn the labs into a portfolio. For each paper hand in one notebook made from the <a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/08-implement-your-own-paper.ipynb">Lab 7H template</a>: a paper card and shape table in your own words, the implementation with tests, a small experiment with one ablation, and an honest reproduction report. Due date and submission: as announced in class.</p>
+<section id="lab-7-project-1" class="level3"><a id="lab-7-challenge"></a>
+<h3 class="anchored" data-anchor-id="lab-7-project-1">Project 1 &mdash; implement one new paper, from PDF to evidence</h3>
+<p><strong>Individual, 2 weeks.</strong> Implement one paper <em>we did not build in the labs</em> (&#9733;&#9734;&#9734; or &#9733;&#9733;&#9734; from the menu below, or your own with approval), test it, and check whether its <strong>main claim</strong> holds at small scale. Start from the <a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/08-implement-your-own-paper.ipynb">Lab 7H template</a>, which does exactly this for SE-Net. Lecture slides: <a href="lectures/07_Paper_Implementation.html#/project-1-brief">the brief</a> and <a href="lectures/07_Paper_Implementation.html#/project-1-handin">hand-in &amp; marks</a>.</p>
 <div class="table-responsive">
 <table class="caption-top table">
-<thead><tr class="header"><th>Level</th><th>Papers</th></tr></thead>
+<thead><tr class="header"><th>Step</th><th>Days</th><th>Done when</th></tr></thead>
 <tbody>
-<tr class="odd"><td>&#x1F949; <strong>Bronze &mdash; 3 papers</strong></td><td>Transformer (7B + 7C), U-Net (7D), and ResNet (7E) <em>or</em> ViT (7F).</td></tr>
-<tr class="even"><td>&#x1F948; <strong>Silver &mdash; 4 papers</strong></td><td>Bronze + both ResNet and ViT, <em>or</em> Bronze + one &#9733;&#9734;&#9734; / &#9733;&#9733;&#9734; paper from the menu below.</td></tr>
-<tr class="odd"><td>&#x1F947; <strong>Gold &mdash; 5 papers</strong></td><td>All four lab papers + one &#9733;&#9733;&#9734; or &#9733;&#9733;&#9733; menu paper, with an ablation and a reproduction report.</td></tr>
+<tr class="odd"><td>1 &middot; Choose a paper and get it approved</td><td>1&ndash;2</td><td>the paper is approved</td></tr>
+<tr class="even"><td>2 &middot; Read it (pass 1 + 2): paper card, shape table, key equations</td><td>2&ndash;3</td><td>card + shape table in your notebook</td></tr>
+<tr class="odd"><td>3 &middot; Build &amp; test: one class per box; shape, hand-example and parameter tests; overfit one batch</td><td>4&ndash;8</td><td>every test passes</td></tr>
+<tr class="even"><td>4 &middot; Experiment: the main claim + one ablation, small data, 3 seeds (mean &plusmn; std)</td><td>9&ndash;12</td><td>a results table + plot</td></tr>
+<tr class="odd"><td>5 &middot; Report &amp; viva: 2 pages + AI-use declaration; 3-minute viva</td><td>13&ndash;14</td><td>submitted on time</td></tr>
 </tbody>
 </table>
 </div>
 <p><strong>Menu</strong> (details and difficulty on the <a href="tutorials/09_paper_implementation_setup.html#reading-list">reading list</a>): &#9733;&#9734;&#9734; <a href="https://arxiv.org/abs/1709.01507">SE-Net</a>, <a href="https://arxiv.org/abs/1801.04381">MobileNetV2</a> (Raspberry&nbsp;Pi-friendly), <a href="https://arxiv.org/abs/1409.1556">VGG</a>, <a href="https://arxiv.org/abs/1502.03167">BatchNorm</a>, <a href="https://arxiv.org/abs/1411.4038">FCN</a> &middot; &#9733;&#9733;&#9734; <a href="https://arxiv.org/abs/1506.02640">YOLO v1</a>, <a href="https://arxiv.org/abs/1511.06434">DCGAN</a>, <a href="https://arxiv.org/abs/2006.11239">DDPM</a>, <a href="https://arxiv.org/abs/2002.05709">SimCLR</a>, <a href="https://arxiv.org/abs/2103.00020">CLIP</a>, <a href="https://arxiv.org/abs/2201.03545">ConvNeXt</a> &middot; &#9733;&#9733;&#9733; <a href="https://arxiv.org/abs/2005.12872">DETR</a>, <a href="https://arxiv.org/abs/2003.08934">NeRF</a>, <a href="https://arxiv.org/abs/2103.14030">Swin</a>, <a href="https://arxiv.org/abs/2111.06377">MAE</a>.</p>
+<p><strong>Hand in</strong> one GitHub repo: <code>model.py</code>, <code>test_model.py</code>, <code>paper.ipynb</code> (runs top to bottom in Colab) and <code>report.pdf</code> (2 pages, your results next to the paper&rsquo;s).</p>
 <div class="table-responsive">
 <table class="caption-top table">
-<thead><tr class="header"><th>For every paper</th><th style="width:12%">Marks</th></tr></thead>
+<thead><tr class="header"><th>Marks</th><th style="width:12%">%</th></tr></thead>
 <tbody>
-<tr class="odd"><td>Paper card + shape table + equations &rarr; code table (your own words)</td><td>20&nbsp;%</td></tr>
-<tr class="even"><td>Correct implementation: tests / &#x2705; checks / parameter counts / overfit-one-batch</td><td>30&nbsp;%</td></tr>
-<tr class="odd"><td>Small experiment + one ablation, with a table or plot (several seeds where possible)</td><td>25&nbsp;%</td></tr>
-<tr class="even"><td>Reproduction report: what matched, what didn&rsquo;t and why; AI-use declaration</td><td>15&nbsp;%</td></tr>
-<tr class="odd"><td>Clean code: functions/classes, comments that cite the paper&rsquo;s equations</td><td>10&nbsp;%</td></tr>
+<tr class="odd"><td>Paper card, shape table, equations &rarr; code (your own words)</td><td>20</td></tr>
+<tr class="even"><td>Correct implementation: tests pass, parameter count, overfit one batch</td><td>30</td></tr>
+<tr class="odd"><td>Experiment + one ablation, 3 seeds, table or plot</td><td>25</td></tr>
+<tr class="even"><td>Honest reproduction report + AI-use declaration</td><td>15</td></tr>
+<tr class="odd"><td>Clean, commented code that cites the paper&rsquo;s equations</td><td>10</td></tr>
 </tbody>
 </table>
 </div>
-<p><strong>Viva:</strong> 3 minutes per student; you must be able to explain any line of your code. <strong>Academic integrity:</strong> many implementations of these papers are online and AI assistants can write them; use them to check details after trying yourself, cite them, and declare AI use. Code you cannot explain earns no marks.</p>
+<p><strong>Viva:</strong> 3 minutes; you must be able to explain any line of your code (code you cannot explain scores 0). <strong>Academic integrity:</strong> AI assistants may explain and review (tutor mode), not write your model; copying code from GitHub scores 0. An honest &ldquo;it did not reproduce&rdquo; with a good explanation earns full marks.</p>
 </section>
 <p><small>Paper figures in the lecture are reproduced from the arXiv versions for teaching; datasets are generated in the notebooks or bundled with scikit-learn (digits; sample photos CC BY 2.0); pretrained weights in 7E come from torchvision.</small></p>
 </section>
 
 <section id="research-papers" class="level2">
 <h2 class="anchored" data-anchor-id="research-papers">Reading &amp; Implementing Research Papers</h2>
-<p><strong>Started in <a href="#lab-7-papers">Lab 7</a></strong> (Transformer, U-Net, ResNet and ViT from scratch, with the 7-step recipe and the <a href="#lab-7-challenge">Paper Implementation Challenge</a>). Two later labs go further on real datasets with a GPU. The method, in short:</p>
+<p><strong>Started in <a href="#lab-7-papers">Lab 7</a></strong> (Transformer, U-Net, ResNet and ViT from scratch, with the 7-step recipe and the <a href="#lab-7-project-1">Project 1</a>). Two later labs go further on real datasets with a GPU. The method, in short:</p>
 <ol type="1">
 <li><strong>Skim first</strong> &mdash; read the abstract, figures and conclusion to grasp the problem and the key idea before touching any equation.</li>
 <li><strong>Map the architecture</strong> &mdash; turn the model figure into a block diagram: inputs, layers, tensor shapes, and how blocks connect.</li>
