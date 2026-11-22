@@ -172,6 +172,8 @@ window.Quarto = {
   <li><a href="#lab-5-lane-lines" id="toc-lab-5-lane-lines" class="nav-link" data-scroll-target="#lab-5-lane-lines">Lab 5 Lane Lines (SDC)</a></li>
   <li><a href="#lab-5-leaderboard" id="toc-lab-5-leaderboard" class="nav-link" data-scroll-target="#lab-5-leaderboard">Lab 5 Leaderboard</a></li>
   <li><a href="#lab-6-calibration" id="toc-lab-6-calibration" class="nav-link" data-scroll-target="#lab-6-calibration">Lab 6 Camera Calibration</a></li>
+  <li><a href="#lab-7-papers" id="toc-lab-7-papers" class="nav-link" data-scroll-target="#lab-7-papers">Lab 7 Paper Implementation</a></li>
+  <li><a href="#lab-7-challenge" id="toc-lab-7-challenge" class="nav-link" data-scroll-target="#lab-7-challenge">Paper Implementation Challenge</a></li>
   <li><a href="#research-papers" id="toc-research-papers" class="nav-link" data-scroll-target="#research-papers">Reading &amp; Implementing Research Papers</a></li>
   <li><a href="#opencv5-deep-dive" id="toc-opencv5-deep-dive" class="nav-link" data-scroll-target="#opencv5-deep-dive">OpenCV 5.0 Deep Dive</a></li>
   <li><a href="#capstone-project" id="toc-capstone-project" class="nav-link" data-scroll-target="#capstone-project">Capstone Project</a>
@@ -256,10 +258,10 @@ window.Quarto = {
 </tr>
 <tr class="odd">
 <td style="text-align:center;">7</td>
-<td><strong>Lab 7</strong></td>
-<td><strong>Features &amp; Matching.</strong></td>
-<td>Harris/Shi&ndash;Tomasi corners; ORB/SIFT descriptors; brute-force &amp; FLANN matching; Hough lines and circles.</td>
-<td>A feature-matching + shape-detection application.</td>
+<td><strong><a href="#lab-7-papers">Lab 7</a></strong></td>
+<td><strong>Reading &amp; Implementing Research Papers.</strong> Hands-on companion to <a href="lectures/07_Paper_Implementation.html">Lecture&nbsp;7</a>.</td>
+<td>Eight notebooks: (7A) PyTorch for paper readers; (7B) attention from scratch; (7C) the Transformer, block by block, trained to reverse sequences; (7D) U-Net exactly as in the paper + a modern U-Net with a skip-connection ablation; (7E) ResNet with torchvision&rsquo;s exact parameter counts and the paper&rsquo;s Figure&nbsp;1 reproduced; (7F) the Vision Transformer; (7G) a pair-programming bug hunt; (7H) a template + worked example (SE-Net) for your own paper. Built-in &#x2705; auto-checks; all run on a free Colab CPU.</td>
+<td>Notebooks 7A&ndash;7F with every check passing and the &ldquo;Your turn&rdquo; answers; the 7G scoreboard; the <a href="#lab-7-challenge">Paper Implementation Challenge</a> (3&ndash;5 papers).</td>
 </tr>
 <tr class="even">
 <td style="text-align:center;">8</td>
@@ -593,9 +595,110 @@ window.Quarto = {
 <p><small>GoPro and dash-cam images &copy; Udacity, Inc. (<a href="https://github.com/udacity/CarND-Camera-Calibration">CarND-Camera-Calibration</a>, <a href="https://github.com/udacity/CarND-Advanced-Lane-Lines">CarND-Advanced-Lane-Lines</a>, MIT licence); stereo pairs from the OpenCV samples (Apache&nbsp;2.0).</small></p>
 </section>
 
+<section id="lab-7-papers" class="level2">
+<style>#lab-7-papers tr[id]{scroll-margin-top:90px}#lab-7-papers tr:target td{background:#fff4cc;transition:background .6s}</style>
+<h2 class="anchored" data-anchor-id="lab-7-papers">Lab 7 &mdash; Reading &amp; Implementing Research Papers</h2>
+<p>Lab 7 is the hands-on half of <a href="lectures/07_Paper_Implementation.html"><strong>Lecture 7 &mdash; Reading &amp; Implementing Research Papers</strong></a> (<a href="lectures/pdf/07_Paper_Implementation.pdf">PDF</a>). You read four landmark papers &mdash; <em>Attention Is All You Need</em>, <em>U-Net</em>, <em>ResNet</em> and the <em>Vision Transformer</em> &mdash; and build each model from scratch in PyTorch, testing every block against the paper and against PyTorch&rsquo;s own implementation. Then you implement a paper of your own choice.</p>
+<div class="d-flex gap-4 flex-wrap align-items-start mb-3">
+<img src="lectures/assets/07_paper_implementation/g_unet_pred.png" alt="Test images, true masks and U-Net predictions from Lab 7D" style="width:320px; max-width:100%; border-radius:6px;">
+<div style="flex:1; min-width:260px;">
+<p class="mb-2"><strong>How to run:</strong> click <em>Colab</em>, then <em>File &rarr; Save a copy in Drive</em> and run the cells from the top. <strong>No GPU needed</strong>: every notebook trains in 1&ndash;2 minutes on the free CPU. Locally in <strong>Cursor or VS Code</strong>: <code>pip install -r <a href="LAB/Lab_7/requirements.txt">requirements.txt</a></code> in a virtual environment. Step-by-step guide for both: <a href="tutorials/09_paper_implementation_setup.html">Tutorial 09 &mdash; Colab, Cursor &amp; reading list</a>.</p>
+<p class="mb-2"><strong>Auto-checks:</strong> after each exercise a &#x2705; check compares your code with the paper (shapes, hand-computed values, parameter counts) or with PyTorch&rsquo;s reference implementation, or gives a &#x1F4A1; hint &mdash; never the answer. Stuck? Each exercise has collapsible hints.</p>
+<p class="mb-2"><strong>AI tutor mode:</strong> the folder contains <code>.cursor/rules/paper-tutor.mdc</code> and <a href="LAB/Lab_7/AGENTS.md"><code>AGENTS.md</code></a>, so Cursor&rsquo;s AI explains and gives hints instead of writing your TODOs. Print the <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/paper_reading_worksheet.md">paper reading worksheet</a> for passes 1&ndash;2.</p>
+<p class="mb-0"><strong>Deliverable:</strong> notebooks 7A&ndash;7F with every check passing and the <em>&ldquo;Your turn&rdquo;</em> questions answered; the 7G scoreboard shown in class; then the <a href="#lab-7-challenge">Paper Implementation Challenge</a>.</p>
+</div>
+</div>
+<div class="table-responsive">
+<table class="caption-top table">
+<colgroup><col style="width: 6%"><col style="width: 50%"><col style="width: 22%"><col style="width: 22%"></colgroup>
+<thead><tr class="header"><th style="text-align:center;">Part</th><th>What you do</th><th>Lecture 7 section</th><th>Notebook</th></tr></thead>
+<tbody>
+<tr id="lab-7a" class="odd">
+<td style="text-align:center;"><strong>7A</strong></td>
+<td><strong>PyTorch for paper readers</strong><br><small>Tensors (B, C, H, W), the conv output-size formula (U-Net&rsquo;s 572&nbsp;&rarr;&nbsp;570, ViT&rsquo;s 224&nbsp;&rarr;&nbsp;14), reshape vs permute (images &rarr; tokens), <code>nn.Module</code>, the five-line training loop on two moons, <code>trace_shapes</code> and a paper&nbsp;&rarr;&nbsp;PyTorch dictionary.</small></td>
+<td>3 &middot; PyTorch you need<br><a href="lectures/07_Paper_Implementation.html#/pytorch-in-10-minutes">lecture slide</a></td>
+<td style="white-space:nowrap;"><a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/01-pytorch-for-papers.ipynb">Colab</a> &middot; <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/01-pytorch-for-papers.ipynb">View</a> &middot; <a href="LAB/Lab_7/01-pytorch-for-papers.ipynb" download>Download</a></td>
+</tr>
+<tr id="lab-7b" class="even">
+<td style="text-align:center;"><strong>7B</strong></td>
+<td><strong>Attention from scratch</strong><br><small>Attention by hand on 3 words, a numerically stable softmax, scaled dot-product attention with masks (checked against <code>F.scaled_dot_product_attention</code>), the &radic;d<sub>k</sub> experiment, the causal mask, multi-head attention identical to <code>nn.MultiheadAttention</code>.</small></td>
+<td>4 &middot; Attention<br><a href="lectures/07_Paper_Implementation.html#/attention-equation">lecture slide</a></td>
+<td style="white-space:nowrap;"><a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/02-attention-from-scratch.ipynb">Colab</a> &middot; <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/02-attention-from-scratch.ipynb">View</a> &middot; <a href="LAB/Lab_7/02-attention-from-scratch.ipynb" download>Download</a></td>
+</tr>
+<tr id="lab-7c" class="odd">
+<td style="text-align:center;"><strong>7C</strong></td>
+<td><strong>The Transformer, block by block: reverse a sequence</strong><br><small>Positional encoding, LayerNorm, the feed-forward network, encoder and decoder layers, the full encoder&ndash;decoder Transformer; teacher forcing, greedy decoding (98.8&nbsp;% of sequences reversed in &asymp;&nbsp;1&nbsp;min on CPU) and the anti-diagonal cross-attention it learns.</small></td>
+<td>4 &middot; Build order<br><a href="lectures/07_Paper_Implementation.html#/transformer-build-order">lecture slide</a></td>
+<td style="white-space:nowrap;"><a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/03-transformer-reverse-sequence.ipynb">Colab</a> &middot; <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/03-transformer-reverse-sequence.ipynb">View</a> &middot; <a href="LAB/Lab_7/03-transformer-reverse-sequence.ipynb" download>Download</a></td>
+</tr>
+<tr id="lab-7d" class="even">
+<td style="text-align:center;"><strong>7D</strong></td>
+<td><strong>U-Net from the paper</strong><br><small>The 2015 network exactly (572&nbsp;&rarr;&nbsp;388, 23 conv layers, 31&nbsp;030&nbsp;658 parameters), then a modern U-Net on a generated circles/squares/triangles dataset (you write the drawing code), Dice, overfit-one-batch, and an ablation without skip connections (Dice 0.94 &rarr; 0.89).</small></td>
+<td>5 &middot; U-Net<br><a href="lectures/07_Paper_Implementation.html#/unet-figure-1">lecture slide</a></td>
+<td style="white-space:nowrap;"><a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/04-unet-from-paper.ipynb">Colab</a> &middot; <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/04-unet-from-paper.ipynb">View</a> &middot; <a href="LAB/Lab_7/04-unet-from-paper.ipynb" download>Download</a></td>
+</tr>
+<tr id="lab-7e" class="odd">
+<td style="text-align:center;"><strong>7E</strong></td>
+<td><strong>ResNet from the paper</strong><br><small>The residual block with projection shortcuts, ResNet-18/34/50 with exactly torchvision&rsquo;s parameter counts, the official ImageNet weights loaded into <em>your</em> code with <code>strict=True</code>, and the paper&rsquo;s Figure&nbsp;1 reproduced on digits (plain-56: 36&nbsp;%, ResNet-56: 98&nbsp;%).</small></td>
+<td>6 &middot; ResNet<br><a href="lectures/07_Paper_Implementation.html#/resnet-residual-block">lecture slide</a></td>
+<td style="white-space:nowrap;"><a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/05-resnet-from-paper.ipynb">Colab</a> &middot; <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/05-resnet-from-paper.ipynb">View</a> &middot; <a href="LAB/Lab_7/05-resnet-from-paper.ipynb" download>Download</a></td>
+</tr>
+<tr id="lab-7f" class="even">
+<td style="text-align:center;"><strong>7F</strong></td>
+<td><strong>Vision Transformer from the paper</strong><br><small>Patchify, the patch embedding as a strided convolution (proved numerically), the [class] token and position embeddings, ViT-B/16 with exactly 86&nbsp;567&nbsp;656 parameters, a tiny ViT on digits (98.6&nbsp;%), [class] attention maps, and the no-position ablation.</small></td>
+<td>7 &middot; ViT<br><a href="lectures/07_Paper_Implementation.html#/vit-figure-1">lecture slide</a></td>
+<td style="white-space:nowrap;"><a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/06-vit-from-paper.ipynb">Colab</a> &middot; <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/06-vit-from-paper.ipynb">View</a> &middot; <a href="LAB/Lab_7/06-vit-from-paper.ipynb" download>Download</a></td>
+</tr>
+<tr id="lab-7g" class="odd">
+<td style="text-align:center;"><strong>7G</strong></td>
+<td><strong>Bug hunt &#x1F41E; (pairs)</strong><br><small>Eight silent bugs from real code: √d<sub>k</sub>, the softmax axis, the causal mask diagonal, splitting heads, the U-Net concat axis, the residual shortcut, stripe-shaped patches, a missing <code>zero_grad</code>. Scoreboard to 8/8.</small></td>
+<td>8 &middot; Bug hunt<br><a href="lectures/07_Paper_Implementation.html#/bug-hunt">lecture slide</a></td>
+<td style="white-space:nowrap;"><a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/07-paper-bug-hunt.ipynb">Colab</a> &middot; <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/07-paper-bug-hunt.ipynb">View</a> &middot; <a href="LAB/Lab_7/07-paper-bug-hunt.ipynb" download>Download</a></td>
+</tr>
+<tr id="lab-7h" class="even">
+<td style="text-align:center;"><strong>7H</strong></td>
+<td><strong>Implement your own paper: template + worked example</strong><br><small>The 7-step recipe done end to end on <em>Squeeze-and-Excitation Networks</em> (paper card, shape table, tests, +2.53&nbsp;M parameters as in the paper, overfit-one-batch, a 3-seed experiment, an honest report), then a blank template for your paper.</small></td>
+<td>8 &middot; Challenge<br><a href="lectures/07_Paper_Implementation.html#/paper-challenge">lecture slide</a></td>
+<td style="white-space:nowrap;"><a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/08-implement-your-own-paper.ipynb">Colab</a> &middot; <a href="https://github.com/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/08-implement-your-own-paper.ipynb">View</a> &middot; <a href="LAB/Lab_7/08-implement-your-own-paper.ipynb" download>Download</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<section id="lab-7-challenge" class="level3">
+<h3 class="anchored" data-anchor-id="lab-7-challenge">Paper Implementation Challenge &mdash; implement 3 to 5 papers</h3>
+<p>Turn the labs into a portfolio. For each paper hand in one notebook made from the <a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/08-implement-your-own-paper.ipynb">Lab 7H template</a>: a paper card and shape table in your own words, the implementation with tests, a small experiment with one ablation, and an honest reproduction report. Due date and submission: as announced in class.</p>
+<div class="table-responsive">
+<table class="caption-top table">
+<thead><tr class="header"><th>Level</th><th>Papers</th></tr></thead>
+<tbody>
+<tr class="odd"><td>&#x1F949; <strong>Bronze &mdash; 3 papers</strong></td><td>Transformer (7B + 7C), U-Net (7D), and ResNet (7E) <em>or</em> ViT (7F).</td></tr>
+<tr class="even"><td>&#x1F948; <strong>Silver &mdash; 4 papers</strong></td><td>Bronze + both ResNet and ViT, <em>or</em> Bronze + one &#9733;&#9734;&#9734; / &#9733;&#9733;&#9734; paper from the menu below.</td></tr>
+<tr class="odd"><td>&#x1F947; <strong>Gold &mdash; 5 papers</strong></td><td>All four lab papers + one &#9733;&#9733;&#9734; or &#9733;&#9733;&#9733; menu paper, with an ablation and a reproduction report.</td></tr>
+</tbody>
+</table>
+</div>
+<p><strong>Menu</strong> (details and difficulty on the <a href="tutorials/09_paper_implementation_setup.html#reading-list">reading list</a>): &#9733;&#9734;&#9734; <a href="https://arxiv.org/abs/1709.01507">SE-Net</a>, <a href="https://arxiv.org/abs/1801.04381">MobileNetV2</a> (Raspberry&nbsp;Pi-friendly), <a href="https://arxiv.org/abs/1409.1556">VGG</a>, <a href="https://arxiv.org/abs/1502.03167">BatchNorm</a>, <a href="https://arxiv.org/abs/1411.4038">FCN</a> &middot; &#9733;&#9733;&#9734; <a href="https://arxiv.org/abs/1506.02640">YOLO v1</a>, <a href="https://arxiv.org/abs/1511.06434">DCGAN</a>, <a href="https://arxiv.org/abs/2006.11239">DDPM</a>, <a href="https://arxiv.org/abs/2002.05709">SimCLR</a>, <a href="https://arxiv.org/abs/2103.00020">CLIP</a>, <a href="https://arxiv.org/abs/2201.03545">ConvNeXt</a> &middot; &#9733;&#9733;&#9733; <a href="https://arxiv.org/abs/2005.12872">DETR</a>, <a href="https://arxiv.org/abs/2003.08934">NeRF</a>, <a href="https://arxiv.org/abs/2103.14030">Swin</a>, <a href="https://arxiv.org/abs/2111.06377">MAE</a>.</p>
+<div class="table-responsive">
+<table class="caption-top table">
+<thead><tr class="header"><th>For every paper</th><th style="width:12%">Marks</th></tr></thead>
+<tbody>
+<tr class="odd"><td>Paper card + shape table + equations &rarr; code table (your own words)</td><td>20&nbsp;%</td></tr>
+<tr class="even"><td>Correct implementation: tests / &#x2705; checks / parameter counts / overfit-one-batch</td><td>30&nbsp;%</td></tr>
+<tr class="odd"><td>Small experiment + one ablation, with a table or plot (several seeds where possible)</td><td>25&nbsp;%</td></tr>
+<tr class="even"><td>Reproduction report: what matched, what didn&rsquo;t and why; AI-use declaration</td><td>15&nbsp;%</td></tr>
+<tr class="odd"><td>Clean code: functions/classes, comments that cite the paper&rsquo;s equations</td><td>10&nbsp;%</td></tr>
+</tbody>
+</table>
+</div>
+<p><strong>Viva:</strong> 3 minutes per student; you must be able to explain any line of your code. <strong>Academic integrity:</strong> many implementations of these papers are online and AI assistants can write them; use them to check details after trying yourself, cite them, and declare AI use. Code you cannot explain earns no marks.</p>
+</section>
+<p><small>Paper figures in the lecture are reproduced from the arXiv versions for teaching; datasets are generated in the notebooks or bundled with scikit-learn (digits; sample photos CC BY 2.0); pretrained weights in 7E come from torchvision.</small></p>
+</section>
+
 <section id="research-papers" class="level2">
 <h2 class="anchored" data-anchor-id="research-papers">Reading &amp; Implementing Research Papers</h2>
-<p>Two mid-semester labs (after the midterm) teach how to turn a paper into working code. We practise a repeatable, five-step method on two landmark architectures &mdash; reading each paper together and building the model from scratch in PyTorch:</p>
+<p><strong>Started in <a href="#lab-7-papers">Lab 7</a></strong> (Transformer, U-Net, ResNet and ViT from scratch, with the 7-step recipe and the <a href="#lab-7-challenge">Paper Implementation Challenge</a>). Two later labs go further on real datasets with a GPU. The method, in short:</p>
 <ol type="1">
 <li><strong>Skim first</strong> &mdash; read the abstract, figures and conclusion to grasp the problem and the key idea before touching any equation.</li>
 <li><strong>Map the architecture</strong> &mdash; turn the model figure into a block diagram: inputs, layers, tensor shapes, and how blocks connect.</li>
@@ -603,7 +706,7 @@ window.Quarto = {
 <li><strong>Implement from scratch</strong> &mdash; build each block in PyTorch, checking tensor shapes at every step against the paper.</li>
 <li><strong>Reproduce &amp; verify</strong> &mdash; train on a small dataset, compare behaviour/metrics to the paper, and note any gaps or simplifications.</li>
 </ol>
-<p><strong>Target papers:</strong> (1) Ronneberger et al., &ldquo;U-Net&rdquo; (2015) &mdash; Lab 13; (2) Vaswani et al., &ldquo;Attention Is All You Need&rdquo; (2017) &mdash; Lab 15. Each lab produces working code plus a one-page paper summary.</p>
+<p><strong>Target papers:</strong> (1) Ronneberger et al., &ldquo;U-Net&rdquo; (2015) &mdash; Lab 7D, then Lab 13 on real data; (2) Vaswani et al., &ldquo;Attention Is All You Need&rdquo; (2017) &mdash; Labs 7B&ndash;7C, then Lab 15. Each produces working code plus a one-page paper card.</p>
 </section>
 
 <section id="opencv5-deep-dive" class="level2">

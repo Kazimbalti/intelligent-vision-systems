@@ -24,6 +24,10 @@ node_modules/
 
 # Instructor-only solutions (kept local, never published)
 lectures/Lecture_5/Assignment_2_solution/
+lectures/Lecture_7/Lab_7_solutions/
+lectures/Lecture_7/_build/
+# Exam papers and marking schemes
+Mid_Term/
 # Outputs produced when students run the Lab 5 project notebook
 LAB/Lab_5/test_videos/
 LAB/Lab_5/test_videos_output/
@@ -33,3 +37,7 @@ LAB/Lab_6/calib_images/
 LAB/Lab_6/my_calib/
 LAB/Lab_6/*.yaml
 LAB/Lab_6/charuco_7x5.png
+# Outputs produced when students run Lab 7 (checkpoints, downloaded weights)
+LAB/Lab_7/*.pt
+LAB/Lab_7/*.pth
+LAB/Lab_7/data/

@@ -1,0 +1,11 @@
+# Lab 7 — Reading & Implementing Research Papers (companion to Lecture 7)
+# Python 3.10–3.12.  Install:  pip install -r requirements.txt
+# Google Colab already has all of these.
+torch                # tested with PyTorch 2.x (CPU is enough for every notebook)
+torchvision          # reference models for the parameter-count checks (ResNet, ViT)
+numpy
+matplotlib
+scikit-learn         # two-moons toy data, the bundled 8 x 8 digits, sample photos
+opencv-python        # drawing the synthetic shapes for the U-Net dataset
+jupyter
+ipykernel            # lets Cursor / VS Code run the notebooks in your .venv

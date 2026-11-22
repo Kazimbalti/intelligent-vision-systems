@@ -1,0 +1,2575 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="../site_libs/quarto-contrib/videojs/video.min.js"></script>
+<link href="../site_libs/quarto-contrib/videojs/video-js.css" rel="stylesheet">
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.10.18">
+
+  <meta name="author" content="Dr. Muhammad Kazim">
+  <title>Intelligent Vision Systems – Lecture 07 — Reading &amp; Implementing Research Papers</title>
+  <meta name="description" content="Lecture 7: how to find and read research papers (three-pass method), Google Colab and Cursor step by step, and implementing four landmark papers from scratch in PyTorch: Attention Is All You Need (the Transformer), U-Net, ResNet and the Vision Transformer, with live demos, quizzes, Lab 7 and the Paper Implementation Challenge.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/reveal.css">
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../site_libs/revealjs/dist/theme/quarto-e29227cb4367bc74b13779e945f9984f.css">
+  <link href="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
+  <link href="../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none;
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". ";
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto;
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0;
+    }
+  </style>
+  <style type="text/css">
+  /* ---- Lecture 7: house style copied from Lecture 6 (navy #28568a, white slides) ---- */
+  .reveal .slides > section.slide { font-size: 1.24em; }
+  .reveal { --navy: #28568a; --navy-d: #1c3f66; --ink: #1f2933; --muted: #5b6b7b; --soft: #eef3f9; --ok: #1f7a4d; --warn: #9a3412; }
+  .reveal h2 { color: var(--navy); font-size: 1.45em; margin-bottom: 0.45em; }
+  .reveal h3 { color: var(--navy); font-size: 1.05em; margin: 0.2em 0 0.35em; }
+  .reveal .kicker { color: var(--navy); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.55em; margin: 0 0 0.2em; }
+  .reveal .muted { color: var(--muted); }
+  .reveal .small { font-size: 0.72em; }
+  .reveal .tiny { font-size: 0.55em; }
+  .reveal .center-text { text-align: center; }
+  .reveal .grid2 { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 22px; align-items: start; }
+  .reveal .grid2.wide-left { grid-template-columns: minmax(0,1.35fr) minmax(0,1fr); }
+  .reveal .grid2.wide-right { grid-template-columns: minmax(0,1fr) minmax(0,1.35fr); }
+  .reveal .grid3 { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; align-items: start; }
+  .reveal .grid4 { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 18px; align-items: start; }
+  .reveal img.fig { display: block; max-width: 100%; max-height: 780px; margin: 0 auto; border-radius: 6px; }
+  .reveal img.fig.h520 { max-height: 700px; }
+  .reveal img.fig.h420 { max-height: 600px; }
+  .reveal img.fig.h340 { max-height: 500px; }
+  .reveal .cap { font-size: 0.6em; color: var(--muted); text-align: center; margin-top: 0.35em; }
+  .reveal .card { background: var(--soft); border-radius: 10px; padding: 0.55em 0.75em; border-left: 6px solid var(--navy); }
+  .reveal .card h3 { margin-top: 0; }
+  .reveal .card p, .reveal .card li { font-size: 0.78em; }
+  .reveal .note { background: #eef6ff; border-left: 6px solid #2a76dd; border-radius: 8px; padding: 0.45em 0.8em; font-size: 0.72em; }
+  .reveal .warn { background: #fff4ec; border-left: 6px solid #ea580c; border-radius: 8px; padding: 0.45em 0.8em; font-size: 0.72em; }
+  .reveal .quiz { background: #fffbea; border: 2px solid #f2c94c; border-radius: 10px; padding: 0.5em 0.85em; }
+  .reveal .quiz .q { font-weight: 700; color: #7a5b00; font-size: 0.6em; letter-spacing: 0.08em; text-transform: uppercase; }
+  .reveal .answer { background: #e9f7ef; border-left: 6px solid var(--ok); border-radius: 8px; padding: 0.4em 0.8em; font-size: 0.75em; margin-top: 0.5em; }
+  .reveal .answer b:first-child { color: var(--ok); }
+  .reveal ul.tight li, .reveal ol.tight li { margin-top: 0.15em; margin-bottom: 0.1em; }
+  .reveal .slide ul, .reveal .slide ol { font-size: 0.86em; }
+  .reveal .card ul, .reveal .card ol { font-size: 1em; }
+  .reveal table.simple { font-size: 0.62em; border-collapse: collapse; width: 100%; }
+  .reveal table.simple th { background: var(--navy); color: #fff; padding: 0.35em 0.55em; text-align: left; }
+  .reveal table.simple td { border-bottom: 1px solid #d8e0ea; padding: 0.32em 0.55em; vertical-align: top; }
+  .reveal table.simple tr:nth-child(even) td { background: #f6f9fc; }
+  .reveal pre { width: 100%; box-shadow: none; margin: 0.2em 0; font-size: 0.57em; line-height: 1.32; }
+  .reveal pre code { max-height: 760px; padding: 0.7em 0.9em; border-radius: 8px; background: #f6f8fa; color: #24292f; border: 1px solid #d8dee4; }
+  .reveal pre.code-sm { font-size: 0.47em; }
+  .reveal code { font-family: var(--r-code-font); }
+  .reveal p code, .reveal li code, .reveal td code { background: #eef1f4; padding: 0.05em 0.3em; border-radius: 4px; font-size: 0.88em; color: #8a1538; }
+  /* light highlight.js theme */
+  .reveal .hljs-keyword, .reveal .hljs-built_in, .reveal .hljs-literal { color: #cf222e; }
+  .reveal .hljs-string { color: #0a3069; }
+  .reveal .hljs-comment { color: #6e7781; font-style: italic; }
+  .reveal .hljs-number { color: #0550ae; }
+  .reveal .hljs-title, .reveal .hljs-title.function_ { color: #8250df; }
+  .reveal .hljs-params { color: #24292f; }
+  .reveal .hljs-meta { color: #953800; }
+  /* section dividers */
+  .reveal .sec-num { font-size: 3.2em; font-weight: 800; color: rgba(255,255,255,0.25); line-height: 1; margin: 0; }
+  .reveal .sec-title { color: #fff; font-size: 2.3em; font-weight: 700; line-height: 1.12; margin: 0.1em 0 0.25em; }
+  .reveal .sec-sub { color: #dbe7f5; font-size: 1.0em; margin: 0; }
+  /* title slide */
+  .reveal .title-wrap { display: grid; grid-template-columns: 1.35fr 1fr; gap: 40px; align-items: center; height: 100%; }
+  .reveal .t-kicker { color: var(--navy); font-weight: 800; letter-spacing: 0.08em; font-size: 0.75em; margin: 0; }
+  .reveal .t-main { color: var(--navy); font-size: 2.05em; font-weight: 800; line-height: 1.02; margin: 0.08em 0 0.12em; }
+  .reveal .t-sub { color: #1f2933; font-size: 1.15em; margin: 0 0 0.9em; }
+  .reveal .t-rule { width: 54px; height: 5px; background: var(--navy); margin: 0.4em 0 0.5em; }
+  .reveal .pixgrid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; }
+  .reveal .pixgrid span { aspect-ratio: 1; border-radius: 3px; }
+  /* roadmap pipeline */
+  .reveal .pipe { display: flex; align-items: stretch; gap: 10px; margin: 0.5em 0; }
+  .reveal .pipe .st { flex: 1; background: var(--soft); border: 2px solid var(--navy); border-radius: 10px; padding: 0.4em 0.3em; text-align: center; font-size: 0.6em; font-weight: 600; color: var(--navy-d); }
+  .reveal .pipe .st small { display: block; font-weight: 400; color: var(--muted); font-size: 0.85em; margin-top: 0.25em; }
+  .reveal .pipe .ar { align-self: center; color: var(--navy); font-size: 0.9em; font-weight: 700; }
+  .reveal .pipe .st.on { background: var(--navy); color: #fff; }
+  .reveal .pipe .st.on small { color: #dbe7f5; }
+  /* lab buttons (same as Lecture 4) */
+  .reveal .lab-link { z-index: 6; background: #28568a; color: #fff; font-weight: 600; font-size: 0.6em;
+    padding: 0.35em 0.9em; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.25); text-decoration: none; }
+  .reveal .lab-link:hover { background: #1c3f66; color: #fff; }
+  .reveal .btnrow { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 0.5em; }
+  .reveal .btnrow a, .reveal .btnrow button { position: static; display: inline-block; }
+  .reveal a.lab-link.alt { background: #fff; color: var(--navy); border: 2px solid var(--navy); box-shadow: none; }
+  /* interactive demos */
+  .reveal .demo-box { background: #f6f9fc; border: 1px solid #d8e0ea; border-radius: 10px; padding: 0.5em 0.7em; }
+  .reveal .demo-box label { font-size: 0.55em; color: var(--ink); display: flex; align-items: center; gap: 10px; margin: 0.3em 0; }
+  .reveal .demo-box input[type=range] { flex: 1; }
+  .reveal .demo-box .val { font-family: var(--r-code-font); min-width: 2.6em; text-align: right; color: var(--navy); font-weight: 700; }
+  .reveal .slides canvas { display: block; max-width: 100%; border-radius: 6px; background: #fff; }
+  .reveal button.dbtn { font-size: 0.5em; padding: 0.3em 0.8em; border-radius: 6px; border: 2px solid var(--navy); background: #fff; color: var(--navy); cursor: pointer; font-weight: 600; }
+  .reveal button.dbtn:hover { background: var(--navy); color: #fff; }
+  .reveal .demo-msg { font-size: 0.5em; color: var(--warn); }
+  .reveal .badge { display: inline-block; background: var(--navy); color: #fff; border-radius: 999px; padding: 0.05em 0.6em; font-size: 0.55em; font-weight: 700; vertical-align: middle; }
+  .reveal .badge.new { background: #ea580c; }
+  .reveal .pill { display: inline-block; border: 2px solid var(--navy); color: var(--navy); border-radius: 999px; padding: 0.05em 0.55em; font-size: 0.6em; font-weight: 700; margin: 0.1em; }
+
+  .reveal svg.stack-svg { display:block; width:100%; height:auto; max-height:650px; margin:0 auto; }
+  /* larger-image layouts */
+  .reveal .grid2.img-wide { grid-template-columns: minmax(0,1.75fr) minmax(0,1fr); }
+  .reveal .grid2.img-wide-r { grid-template-columns: minmax(0,1fr) minmax(0,1.75fr); }
+  .reveal img.fig.h600 { max-height: 640px; }
+  .reveal .grid2 img.fig, .reveal .grid3 img.fig { width: 100%; object-fit: contain; }
+  .reveal img.fig.full { max-height: 720px; width: 100%; object-fit: contain; }
+  .reveal .slides img.fig, .reveal .slides img.zoomable { cursor: zoom-in; }
+  .reveal .zoom-hint { position: absolute; right: 18px; bottom: 6px; font-size: 0.42em; color: #8a99aa; }
+  /* click-to-zoom lightbox */
+  #lb { position: fixed; inset: 0; z-index: 9999; background: rgba(10,16,24,0.92); display: none; align-items: center; justify-content: center; cursor: zoom-out; }
+  #lb.on { display: flex; }
+  #lb img { max-width: 96vw; max-height: 92vh; object-fit: contain; border-radius: 6px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); background: #fff; }
+  #lb p { position: fixed; bottom: 1.2vh; left: 0; right: 0; text-align: center; color: #dbe7f5; font: 15px "Source Sans Pro", sans-serif; margin: 0; }
+
+  /* Lecture 6 additions */
+  .reveal .tryit { background: #fff7e6; border-left: 6px solid #f2a900; border-radius: 8px; padding: 0.35em 0.8em; font-size: 0.62em; margin: 0.5em 0 0; }
+  .reveal .tryit b:first-child { color: #9a6700; }
+  .reveal .plain { background: #effaf3; border-left: 6px solid #1f7a4d; border-radius: 8px; padding: 0.35em 0.8em; font-size: 0.62em; margin: 0.5em 0 0; }
+  .reveal .plain b:first-child { color: #1f7a4d; }
+  .reveal .lab-link.colab::before { content: ""; }
+  .reveal .labgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 18px; }
+  .reveal .labgrid a { display: flex; align-items: center; gap: 10px; text-decoration: none; background: var(--soft); border-radius: 8px; padding: 0.3em 0.6em; font-size: 0.55em; color: var(--ink); }
+  .reveal .labgrid a:hover { background: #dfe9f5; }
+  .reveal .labgrid a b { background: var(--navy); color: #fff; border-radius: 6px; padding: 0.05em 0.45em; min-width: 2.2em; text-align: center; }
+  .reveal .labgrid a.vid b { background: #ea580c; }
+  .reveal .steps3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin-top: 0.4em; }
+  .reveal .steps3 .card { text-align: center; }
+  .reveal .steps3 .big { font-size: 2.2em; line-height: 1; margin: 0.1em 0 0.2em; }
+  .reveal .gloss td:first-child { font-weight: 700; color: var(--navy); white-space: nowrap; }
+  .reveal .vids { gap: 16px; }
+  .reveal .vids a { display: flex; gap: 12px; align-items: center; background: var(--soft); border-radius: 10px; padding: 8px; text-decoration: none; color: var(--ink); }
+  .reveal .vids a:hover { background: #dfe9f5; }
+  .reveal .vids img { width: 190px; border-radius: 6px; margin: 0; flex: none; }
+  .reveal .vids span { font-size: 0.5em; line-height: 1.3; }
+  .reveal .demo-box input[type=number] { font-size: 1em; padding: 0.1em 0.3em; border: 1px solid #b8c4d2; border-radius: 4px; }
+  .reveal #pw-src { cursor: grab; touch-action: none; }
+  .reveal .MathJax_Display, .reveal mjx-container { margin: 0.3em 0 !important; }
+  .reveal .grid4 img.fig { width: 100%; object-fit: contain; }
+
+  /* Lecture 7 additions */
+  .reveal .paperstack { position: relative; height: 560px; }
+  .reveal .paperstack img { position: absolute; width: 46%; border: 1px solid #d8e0ea; border-radius: 4px; box-shadow: 0 6px 22px rgba(0,0,0,0.18); background: #fff; margin: 0; }
+  .reveal .paperstack img:nth-child(1) { left: 0; top: 0; transform: rotate(-5deg); }
+  .reveal .paperstack img:nth-child(2) { left: 15%; top: 30px; transform: rotate(-1.5deg); }
+  .reveal .paperstack img:nth-child(3) { left: 30%; top: 60px; transform: rotate(2deg); }
+  .reveal .paperstack img:nth-child(4) { left: 45%; top: 90px; transform: rotate(5deg); }
+  .reveal .anat { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .reveal .anat button { font-size: 0.5em; padding: 0.45em 0.3em; border-radius: 8px; border: 2px solid var(--navy); background: #fff; color: var(--navy); cursor: pointer; font-weight: 600; }
+  .reveal .anat button:hover, .reveal .anat button.on { background: var(--navy); color: #fff; }
+  .reveal .demo-box select { font-size: 1em; padding: 0.1em 0.3em; border: 1px solid #b8c4d2; border-radius: 4px; }
+  .reveal blockquote { background: var(--soft); border-left: 6px solid var(--navy); padding: 0.4em 0.8em; width: auto; font-style: italic; }
+  .reveal #vp-canvas, .reveal #att-canvas { cursor: crosshair; }
+  .reveal pre code.text { white-space: pre; }
+  .reveal .slide ul.small, .reveal .slide ol.small { font-size: 0.64em; }
+  .reveal .card ul.small, .reveal .card ol.small { font-size: 0.85em; }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="lecture-7-papers" class="slide level2" data-menu-title="Lecture 7 — Reading &amp; Implementing Research Papers">
+<div class="title-wrap">
+<div>
+<p class="t-kicker">LECTURE 7</p>
+<p class="t-main">Reading &amp; Implementing Research Papers</p>
+<p class="t-sub">From a PDF to working PyTorch: Attention, the Transformer, U-Net, ResNet and the Vision Transformer</p>
+<p class="muted" style="font-size:0.62em; margin:0;">How to read a paper · Google Colab &amp; Cursor step by step · build 4 landmark papers from scratch · Lab 7 &amp; the Paper Implementation Challenge</p>
+<div class="t-rule"></div>
+<p style="font-size:0.66em; font-weight:700; margin:0;">Dr. Muhammad Kazim</p>
+<p class="muted" style="font-size:0.56em; margin:0;">Department of Intelligent Systems<br>University of Lahore</p>
+</div>
+<div>
+<div class="paperstack">
+<img src="assets/07_paper_implementation/p_transformer_page1.jpg" alt="First page of Attention Is All You Need">
+<img src="assets/07_paper_implementation/p_unet_page1.jpg" alt="First page of the U-Net paper">
+<img src="assets/07_paper_implementation/p_resnet_page1.jpg" alt="First page of the ResNet paper">
+<img src="assets/07_paper_implementation/p_vit_page1.jpg" alt="First page of the Vision Transformer paper">
+</div>
+<p class="cap">Four papers, ≈ 500 000 citations together, and you will build all four from scratch today.</p>
+</div>
+</div>
+<aside class="notes">Lectures 3 and 4 used models as black boxes (ResNet, RF-DETR, SAM, SmolVLM). Today we open the box: read the original papers and write the models ourselves. The message for weak students: a paper is a recipe; you will follow four recipes step by step, with a check after every step. Nobody needs to understand everything on the first read.</aside>
+</section>
+
+<section id="from-lecture-6-to-lecture-7" class="slide level2" data-menu-title="From Lecture 6 to Lecture 7">
+<p class="kicker">Where we are</p>
+<h2>From <i>using</i> models to <i>building</i> them from the paper</h2>
+<div class="grid2">
+<div class="card">
+<h3>Lectures 3–6 · you can already</h3>
+<ul class="tight">
+<li>Run a <b>pretrained</b> ResNet, RF-DETR, SAM or a VLM (Lecture 4)</li>
+<li>Explain neurons, layers, CNNs, training (Lecture 3)</li>
+<li>Build classic pipelines: colour, Canny, Hough, calibration (Lectures 5–6)</li>
+</ul>
+<p class="small muted" style="margin-top:0.6em;">…but the deep models are <b>black boxes</b>: you call <code>model(x)</code> and hope.</p>
+</div>
+<div class="card" style="border-left-color:#ea580c;">
+<h3>Lecture 7 · today</h3>
+<ul class="tight">
+<li><b>Find</b> and <b>read</b> a research paper (the three-pass method)</li>
+<li>Set up <b>Google Colab</b> and <b>Cursor</b> for paper work</li>
+<li>Turn figures and equations into <b>PyTorch</b>, testing every block</li>
+<li>Build <b>Attention → Transformer</b>, <b>U-Net</b>, <b>ResNet</b>, <b>ViT</b></li>
+<li><b>Reproduce</b> a result, run an <b>ablation</b>, write a report</li>
+</ul>
+</div>
+</div>
+<p class="plain"><b>Why this matters:</b> every model you will ever use started as a PDF. Engineers who can read the PDF can fix, adapt and trust the model, and they get the MSc places and the jobs.</p>
+</section>
+
+<section id="learning-outcomes" class="slide level2" data-menu-title="Learning outcomes">
+<h2>Learning outcomes</h2>
+<p class="small muted">By the end of this lecture and Lab 7 you should be able to:</p>
+<ol>
+<li>Describe the <b>anatomy</b> of a research paper and read it in <b>three passes</b>; fill a one-page paper card.</li>
+<li>Find papers and code (arXiv, Hugging Face Papers, CVF, OpenReview, GitHub) and run them in <b>Colab</b> and <b>Cursor</b>.</li>
+<li>Translate a <b>figure</b> into modules and an <b>equation</b> into PyTorch; predict every <b>tensor shape</b>.</li>
+<li>Implement <b>scaled dot-product and multi-head attention</b>, <b>positional encoding</b> and a full <b>Transformer</b>; train it.</li>
+<li>Implement the <b>U-Net</b> exactly as in the paper (572 → 388) and a modern U-Net; evaluate with <b>Dice</b>.</li>
+<li>Implement <b>ResNet</b> and <b>ViT</b> with parameter counts identical to torchvision; reproduce a paper's <b>key figure</b>.</li>
+<li>Debug with <b>shape tracing</b>, <b>reference checks</b> and <b>overfit-one-batch</b>; write an honest <b>reproduction report</b>.</li>
+</ol>
+</section>
+
+<section id="how-to-teach-this-lecture" class="slide level2" data-menu-title="How to teach (and learn) this lecture">
+<p class="kicker">For the teacher and the student</p>
+<h2>How this lecture works: 9 levels, basics → advanced</h2>
+<div class="grid2 wide-left">
+<table class="simple" style="font-size:0.52em;">
+<tr><th>Level</th><th>Topic</th><th>Time</th><th>Hands-on</th></tr>
+<tr><td>0</td><td>What is a research paper?</td><td>10 min</td><td>quiz</td></tr>
+<tr><td>1</td><td>How to read a paper</td><td>20 min</td><td>paper anatomy demo · read 3 abstracts</td></tr>
+<tr><td>2</td><td>Tools: find, read, run (Colab, Cursor)</td><td>15 min</td><td>open Lab 7A in both</td></tr>
+<tr><td>3</td><td>PyTorch you need</td><td>15 min</td><td>conv calculator · <b>7A</b></td></tr>
+<tr><td><b>4</b></td><td><b>Paper 1: Attention Is All You Need</b></td><td><b>40 min</b></td><td>attention &amp; PE demos · <b>7B, 7C</b></td></tr>
+<tr><td><b>5</b></td><td><b>Paper 2: U-Net</b></td><td><b>25 min</b></td><td>shape tracer · <b>7D</b></td></tr>
+<tr><td>6</td><td>Paper 3: ResNet</td><td>15 min</td><td><b>7E</b></td></tr>
+<tr><td>7</td><td>Paper 4: Vision Transformer</td><td>15 min</td><td>patchify demo · <b>7F</b></td></tr>
+<tr><td>8</td><td>Advanced: your next paper, research</td><td>pick</td><td><b>7G</b> bug hunt · <b>7H</b> challenge</td></tr>
+</table>
+<div>
+<div class="card"><h3>Teacher checklist</h3>
+<ul class="tight">
+<li>Open <a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/01-pytorch-for-papers.ipynb">Lab 7A in Colab</a> once before class (sign-in)</li>
+<li>Print or share the <a href="https://arxiv.org/pdf/1505.04597">U-Net PDF</a>: students annotate it in Level 1</li>
+<li>Press <b>S</b> for speaker notes (timing and tips)</li>
+<li>Pairs for the 7G bug hunt</li>
+</ul></div>
+<p class="plain" style="margin-top:0.6em;"><b>Students:</b> every level ends with a <b>quiz</b>; 🖐 boxes are things to try now; ▶ buttons open the matching Colab notebook. You do <b>not</b> need a GPU: every lab runs on a free Colab CPU in a few minutes.</p>
+</div>
+</div>
+<aside class="notes">Three sessions work well: (1) Levels 0–3 + Lab 7A; (2) Level 4 + Labs 7B/7C; (3) Levels 5–7 + Labs 7D–7F, with 7G as a warm-up game. Level 8 and the challenge are for the following weeks.</aside>
+</section>
+
+<section id="roadmap" class="slide level2" data-menu-title="Roadmap">
+<h2>Roadmap: from the very basics to your own research</h2>
+<div class="pipe">
+<div class="st">0 · Papers<small>what &amp; why</small></div><div class="ar">→</div>
+<div class="st">1 · Read<small>3 passes</small></div><div class="ar">→</div>
+<div class="st">2 · Tools<small>Colab, Cursor</small></div><div class="ar">→</div>
+<div class="st">3 · PyTorch<small>shapes!</small></div><div class="ar">→</div>
+<div class="st on">4 · Attention<small>Transformer</small></div><div class="ar">→</div>
+<div class="st on">5 · U-Net<small>segmentation</small></div><div class="ar">→</div>
+<div class="st on">6 · ResNet<small>depth</small></div><div class="ar">→</div>
+<div class="st on">7 · ViT<small>images as words</small></div><div class="ar">→</div>
+<div class="st">8 · Next<small>your paper</small></div>
+</div>
+<div class="grid4" style="margin-top:0.4em;">
+<div><img class="fig" src="assets/07_paper_implementation/p_transformer_fig1.png" alt="Transformer architecture, Figure 1" style="max-height:330px;"><p class="cap">Vaswani et al., 2017</p></div>
+<div><img class="fig" src="assets/07_paper_implementation/p_unet_fig1.png" alt="U-Net architecture, Figure 1" style="max-height:330px;"><p class="cap">Ronneberger et al., 2015</p></div>
+<div><img class="fig" src="assets/07_paper_implementation/p_resnet_fig2.png" alt="Residual block, Figure 2" style="max-height:330px;"><p class="cap">He et al., 2016</p></div>
+<div><img class="fig" src="assets/07_paper_implementation/p_vit_fig1.png" alt="Vision Transformer, Figure 1" style="max-height:330px;"><p class="cap">Dosovitskiy et al., 2021</p></div>
+</div>
+</section>
+
+<section id="papers-in-one-minute" class="slide level2" data-menu-title="Paper implementation in one minute">
+<p class="kicker">The big picture first</p>
+<h2>Implementing a paper in one minute</h2>
+<div class="steps3">
+<div class="card"><p class="big">📖</p><h3>1 · Read smart</h3><p>Not front to back! Abstract, figures, conclusion first. Then the method. Write a <b>one-page card</b>: problem, idea, figure, equations, shapes.</p></div>
+<div class="card" style="border-left-color:#ea580c;"><p class="big">🧱</p><h3>2 · Build bottom-up</h3><p>One box of the figure = one PyTorch class. Build the <b>smallest</b> box first and <b>test it</b> (shape, a value you can compute by hand, the parameter count) before the next.</p></div>
+<div class="card" style="border-left-color:#1f7a4d;"><p class="big">🔬</p><h3>3 · Reproduce small</h3><p>Overfit one batch, then a <b>small experiment</b> that tests the paper's main claim, with an <b>ablation</b>. Report honestly what matched and what didn't.</p></div>
+</div>
+<p class="plain" style="font-size:0.7em; margin-top:0.8em;"><b>Analogy:</b> a paper is a <b>recipe written by a chef for other chefs</b>. It skips "obvious" steps, uses jargon, and the photo (the figure) is the most useful part. You don't read it once and cook the whole banquet: you read it, cook one dish at a time, <b>taste after every step</b>, and compare with the photo.</p>
+</section>
+
+<section id="key-words" class="slide level2" data-menu-title="Key words in plain English">
+<h2>Key words in plain English</h2>
+<table class="simple gloss">
+<tr><th>Word</th><th>Means</th><th>Everyday picture</th></tr>
+<tr><td>Preprint / arXiv</td><td>a paper posted online <b>before</b> (or without) peer review; free</td><td>a draft shared with friends</td></tr>
+<tr><td>Peer review, venue</td><td>experts check the paper; accepted papers appear at a conference (CVPR, ICCV, NeurIPS…) or journal</td><td>an exam marked by other teachers</td></tr>
+<tr><td>Baseline · SOTA</td><td>the method you compare against · "state of the art", the best known result</td><td>last year's champion</td></tr>
+<tr><td>Ablation</td><td>remove one part of the model and measure the drop: proves the part matters</td><td>cook without salt to see what salt does</td></tr>
+<tr><td>Benchmark</td><td>a fixed dataset + metric everyone reports (ImageNet top-1, COCO mAP, Dice)</td><td>the same exam for every school</td></tr>
+<tr><td>Hyper-parameter</td><td>a number <i>you</i> choose, not learned (learning rate, layers, heads, patch size)</td><td>oven temperature</td></tr>
+<tr><td>Reproduce · replicate</td><td>get the paper's result with their code · with <b>your own</b> code</td><td>cook the recipe yourself</td></tr>
+<tr><td>Tensor shape</td><td>the size of every axis, e.g. (B, C, H, W) = (8, 3, 224, 224)</td><td>the size of every box in the kitchen</td></tr>
+</table>
+</section>
+
+<!-- ============================ LEVEL 0 ============================ -->
+<section id="level-0" class="slide level2 center" data-background-color="#28568a" data-menu-title="Level 0 · What is a research paper?">
+<p class="sec-num">0</p>
+<p class="sec-title">What is a research paper?</p>
+<p class="sec-sub"><b>Level 0</b> · where papers come from, which ones matter for vision, and why we implement them</p>
+</section>
+
+<section id="life-of-a-paper" class="slide level2" data-menu-title="The life of a paper">
+<p class="kicker">Level 0 · step 1</p>
+<h2>The life of a paper: from an idea to your phone</h2>
+<svg viewBox="0 0 1500 330" class="stack-svg" role="img" aria-label="Idea, experiments, arXiv preprint, peer review, conference, open-source code, products">
+<g font-family="Source Sans Pro, sans-serif" font-size="22" text-anchor="middle">
+<defs><marker id="arA" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10z" fill="#28568a"/></marker></defs>
+<g fill="#eef3f9" stroke="#28568a" stroke-width="3">
+<rect x="10" y="40" width="180" height="120" rx="14"/><rect x="225" y="40" width="180" height="120" rx="14"/><rect x="440" y="40" width="180" height="120" rx="14"/>
+<rect x="655" y="40" width="180" height="120" rx="14"/><rect x="870" y="40" width="180" height="120" rx="14"/><rect x="1085" y="40" width="180" height="120" rx="14"/>
+</g>
+<rect x="1300" y="40" width="190" height="120" rx="14" fill="#fff4ec" stroke="#ea580c" stroke-width="3"/>
+<text x="100" y="90" font-size="36">💡</text><text x="100" y="135" font-weight="700" fill="#28568a">idea</text>
+<text x="315" y="90" font-size="36">🧪</text><text x="315" y="135" font-weight="700" fill="#28568a">experiments</text>
+<text x="530" y="90" font-size="36">📄</text><text x="530" y="135" font-weight="700" fill="#28568a">arXiv preprint</text>
+<text x="745" y="90" font-size="36">🧑‍⚖️</text><text x="745" y="135" font-weight="700" fill="#28568a">peer review</text>
+<text x="960" y="90" font-size="36">🎤</text><text x="960" y="135" font-weight="700" fill="#28568a">conference</text>
+<text x="1175" y="90" font-size="36">💻</text><text x="1175" y="135" font-weight="700" fill="#28568a">code on GitHub</text>
+<text x="1395" y="90" font-size="36">📱</text><text x="1395" y="135" font-weight="700" fill="#ea580c">products</text>
+<g stroke="#28568a" stroke-width="5" marker-end="url(#arA)"><path d="M192 100 H220"/><path d="M407 100 H435"/><path d="M622 100 H650"/><path d="M837 100 H865"/><path d="M1052 100 H1080"/><path d="M1267 100 H1295"/></g>
+<text x="315" y="200" fill="#5b6b7b" font-size="19">months of work</text>
+<text x="530" y="200" fill="#5b6b7b" font-size="19">free, same day</text>
+<text x="745" y="200" fill="#5b6b7b" font-size="19">3–6 months</text>
+<text x="960" y="200" fill="#5b6b7b" font-size="19">CVPR · ICCV · ECCV</text>
+<text x="960" y="225" fill="#5b6b7b" font-size="19">NeurIPS · ICLR · MICCAI</text>
+<text x="1175" y="200" fill="#5b6b7b" font-size="19">often official code</text>
+<text x="1395" y="200" fill="#5b6b7b" font-size="19">ChatGPT, medical scans,</text>
+<text x="1395" y="225" fill="#5b6b7b" font-size="19">phone cameras, cars</text>
+<text x="750" y="295" fill="#28568a" font-size="24" font-weight="700">U-Net (2015) → every medical segmentation tool · Transformer (2017) → ChatGPT, Claude, Gemini · ViT (2021) → SAM, CLIP, VLMs</text>
+</g></svg>
+<p class="plain"><b>In plain words:</b> in computer vision the newest ideas appear on <b>arXiv</b> first (free, anyone can read them), then at <b>conferences</b>. Most important papers come with code. The best ones end up inside products within 1–3 years.</p>
+</section>
+
+<section id="vision-paper-timeline" class="slide level2" data-menu-title="The papers that built computer vision">
+<p class="kicker">Level 0 · step 2</p>
+<h2>The papers that built modern computer vision</h2>
+<svg viewBox="0 0 1500 560" class="stack-svg" role="img" aria-label="Timeline of landmark vision papers 2012 to 2024">
+<g font-family="Source Sans Pro, sans-serif" font-size="22" text-anchor="middle">
+<line x1="40" y1="250" x2="1470" y2="250" stroke="#28568a" stroke-width="6"/>
+<g fill="#28568a"><circle cx="100" cy="250" r="11"/><circle cx="260" cy="250" r="11"/><circle cx="440" cy="250" r="11"/><circle cx="610" cy="250" r="11"/><circle cx="790" cy="250" r="11"/><circle cx="980" cy="250" r="11"/><circle cx="1160" cy="250" r="11"/><circle cx="1310" cy="250" r="11"/><circle cx="1440" cy="250" r="11"/></g>
+<g font-weight="700" fill="#28568a" font-size="21">
+<text x="100" y="236">2012</text><text x="260" y="284">2014</text><text x="440" y="284">2015</text><text x="610" y="236">2016</text><text x="790" y="284">2017</text><text x="980" y="284">2020</text><text x="1160" y="284">2021</text><text x="1310" y="236">2023</text><text x="1440" y="284">2024</text>
+</g>
+<!-- below the line -->
+<text x="100" y="300" font-weight="700">AlexNet</text><text x="100" y="326" fill="#5b6b7b" font-size="18">deep nets win ImageNet</text>
+<text x="610" y="300" font-weight="700">YOLO</text><text x="610" y="326" fill="#5b6b7b" font-size="18">real-time</text>
+<text x="1310" y="300" font-weight="700">SAM · DINOv2</text><text x="1310" y="326" fill="#5b6b7b" font-size="18">3D Gaussian Splatting</text>
+<text x="440" y="318" fill="#5b6b7b" font-size="18">BatchNorm · Faster R-CNN</text>
+<text x="790" y="318" fill="#5b6b7b" font-size="18">Mask R-CNN</text>
+<text x="980" y="318" fill="#5b6b7b" font-size="18">DETR · DDPM · NeRF</text>
+<!-- above the line -->
+<text x="260" y="200" font-weight="700">VGG · GAN</text><text x="260" y="226" fill="#5b6b7b" font-size="18">deeper · generative</text>
+<text x="1160" y="200" font-weight="700">CLIP · Swin · MAE</text><text x="1160" y="226" fill="#5b6b7b" font-size="18">vision + language</text>
+<text x="1425" y="200" font-weight="700">SAM 2 · VLMs</text><text x="1430" y="226" fill="#5b6b7b" font-size="18">open models</text>
+<g fill="#fff4ec" stroke="#ea580c" stroke-width="3"><rect x="365" y="105" width="150" height="110" rx="12"/><rect x="690" y="125" width="200" height="90" rx="12"/><rect x="895" y="125" width="170" height="90" rx="12"/></g>
+<g font-weight="700" fill="#ea580c" font-size="24"><text x="440" y="148">ResNet ★</text><text x="440" y="185">U-Net ★</text><text x="790" y="165">Transformer ★</text><text x="980" y="165">ViT ★</text></g>
+<text x="790" y="195" fill="#5b6b7b" font-size="17">Attention Is All You Need</text>
+<text x="980" y="195" fill="#5b6b7b" font-size="17">ICLR 2021</text>
+<g font-size="21" fill="#1f2933" text-anchor="start">
+<text x="40" y="420">★ = we build it today. Lecture 4's models stand on these: RF-DETR = ResNet/ViT backbone + DETR (Transformer);</text>
+<text x="40" y="452">SAM = ViT encoder + Transformer decoder; SmolVLM = ViT (SigLIP) + a Transformer language model.</text>
+<text x="40" y="500" fill="#28568a" font-weight="700" font-size="24">Learn these four and you can read almost every vision paper written since 2020.</text>
+</g>
+</g></svg>
+<aside class="notes">Point at Lecture 4: the "magic" models students already ran are built from today's four papers. ViT appeared on arXiv in October 2020 and was published at ICLR 2021, which is why it sits between the two years.</aside>
+</section>
+
+<section id="why-implement" class="slide level2" data-menu-title="Why implement papers yourself?">
+<p class="kicker">Level 0 · step 3</p>
+<h2>Why implement a paper yourself (when the code exists)?</h2>
+<div class="grid2 wide-left">
+<div>
+<blockquote style="font-size:0.85em; margin:0 0 0.5em;">"What I cannot create, I do not understand."<br><span class="small muted">Richard Feynman, written on his blackboard (1988)</span></blockquote>
+<ul class="tight small">
+<li><b>Real understanding:</b> you discover every detail the paper skipped (padding? bias? which axis?).</li>
+<li><b>Debugging skill:</b> the #1 skill of an ML engineer. Your bugs teach you more than any lecture.</li>
+<li><b>Adapting:</b> to change a model for <i>your</i> data (Urdu text, local roads, X-rays) you must know its insides.</li>
+<li><b>Careers:</b> "implemented U-Net and ViT from the papers" is a strong CV line for jobs and MSc/PhD applications.</li>
+<li><b>AI tools era:</b> AI can write code, but someone must <b>check</b> it against the paper. That person is you.</li>
+</ul>
+</div>
+<div>
+<div class="card" style="border-left-color:#ea580c;"><h3>The honest truth</h3>
+<p>You will <b>not</b> understand a paper fully on the first read. Nobody does, not even professors. Researchers read a paper several times and <b>understand it by building it</b>.</p></div>
+<p class="tryit"><b>🖐 Try it:</b> open <a href="https://arxiv.org/abs/1505.04597">arxiv.org/abs/1505.04597</a> on your phone. How many pages is U-Net? (8.) How many pages is the architecture description? (Half a page!)</p>
+</div>
+</div>
+</section>
+
+<section id="level-0-quiz" class="slide level2" data-menu-title="Level 0 quiz">
+<h2>Level 0 check: three quick questions</h2>
+<div class="quiz">
+<p class="q">Answer out loud, then click</p>
+<ol class="tight">
+<li>Is a paper on arXiv always peer-reviewed?</li>
+<li>Which of today's four papers is inside a Large Language Model like ChatGPT? Which one is inside most medical-image segmentation tools?</li>
+<li>Your friend says "an ablation study is when you train the model longer". Correct them.</li>
+</ol>
+<div class="answer fragment"><b>1.</b> No. arXiv is a <b>preprint</b> server: anyone with an account can post. Check where it was <b>published</b> (e.g. "MICCAI 2015", "ICLR 2021"); be careful with unreviewed claims.</div>
+<div class="answer fragment"><b>2.</b> The <b>Transformer</b> (Attention Is All You Need) is the core of every LLM; <b>U-Net</b> (or a descendant like nnU-Net) is in most medical segmentation tools.</div>
+<div class="answer fragment"><b>3.</b> An ablation <b>removes or changes one component</b> (skip connections, positional encoding…) and measures how much worse the model gets. It proves which parts matter.</div>
+</div>
+</section>
+
+<!-- ============================ LEVEL 1 ============================ -->
+<section id="level-1" class="slide level2 center" data-background-color="#28568a" data-menu-title="Level 1 · How to read a paper">
+<p class="sec-num">1</p>
+<p class="sec-title">How to read a research paper</p>
+<p class="sec-sub"><b>Level 1</b> · anatomy of a paper, the three-pass method, and three worked examples</p>
+</section>
+
+<section id="anatomy-of-a-paper" class="slide level2" data-menu-title="Live demo: anatomy of a paper">
+<p class="kicker">Level 1 · step 1 · live demo</p>
+<h2>Anatomy of a paper: what each part tells you</h2>
+<div class="grid2 wide-right">
+<div><img class="fig" src="assets/07_paper_implementation/p_unet_page1.jpg" alt="Page 1 of the U-Net paper" style="max-height:690px; border:1px solid #d8e0ea;"></div>
+<div>
+<div class="anat" id="anat-btns">
+<button data-s="title">Title &amp; authors</button><button data-s="abstract">Abstract</button><button data-s="intro">1 · Introduction</button>
+<button data-s="related">Related work</button><button data-s="method">Method / Architecture</button><button data-s="experiments">Experiments &amp; tables</button>
+<button data-s="conclusion">Conclusion</button><button data-s="refs">References</button><button data-s="appendix">Appendix / supplementary</button>
+</div>
+<div class="demo-box" id="anat-out" style="min-height:300px; margin-top:0.4em;"><p class="small">Click a part of the paper.</p></div>
+</div>
+</div>
+<aside class="notes">Click through the sections with the class. Ask: which parts would you read if you had only 10 minutes? (Title, abstract, figures, conclusion.) Which part do you need to implement the model? (Method + the architecture figure + the training details in experiments.)</aside>
+</section>
+
+<section id="three-pass-method" class="slide level2" data-menu-title="The three-pass method">
+<p class="kicker">Level 1 · step 2</p>
+<h2>The three-pass method (S. Keshav, <i>How to Read a Paper</i>, 2007)</h2>
+<div class="grid3">
+<div class="card"><h3>Pass 1 · 10 minutes</h3>
+<p><b>Read:</b> title, abstract, introduction, section headings, <b>all figures</b>, conclusion. Skip the maths.</p>
+<p><b>Answer the 5 Cs:</b> <b>C</b>ategory (what kind of paper?), <b>C</b>ontext (built on which papers?), <b>C</b>orrectness (do the assumptions look valid?), <b>C</b>ontributions (what is new?), <b>C</b>larity (well written?)</p>
+<p><b>Decide:</b> keep reading or not?</p></div>
+<div class="card" style="border-left-color:#ea580c;"><h3>Pass 2 · ≈ 1 hour</h3>
+<p><b>Read the method carefully</b>, but skip proofs. Study every figure, axis and table. Mark the terms and references you don't know.</p>
+<p><b>Output:</b> a summary in your own words, the architecture drawn by hand, a <b>shape table</b>, the key equations.</p>
+<p>Enough to <b>explain</b> the paper to a friend.</p></div>
+<div class="card" style="border-left-color:#1f7a4d;"><h3>Pass 3 · hours</h3>
+<p><b>Virtually re-implement it:</b> make the same assumptions and rebuild the work in your head, then compare. Every detail counts: padding, bias, axis, initialisation, learning rate.</p>
+<p>For us, pass 3 = <b>writing the code</b>. That is what Lab 7 does.</p></div>
+</div>
+<p class="note" style="margin-top:0.5em;">Free PDF: S. Keshav, <a href="https://web.stanford.edu/class/ee384m/Handouts/HowtoReadPaper.pdf">"How to Read a Paper"</a>, ACM SIGCOMM CCR 37(3), 2007 (two pages, read it tonight).</p>
+</section>
+
+<section id="reading-tips" class="slide level2" data-menu-title="Reading tips for beginners">
+<p class="kicker">Level 1 · step 3</p>
+<h2>Reading tips that save beginners hours</h2>
+<div class="grid2">
+<div>
+<ul class="tight small">
+<li><b>Never read front to back</b> on the first go. Figures first: the architecture figure <i>is</i> the paper.</li>
+<li><b>Print it</b> (or use a PDF app) and <b>write on it</b>: shapes next to every layer, "?" next to every unknown word.</li>
+<li><b>One unknown term at a time:</b> look it up, write a one-line definition in your glossary, continue.</li>
+<li>"<b>We follow [12]</b>" means: the detail is in paper 12. ViT says "we follow the Transformer", so read the Transformer first.</li>
+<li>Read the <b>official code</b> next to the method section: the code is the final truth when the paper is vague.</li>
+<li><b>Hyper-parameters</b> hide in "Experiments", "Implementation details" and the appendix.</li>
+</ul>
+</div>
+<div>
+<div class="card"><h3>Questions to answer for every paper</h3>
+<ol class="tight">
+<li>What is the <b>input</b> and the <b>output</b> (with shapes)?</li>
+<li>What <b>problem</b> did earlier methods have?</li>
+<li>What is the <b>one new idea</b>?</li>
+<li>Which <b>figure</b> shows the model? Which <b>equation</b> is the core?</li>
+<li>What <b>data</b> and <b>metric</b>? How much better than the baseline?</li>
+<li>Which <b>ablation</b> proves the idea matters?</li>
+<li>What would I need (data, GPU-hours) to reproduce it?</li>
+</ol></div>
+</div>
+</div>
+<p class="tiny muted">After Keshav (2007) and Andrew Ng's advice on reading papers (Stanford CS230, 2019).</p>
+</section>
+
+<section id="example-neuralangelo" class="slide level2" data-menu-title="Example 1: Neuralangelo (pass 1 only)">
+<p class="kicker">Level 1 · worked example 1 · pass 1 only</p>
+<h2>Example 1: <i>Neuralangelo</i>: read, decide, don't implement</h2>
+<div class="grid2 wide-right">
+<div><img class="fig" src="assets/07_paper_implementation/p_neuralangelo_page1.jpg" alt="Page 1 of the Neuralangelo paper" style="max-height:600px; border:1px solid #d8e0ea;"></div>
+<div>
+<table class="simple" style="font-size:0.54em;">
+<tr><th colspan="2">Pass-1 card (10 minutes)</th></tr>
+<tr><td><b>Category</b></td><td>3-D reconstruction from video (neural surface reconstruction)</td></tr>
+<tr><td><b>Context</b></td><td>NeRF, NeuS (SDF surfaces), Instant-NGP (multi-resolution hash grids)</td></tr>
+<tr><td><b>Input → output</b></td><td>RGB video of an object/scene (+ camera poses) → detailed 3-D surface mesh</td></tr>
+<tr><td><b>New idea</b></td><td>hash-grid SDF + <b>numerical</b> gradients + <b>coarse-to-fine</b> training → fine detail</td></tr>
+<tr><td><b>Evidence</b></td><td>DTU and Tanks &amp; Temples benchmarks, big improvement over NeuS</td></tr>
+<tr><td><b>Implement?</b></td><td>❌ not in this course: needs camera poses (COLMAP), CUDA hash grids and many GPU-hours per scene. ✔ But we <b>understood it</b> in 10 minutes.</td></tr>
+</table>
+<p class="tiny muted">Z. Li et al., <a href="https://arxiv.org/abs/2306.03092">arXiv:2306.03092</a> · <a href="https://research.nvidia.com/labs/dir/neuralangelo/">project page</a> · <a href="https://github.com/NVlabs/neuralangelo">code</a></p>
+</div>
+</div>
+<p class="plain"><b>Lesson:</b> pass 1 is also for <b>saying no</b>. Most papers you read you will not implement. Choose papers whose compute and data you can afford.</p>
+</section>
+
+<section id="example-attention-pass1" class="slide level2" data-menu-title="Example 2: Attention Is All You Need (pass 1)">
+<p class="kicker">Level 1 · worked example 2</p>
+<h2>Example 2: <i>Attention Is All You Need</i>: pass 1 in 10 minutes</h2>
+<div class="grid2 wide-right">
+<div><img class="fig" src="assets/07_paper_implementation/p_transformer_page1.jpg" alt="Page 1 of Attention Is All You Need" style="max-height:640px; border:1px solid #d8e0ea;"></div>
+<div>
+<table class="simple">
+<tr><th colspan="2">Pass-1 card</th></tr>
+<tr><td><b>Category</b></td><td>new architecture for sequence-to-sequence (machine translation)</td></tr>
+<tr><td><b>Problem</b></td><td>RNNs read one word at a time: slow to train, forget long-range context</td></tr>
+<tr><td><b>New idea</b></td><td><b>only attention</b>, no recurrence, no convolution → everything in parallel</td></tr>
+<tr><td><b>Core figure / equation</b></td><td>Figure 1 (encoder–decoder), Eq. 1: softmax(QKᵀ/√d<sub>k</sub>)V</td></tr>
+<tr><td><b>Evidence</b></td><td>WMT 2014 BLEU 28.4 (EN→DE), 41.8 (EN→FR): new SOTA at a fraction of the training cost (big model: 3.5 days on 8 P100 GPUs)</td></tr>
+<tr><td><b>Implement?</b></td><td>✔ the architecture: yes, small (Lab 7C). The full translation model: big data + GPU days.</td></tr>
+</table>
+<p class="tiny muted">A. Vaswani et al., NeurIPS 2017 · <a href="https://arxiv.org/abs/1706.03762">arXiv:1706.03762</a></p>
+</div>
+</div>
+</section>
+
+<section id="example-unet-pass1" class="slide level2" data-menu-title="Example 3: U-Net (pass 1)">
+<p class="kicker">Level 1 · worked example 3 · 🖐 your turn</p>
+<h2>Example 3: <i>U-Net</i>: you fill in the card</h2>
+<div class="grid2 wide-right">
+<div><img class="fig" src="assets/07_paper_implementation/p_unet_page1.jpg" alt="Page 1 of the U-Net paper" style="max-height:640px; border:1px solid #d8e0ea;"></div>
+<div>
+<p class="tryit"><b>🖐 In pairs, 5 minutes:</b> read only the abstract and Figure 1 of the <a href="https://arxiv.org/pdf/1505.04597">U-Net PDF</a>, then fill: category · problem · new idea · input → output · evidence · implement?</p>
+<div class="answer fragment" style="font-size:0.62em;">
+<b>Category:</b> new architecture for biomedical <b>semantic segmentation</b>.<br>
+<b>Problem:</b> few annotated images (the EM challenge has only <b>30</b> training images); a sliding-window classifier is slow and sees little context.<br>
+<b>New idea:</b> a <b>U-shaped</b> fully-convolutional net: contracting path (context) + expansive path (localisation) joined by <b>skip connections</b>; strong data augmentation (elastic deformations).<br>
+<b>Input → output:</b> 572 × 572 grey tile → 388 × 388 × 2 class map.<br>
+<b>Evidence:</b> best on ISBI EM segmentation; won the ISBI cell tracking challenge 2015 "by a large margin"; &lt; 1 s per 512 × 512 image on a GPU.<br>
+<b>Implement?</b> ✔ Yes: ½ page of architecture, small data (Lab 7D).</div>
+</div>
+</div>
+</section>
+
+<section id="paper-card" class="slide level2" data-menu-title="The one-page paper card">
+<p class="kicker">Level 1 · step 4</p>
+<h2>The one-page paper card (your output of passes 1–2)</h2>
+<div class="grid2">
+<table class="simple">
+<tr><th>Field</th><th>Write</th></tr>
+<tr><td>Title, authors, venue, year</td><td>"U-Net, Ronneberger et al., MICCAI 2015"</td></tr>
+<tr><td>Links</td><td>arXiv · PDF · official code</td></tr>
+<tr><td>Problem</td><td>one sentence</td></tr>
+<tr><td>Key idea</td><td>one sentence, your words</td></tr>
+<tr><td>Architecture</td><td>your hand drawing of the main figure</td></tr>
+<tr><td>Shape table</td><td>input → each block → output</td></tr>
+<tr><td>Core equations</td><td>copied + explained in words</td></tr>
+<tr><td>Data, metric, result</td><td>"ISBI EM, warping error, best"</td></tr>
+<tr><td>Ablation</td><td>which part matters most?</td></tr>
+<tr><td>Can I implement it?</td><td>compute, data, time</td></tr>
+</table>
+<div>
+<p class="small">The card is the first cell of every Lab 7 notebook and of the <b>Paper Implementation Challenge</b> template (Lab 7H).</p>
+<p class="note">A good card is <b>short</b>. If you cannot say the key idea in one sentence, you have not understood it yet: read Figure 1 again.</p>
+<p class="warn"><b>Don't</b> copy the abstract into the card. Re-writing in your own words is where understanding happens (and copy-pasted text is plagiarism in a report).</p>
+<a class="lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/08-implement-your-own-paper.ipynb" style="position:static; display:inline-block; margin-top:0.5em;">&#9654;&#xFE0E; Template: Lab 7H in Colab</a>
+</div>
+</div>
+</section>
+
+<section id="reading-with-ai" class="slide level2" data-menu-title="Reading papers with AI (responsibly)">
+<p class="kicker">Level 1 · step 5</p>
+<h2>Reading papers with an AI assistant: a tutor, not a ghost-writer</h2>
+<div class="grid2">
+<div class="card" style="border-left-color:#1f7a4d;"><h3>✔ Good prompts</h3>
+<ul class="tight">
+<li>"Explain Eq. 1 of this paper to a 3rd-year student. What is the shape of every symbol?"</li>
+<li>"Here is my shape table for Figure 1. Is any row wrong? Don't give me code."</li>
+<li>"Which prior papers do I need to read to understand §3?"</li>
+<li>"Give me 5 quiz questions about this method, with answers hidden."</li>
+<li>"My U-Net output is 392 × 392 instead of 388. Explain what to check, step by step."</li>
+</ul></div>
+<div class="card" style="border-left-color:#ea580c;"><h3>✘ Traps</h3>
+<ul class="tight">
+<li>Asking it to write the whole implementation: you learn nothing, and you cannot defend it in a viva.</li>
+<li>Trusting it blindly: assistants <b>invent</b> references, numbers and "facts" about papers. Check against the PDF.</li>
+<li>Pasting a paper it has not seen and asking for results it cannot know.</li>
+</ul>
+<p class="small" style="margin-top:0.4em;">Tools: <a href="https://www.alphaxiv.org">alphaXiv</a> (chat with any arXiv paper: replace "arxiv" with "alphaxiv" in the URL) · <a href="https://notebooklm.google.com">NotebookLM</a> · Claude / ChatGPT / Gemini · Cursor's chat (Level 2).</p></div>
+</div>
+<p class="plain"><b>Course rule:</b> you may use AI to <b>understand</b> and to <b>review</b>. Every report ends with an <b>AI-use declaration</b>: what you asked, what you kept, what you checked yourself.</p>
+</section>
+
+<section id="level-1-quiz" class="slide level2" data-menu-title="Level 1 quiz">
+<h2>Level 1 check</h2>
+<div class="quiz">
+<p class="q">Answer out loud, then click</p>
+<ol class="tight">
+<li>You have 10 minutes before class to decide whether a paper is useful for your project. What do you read?</li>
+<li>The ViT paper says "the Transformer encoder (Vaswani et al., 2017)" and gives no detail. What do you do?</li>
+<li>Where do you usually find the learning rate, batch size and number of epochs?</li>
+</ol>
+<div class="answer fragment"><b>1.</b> Pass 1: title, abstract, figures (especially the architecture figure), section headings, conclusion. Then answer the 5 Cs.</div>
+<div class="answer fragment"><b>2.</b> Follow the reference: the detail is in the Transformer paper (or its official code). Papers build on papers.</div>
+<div class="answer fragment"><b>3.</b> In "Experiments" / "Implementation details" / "Training", the appendix, and the official code's config files.</div>
+</div>
+</section>
+
+<!-- ============================ LEVEL 2 ============================ -->
+<section id="level-2" class="slide level2 center" data-background-color="#28568a" data-menu-title="Level 2 · Tools: find, read, run">
+<p class="sec-num">2</p>
+<p class="sec-title">Tools: find, read, run</p>
+<p class="sec-sub"><b>Level 2</b> · where papers and code live, Google Colab and Cursor step by step</p>
+</section>
+
+<section id="where-to-find-papers" class="slide level2" data-menu-title="Where to find papers">
+<p class="kicker">Level 2 · step 1</p>
+<h2>Where to find papers (all free)</h2>
+<table class="simple">
+<tr><th>Site</th><th>Use it for</th><th>Tip</th></tr>
+<tr><td><a href="https://arxiv.org/list/cs.CV/recent">arXiv cs.CV</a></td><td>every new vision preprint, PDF + HTML</td><td>the ID tells the date: 1505.04597 = May 2015</td></tr>
+<tr><td><a href="https://huggingface.co/papers">Hugging Face Daily Papers</a></td><td>the best new papers each day, voted by the community, with code, models and demos</td><td>Papers with Code now redirects here (trending papers)</td></tr>
+<tr><td><a href="https://www.alphaxiv.org">alphaXiv</a></td><td>discuss any arXiv paper line by line; AI chat about the paper</td><td>arxiv.org/abs/… → alphaxiv.org/abs/…</td></tr>
+<tr><td><a href="https://openaccess.thecvf.com">CVF Open Access</a></td><td>all CVPR / ICCV / WACV papers, free, final versions</td><td>also supplementary material</td></tr>
+<tr><td><a href="https://openreview.net">OpenReview</a></td><td>ICLR / NeurIPS papers <b>with the reviewers' comments</b></td><td>reviews show the weaknesses!</td></tr>
+<tr><td><a href="https://scholar.google.com">Google Scholar</a> · <a href="https://www.semanticscholar.org">Semantic Scholar</a></td><td>search, citation counts, "cited by" (what came after)</td><td>Semantic Scholar has TL;DR summaries</td></tr>
+<tr><td><a href="https://www.connectedpapers.com">Connected Papers</a></td><td>a graph of related papers: find the prior work and the follow-ups</td><td>great for literature reviews</td></tr>
+</table>
+<p class="tryit"><b>🖐 Try it:</b> open Hugging Face Daily Papers now. Find one paper from this week with "segmentation" or "detection" in the title and read its abstract.</p>
+</section>
+
+<section id="where-to-find-code" class="slide level2" data-menu-title="Where to find code">
+<p class="kicker">Level 2 · step 2</p>
+<h2>Where to find code to learn from</h2>
+<div class="grid2">
+<table class="simple">
+<tr><th>Source</th><th>Why</th></tr>
+<tr><td>Official repo (link in the paper / project page)</td><td>the final truth for every detail</td></tr>
+<tr><td><a href="https://nlp.seas.harvard.edu/annotated-transformer/">The Annotated Transformer</a></td><td>the paper with code between the lines</td></tr>
+<tr><td><a href="https://nn.labml.ai/">labml.ai annotated implementations</a></td><td>50+ papers, side-by-side notes and code</td></tr>
+<tr><td><a href="https://d2l.ai/">Dive into Deep Learning (d2l.ai)</a></td><td>free book: attention, ResNet, ViT chapters with code</td></tr>
+<tr><td><a href="https://github.com/pytorch/vision/tree/main/torchvision/models">torchvision models</a> · <a href="https://github.com/huggingface/pytorch-image-models">timm</a></td><td>clean, tested reference implementations</td></tr>
+<tr><td><a href="https://github.com/lucidrains/vit-pytorch">lucidrains/vit-pytorch</a> · <a href="https://github.com/milesial/Pytorch-UNet">milesial/Pytorch-UNet</a></td><td>short, readable versions of ViT and U-Net</td></tr>
+<tr><td><a href="https://github.com/niconielsen32/101-transformers">niconielsen32/101-transformers</a></td><td>15-topic Transformer course, notebooks</td></tr>
+</table>
+<div>
+<p class="note"><b>How to use other people's code:</b> read it <b>after</b> you tried yourself, to check details. Don't copy-paste: type it, and change names so you have to understand each line.</p>
+<p class="warn"><b>Licence &amp; honesty:</b> if you use or adapt code, <b>cite it</b> (repo + licence) in your report. Code you cannot explain earns no marks in the viva.</p>
+<p class="small">Videos that pair well with Lab 7: Andrej Karpathy, <a href="https://www.youtube.com/watch?v=kCc8FmEb1nY">"Let's build GPT: from scratch, in code, spelled out"</a> · Jay Alammar, <a href="https://jalammar.github.io/illustrated-transformer/">The Illustrated Transformer</a> (blog).</p>
+</div>
+</div>
+</section>
+
+<section id="seven-step-recipe" class="slide level2" data-menu-title="The 7-step paper → code recipe">
+<p class="kicker">Level 2 · step 3 · the method we use for every paper</p>
+<h2>The 7-step recipe: from paper to working code</h2>
+<div class="pipe" style="font-size:1.05em;">
+<div class="st">1 · Pass 1<small>card, decide</small></div><div class="ar">→</div>
+<div class="st">2 · Pass 2<small>figure, shapes, equations</small></div><div class="ar">→</div>
+<div class="st">3 · Map<small>box → class, eq. → line</small></div><div class="ar">→</div>
+<div class="st on">4 · Build &amp; test<small>smallest block first</small></div><div class="ar">→</div>
+<div class="st">5 · Overfit<small>one batch → loss ≈ 0</small></div><div class="ar">→</div>
+<div class="st">6 · Experiment<small>small, + ablation</small></div><div class="ar">→</div>
+<div class="st">7 · Report<small>honest</small></div>
+</div>
+<div class="grid3" style="margin-top:0.5em;">
+<div class="card"><h3>Test every block with…</h3><ul class="tight"><li>its <b>output shape</b> (from your shape table)</li><li>a <b>tiny example</b> you can compute by hand</li><li>its <b>parameter count</b> (by hand or from the paper)</li><li>a <b>reference</b> (PyTorch's own layer, official code)</li></ul></div>
+<div class="card" style="border-left-color:#ea580c;"><h3>Overfit one batch</h3><p>Train on 8–32 examples only. Loss must go to ≈ 0. If not, there is a bug in shapes, masks, loss or the training loop, and more data will <b>not</b> help.</p></div>
+<div class="card" style="border-left-color:#1f7a4d;"><h3>Small experiment</h3><p>Shrink the problem until it trains in minutes on Colab, but still tests the <b>paper's main claim</b>. Change one thing at a time. Several seeds.</p></div>
+</div>
+</section>
+
+<section id="colab-step-by-step" class="slide level2" data-menu-title="Google Colab step by step">
+<p class="kicker">Level 2 · step 4 · tool 1</p>
+<h2>Google Colab, step by step (nothing to install)</h2>
+<div class="grid2 wide-left">
+<ol class="tight small">
+<li>Sign in with a Google account at <a href="https://colab.research.google.com">colab.research.google.com</a>.</li>
+<li>Open a lab: click a <b>▶ Lab 7X in Colab</b> button (or <i>File → Open notebook → GitHub</i>, paste <code>Kazimbalti/intelligent-vision-systems</code>).</li>
+<li><b>Save your own copy:</b> <i>File → Save a copy in Drive</i>. (Otherwise your work is lost when you close the tab!)</li>
+<li>Optional GPU: <i>Runtime → Change runtime type → T4 GPU</i>. Lab 7 runs fine on CPU too.</li>
+<li>Run cells with <b>Shift + Enter</b>, or <i>Runtime → Run all</i>. The first cell downloads <code>lab7_checks.py</code>.</li>
+<li>Missing package? A cell with <code>!pip install -q package</code>.</li>
+<li>Keep files: <code>from google.colab import drive; drive.mount('/content/drive')</code> and save to <code>/content/drive/MyDrive/</code>.</li>
+<li>Stuck/frozen? <i>Runtime → Restart session</i>, then run from the top.</li>
+</ol>
+<div>
+<div class="card"><h3>Good to know</h3>
+<ul class="tight">
+<li>Free sessions <b>disconnect</b> after ~90 min idle and end after at most ~12 h: save often.</li>
+<li>Files in <code>/content</code> disappear when the session ends; Drive files stay.</li>
+<li>Check the GPU: <code>!nvidia-smi</code> or <code>torch.cuda.is_available()</code>.</li>
+<li>Colab has a built-in AI helper (Gemini): same rules as before, <b>explain, don't write</b>.</li>
+</ul></div>
+<p class="tryit"><b>🖐 Do it now:</b> open Lab 7A in Colab, save a copy in Drive, run the first two cells. Raise your hand when you see <code>PyTorch 2.x · device: cpu</code>.</p>
+</div>
+</div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/01-pytorch-for-papers.ipynb" style="right:24px; top:6px;">&#9654;&#xFE0E; Lab 7A in Colab</a>
+<aside class="notes">Do this live. Walk around: the most common problems are not being signed in, and forgetting to save a copy. Full illustrated guide: tutorials/09_paper_implementation_setup.html.</aside>
+</section>
+
+<section id="cursor-step-by-step" class="slide level2" data-menu-title="Cursor step by step">
+<p class="kicker">Level 2 · step 5 · tool 2</p>
+<h2>Cursor (AI code editor), step by step, on your laptop</h2>
+<div class="grid2 wide-left">
+<ol class="tight small">
+<li>Install <b>Python 3.11 or 3.12</b> from <a href="https://www.python.org/downloads/">python.org</a> (Windows: tick <i>"Add python.exe to PATH"</i>).</li>
+<li>Install <b>Cursor</b> from <a href="https://cursor.com">cursor.com</a> (free plan is enough). It is VS Code with AI built in.</li>
+<li>Get the labs: <code>git clone https://github.com/Kazimbalti/intelligent-vision-systems</code> (or download the ZIP).</li>
+<li><i>File → Open Folder</i> → <code>LAB/Lab_7</code>.</li>
+<li>Open the terminal (<b>Ctrl + `</b>) and make a virtual environment:<br><code>python -m venv .venv</code> → <code>.venv\Scripts\activate</code> (Windows) or <code>source .venv/bin/activate</code><br><code>pip install -r requirements.txt</code></li>
+<li>Open <code>01-pytorch-for-papers.ipynb</code> → <b>Select Kernel</b> (top right) → <code>.venv</code>. Install the Python + Jupyter extensions if asked.</li>
+<li>AI: <b>Ctrl + L</b> chat (use <b>Ask</b> mode to learn), <b>Ctrl + K</b> edit a selection, <b>@file</b> to give it context.</li>
+</ol>
+<div>
+<div class="card"><h3>Tutor mode is already set up</h3>
+<p>The Lab 7 folder contains <code>.cursor/rules/paper-tutor.mdc</code> and <code>AGENTS.md</code>: they tell Cursor's AI to <b>explain and give hints</b> in this course, not to write your TODOs for you.</p></div>
+<p class="tryit"><b>🖐 Try it:</b> select the attention equation in Lab 7B, press <b>Ctrl + L</b> and ask <i>"What is the shape of every tensor here if B = 2, L = 5, d_k = 8?"</i></p>
+<p class="tiny muted">Same steps work in VS Code (+ GitHub Copilot) or PyCharm.</p>
+</div>
+</div>
+</section>
+
+<section id="colab-vs-cursor" class="slide level2" data-menu-title="Colab or Cursor?">
+<p class="kicker">Level 2 · step 6</p>
+<h2>Colab or Cursor? Use both</h2>
+<table class="simple">
+<tr><th></th><th>Google Colab</th><th>Cursor / VS Code on your laptop</th></tr>
+<tr><td>Setup</td><td>none, runs in the browser</td><td>Python + editor + venv (15 min once)</td></tr>
+<tr><td>GPU</td><td>free T4 (limited hours)</td><td>only if your laptop has one (CPU is fine for Lab 7)</td></tr>
+<tr><td>Best for</td><td>notebooks, quick experiments, training on GPU, sharing a link</td><td>real projects with many <code>.py</code> files, git, debugging, Raspberry Pi code</td></tr>
+<tr><td>AI help</td><td>Gemini in Colab</td><td>Cursor chat / agent, sees your whole project</td></tr>
+<tr><td>Files</td><td>vanish unless saved to Drive</td><td>stay on your disk, versioned with git</td></tr>
+<tr><td>Offline</td><td>✘</td><td>✔</td></tr>
+</table>
+<p class="plain"><b>Our workflow:</b> do the Lab 7 notebooks in <b>Colab</b>. For the Paper Implementation Challenge write your model as a clean <code>model.py</code> in <b>Cursor</b>, push it to GitHub, and train it in Colab (<code>!git clone</code> your repo).</p>
+<p class="note">Full step-by-step guide with screenshots-in-words, troubleshooting and the paper reading list: <a href="../tutorials/09_paper_implementation_setup.html">Tutorial 09: Paper implementation setup (Colab &amp; Cursor)</a>.</p>
+</section>
+
+<section id="level-2-quiz" class="slide level2" data-menu-title="Level 2 quiz">
+<h2>Level 2 check</h2>
+<div class="quiz">
+<p class="q">Answer out loud, then click</p>
+<ol class="tight">
+<li>You trained a model in Colab for 40 minutes, closed the laptop, came back the next day: the trained weights are gone. Why, and how do you prevent it?</li>
+<li>Where can you read what reviewers criticised about an ICLR paper?</li>
+<li>Your loss does not go down when training on the full dataset. What is the first test from the 7-step recipe?</li>
+</ol>
+<div class="answer fragment"><b>1.</b> Files in <code>/content</code> live only as long as the session. Mount Google Drive and <code>torch.save(model.state_dict(), '/content/drive/MyDrive/…')</code>.</div>
+<div class="answer fragment"><b>2.</b> On <b>OpenReview</b> (ICLR and NeurIPS publish the reviews).</div>
+<div class="answer fragment"><b>3.</b> <b>Overfit one batch.</b> If the model cannot memorise 8–32 examples, there is a bug (shape, mask, loss, missing <code>zero_grad</code>…).</div>
+</div>
+</section>
+
+<!-- ============================ LEVEL 3 ============================ -->
+<section id="level-3" class="slide level2 center" data-background-color="#28568a" data-menu-title="Level 3 · PyTorch you need">
+<p class="sec-num">3</p>
+<p class="sec-title">The PyTorch you need</p>
+<p class="sec-sub"><b>Level 3</b> · tensors, shapes, conv arithmetic, nn.Module, the training loop, debugging habits</p>
+</section>
+
+<section id="pytorch-in-10-minutes" class="slide level2" data-menu-title="PyTorch in 10 minutes">
+<p class="kicker">Level 3 · step 1</p>
+<h2>PyTorch in 10 minutes: the three things every paper needs</h2>
+<div class="grid3">
+<div>
+<h3>1 · Tensors (B, C, H, W)</h3>
+<pre><code class="python">x = torch.rand(8, 3, 32, 32)  # batch of
+x.shape   # 8 RGB 32×32 images
+x[0]      # one image (3, 32, 32)
+x.permute(0, 2, 3, 1)  # → (B,H,W,C)
+x.to("cuda")           # on the GPU
+</code></pre>
+<p class="small">NumPy / OpenCV: (H, W, C). PyTorch: <b>channels first</b>.</p>
+</div>
+<div>
+<h3>2 · A model = nn.Module</h3>
+<pre><code class="python">class TinyMLP(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(2, 32), nn.ReLU(),
+            nn.Linear(32, 2))
+
+    def forward(self, x):
+        return self.net(x)
+</code></pre>
+<p class="small"><code>__init__</code>: the boxes · <code>forward</code>: the arrows.</p>
+</div>
+<div>
+<h3>3 · The training loop</h3>
+<pre><code class="python">for x, y in loader:
+    opt.zero_grad()      # 1
+    pred = model(x)      # 2
+    loss = loss_fn(pred, y)  # 3
+    loss.backward()      # 4
+    opt.step()           # 5
+</code></pre>
+<p class="small">Five lines, in every lab, in every paper.</p>
+</div>
+</div>
+<p class="plain"><b>Remember:</b> a paper's figure gives you <code>__init__</code> (which layers) and <code>forward</code> (how they connect). The "Training" section gives you the loop's optimiser, learning rate and loss.</p>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/01-pytorch-for-papers.ipynb" style="right:24px; top:6px;">&#9654;&#xFE0E; Lab 7A in Colab</a>
+</section>
+
+<section id="conv-arithmetic" class="slide level2" data-menu-title="Live demo: conv arithmetic">
+<p class="kicker">Level 3 · step 2 · live demo</p>
+<h2>Conv arithmetic: the one formula behind every shape</h2>
+<div class="grid2">
+<div>
+<p>\[ n_{out} = \left\lfloor \frac{n + 2p - d\,(k-1) - 1}{s} \right\rfloor + 1 \]</p>
+<p class="small">n = input size, k = kernel, s = stride, p = padding, d = dilation (usually 1). Pooling uses the same formula.</p>
+<table class="simple">
+<tr><th>Paper</th><th>Layer</th><th>n → n<sub>out</sub></th></tr>
+<tr><td>U-Net</td><td>3 × 3 conv, no padding</td><td>572 → 570</td></tr>
+<tr><td>ResNet</td><td>7 × 7 conv, s 2, p 3</td><td>224 → 112</td></tr>
+<tr><td>ViT</td><td>16 × 16 "patch" conv, s 16</td><td>224 → 14</td></tr>
+<tr><td>everyone</td><td>3 × 3 conv, p 1 ("same")</td><td>n → n</td></tr>
+</table>
+</div>
+<div class="demo-box">
+<label>input n <input type="range" id="ca-n" min="4" max="640" value="572"><span class="val" id="ca-nv">572</span></label>
+<label>kernel k <input type="range" id="ca-k" min="1" max="16" value="3"><span class="val" id="ca-kv">3</span></label>
+<label>stride s <input type="range" id="ca-s" min="1" max="16" value="1"><span class="val" id="ca-sv">1</span></label>
+<label>padding p <input type="range" id="ca-p" min="0" max="8" value="0"><span class="val" id="ca-pv">0</span></label>
+<label>dilation d <input type="range" id="ca-d" min="1" max="4" value="1"><span class="val" id="ca-dv">1</span></label>
+<div class="btnrow"><button class="dbtn" data-ca="572,3,1,0,1">U-Net conv</button><button class="dbtn" data-ca="568,2,2,0,1">U-Net pool</button><button class="dbtn" data-ca="224,7,2,3,1">ResNet stem</button><button class="dbtn" data-ca="224,16,16,0,1">ViT patches</button><button class="dbtn" data-ca="32,3,1,1,1">"same"</button></div>
+<pre id="ca-out" style="font-size:0.5em; margin-top:0.5em;"></pre>
+</div>
+</div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/01-pytorch-for-papers.ipynb" style="right:24px; top:6px;">&#9654;&#xFE0E; Lab 7A in Colab</a>
+</section>
+
+<section id="reshape-vs-permute" class="slide level2" data-menu-title="Reshape vs permute: images to tokens">
+<p class="kicker">Level 3 · step 3</p>
+<h2>Reshape vs permute: the #1 silent bug</h2>
+<div class="grid2">
+<div>
+<pre><code class="python">t = torch.arange(6).reshape(2, 3)
+# tensor([[0, 1, 2],
+#         [3, 4, 5]])
+t.reshape(3, 2)  # [[0,1],[2,3],[4,5]]  re-cut!
+t.T              # [[0,3],[1,4],[2,5]]  real transpose
+
+# feature map (B, C, H, W) → tokens (B, H·W, C)
+tokens = x.flatten(2).transpose(1, 2)   # ✔
+tokens = x.reshape(B, H * W, C)         # ✘ right shape,
+                                        #   wrong numbers!
+</code></pre>
+</div>
+<div>
+<p class="small"><code>reshape</code>/<code>view</code> re-read the numbers <b>in memory order</b>. <code>permute</code>/<code>transpose</code> really <b>move an axis</b>.</p>
+<p class="warn">The wrong version <b>does not crash</b>. Shapes match, the model trains, just badly. You can lose days. Every Transformer and ViT does this conversion: multi-head attention twice, ViT once for the patches.</p>
+<p class="note"><b>Habit:</b> after every reshape, test on a <b>tiny tensor you can read</b> (<code>torch.arange</code>) and check that the right numbers ended up together.</p>
+</div>
+</div>
+</section>
+
+<section id="debugging-habits" class="slide level2" data-menu-title="Debugging habits of paper implementers">
+<p class="kicker">Level 3 · step 4</p>
+<h2>Six debugging habits of people who implement papers</h2>
+<div class="grid3">
+<div class="card"><h3>1 · Trace shapes</h3><p><code>C.trace_shapes(model, x)</code> prints every layer's output shape. Compare with the figure.</p></div>
+<div class="card"><h3>2 · Assert shapes</h3><p><code>assert y.shape == (B, 64, 568, 568)</code> after every block, in the code itself.</p></div>
+<div class="card"><h3>3 · Tiny example by hand</h3><p>3 words, 2 numbers each: compute attention on paper, compare.</p></div>
+<div class="card" style="border-left-color:#ea580c;"><h3>4 · Compare with a reference</h3><p>Same weights into <code>nn.MultiheadAttention</code>; same parameter count as <code>torchvision</code>.</p></div>
+<div class="card" style="border-left-color:#ea580c;"><h3>5 · Overfit one batch</h3><p>8–32 examples, loss → ≈ 0. Otherwise: a bug.</p></div>
+<div class="card" style="border-left-color:#ea580c;"><h3>6 · Fix the seed, change one thing</h3><p><code>C.seed_everything(0)</code>; one change per run; write results in a table.</p></div>
+</div>
+<p class="plain"><b>All six are built into the Lab 7 checks.</b> When a check says 💡, it is pointing at one of these habits.</p>
+</section>
+
+<section id="level-3-quiz" class="slide level2" data-menu-title="Level 3 quiz">
+<h2>Level 3 check</h2>
+<div class="quiz">
+<p class="q">Use the formula, then click</p>
+<ol class="tight">
+<li>A 64 × 64 feature map goes through a 3 × 3 conv with stride 2 and padding 1. Output size?</li>
+<li>U-Net: 568 × 568 → 2 × 2 max-pool, stride 2 → ? → two unpadded 3 × 3 convs → ?</li>
+<li>A <code>Linear(512 → 2048)</code> layer: how many parameters?</li>
+</ol>
+<div class="answer fragment"><b>1.</b> ⌊(64 + 2 − 2 − 1)/2⌋ + 1 = ⌊63/2⌋ + 1 = 31 + 1 = <b>32</b>.</div>
+<div class="answer fragment"><b>2.</b> 568 → <b>284</b> → 282 → <b>280</b> (exactly the numbers in Figure 1 of the paper).</div>
+<div class="answer fragment"><b>3.</b> 512 · 2048 weights + 2048 biases = <b>1 050 624</b>. (Two of these make the Transformer's feed-forward block.)</div>
+</div>
+</section>
+
+<!-- ============================ LEVEL 4 ============================ -->
+<section id="level-4" class="slide level2 center" data-background-color="#28568a" data-menu-title="Level 4 · Paper 1: Attention Is All You Need">
+<p class="sec-num">4</p>
+<p class="sec-title">Paper 1: Attention Is All You Need</p>
+<p class="sec-sub"><b>Level 4</b> · Vaswani et al., NeurIPS 2017 · attention, multi-head, positions, the full Transformer · Labs 7B &amp; 7C</p>
+</section>
+
+<section id="why-attention" class="slide level2" data-menu-title="Why attention? The problem with RNNs">
+<p class="kicker">Level 4 · step 1 · the problem</p>
+<h2>Why attention? Reading one word at a time is slow and forgetful</h2>
+<svg viewBox="0 0 1500 330" class="stack-svg" role="img" aria-label="An RNN passes information word by word; attention connects every word to every other word directly">
+<g font-family="Source Sans Pro, sans-serif" font-size="24" text-anchor="middle">
+<defs><marker id="arB" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10z" fill="#28568a"/></marker>
+<marker id="arC" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10z" fill="#ea580c"/></marker></defs>
+<text x="330" y="35" font-weight="700" fill="#28568a">RNN (before 2017)</text>
+<g fill="#eef3f9" stroke="#28568a" stroke-width="3"><rect x="40" y="70" width="100" height="60" rx="10"/><rect x="190" y="70" width="100" height="60" rx="10"/><rect x="340" y="70" width="100" height="60" rx="10"/><rect x="490" y="70" width="100" height="60" rx="10"/></g>
+<text x="90" y="108">The</text><text x="240" y="108">animal</text><text x="390" y="108">…</text><text x="540" y="108">it</text>
+<g stroke="#28568a" stroke-width="4" marker-end="url(#arB)"><path d="M142 100 H185"/><path d="M292 100 H335"/><path d="M442 100 H485"/></g>
+<text x="315" y="185" font-size="20" fill="#5b6b7b">step 1 → 2 → 3 → …: cannot run in parallel</text>
+<text x="315" y="215" font-size="20" fill="#5b6b7b">"it" must remember "animal" through every step</text>
+<text x="315" y="245" font-size="20" fill="#5b6b7b">path length between two words: O(n)</text>
+<text x="1080" y="35" font-weight="700" fill="#ea580c">Self-attention (Transformer)</text>
+<g fill="#fff4ec" stroke="#ea580c" stroke-width="3"><rect x="790" y="70" width="100" height="60" rx="10"/><rect x="940" y="70" width="100" height="60" rx="10"/><rect x="1090" y="70" width="100" height="60" rx="10"/><rect x="1240" y="70" width="100" height="60" rx="10"/></g>
+<text x="840" y="108">The</text><text x="990" y="108">animal</text><text x="1140" y="108">…</text><text x="1290" y="108">it</text>
+<g stroke="#ea580c" stroke-width="4" fill="none" marker-end="url(#arC)"><path d="M1290 135 Q1140 230 995 137"/><path d="M1290 135 Q1065 270 845 137"/><path d="M1290 135 Q1215 190 1145 137"/></g>
+<text x="1065" y="300" font-size="20" fill="#5b6b7b">every word looks at every word at once: parallel on a GPU, path length O(1)</text>
+</g></svg>
+<p class="plain"><b>In plain words:</b> an RNN is like passing a message along a line of students; by the 20th student the message is garbled. Attention lets every student <b>ask everyone directly</b>. The paper's Table 1 says exactly this: maximum path length O(n) for recurrent layers, O(1) for self-attention.</p>
+</section>
+
+<section id="attention-equation" class="slide level2" data-menu-title="The attention equation">
+<p class="kicker">Level 4 · step 2 · the core equation (§3.2.1, Eq. 1)</p>
+<h2>Scaled dot-product attention: one line of maths</h2>
+<div class="grid2">
+<div>
+<p style="font-size:0.85em;">\[ \mathrm{Attention}(Q,K,V) = \mathrm{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}}\right)V \]</p>
+<table class="simple" style="font-size:0.5em;">
+<tr><th>Symbol</th><th>Shape</th><th>Meaning</th></tr>
+<tr><td>Q (queries)</td><td>(L<sub>q</sub>, d<sub>k</sub>)</td><td>"what am I looking for?"</td></tr>
+<tr><td>K (keys)</td><td>(L<sub>k</sub>, d<sub>k</sub>)</td><td>"what do I contain?" (a label)</td></tr>
+<tr><td>V (values)</td><td>(L<sub>k</sub>, d<sub>v</sub>)</td><td>"what do I give if chosen?"</td></tr>
+<tr><td>QKᵀ</td><td>(L<sub>q</sub>, L<sub>k</sub>)</td><td>similarity of every query with every key</td></tr>
+<tr><td>softmax(·)</td><td>(L<sub>q</sub>, L<sub>k</sub>)</td><td>each row → percentages summing to 1</td></tr>
+<tr><td>output</td><td>(L<sub>q</sub>, d<sub>v</sub>)</td><td>weighted mix of the values</td></tr>
+</table>
+<p class="plain"><b>YouTube analogy:</b> your search text = query, video titles = keys, the videos = values. Better-matching titles get more of your attention.</p>
+</div>
+<div><img class="fig" src="assets/07_paper_implementation/p_transformer_fig2.png" alt="Figure 2: scaled dot-product attention and multi-head attention"><p class="cap">Figure 2 of the paper. Read it bottom-up: MatMul → Scale → Mask → SoftMax → MatMul. Each box is one line of code.</p></div>
+</div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/02-attention-from-scratch.ipynb" style="right:24px; top:6px;">&#9654;&#xFE0E; Lab 7B in Colab</a>
+</section>
+
+<section id="attention-code" class="slide level2" data-menu-title="Attention: figure → code">
+<p class="kicker">Level 4 · step 3 · figure 2 (left) → code</p>
+<h2>Five boxes, five lines</h2>
+<div class="grid2 wide-left">
+<pre><code class="python">def attention(q, k, v, mask=None):
+    d_k = q.size(-1)
+    scores = q @ k.transpose(-2, -1)             # MatMul
+    scores = scores / math.sqrt(d_k)             # Scale
+    if mask is not None:                         # Mask (opt.)
+        scores = scores.masked_fill(~mask, float("-inf"))
+    weights = scores.softmax(dim=-1)             # SoftMax
+    return weights @ v, weights                  # MatMul
+</code></pre>
+<div>
+<div class="card"><h3>Three details the paper leaves to you</h3>
+<ul class="tight">
+<li><code>k.transpose(-2, -1)</code>, not <code>k.T</code>: the tensors will be 4-D (batch, heads, L, d<sub>k</sub>).</li>
+<li>Softmax over the <b>last</b> axis = over the keys. Each query's weights sum to 1.</li>
+<li>Masked scores become −∞ <b>before</b> the softmax, so e<sup>−∞</sup> = 0.</li>
+</ul></div>
+<p class="note">Lab 7B checks your function against PyTorch's own <code>F.scaled_dot_product_attention</code> and gives a specific hint for each classic mistake.</p>
+</div>
+</div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/02-attention-from-scratch.ipynb" style="right:24px; top:6px;">&#9654;&#xFE0E; Lab 7B in Colab</a>
+</section>
+
+<section id="demo-attention" class="slide level2" data-menu-title="Live demo: attention playground">
+<p class="kicker">Level 4 · step 4 · live demo</p>
+<h2>Attention playground</h2>
+<div class="grid2">
+<div>
+<canvas id="att-canvas" width="620" height="560"></canvas>
+<p class="cap">Self-attention weights for "the cat sat on the mat" (Q = K = V = hand-made 4-number embeddings, as in Lab 7B). Click a row.</p>
+</div>
+<div>
+<div class="demo-box">
+<label><input type="checkbox" id="att-causal"> causal mask (decoder: no peeking at later words)</label>
+<label>sharpness (embedding scale) <input type="range" id="att-sharp" min="2" max="40" value="10"><span class="val" id="att-sharpv">1.0</span></label>
+<p class="small" id="att-row" style="margin:0.3em 0;">Click a row of the matrix.</p>
+</div>
+<div class="demo-box" style="margin-top:0.4em;">
+<p class="small" style="margin:0 0 0.2em;"><b>Why ÷√d<sub>k</sub>?</b> Random q and 8 keys with d<sub>k</sub> numbers each:</p>
+<label><span>d<sub>k</sub></span> <input type="range" id="att-dk" min="1" max="10" value="6"><span class="val" id="att-dkv">64</span></label>
+<label><input type="checkbox" id="att-scale" checked> <span>divide by √d<sub>k</sub> (the paper)</span></label>
+<canvas id="att-bars" width="600" height="190"></canvas>
+<button class="dbtn" id="att-new">new random q, k</button>
+</div>
+</div>
+</div>
+<aside class="notes">Show: (1) cat looks at mat, sat looks at on; (2) tick causal: the upper triangle goes to zero, first row is 1.0; (3) in the bottom panel move d_k to 512 with scaling off: one bar takes everything. Tick scaling on: the bars stay soft. That is footnote 4 of the paper.</aside>
+</section>
+
+<section id="multi-head-attention" class="slide level2" data-menu-title="Multi-head attention">
+<p class="kicker">Level 4 · step 5 · §3.2.2</p>
+<h2>Multi-head attention: 8 small attentions instead of 1 big one</h2>
+<div class="grid2 wide-left">
+<div>
+<p>\[ \mathrm{MultiHead}(Q,K,V) = \mathrm{Concat}(\mathrm{head}_1,\dots,\mathrm{head}_h)\,W^O \]</p>
+<pre><code class="python">B, L, D = x.shape                       # e.g. (2, 10, 512), h = 8
+q = self.w_q(x)                          # (B, L, 512)  one Linear for all heads
+q = q.view(B, L, h, D // h)              # (B, L, 8, 64)
+q = q.transpose(1, 2)                    # (B, 8, L, 64)  heads = extra batch axis
+#   … same for k, v …
+out, w = attention(q, k, v, mask)        # (B, 8, L, 64)
+out = out.transpose(1, 2).reshape(B, L, D)   # undo: (B, L, 512)
+return self.w_o(out)                     # W^O
+</code></pre>
+</div>
+<div>
+<p class="small">Each head can learn a different relation: one finds the subject of a verb, one the previous word, one the word "it" refers to.</p>
+<p class="small">Paper's base model: d<sub>model</sub> = 512, h = 8, d<sub>k</sub> = d<sub>v</sub> = 512/8 = <b>64</b>. Same cost as one head of size 512.</p>
+<p class="warn"><b>Classic bug</b> (Lab 7G, bug 4): <code>q.view(B, h, L, d_k)</code> directly. The shape is right but tokens and heads are mixed. Always <code>view</code> then <code>transpose</code>.</p>
+<p class="note">Lab 7B: copy PyTorch's weights into your class; outputs must equal <code>nn.MultiheadAttention</code>.</p>
+</div>
+</div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/02-attention-from-scratch.ipynb" style="right:24px; top:6px;">&#9654;&#xFE0E; Lab 7B in Colab</a>
+</section>
+
+<section id="positional-encoding" class="slide level2" data-menu-title="Live demo: positional encoding">
+<p class="kicker">Level 4 · step 6 · §3.5 · live demo</p>
+<h2>Positional encoding: telling the model <i>where</i> each word is</h2>
+<div class="grid2 wide-right">
+<div>
+<p class="small">Attention sees a <b>set</b>, not a sequence: "dog bites man" = "man bites dog". So the paper <b>adds</b> a pattern to every word's embedding:</p>
+<p style="font-size:0.8em;">\[ \begin{aligned} PE_{(pos,\,2i)} &amp;= \sin\big(pos / 10000^{2i/d}\big) \\ PE_{(pos,\,2i+1)} &amp;= \cos\big(pos / 10000^{2i/d}\big) \end{aligned} \]</p>
+<pre class="code-sm"><code class="python">pos  = torch.arange(L).unsqueeze(1)          # (L, 1)
+two_i = torch.arange(0, d, 2)                # 0, 2, 4, …
+div  = 10000 ** (two_i / d)
+pe[:, 0::2] = torch.sin(pos / div)           # even dims
+pe[:, 1::2] = torch.cos(pos / div)           # odd dims
+</code></pre>
+<p class="plain"><b>Clock analogy:</b> low dimensions are the seconds hand (fast), high dimensions the hour hand (slow). Together they give every position a unique "time".</p>
+</div>
+<div class="demo-box">
+<canvas id="pe-canvas" width="760" height="430"></canvas>
+<label><span>d<sub>model</sub></span> <input type="range" id="pe-d" min="3" max="9" value="7"><span class="val" id="pe-dv">128</span></label>
+<label>positions <input type="range" id="pe-L" min="10" max="200" value="100"><span class="val" id="pe-Lv">100</span></label>
+<p class="small" id="pe-info" style="margin:0.2em 0;">Move the mouse over the picture.</p>
+</div>
+</div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/03-transformer-reverse-sequence.ipynb" style="right:24px; top:6px;">&#9654;&#xFE0E; Lab 7C in Colab</a>
+</section>
+
+<section id="transformer-figure-1" class="slide level2" data-menu-title="The Transformer: Figure 1">
+<p class="kicker">Level 4 · step 7 · Figure 1</p>
+<h2>The whole Transformer is made of the blocks you now know</h2>
+<div class="grid2 wide-left">
+<div>
+<table class="simple" style="font-size:0.5em;">
+<tr><th>Box in Figure 1</th><th>What it is</th></tr>
+<tr><td>Input / Output Embedding</td><td><code>nn.Embedding(vocab, 512)</code> × √d<sub>model</sub></td></tr>
+<tr><td>Positional Encoding ⊕</td><td>add the sin/cos pattern</td></tr>
+<tr><td>Multi-Head Attention</td><td>encoder self-attention</td></tr>
+<tr><td>Masked Multi-Head Attention</td><td>decoder self-attention + causal mask</td></tr>
+<tr><td>Multi-Head Attention (decoder, middle)</td><td><b>cross</b>-attention: Q from decoder, K, V from encoder</td></tr>
+<tr><td>Feed Forward</td><td>Linear(512→2048) → ReLU → Linear(2048→512)</td></tr>
+<tr><td>Add &amp; Norm</td><td><code>LayerNorm(x + Sublayer(x))</code></td></tr>
+<tr><td>N×</td><td>stack N = 6 identical layers</td></tr>
+<tr><td>Linear + Softmax</td><td>scores over the output vocabulary</td></tr>
+</table>
+<p class="small muted">Base model: N = 6, d<sub>model</sub> = 512, h = 8, d<sub>ff</sub> = 2048, dropout 0.1 → 65 M parameters (Table 3).</p>
+</div>
+<div><img class="fig" src="assets/07_paper_implementation/p_transformer_fig1.png" alt="Figure 1 of Attention Is All You Need: the Transformer architecture" style="max-height:700px;"></div>
+</div>
+</section>
+
+<section id="transformer-build-order" class="slide level2" data-menu-title="Build order: smallest block first">
+<p class="kicker">Level 4 · step 8 · Lab 7C</p>
+<h2>Build order: smallest block first, test each one</h2>
+<div class="pipe">
+<div class="st">Scaled dot-product attention<small>7B ✅ = F.sdpa</small></div><div class="ar">→</div>
+<div class="st">Multi-head attention<small>7B ✅ = nn.MHA</small></div><div class="ar">→</div>
+<div class="st">Positional encoding<small>7C ✅ = formula</small></div><div class="ar">→</div>
+<div class="st">Feed-forward<small>7C ✅ params</small></div><div class="ar">→</div>
+<div class="st">Layer norm<small>7C ✅ = nn.LayerNorm</small></div><div class="ar">→</div>
+<div class="st on">Encoder layer<small>✅ mask respected</small></div><div class="ar">→</div>
+<div class="st on">Decoder layer<small>✅ no future peeking</small></div><div class="ar">→</div>
+<div class="st on">Transformer<small>✅ shapes</small></div>
+</div>
+<div class="grid2" style="margin-top:0.3em;">
+<pre class="code-sm"><code class="python">class EncoderLayer(nn.Module):
+    def __init__(self, d_model, n_heads, d_ff, dropout=0.1):
+        super().__init__()
+        self.self_attn = MultiHeadAttention(d_model, n_heads, dropout)
+        self.ffn = FeedForward(d_model, d_ff, dropout)
+        self.norm1, self.norm2 = LayerNorm(d_model), LayerNorm(d_model)
+        self.drop = nn.Dropout(dropout)
+
+    def forward(self, x, src_mask):           # "LayerNorm(x + Sublayer(x))"
+        x = self.norm1(x + self.drop(self.self_attn(x, x, x, src_mask)))
+        x = self.norm2(x + self.drop(self.ffn(x)))
+        return x
+</code></pre>
+<pre class="code-sm"><code class="python">class DecoderLayer(nn.Module):
+    ...
+    def forward(self, y, memory, src_mask, tgt_mask):
+        y = self.norm1(y + self.drop(self.self_attn(y, y, y, tgt_mask)))   # masked
+        y = self.norm2(y + self.drop(self.cross_attn(y, memory, memory, src_mask)))
+        y = self.norm3(y + self.drop(self.ffn(y)))
+        return y
+
+# Transformer.forward(src, tgt):
+#   memory = encoder(embed(src) + PE)
+#   return linear(decoder(embed(tgt) + PE, memory))   # (B, L_tgt, vocab)
+</code></pre>
+</div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/03-transformer-reverse-sequence.ipynb" style="right:24px; top:6px;">&#9654;&#xFE0E; Lab 7C in Colab</a>
+</section>
+
+<section id="reverse-task" class="slide level2" data-menu-title="Experiment: teach it to reverse a sequence">
+<p class="kicker">Level 4 · step 9 · the experiment</p>
+<h2>A task you can train in 1 minute: reverse a sequence</h2>
+<div class="grid2">
+<div>
+<pre><code class="text">src     :      3  7  1  9  5  2  8  4
+tgt_in  : BOS  4  8  2  5  9  1  7  3      (teacher forcing:
+tgt_out :  4   8  2  5  9  1  7  3 EOS      shifted by one)
+</code></pre>
+<ul class="tight small">
+<li>Tiny model: d<sub>model</sub> = 64, 4 heads, 2 + 2 layers, <b>170 k</b> parameters (the paper's base: 65 M)</li>
+<li>Adam β = (0.9, 0.98) as in the paper, lr 2 × 10⁻³, 1000 steps of 64 random sequences</li>
+<li>Inference: greedy decoding, one token at a time (like ChatGPT)</li>
+<li>Result: <b>98.8 %</b> of 1000 new sequences reversed perfectly (CPU, ≈ 40 s)</li>
+</ul>
+<p class="tryit"><b>🖐 Predict first:</b> remove the positional encoding and retrain. What accuracy? (Lab 7C, Your turn 1.)</p>
+</div>
+<div>
+<img class="fig" src="assets/07_paper_implementation/g_cross_attention.png" alt="Cross-attention of the trained model forms an anti-diagonal" style="max-height:520px;">
+<p class="cap">The trained model's cross-attention: output token <i>i</i> looks at input token <i>L − 1 − i</i>, an <b>anti-diagonal</b>. Nobody programmed this; it was learned.</p>
+</div>
+</div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/03-transformer-reverse-sequence.ipynb" style="right:24px; top:6px;">&#9654;&#xFE0E; Lab 7C in Colab</a>
+</section>
+
+<section id="level-4-quiz" class="slide level2" data-menu-title="Level 4 quiz">
+<h2>Level 4 check: the Transformer</h2>
+<div class="quiz">
+<p class="q">Answer out loud, then click</p>
+<ol class="tight">
+<li>Q is (2, 8, 10, 64) and K is (2, 8, 12, 64). What is the shape of QKᵀ? Of the output if V is (2, 8, 12, 64)?</li>
+<li>Without the positional encoding, can the Transformer reverse a sequence? Why?</li>
+<li>Why does the decoder's first attention need a causal mask during training, but the encoder's does not?</li>
+</ol>
+<div class="answer fragment"><b>1.</b> QKᵀ: (2, 8, 10, 12) = one score per (query, key) pair in every head. Output: (2, 8, 10, 64).</div>
+<div class="answer fragment"><b>2.</b> No: attention treats the input as a <b>set</b>, so the encoder cannot tell which digit came first. Accuracy collapses to ≈ 0 % (try it in Lab 7C).</div>
+<div class="answer fragment"><b>3.</b> With teacher forcing the decoder sees the whole correct answer. Without the mask, position <i>i</i> would just copy token <i>i</i>+1. The encoder reads the input, which is allowed to be seen completely.</div>
+</div>
+</section>
+
+<!-- ============================ LEVEL 5 ============================ -->
+<section id="level-5" class="slide level2 center" data-background-color="#28568a" data-menu-title="Level 5 · Paper 2: U-Net">
+<p class="sec-num">5</p>
+<p class="sec-title">Paper 2: U-Net</p>
+<p class="sec-sub"><b>Level 5</b> · Ronneberger, Fischer &amp; Brox, MICCAI 2015 · segmentation with very little data · Lab 7D</p>
+</section>
+
+<section id="unet-figure-1" class="slide level2" data-menu-title="U-Net: Figure 1 is the paper">
+<p class="kicker">Level 5 · step 1 · Figure 1</p>
+<h2>U-Net: the figure <i>is</i> the paper</h2>
+<div class="grid2 img-wide">
+<div><img class="fig" src="assets/07_paper_implementation/p_unet_fig1.png" alt="Figure 1 of the U-Net paper"></div>
+<div>
+<ul class="tight small">
+<li><b>Left (contracting):</b> 2 × [3 × 3 conv, ReLU] then 2 × 2 max-pool. Channels <b>double</b>: 64 → 128 → 256 → 512 → 1024. Learns <i>what</i> is in the image.</li>
+<li><b>Right (expansive):</b> 2 × 2 up-conv (channels halve), <b>concatenate</b> the cropped left map, 2 × [3 × 3 conv, ReLU]. Recovers <i>where</i>.</li>
+<li><b>Grey arrows = skip connections:</b> sharp details jump straight across the U.</li>
+<li><b>Last layer:</b> 1 × 1 conv → 2 classes per pixel.</li>
+<li>Numbers on the boxes: <b>channels</b> (top) and <b>size</b> (bottom left). Unpadded convs: every conv loses 2 pixels.</li>
+</ul>
+<p class="plain"><b>Analogy:</b> the left side zooms out to understand the scene; the right side zooms back in to draw the outline, copying the fine details from the left side through the skip connections.</p>
+</div>
+</div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/04-unet-from-paper.ipynb" style="right:24px; top:6px;">&#9654;&#xFE0E; Lab 7D in Colab</a>
+</section>
+
+<section id="demo-unet-shapes" class="slide level2" data-menu-title="Live demo: U-Net shape tracer">
+<p class="kicker">Level 5 · step 2 · live demo</p>
+<h2>U-Net shape tracer: predict every size, then check</h2>
+<div class="grid2 wide-right">
+<div class="demo-box">
+<label>input size <input type="number" id="un-n" value="572" min="16" max="2048" step="1" style="width:5em"></label>
+<label>padding <select id="un-pad"><option value="valid" selected>valid (paper, 2015)</option><option value="same">same, padding = 1 (today)</option></select></label>
+<label>depth (pools) <input type="range" id="un-depth" min="1" max="5" value="4"><span class="val" id="un-depthv">4</span></label>
+<label>first channels <select id="un-base"><option>8</option><option>16</option><option>32</option><option selected>64</option></select></label>
+<label>classes <input type="number" id="un-cls" value="2" min="1" max="100" style="width:4em"></label>
+<label><input type="checkbox" id="un-bn"> BatchNorm (no conv bias)</label>
+<div class="btnrow"><button class="dbtn" data-un="572,valid,4,64,2,0">2015 paper</button><button class="dbtn" data-un="64,same,3,16,4,1">Lab 7D model</button><button class="dbtn" data-un="570,valid,4,64,2,0">570 input?</button></div>
+<p class="demo-msg" id="un-msg"></p>
+</div>
+<div><pre id="un-out" style="font-size:0.46em; max-height:640px; overflow:auto;"></pre></div>
+</div>
+<aside class="notes">Press "2015 paper": 572 → 388, 31,030,658 parameters, exactly what the Lab 7D check expects. Then "570 input?": a size that is odd before a pool cannot be used with valid convolutions; that is why the paper says "it is important to select the input tile size such that all 2x2 max-pooling operations are applied to a layer with an even x- and y-size".</aside>
+</section>
+
+<section id="unet-code" class="slide level2" data-menu-title="U-Net: the code">
+<p class="kicker">Level 5 · step 3 · paper → code</p>
+<h2>U-Net in 30 lines</h2>
+<div class="grid2" style="grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);">
+<pre class="code-sm" style="font-size:0.42em; line-height:1.2;"><code class="python">class DoubleConvValid(nn.Module):              # 2 × [3×3 conv (unpadded), ReLU]
+    def __init__(self, cin, cout):
+        super().__init__()
+        self.net = nn.Sequential(nn.Conv2d(cin, cout, 3), nn.ReLU(inplace=True),
+                                 nn.Conv2d(cout, cout, 3), nn.ReLU(inplace=True))
+    def forward(self, x):
+        return self.net(x)
+
+def center_crop(x, size):                      # "copy and crop"
+    t = (x.shape[-1] - size) // 2
+    return x[..., t:t + size, t:t + size]
+
+class UNetPaper(nn.Module):
+    def __init__(self, in_ch=1, n_classes=2):
+        super().__init__()
+        ch = [64, 128, 256, 512, 1024]
+        self.downs = nn.ModuleList([DoubleConvValid(([in_ch] + ch)[i], ch[i]) for i in range(5)])
+        self.pool = nn.MaxPool2d(2)
+        self.ups = nn.ModuleList([nn.ConvTranspose2d(ch[i], ch[i-1], 2, stride=2) for i in (4, 3, 2, 1)])
+        self.up_convs = nn.ModuleList([DoubleConvValid(ch[i], ch[i-1]) for i in (4, 3, 2, 1)])
+        self.head = nn.Conv2d(64, n_classes, 1)                 # 1×1 conv
+
+    def forward(self, x):
+        skips = []
+        for i, down in enumerate(self.downs):                   # contracting path
+            x = down(x)
+            if i &lt; 4:
+                skips.append(x)
+                x = self.pool(x)
+        for up, conv, skip in zip(self.ups, self.up_convs, reversed(skips)):
+            x = up(x)                                           # expansive path
+            x = conv(torch.cat([center_crop(skip, x.shape[-1]), x], dim=1))
+        return self.head(x)
+</code></pre>
+<div>
+<p class="small">✅ Lab 7D checks: 572² → <b>388²</b>, <b>31 030 658</b> parameters, and you can count the paper's "<b>23 convolutional layers</b>" in <code>trace_shapes</code>.</p>
+<table class="simple">
+<tr><th>2015 paper</th><th>Today</th></tr>
+<tr><td>unpadded convs + crop</td><td><code>padding=1</code>, no crop</td></tr>
+<tr><td>no normalisation</td><td>BatchNorm after each conv</td></tr>
+<tr><td>64 … 1024 channels</td><td>base 16–64</td></tr>
+<tr><td>overlap-tile for big images</td><td>whole image at once</td></tr>
+</table>
+<p class="small muted">Idea unchanged since 2015: encoder, decoder, skip connections. nnU-Net (2021) is still the medical benchmark winner.</p>
+</div>
+</div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/04-unet-from-paper.ipynb" style="right:24px; top:6px;">&#9654;&#xFE0E; Lab 7D in Colab</a>
+</section>
+
+<section id="unet-experiment" class="slide level2" data-menu-title="U-Net: data, training, ablation">
+<p class="kicker">Level 5 · step 4 · the experiment</p>
+<h2>Our experiment: shapes dataset, Dice, and an ablation</h2>
+<div class="grid2 wide-right">
+<div>
+<ul class="tight small">
+<li><b>Data:</b> 800 + 200 generated 64 × 64 images with circles, squares, triangles and noise (Lab 7D, you write the square-drawing code).</li>
+<li><b>Model:</b> modern U-Net, base 16, depth 3, 0.48 M parameters.</li>
+<li><b>Loss:</b> pixel-wise cross-entropy (the paper's "pixel-wise soft-max … combined with the cross entropy loss").</li>
+<li><b>Metric:</b> Dice = 2|A ∩ B| / (|A| + |B|).</li>
+<li><b>Result:</b> mean Dice <b>0.94</b> after 10 epochs (≈ 70 s on CPU).</li>
+<li><b>Ablation:</b> same network <b>without skip connections</b> → mean Dice <b>0.89</b> (triangles 0.93 → <b>0.83</b>). The skips carry the fine detail.</li>
+</ul>
+</div>
+<div>
+<img class="fig" src="assets/07_paper_implementation/g_unet_pred.png" alt="Test images, true masks and U-Net predictions" style="max-height:420px;">
+<img class="fig" src="assets/07_paper_implementation/g_unet_ablation.png" alt="With and without skip connections" style="max-height:200px; margin-top:6px;">
+</div>
+</div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/04-unet-from-paper.ipynb" style="right:24px; top:6px;">&#9654;&#xFE0E; Lab 7D in Colab</a>
+</section>
+
+<section id="level-5-quiz" class="slide level2" data-menu-title="Level 5 quiz">
+<h2>Level 5 check: U-Net</h2>
+<div class="quiz">
+<p class="q">Answer out loud, then click</p>
+<ol class="tight">
+<li>Fourth level: 64 × 64 × 512 → 2 × 2 max-pool → ? → two unpadded 3 × 3 convs with 1024 filters → ? → 2 × 2 up-conv → ?</li>
+<li>The up-conv gives 512 channels and the skip has 512 channels. How many channels go into the next DoubleConv?</li>
+<li>Your prediction for class "triangle" has 40 pixels, the truth has 60, and 30 pixels overlap. Dice?</li>
+</ol>
+<div class="answer fragment"><b>1.</b> 64² × 512 → pool → <b>32² × 512</b> → 30² → <b>28² × 1024</b> → up-conv → <b>56² × 512</b> (check against the bottom of Figure 1).</div>
+<div class="answer fragment"><b>2.</b> <b>1024</b>: concatenation adds channels (512 + 512). Then the DoubleConv brings it back to 512.</div>
+<div class="answer fragment"><b>3.</b> 2 · 30 / (40 + 60) = 60 / 100 = <b>0.60</b>.</div>
+</div>
+</section>
+
+<!-- ============================ LEVEL 6 ============================ -->
+<section id="level-6" class="slide level2 center" data-background-color="#28568a" data-menu-title="Level 6 · Paper 3: ResNet">
+<p class="sec-num">6</p>
+<p class="sec-title">Paper 3: ResNet</p>
+<p class="sec-sub"><b>Level 6</b> · He, Zhang, Ren &amp; Sun, CVPR 2016 (Best Paper) · why deeper was worse, and the fix · Lab 7E</p>
+</section>
+
+<section id="resnet-degradation" class="slide level2" data-menu-title="ResNet: the degradation problem">
+<p class="kicker">Level 6 · step 1 · Figure 1</p>
+<h2>The surprise: a deeper network was <i>worse</i>, even on training data</h2>
+<div class="grid2">
+<div>
+<img class="fig" src="assets/07_paper_implementation/p_resnet_fig1.png" alt="Figure 1 of ResNet: 56-layer plain network has higher training and test error than 20-layer">
+<p class="cap">Paper, Figure 1 (CIFAR-10): the 56-layer plain net has higher <b>training</b> and test error than the 20-layer one.</p>
+</div>
+<div>
+<img class="fig" src="assets/07_paper_implementation/g_resnet_degradation.png" alt="Our reproduction: plain-56 fails to train, ResNet-56 trains well">
+<p class="cap"><b>Our reproduction</b> in Lab 7E (8 × 8 digits, 1 min on CPU): plain-56 stays at 36 % test accuracy; with shortcuts, ResNet-56 reaches 98 %.</p>
+</div>
+</div>
+<p class="plain"><b>Why is this strange?</b> A 56-layer net could copy the 20-layer net and make the other 36 layers do nothing (identity). So it should be <i>at least as good</i>. It isn't: plain layers find it hard to learn "do nothing". This is <b>not overfitting</b> (training error is higher too).</p>
+</section>
+
+<section id="resnet-residual-block" class="slide level2" data-menu-title="The residual block">
+<p class="kicker">Level 6 · step 2 · Figure 2</p>
+<h2>The fix: learn the <i>change</i>, F(x) = H(x) − x, and add x back</h2>
+<div class="grid2">
+<div>
+<img class="fig" src="assets/07_paper_implementation/p_resnet_fig2.png" alt="Figure 2 of ResNet: the residual block" style="max-height:260px;">
+<p>\[ y = \mathcal{F}(x, \{W_i\}) + x \]</p>
+<p class="small">If the best thing a block can do is nothing, it only has to push F(x) to 0: easy. Gradients also flow straight through the "+ x" path to early layers.</p>
+<p class="plain"><b>Analogy:</b> editing an essay is easier than rewriting it. Each block makes a small <b>edit</b> to x instead of producing a whole new x.</p>
+</div>
+<pre class="code-sm"><code class="python">class BasicBlock(nn.Module):
+    def __init__(self, cin, cout, stride=1):
+        super().__init__()
+        self.conv1 = nn.Conv2d(cin, cout, 3, stride, 1, bias=False)
+        self.bn1 = nn.BatchNorm2d(cout)
+        self.conv2 = nn.Conv2d(cout, cout, 3, 1, 1, bias=False)
+        self.bn2 = nn.BatchNorm2d(cout)
+        self.relu = nn.ReLU(inplace=True)
+        self.downsample = None                       # identity shortcut
+        if stride != 1 or cin != cout:               # projection shortcut
+            self.downsample = nn.Sequential(          # (option B, §3.3)
+                nn.Conv2d(cin, cout, 1, stride, bias=False),
+                nn.BatchNorm2d(cout))
+
+    def forward(self, x):
+        identity = x if self.downsample is None else self.downsample(x)
+        out = self.relu(self.bn1(self.conv1(x)))
+        out = self.bn2(self.conv2(out))
+        return self.relu(out + identity)             # ReLU AFTER the add
+</code></pre>
+</div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/05-resnet-from-paper.ipynb" style="right:24px; top:6px;">&#9654;&#xFE0E; Lab 7E in Colab</a>
+</section>
+
+<section id="resnet-table-1" class="slide level2" data-menu-title="ResNet: Table 1 and the ultimate test">
+<p class="kicker">Level 6 · step 3 · Table 1</p>
+<h2>Table 1 → ResNet-18/34/50, and the ultimate correctness test</h2>
+<div class="grid2">
+<div>
+<table class="simple">
+<tr><th>stage</th><th>size</th><th>ResNet-18</th><th>ResNet-34</th><th>ResNet-50</th></tr>
+<tr><td>conv1</td><td>112²</td><td colspan="3">7 × 7, 64, stride 2 · then 3 × 3 max-pool</td></tr>
+<tr><td>conv2_x</td><td>56²</td><td>2 blocks</td><td>3</td><td>3 bottlenecks</td></tr>
+<tr><td>conv3_x</td><td>28²</td><td>2</td><td>4</td><td>4</td></tr>
+<tr><td>conv4_x</td><td>14²</td><td>2</td><td>6</td><td>6</td></tr>
+<tr><td>conv5_x</td><td>7²</td><td>2</td><td>3</td><td>3</td></tr>
+<tr><td colspan="2">parameters</td><td><b>11 689 512</b></td><td><b>21 797 672</b></td><td><b>25 557 032</b></td></tr>
+</table>
+<p class="small">Lab 7E checks your counts against <code>torchvision</code> to the last parameter.</p>
+</div>
+<div>
+<img class="fig" src="assets/07_paper_implementation/g_resnet_photos.png" alt="Our ResNet-18 code with official ImageNet weights classifies two photos" style="max-height:330px;">
+<p class="cap"><b>Ultimate test:</b> load the official ImageNet weights into <i>your</i> class with <code>strict=True</code>. If a single name or shape differs, it fails. It works, so your code <b>is</b> ResNet-18.</p>
+</div>
+</div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/05-resnet-from-paper.ipynb" style="right:24px; top:6px;">&#9654;&#xFE0E; Lab 7E in Colab</a>
+</section>
+
+<section id="level-6-quiz" class="slide level2" data-menu-title="Level 6 quiz">
+<h2>Level 6 check: ResNet</h2>
+<div class="quiz">
+<p class="q">Answer out loud, then click</p>
+<ol class="tight">
+<li>Why do ResNet convolutions use <code>bias=False</code>?</li>
+<li>A block maps (B, 64, 56, 56) to (B, 128, 28, 28). Why can't you just add x, and what does the paper do?</li>
+<li>The 56-layer plain net has a <i>higher training error</i> than the 20-layer one. Is it overfitting?</li>
+</ol>
+<div class="answer fragment"><b>1.</b> Each conv is followed by BatchNorm, which subtracts the mean (removing any bias) and has its own learned shift β. A bias would be wasted parameters.</div>
+<div class="answer fragment"><b>2.</b> Shapes differ (channels and size). The shortcut becomes a <b>1 × 1 conv with stride 2</b> (+ BN): a "projection shortcut".</div>
+<div class="answer fragment"><b>3.</b> No. Overfitting = low training error, high test error. Here <b>training</b> error is higher: an <b>optimisation</b> problem, which residual connections solve.</div>
+</div>
+</section>
+
+<!-- ============================ LEVEL 7 ============================ -->
+<section id="level-7" class="slide level2 center" data-background-color="#28568a" data-menu-title="Level 7 · Paper 4: Vision Transformer">
+<p class="sec-num">7</p>
+<p class="sec-title">Paper 4: An Image is Worth 16×16 Words</p>
+<p class="sec-sub"><b>Level 7</b> · Dosovitskiy et al., ICLR 2021 · the Vision Transformer (ViT) · Lab 7F</p>
+</section>
+
+<section id="vit-figure-1" class="slide level2" data-menu-title="ViT: Figure 1 and Equations 1–4">
+<p class="kicker">Level 7 · step 1 · Figure 1, Eq. 1–4</p>
+<h2>ViT: cut the image into patches and treat them as words</h2>
+<img class="fig" src="assets/07_paper_implementation/p_vit_fig1.png" alt="Figure 1 of the ViT paper" style="max-height:330px;">
+<table class="simple" style="margin-top:0.3em;">
+<tr><th>Eq.</th><th>Formula</th><th>In plain words</th><th>Code</th></tr>
+<tr><td>1</td><td>z₀ = [x<sub>class</sub>; x<sub>p</sub>¹E; …; x<sub>p</sub><sup>N</sup>E] + E<sub>pos</sub></td><td>patches → vectors, add a [class] token in front, add learned positions</td><td><code>Conv2d(3, D, 16, stride=16)</code>, <code>cat</code>, <code>+ pos_embed</code></td></tr>
+<tr><td>2</td><td>z′ = MSA(LN(z)) + z</td><td>attention, <b>pre-norm</b>, residual</td><td><code>x = x + attn(norm1(x))</code></td></tr>
+<tr><td>3</td><td>z = MLP(LN(z′)) + z′</td><td>MLP (GELU), pre-norm, residual</td><td><code>x = x + mlp(norm2(x))</code></td></tr>
+<tr><td>4</td><td>y = LN(z<sub>L</sub>⁰)</td><td>the final [class] token is the image summary</td><td><code>head(norm(x)[:, 0])</code></td></tr>
+</table>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/06-vit-from-paper.ipynb" style="right:24px; top:6px;">&#9654;&#xFE0E; Lab 7F in Colab</a>
+</section>
+
+<section id="demo-patchify" class="slide level2" data-menu-title="Live demo: an image as a sequence of patches">
+<p class="kicker">Level 7 · step 2 · live demo</p>
+<h2>An image as a sentence of patches</h2>
+<div class="grid2 wide-left">
+<div><canvas id="vp-canvas" width="640" height="640"></canvas></div>
+<div>
+<div class="demo-box">
+<label>image size <select id="vp-img"><option value="224" selected>224 × 224</option><option value="384">384 × 384</option></select></label>
+<label>patch size P <select id="vp-p"><option>8</option><option>14</option><option selected>16</option><option>32</option></select></label>
+<div class="btnrow"><button class="dbtn" id="vp-shuffle">shuffle patches</button><button class="dbtn" id="vp-reset">reset</button></div>
+<pre id="vp-out" style="font-size:0.5em; margin-top:0.4em;"></pre>
+</div>
+<p class="tryit"><b>🖐 Think:</b> press <b>shuffle</b>. Without position embeddings, ViT sees exactly this jumble (a "bag of patches"). Lab 7F: removing them drops our tiny ViT from 98.6 % to <b>80.5 %</b>.</p>
+</div>
+</div>
+<aside class="notes">Hover over the image: each patch is one token of P·P·3 numbers. Switch P from 16 to 8: four times more tokens, sixteen times more attention cost (N²). That is why high-resolution ViTs are expensive, and why Swin uses local windows.</aside>
+</section>
+
+<section id="vit-code" class="slide level2" data-menu-title="ViT: the code">
+<p class="kicker">Level 7 · step 3 · paper → code</p>
+<h2>ViT in 25 lines (reusing the Transformer encoder)</h2>
+<div class="grid2 wide-left">
+<pre class="code-sm"><code class="python">class PatchEmbedding(nn.Module):        # "linear projection of flattened patches"
+    def __init__(self, img_size, patch, in_ch, dim):
+        super().__init__()
+        self.n_patches = (img_size // patch) ** 2
+        self.proj = nn.Conv2d(in_ch, dim, kernel_size=patch, stride=patch)
+    def forward(self, x):                                   # (B, 3, 224, 224)
+        return self.proj(x).flatten(2).transpose(1, 2)      # (B, 196, 768)
+
+class ViT(nn.Module):
+    def __init__(self, img_size=224, patch=16, in_ch=3, n_classes=1000,
+                 dim=768, depth=12, heads=12, mlp_dim=3072, dropout=0.0):
+        super().__init__()
+        self.patch_embed = PatchEmbedding(img_size, patch, in_ch, dim)
+        n = self.patch_embed.n_patches
+        self.cls_token = nn.Parameter(torch.zeros(1, 1, dim))
+        self.pos_embed = nn.Parameter(torch.randn(1, n + 1, dim) * 0.02)
+        self.blocks = nn.Sequential(*[EncoderBlock(dim, heads, mlp_dim, dropout)
+                                      for _ in range(depth)])
+        self.norm = nn.LayerNorm(dim, eps=1e-6)
+        self.head = nn.Linear(dim, n_classes)
+
+    def forward(self, x):
+        x = self.patch_embed(x)                                        # Eq. 1
+        x = torch.cat([self.cls_token.expand(x.size(0), -1, -1), x], 1) + self.pos_embed
+        x = self.blocks(x)                                             # Eq. 2–3
+        return self.head(self.norm(x)[:, 0])                           # Eq. 4
+</code></pre>
+<div>
+<p class="small">✅ Lab 7F: <code>ViT()</code> has <b>86 567 656</b> parameters, identical to <code>torchvision.models.vit_b_16()</code> (the paper's "ViT-Base, 86M").</p>
+<p class="note">A 16 × 16 conv with stride 16 <b>is</b> a linear layer on flattened patches: each output position sees one patch, no overlap. Lab 7F proves it numerically.</p>
+<p class="small"><b>Tiny ViT on 8 × 8 digits</b> (2 × 2 patches, 16 tokens, D = 64, 4 blocks): <b>98.6 %</b> test accuracy in ≈ 40 s on CPU.</p>
+<img class="fig" src="assets/07_paper_implementation/g_vit_attention.png" alt="Where the class token looks on handwritten digits" style="max-height:190px;">
+</div>
+</div>
+<a class="absolute lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/06-vit-from-paper.ipynb" style="right:24px; top:6px;">&#9654;&#xFE0E; Lab 7F in Colab</a>
+</section>
+
+<section id="cnn-vs-vit" class="slide level2" data-menu-title="CNN or ViT?">
+<p class="kicker">Level 7 · step 4 · what the paper found</p>
+<h2>CNN or ViT? It depends on how much data you have</h2>
+<div class="grid2">
+<div class="card"><h3>CNN (ResNet)</h3>
+<ul class="tight">
+<li>Built-in assumptions ("inductive bias"): <b>locality</b> (3 × 3 neighbours) and <b>translation equivariance</b></li>
+<li>Learns well from <b>small</b> datasets</li>
+<li>Cheap at high resolution (cost ∝ pixels)</li>
+<li>Best for: Raspberry Pi, small custom datasets</li>
+</ul></div>
+<div class="card" style="border-left-color:#ea580c;"><h3>ViT</h3>
+<ul class="tight">
+<li>Almost no built-in assumptions: must <b>learn</b> that nearby patches matter</li>
+<li>Paper: on ImageNet alone (1.3 M images), a few points <b>below</b> comparable ResNets; pre-trained on <b>JFT-300M</b> it beats them (ViT-H/14: 88.55 % top-1)</li>
+<li>Attention cost ∝ N² tokens</li>
+<li>Best for: large pre-trained models (CLIP, SAM, DINOv2, VLMs), then fine-tune</li>
+</ul></div>
+</div>
+<p class="plain"><b>Practical rule:</b> small data and no pre-training → CNN. Pre-trained ViT available (most are, on Hugging Face) → fine-tune the ViT. Lecture 4's SmolVLM and SAM use ViT encoders for exactly this reason.</p>
+</section>
+
+<section id="level-7-quiz" class="slide level2" data-menu-title="Level 7 quiz">
+<h2>Level 7 check: ViT</h2>
+<div class="quiz">
+<p class="q">Answer out loud, then click</p>
+<ol class="tight">
+<li>ViT-B/16 at 224 × 224: how many patch tokens? What is the sequence length after adding [class]?</li>
+<li>Same model at 384 × 384: how many tokens? About how much more attention compute?</li>
+<li>What does the [class] token "see" at the input, and why can it summarise the image at the output?</li>
+</ol>
+<div class="answer fragment"><b>1.</b> (224/16)² = 14² = <b>196</b> patches; + 1 [class] = <b>197</b>.</div>
+<div class="answer fragment"><b>2.</b> (384/16)² = 24² = <b>576</b> tokens; attention ∝ N², so (577/197)² ≈ <b>8.6 ×</b> more.</div>
+<div class="answer fragment"><b>3.</b> Nothing image-specific: it starts as a learned vector. Through attention in every layer it gathers information from all patches, so after 12 layers it is a summary of the whole image.</div>
+</div>
+</section>
+
+<!-- ============================ LEVEL 8 ============================ -->
+<section id="level-8" class="slide level2 center" data-background-color="#28568a" data-menu-title="Level 8 · Advanced: your next paper">
+<p class="sec-num">8</p>
+<p class="sec-title">Advanced: your next paper and your own research</p>
+<p class="sec-sub"><b>Level 8</b> · a menu of vision papers, the bug hunt, the Paper Implementation Challenge, from implementing to research</p>
+</section>
+
+<section id="paper-menu" class="slide level2" data-menu-title="Paper menu for Intelligent Vision students">
+<p class="kicker">Level 8 · step 1 · choose your next paper</p>
+<h2>Paper menu for Intelligent Vision students</h2>
+<table class="simple">
+<tr><th>Paper</th><th>Year</th><th>You learn</th><th>Difficulty</th><th>Colab?</th></tr>
+<tr><td><a href="https://arxiv.org/abs/1709.01507">SE-Net</a> (worked example in 7H)</td><td>2018</td><td>channel attention, plug-in modules</td><td>★☆☆</td><td>CPU</td></tr>
+<tr><td><a href="https://arxiv.org/abs/1801.04381">MobileNetV2</a></td><td>2018</td><td>depthwise separable convs, inverted residuals: <b>Raspberry Pi</b>-friendly</td><td>★☆☆</td><td>CPU/GPU</td></tr>
+<tr><td><a href="https://arxiv.org/abs/1409.1556">VGG</a> · <a href="https://arxiv.org/abs/1502.03167">BatchNorm</a></td><td>2014–15</td><td>depth with 3 × 3 convs · normalisation from the equations</td><td>★☆☆</td><td>GPU</td></tr>
+<tr><td><a href="https://arxiv.org/abs/1506.02640">YOLO v1</a></td><td>2016</td><td>detection as regression: grid, boxes, the YOLO loss</td><td>★★☆</td><td>GPU</td></tr>
+<tr><td><a href="https://arxiv.org/abs/1511.06434">DCGAN</a></td><td>2016</td><td>generator vs discriminator: generate faces/digits</td><td>★★☆</td><td>GPU</td></tr>
+<tr><td><a href="https://arxiv.org/abs/2006.11239">DDPM (diffusion)</a></td><td>2020</td><td>how image generators work; uses your U-Net!</td><td>★★☆</td><td>GPU</td></tr>
+<tr><td><a href="https://arxiv.org/abs/2103.00020">CLIP</a></td><td>2021</td><td>images + text in one space; contrastive loss; zero-shot</td><td>★★☆</td><td>GPU</td></tr>
+<tr><td><a href="https://arxiv.org/abs/2005.12872">DETR</a></td><td>2020</td><td>detection with a Transformer + Hungarian matching (RF-DETR's ancestor)</td><td>★★★</td><td>GPU</td></tr>
+<tr><td><a href="https://arxiv.org/abs/2003.08934">NeRF</a></td><td>2020</td><td>3-D scenes from photos; volume rendering (uses Lecture 6's cameras)</td><td>★★★</td><td>GPU</td></tr>
+<tr><td><a href="https://arxiv.org/abs/2103.14030">Swin</a> · <a href="https://arxiv.org/abs/2111.06377">MAE</a> · <a href="https://arxiv.org/abs/2304.02643">SAM</a></td><td>2021–23</td><td>windowed attention · masked pre-training · promptable segmentation</td><td>★★★</td><td>GPU</td></tr>
+</table>
+<p class="small">More: <a href="https://arxiv.org/abs/1411.4038">FCN</a> · <a href="https://arxiv.org/abs/1703.06870">Mask R-CNN</a> · <a href="https://arxiv.org/abs/2002.05709">SimCLR</a> · <a href="https://arxiv.org/abs/2201.03545">ConvNeXt</a> · <a href="https://arxiv.org/abs/2304.07193">DINOv2</a> · <a href="https://arxiv.org/abs/2308.04079">3D Gaussian Splatting</a> · <a href="https://arxiv.org/abs/2306.03092">Neuralangelo</a> · <a href="https://arxiv.org/abs/2408.00714">SAM 2</a></p>
+</section>
+
+<section id="bug-hunt" class="slide level2" data-menu-title="Bug hunt (Lab 7G)">
+<p class="kicker">Level 8 · step 2 · Lab 7G, in pairs</p>
+<h2>Bug hunt 🐞: eight bugs that do <i>not</i> crash</h2>
+<div class="grid2">
+<div>
+<table class="simple">
+<tr><th>#</th><th>Paper</th><th>Bug (no error message!)</th></tr>
+<tr><td>1</td><td>Transformer</td><td>divides by d<sub>k</sub> instead of √d<sub>k</sub></td></tr>
+<tr><td>2</td><td>Transformer</td><td>softmax over the wrong axis</td></tr>
+<tr><td>3</td><td>Transformer</td><td>causal mask hides the token itself</td></tr>
+<tr><td>4</td><td>Transformer</td><td>heads split with <code>view</code> only</td></tr>
+<tr><td>5</td><td>U-Net</td><td>skip concatenated on the wrong axis</td></tr>
+<tr><td>6</td><td>ResNet</td><td>no projection shortcut, ReLU before add</td></tr>
+<tr><td>7</td><td>ViT</td><td>patches cut as stripes (reshape only)</td></tr>
+<tr><td>8</td><td>any</td><td>missing <code>zero_grad()</code></td></tr>
+</table>
+</div>
+<div>
+<p class="small"><b>Rules:</b> one reads the paper/slide, one edits the code; swap after every bug. Change as little as possible. Each fix has its own ✅ check and there is a scoreboard to 8/8.</p>
+<p class="note">For every bug, write: <b>what</b> was wrong · <b>how</b> you found it · which <b>habit</b> (Level 3) would have caught it. That list becomes your personal debugging checklist.</p>
+<a class="lab-link" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/07-paper-bug-hunt.ipynb" style="position:static; display:inline-block; margin-top:0.4em;">&#9654;&#xFE0E; Lab 7G in Colab</a>
+</div>
+</div>
+</section>
+
+<section id="paper-challenge" class="slide level2" data-menu-title="The Paper Implementation Challenge">
+<p class="kicker">Level 8 · step 3 · your project</p>
+<h2>The Paper Implementation Challenge: 3 to 5 papers</h2>
+<div class="grid3">
+<div class="card" style="border-left-color:#b08d57;"><h3>🥉 Bronze: 3 papers</h3><p><b>Transformer</b> (7B + 7C), <b>U-Net</b> (7D), and <b>ResNet</b> (7E) <i>or</i> <b>ViT</b> (7F). Each with a paper card, a shape table, all ✅ checks and the "Your turn" experiments.</p></div>
+<div class="card" style="border-left-color:#8a9aa9;"><h3>🥈 Silver: 4 papers</h3><p>Bronze + <b>both</b> ResNet and ViT, <b>or</b> Bronze + one ★☆☆ / ★★☆ paper from the menu, done with the Lab 7H template.</p></div>
+<div class="card" style="border-left-color:#d4a017;"><h3>🥇 Gold: 5 papers</h3><p>All four lab papers + one menu paper rated ★★☆ or ★★★ (YOLO v1, DDPM, CLIP, DETR, NeRF…), with an ablation and a reproduction report.</p></div>
+</div>
+<table class="simple" style="margin-top:0.4em; font-size:0.52em;">
+<tr><th>For every paper, hand in</th><th>Marks</th></tr>
+<tr><td>Paper card + shape table + equations → code table (your own words)</td><td>20 %</td></tr>
+<tr><td>Correct implementation: tests / ✅ checks / parameter counts / overfit-one-batch</td><td>30 %</td></tr>
+<tr><td>Small experiment + one ablation, with a table or plot (several seeds where possible)</td><td>25 %</td></tr>
+<tr><td>Reproduction report: what matched, what didn't and why, AI-use declaration</td><td>15 %</td></tr>
+<tr><td>Clean code (functions/classes, comments that cite the paper's equations)</td><td>10 %</td></tr>
+</table>
+<p class="small" style="margin-top:0.3em;">Plus a 3-minute <b>viva</b>: explain any line of your code. Template: <a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/08-implement-your-own-paper.ipynb">Lab 7H</a> · details on the <a href="../labs.html#lab-7-challenge">labs page</a>.</p>
+</section>
+
+<section id="reproduction-report" class="slide level2" data-menu-title="Writing a reproduction report">
+<p class="kicker">Level 8 · step 4</p>
+<h2>Writing an honest reproduction report</h2>
+<div class="grid2">
+<div>
+<ol class="tight small">
+<li><b>Claim:</b> which result of the paper did you test? ("§3.3 and Table 2: SE adds ≈ 10 % parameters and lowers the error")</li>
+<li><b>Setup:</b> data, model size, epochs, optimiser; and how they <b>differ</b> from the paper.</li>
+<li><b>Results:</b> a table with your numbers next to the paper's; mean ± std over 3 seeds.</li>
+<li><b>Ablation:</b> what happens without the paper's key idea?</li>
+<li><b>Discussion:</b> what matched, what didn't, your best explanation.</li>
+<li><b>Next steps</b> with more compute.</li>
+<li><b>AI-use declaration</b> and references.</li>
+</ol>
+</div>
+<div>
+<div class="card" style="border-left-color:#ea580c;"><h3>Honesty beats "good" numbers</h3>
+<p>In the Lab 7H worked example our small test does <b>not</b> show SE-Net's improvement: the difference is inside the seed-to-seed noise. Saying so, and explaining why (tiny data, 8 × 8 images), earns <b>full marks</b>. Hiding it or running seeds until it "works" is cheating.</p></div>
+<p class="note">The parameter count matched the paper exactly (+2.53 M, +9.9 %). Report what matched too: it shows your implementation is right.</p>
+</div>
+</div>
+</section>
+
+<section id="from-implementing-to-research" class="slide level2" data-menu-title="From implementing to research">
+<p class="kicker">Level 8 · step 5</p>
+<h2>From implementing papers to doing research</h2>
+<div class="pipe">
+<div class="st">Implement<small>a paper (today)</small></div><div class="ar">→</div>
+<div class="st">Apply<small>to new data</small></div><div class="ar">→</div>
+<div class="st">Find a weakness<small>where does it fail?</small></div><div class="ar">→</div>
+<div class="st on">Change one thing<small>your idea</small></div><div class="ar">→</div>
+<div class="st">Ablate &amp; compare<small>vs the baseline</small></div><div class="ar">→</div>
+<div class="st">Write it up<small>report, poster, paper</small></div>
+</div>
+<div class="grid2" style="margin-top:0.4em;">
+<div class="card"><h3>Mini-research ideas (FYP / MSc starters)</h3>
+<ul class="tight">
+<li>U-Net for <b>road crack / pothole</b> segmentation on local street photos; does the paper's weighted loss help thin cracks?</li>
+<li>ResNet vs ViT vs MobileNetV2 on a <b>small local dataset</b> (currency notes, crop disease, fruits): accuracy vs data size vs Pi 5 speed</li>
+<li>SE blocks inside a <b>Raspberry Pi</b> classifier: accuracy gain vs latency</li>
+<li>A small Transformer that reads <b>number plates</b> as sequences</li>
+</ul></div>
+<div class="card" style="border-left-color:#ea580c;"><h3>Habits of researchers</h3>
+<ul class="tight">
+<li>Read <b>one paper a week</b> (Hugging Face Daily Papers), pass 1 only; implement one a month</li>
+<li>Keep a <b>lab notebook</b>: every run, its settings, its result</li>
+<li>Put your implementations on <b>GitHub</b> with a README and results table: your portfolio</li>
+<li>Always have a <b>baseline</b> and an <b>ablation</b></li>
+</ul></div>
+</div>
+</section>
+
+<section id="ai-and-the-future-of-coding" class="slide level2" data-menu-title="AI coding tools and the future of coding">
+<p class="kicker">Level 8 · step 6</p>
+<h2>AI coding agents: what changes, and what does not</h2>
+<div class="grid2">
+<div>
+<table class="simple">
+<tr><th>Step</th><th>You</th><th>AI assistant (Cursor, Claude, Copilot, Gemini)</th></tr>
+<tr><td>Understand</td><td>read the paper, write the card</td><td>explains terms and equations</td></tr>
+<tr><td>Specify</td><td><b>shape table, tests, parameter counts</b></td><td>reviews your table</td></tr>
+<tr><td>Code</td><td>write the core (Lab 7); later, supervise</td><td>boilerplate: data loading, plotting, logging</td></tr>
+<tr><td>Verify</td><td><b>checks vs paper and reference</b></td><td>suggests where a bug may be</td></tr>
+<tr><td>Conclude</td><td><b>experiments, judgement, report</b></td><td>proof-reads</td></tr>
+</table>
+</div>
+<div>
+<p class="small"><b>"Don't just learn to code, learn to solve problems."</b> AI agents now write a lot of the code. What they cannot do for you: know what the paper <i>really</i> says, design the test that catches a silent bug, and decide whether a result is believable.</p>
+<p class="warn">AI-generated implementations of papers often contain exactly the bugs of Lab 7G (wrong softmax axis, <code>view</code> without <code>transpose</code>). They run, look plausible, and are wrong. <b>The person who can check them is valuable.</b></p>
+<p class="plain"><b>Stay ahead:</b> paper reading + PyTorch + testing + an AI assistant you know how to direct. That combination is what employers and MSc supervisors look for in 2026.</p>
+</div>
+</div>
+</section>
+
+<section id="faq" class="slide level2" data-menu-title="Questions students always ask">
+<h2>Questions students always ask</h2>
+<div class="grid2">
+<div>
+<p class="small"><b>I don't understand the maths in the paper. Can I still implement it?</b><br>Yes. Most vision papers need matrix multiplication and a few functions (softmax, sigmoid). Translate one symbol at a time into a tensor with a shape; the code often makes the maths clear.</p>
+<p class="small"><b>Do I need a GPU?</b><br>Not for Lab 7 (all CPU, minutes). For menu papers use Colab's free T4 and shrink the data/model first.</p>
+<p class="small"><b>The official code differs from the paper. Which is right?</b><br>For reproducing results, the code. Note the difference in your report: it is a finding.</p>
+</div>
+<div>
+<p class="small"><b>My numbers are lower than the paper's.</b><br>Expected: they trained bigger models, longer, on more data. Compare <b>trends</b> (does the ablation hurt? does depth help?), not absolute numbers.</p>
+<p class="small"><b>Can I use code from GitHub?</b><br>To check details after trying yourself: yes, cite it. Copying it as your implementation: no, and the viva will show it.</p>
+<p class="small"><b>How long does one paper take?</b><br>Lab-sized papers: 2–4 hours. A ★★☆ menu paper: about a week of evenings. That is normal, even for professionals.</p>
+</div>
+</div>
+</section>
+
+<section id="summary" class="slide level2" data-menu-title="Summary">
+<h2>Summary</h2>
+<div class="grid2">
+<div class="card"><h3>Reading</h3>
+<ul class="tight">
+<li>A paper = recipe + evidence; the <b>architecture figure</b> is the most important part</li>
+<li><b>Three passes</b>: 10 min (5 Cs) → 1 h (figures, method, shapes) → implement</li>
+<li>One-page <b>paper card</b>; AI as a <b>tutor</b>, never a ghost-writer</li>
+<li>arXiv · HF Daily Papers · alphaXiv · CVF · OpenReview · Connected Papers</li>
+</ul></div>
+<div class="card" style="border-left-color:#ea580c;"><h3>Implementing</h3>
+<ul class="tight">
+<li>7 steps: card → shapes → map → <b>build &amp; test</b> → overfit → experiment → report</li>
+<li><b>Attention</b> = softmax(QKᵀ/√d<sub>k</sub>)V; multi-head = view + transpose; positions by sin/cos</li>
+<li><b>U-Net</b> = contracting + expansive path + skip connections (572 → 388)</li>
+<li><b>ResNet</b> = F(x) + x; <b>ViT</b> = patches + [class] + Transformer encoder</li>
+<li>Verify with shapes, hand examples, references, parameter counts, ablations</li>
+</ul></div>
+</div>
+<p class="note" style="margin-top:0.6em;">Next: the Paper Implementation Challenge (3–5 papers). Later lectures use these models directly: segmentation (U-Net), detection (DETR/YOLO) and ViT-based foundation models.</p>
+</section>
+
+<section id="lab-7-and-resources" class="slide level2" data-menu-title="Lab 7 &amp; resources">
+<h2>Lab 7: all notebooks (click to open in Colab)</h2>
+<div class="labgrid">
+<a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/01-pytorch-for-papers.ipynb"><b>7A</b>PyTorch for paper readers</a>
+<a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/02-attention-from-scratch.ipynb"><b>7B</b>Attention from scratch</a>
+<a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/03-transformer-reverse-sequence.ipynb"><b>7C</b>The Transformer: reverse a sequence</a>
+<a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/04-unet-from-paper.ipynb"><b>7D</b>U-Net from the paper</a>
+<a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/05-resnet-from-paper.ipynb"><b>7E</b>ResNet from the paper</a>
+<a href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/06-vit-from-paper.ipynb"><b>7F</b>Vision Transformer from the paper</a>
+<a class="vid" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/07-paper-bug-hunt.ipynb"><b>7G</b>Bug hunt 🐞 (pairs)</a>
+<a class="vid" href="https://colab.research.google.com/github/Kazimbalti/intelligent-vision-systems/blob/main/LAB/Lab_7/08-implement-your-own-paper.ipynb"><b>7H</b>Your own paper: template + SE-Net example</a>
+<a href="../labs.html#lab-7-papers"><b>📋</b>Labs page: Colab · View · Download, the Challenge</a>
+<a href="../tutorials/09_paper_implementation_setup.html"><b>🛠</b>Tutorial 09: Colab &amp; Cursor setup, reading list</a>
+</div>
+<div class="grid2" style="margin-top:0.6em;">
+<p class="tiny muted"><b>The four papers:</b> Vaswani et al., <a href="https://arxiv.org/abs/1706.03762">Attention Is All You Need</a>, NeurIPS 2017 · Ronneberger et al., <a href="https://arxiv.org/abs/1505.04597">U-Net</a>, MICCAI 2015 · He et al., <a href="https://arxiv.org/abs/1512.03385">Deep Residual Learning</a>, CVPR 2016 · Dosovitskiy et al., <a href="https://arxiv.org/abs/2010.11929">An Image is Worth 16x16 Words</a>, ICLR 2021 · Hu et al., <a href="https://arxiv.org/abs/1709.01507">Squeeze-and-Excitation Networks</a>, CVPR 2018.</p>
+<p class="tiny muted"><b>Reading:</b> Keshav, <a href="https://web.stanford.edu/class/ee384m/Handouts/HowtoReadPaper.pdf">How to Read a Paper</a> · <a href="https://nlp.seas.harvard.edu/annotated-transformer/">The Annotated Transformer</a> · <a href="https://jalammar.github.io/illustrated-transformer/">The Illustrated Transformer</a> · <a href="https://d2l.ai/">d2l.ai</a> ch. 8, 11 · <a href="https://nn.labml.ai/">labml.ai</a> · <a href="https://github.com/niconielsen32/101-transformers">101-transformers</a> · <a href="https://huggingface.co/papers">HF Daily Papers</a> · <a href="https://www.alphaxiv.org">alphaXiv</a>.</p>
+</div>
+<p class="tiny muted" style="margin-top:0.3em;"><b>Credits.</b> Paper figures and first pages are reproduced from the arXiv versions of the cited papers for teaching and commentary; © their authors. Photos in the ResNet slide: scikit-learn sample images by danielbuechele and vultilion (Flickr, CC BY 2.0); road photo: Udacity CarND (MIT). All other figures were generated by the Lab 7 notebooks.</p>
+</section>
+
+<section id="questions" class="slide level2 center" data-background-color="#28568a" data-menu-title="Questions">
+<p class="sec-title" style="text-align:center;">Questions?</p>
+<p class="sec-sub" style="text-align:center;">Next: Lab 7. Start with 7A in Colab, then build the Transformer, U-Net, ResNet and ViT yourself.</p>
+</section>
+
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+<p>Intelligent Vision Systems; University of Lahore | Dr. Muhammad Kazim</p>
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="../site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../site_libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
+  <script src="../site_libs/revealjs/plugin/quarto-support/support.js"></script>
+
+
+  <script src="../site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="../site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="../site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="../site_libs/revealjs/plugin/math/math.js"></script>
+  <script src="../site_libs/revealjs/plugin/highlight/highlight.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': false,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'pdfMaxPagesPerSlide': 1,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\"><kbd>b</kbd> Toggle Chalkboard</a></li>\n<li class=\"slide-tool-item\" data-item=\"6\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\"><kbd>c</kbd> Toggle Notes Canvas</a></li>\n<li class=\"slide-tool-item\" data-item=\"7\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\"><kbd>d</kbd> Download Drawings</a></li>\n<li class=\"slide-tool-item\" data-item=\"8\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'chalkboard': {"buttons":true},
+'smaller': false,
+
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1600,
+
+        height: 900,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.04,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, RevealChalkboard, QuartoSupport,
+
+          RevealMath,
+          RevealHighlight,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button,
+              { trigger: "manual",
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config);
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+
+
+  <script>
+  /* ---- Lecture 7 live demos ---- */
+  (function () {
+    function $(id) { return document.getElementById(id); }
+    function fmtInt(n) { return n.toLocaleString("en-US").replace(/,/g, " "); }
+
+    /* 1. anatomy of a paper */
+    function anatomyDemo() {
+      var box = $("anat-out"); if (!box) return;
+      var info = {
+        title: ["Title &amp; authors", "1", "The claim in a few words, who did it, where it was published (venue, year).", "Is it from a strong group or a well-known venue? Is it recent?"],
+        abstract: ["Abstract", "1", "Problem, idea, main result: the whole paper in ~200 words.", "Write the key idea in ONE sentence of your own."],
+        intro: ["1 · Introduction", "1 (skim) · 2", "Why the problem matters, what earlier methods lack, and a list of contributions (often bullet points at the end).", "The contributions list = what you must reproduce."],
+        related: ["Related work", "2 (skim)", "The family of earlier papers. Tells you the Context (the 2nd C).", "Which 1–2 papers must I read first? (\"We follow [12]\")"],
+        method: ["Method / Architecture", "2 · 3", "THE part you implement: the architecture figure, equations, layer sizes. U-Net: §2, half a page!", "Draw the figure yourself; write a shape table; copy each equation and explain it in words."],
+        experiments: ["Experiments &amp; tables", "1 (figures, main table) · 2", "Datasets, metrics, baselines, results tables, ablations, and the training details (optimiser, learning rate, epochs).", "Which table proves the main claim? Which ablation shows the idea matters? Where are the hyper-parameters?"],
+        conclusion: ["Conclusion", "1", "Summary and limitations (sometimes honest ones!).", "What does the paper NOT solve? That is your research opportunity."],
+        refs: ["References", "2", "The papers this one stands on.", "Mark the ones you don't know. Follow 1–2 of them, not all."],
+        appendix: ["Appendix / supplementary", "3", "Extra experiments, exact hyper-parameters, proofs, more figures.", "When your numbers don't match, the missing detail is usually here (or in the official code)."]
+      };
+      var btns = document.querySelectorAll("#anat-btns button");
+      btns.forEach(function (b) {
+        b.addEventListener("click", function () {
+          btns.forEach(function (x) { x.classList.remove("on"); }); b.classList.add("on");
+          var v = info[b.getAttribute("data-s")];
+          box.innerHTML = "<h3 style='margin:0 0 0.3em'>" + v[0] + "</h3>" +
+            "<p class='small' style='margin:0.2em 0'><span class='badge'>read in pass " + v[1] + "</span></p>" +
+            "<p class='small' style='margin:0.4em 0'><b>What it tells you:</b> " + v[2] + "</p>" +
+            "<p class='small' style='margin:0.4em 0'><b>What you do:</b> " + v[3] + "</p>";
+        });
+      });
+    }
+
+    /* 2. conv arithmetic */
+    function convDemo() {
+      if (!$("ca-n")) return;
+      var ids = ["n", "k", "s", "p", "d"];
+      function upd() {
+        var v = {}; ids.forEach(function (i) { v[i] = +$("ca-" + i).value; $("ca-" + i + "v").textContent = v[i]; });
+        var num = v.n + 2 * v.p - v.d * (v.k - 1) - 1;
+        var out = Math.floor(num / v.s) + 1;
+        var txt = "n_out = floor((n + 2p - d(k-1) - 1) / s) + 1\n      = floor((" + v.n + " + " + 2 * v.p + " - " + v.d * (v.k - 1) + " - 1) / " + v.s + ") + 1\n      = floor(" + num + " / " + v.s + ") + 1\n      = " + out;
+        if (out < 1) txt += "\n\n⚠ kernel larger than the (padded) input!";
+        else if (num % v.s !== 0) txt += "\n\nnote: " + num + " / " + v.s + " is not whole: the last " + (num % v.s) + " pixel(s) are skipped";
+        if (out === v.n) txt += "\n\n'same' padding: size unchanged";
+        txt += "\n\nPyTorch:\nnn.Conv2d(c_in, c_out, kernel_size=" + v.k + ", stride=" + v.s + ", padding=" + v.p + (v.d > 1 ? ", dilation=" + v.d : "") + ")";
+        $("ca-out").textContent = txt;
+      }
+      ids.forEach(function (i) { $("ca-" + i).addEventListener("input", upd); });
+      document.querySelectorAll("[data-ca]").forEach(function (b) {
+        b.addEventListener("click", function () {
+          var a = b.getAttribute("data-ca").split(","); ids.forEach(function (i, j) { $("ca-" + i).value = a[j]; }); upd();
+        });
+      });
+      upd();
+    }
+
+    /* 3. attention playground */
+    function attentionDemo() {
+      var cv = $("att-canvas"); if (!cv) return;
+      var ctx = cv.getContext("2d");
+      var words = ["the", "cat", "sat", "on", "the", "mat"];
+      var E = [[0.3, 0.3, 0.3, 0.3], [2, 0, 0, 0.5], [0, 2, 0, 0], [0, 1.5, 0.5, 0], [0.3, 0.3, 0.3, 0.3], [2, 0, 0, -0.5]];
+      var sel = 1, W = null;
+      function softmax(a) { var m = Math.max.apply(null, a), e = a.map(function (x) { return isFinite(x) ? Math.exp(x - m) : 0; }), s = e.reduce(function (p, q) { return p + q; }, 0); return e.map(function (x) { return x / s; }); }
+      function compute() {
+        var sc = $("att-sharp").value / 10, causal = $("att-causal").checked;
+        $("att-sharpv").textContent = sc.toFixed(1);
+        W = words.map(function (_, i) {
+          var row = words.map(function (_, j) {
+            if (causal && j > i) return -Infinity;
+            var d = 0; for (var t = 0; t < 4; t++) d += E[i][t] * sc * E[j][t] * sc;
+            return d / 2;                                   // sqrt(d_k) = sqrt(4)
+          });
+          return softmax(row);
+        });
+      }
+      function draw() {
+        compute();
+        var x0 = 90, y0 = 40, c = 80;
+        ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, cv.width, cv.height);
+        ctx.font = "18px Source Sans Pro, sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+        for (var i = 0; i < 6; i++) {
+          ctx.fillStyle = "#1f2933"; ctx.fillText(words[i], x0 + c * i + c / 2, y0 - 18); ctx.fillText(words[i], x0 - 40, y0 + c * i + c / 2);
+          for (var j = 0; j < 6; j++) {
+            var w = W[i][j], g = Math.round(255 - 215 * w);
+            ctx.fillStyle = "rgb(" + Math.round(255 - 215 * w) + "," + Math.round(255 - 170 * w) + "," + Math.round(255 - 117 * w) + ")";
+            ctx.fillRect(x0 + c * j, y0 + c * i, c - 2, c - 2);
+            ctx.fillStyle = w > 0.55 ? "#fff" : "#1f2933"; ctx.fillText(w.toFixed(2), x0 + c * j + c / 2, y0 + c * i + c / 2);
+          }
+        }
+        ctx.strokeStyle = "#ea580c"; ctx.lineWidth = 4; ctx.strokeRect(x0 - 2, y0 + c * sel - 2, 6 * c + 2, c + 2);
+        ctx.fillStyle = "#5b6b7b"; ctx.font = "16px Source Sans Pro, sans-serif"; ctx.fillText("key (looked at) →", x0 + 3 * c, y0 + 6 * c + 22);
+        ctx.save(); ctx.translate(18, y0 + 3 * c); ctx.rotate(-Math.PI / 2); ctx.fillText("query →", 0, 0); ctx.restore();
+        var best = W[sel].map(function (w, j) { return [w, j]; }).sort(function (a, b) { return b[0] - a[0]; });
+        $("att-row").innerHTML = "<b>" + words[sel] + "</b> takes " + (100 * best[0][0]).toFixed(0) + " % of its output from <b>" + words[best[0][1]] + "</b>" +
+          (best[1][0] > 0.01 ? " and " + (100 * best[1][0]).toFixed(0) + " % from <b>" + words[best[1][1]] + "</b>" : "") + ". Row sum = 1.00.";
+      }
+      cv.addEventListener("click", function (e) {
+        var r = cv.getBoundingClientRect(), y = (e.clientY - r.top) / r.height * cv.height;
+        var i = Math.floor((y - 40) / 80); if (i >= 0 && i < 6) { sel = i; draw(); }
+      });
+      ["att-sharp", "att-causal"].forEach(function (id) { $(id).addEventListener("input", draw); });
+      // sqrt(d_k) panel
+      var bc = $("att-bars").getContext("2d"), seed = 1, q = null, ks = null;
+      function rnd() { seed = (seed * 16807) % 2147483647; return seed / 2147483647; }
+      function gauss() { var u = rnd() || 1e-9, v = rnd(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
+      function regen() { q = []; ks = []; for (var t = 0; t < 1024; t++) q.push(gauss()); for (var k = 0; k < 8; k++) { var a = []; for (t = 0; t < 1024; t++) a.push(gauss()); ks.push(a); } }
+      function bars() {
+        var dk = Math.pow(2, +$("att-dk").value); $("att-dkv").textContent = dk;
+        var s = ks.map(function (k) { var d = 0; for (var t = 0; t < dk; t++) d += q[t] * k[t]; return $("att-scale").checked ? d / Math.sqrt(dk) : d; });
+        var w = softmax(s), Wd = 600, H = 190;
+        bc.fillStyle = "#fff"; bc.fillRect(0, 0, Wd, H);
+        for (var i = 0; i < 8; i++) {
+          var h = w[i] * 150;
+          bc.fillStyle = w[i] > 0.9 ? "#ea580c" : "#28568a"; bc.fillRect(20 + i * 72, 165 - h, 56, h);
+          bc.fillStyle = "#1f2933"; bc.font = "15px sans-serif"; bc.textAlign = "center"; bc.fillText(w[i].toFixed(2), 48 + i * 72, 160 - h);
+          bc.fillStyle = "#5b6b7b"; bc.fillText("key " + (i + 1), 48 + i * 72, 183);
+        }
+      }
+      $("att-dk").addEventListener("input", bars); $("att-scale").addEventListener("change", bars);
+      $("att-new").addEventListener("click", function () { seed = Math.floor(Math.random() * 1e6) + 1; regen(); bars(); });
+      regen(); bars(); draw();
+    }
+
+    /* 4. positional encoding heat map */
+    function peDemo() {
+      var cv = $("pe-canvas"); if (!cv) return;
+      var ctx = cv.getContext("2d"), d = 128, L = 100;
+      function pe(pos, i) { var k = Math.floor(i / 2) * 2, a = pos / Math.pow(10000, k / d); return i % 2 === 0 ? Math.sin(a) : Math.cos(a); }
+      function color(v) { // RdBu
+        var t = (v + 1) / 2, r, g, b;
+        if (t < 0.5) { r = Math.round(33 + 2 * t * 222); g = Math.round(102 + 2 * t * 153); b = Math.round(172 + 2 * t * 83); }
+        else { var u = (t - 0.5) * 2; r = Math.round(255 - u * 77); g = Math.round(255 - u * 231); b = Math.round(255 - u * 212); }
+        return [r, g, b];
+      }
+      function draw() {
+        d = Math.pow(2, +$("pe-d").value); L = +$("pe-L").value; $("pe-dv").textContent = d; $("pe-Lv").textContent = L;
+        var Wd = 700, H = 380, img = ctx.createImageData(Wd, H);
+        for (var y = 0; y < H; y++) for (var x = 0; x < Wd; x++) {
+          var pos = Math.floor(x / Wd * L), i = Math.floor(y / H * d), c = color(pe(pos, i)), o = 4 * (y * Wd + x);
+          img.data[o] = c[0]; img.data[o + 1] = c[1]; img.data[o + 2] = c[2]; img.data[o + 3] = 255;
+        }
+        ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, cv.width, cv.height); ctx.putImageData(img, 50, 10);
+        ctx.fillStyle = "#1f2933"; ctx.font = "16px sans-serif"; ctx.textAlign = "center";
+        ctx.fillText("position 0 → " + (L - 1), 400, 418);
+        ctx.save(); ctx.translate(20, 200); ctx.rotate(-Math.PI / 2); ctx.fillText("dimension 0 → " + (d - 1), 0, 0); ctx.restore();
+      }
+      cv.addEventListener("mousemove", function (e) {
+        var r = cv.getBoundingClientRect(), x = (e.clientX - r.left) / r.width * cv.width - 50, y = (e.clientY - r.top) / r.height * cv.height - 10;
+        if (x < 0 || y < 0 || x >= 700 || y >= 380) return;
+        var pos = Math.floor(x / 700 * L), i = Math.floor(y / 380 * d);
+        $("pe-info").innerHTML = "position <b>" + pos + "</b>, dimension <b>" + i + "</b> (" + (i % 2 ? "cos" : "sin") + ", wavelength " + (2 * Math.PI * Math.pow(10000, Math.floor(i / 2) * 2 / d)).toFixed(1) + " positions): PE = <b>" + pe(pos, i).toFixed(3) + "</b>";
+      });
+      ["pe-d", "pe-L"].forEach(function (id) { $(id).addEventListener("input", draw); });
+      draw();
+    }
+
+    /* 5. U-Net shape tracer */
+    function unetDemo() {
+      if (!$("un-n")) return;
+      function run() {
+        var n = +$("un-n").value, valid = $("un-pad").value === "valid", depth = +$("un-depth").value, base = +$("un-base").value,
+            ncls = +$("un-cls").value, bn = $("un-bn").checked, msg = "", lines = [], params = 0, convs = 0;
+        $("un-depthv").textContent = depth;
+        function dconv(cin, cout) { convs += 2; return bn ? cin * cout * 9 + cout * cout * 9 + 4 * cout : cin * cout * 9 + cout + cout * cout * 9 + cout; }
+        function pad(s, w) { s = String(s); while (s.length < w) s = s + " "; return s; }
+        var s = n, c = 1, skips = [], ok = true;
+        lines.push(pad("step", 34) + pad("size", 12) + "channels");
+        lines.push(pad("input", 34) + pad(s + "²", 12) + c);
+        for (var lv = 0; lv <= depth; lv++) {
+          var co = base * Math.pow(2, lv);
+          params += dconv(c, co); c = co;
+          if (valid) s -= 4;
+          if (s < 1) { ok = false; msg = "⚠ the image became smaller than 1 pixel: input too small for this depth"; break; }
+          lines.push(pad((lv === depth ? "bottom" : "down " + (lv + 1)) + ": 2 × conv3×3" + (valid ? "" : " p=1"), 34) + pad(s + "²", 12) + c);
+          if (lv < depth) {
+            skips.push([s, c]);
+            if (s % 2 && !msg) { ok = false; msg = "⚠ size " + s + " is odd before max-pool " + (lv + 1) + ": the paper requires even sizes (choose another input size)"; }
+            s = Math.floor(s / 2);
+            lines.push(pad("  max-pool 2×2", 34) + pad(s + "²", 12) + c);
+          }
+        }
+        if (ok || msg.indexOf("odd") >= 0) {
+          for (lv = depth - 1; lv >= 0 && s >= 1; lv--) {
+            var sk = skips[lv], co2 = c / 2;
+            params += c * co2 * 4 + co2; s *= 2; c = co2; convs += 1;
+            lines.push(pad("  up-conv 2×2", 34) + pad(s + "²", 12) + c);
+            var crop = sk[0] - s;
+            lines.push(pad("  concat skip " + (lv + 1) + (valid ? " (crop " + sk[0] + "→" + s + ")" : ""), 34) + pad(s + "²", 12) + (c + sk[1]));
+            if (crop < 0 || crop % 2) msg = msg || "⚠ skip " + (lv + 1) + " cannot be centre-cropped evenly";
+            params += dconv(c + sk[1], c); if (valid) s -= 4;
+            lines.push(pad("up " + (lv + 1) + ": 2 × conv3×3", 34) + pad(s + "²", 12) + c);
+          }
+          params += c * ncls + ncls; convs += 1;
+          lines.push(pad("head conv1×1", 34) + pad(s + "²", 12) + ncls);
+          lines.push("");
+          lines.push("output " + s + " × " + s + " × " + ncls + "   (lost " + (n - s) + " border pixels)");
+          lines.push("conv layers: " + convs + " · parameters: " + fmtInt(params));
+          if (n === 572 && valid && depth === 4 && base === 64 && !bn) lines.push("= Figure 1 of the paper: 23 conv layers, 31 030 658 parameters ✔");
+        }
+        $("un-out").textContent = lines.join("\n");
+        $("un-msg").textContent = msg;
+      }
+      ["un-n", "un-pad", "un-depth", "un-base", "un-cls", "un-bn"].forEach(function (id) { $(id).addEventListener("input", run); $(id).addEventListener("change", run); });
+      document.querySelectorAll("[data-un]").forEach(function (b) {
+        b.addEventListener("click", function () {
+          var a = b.getAttribute("data-un").split(",");
+          $("un-n").value = a[0]; $("un-pad").value = a[1]; $("un-depth").value = a[2]; $("un-base").value = a[3]; $("un-cls").value = a[4]; $("un-bn").checked = a[5] === "1"; run();
+        });
+      });
+      run();
+    }
+
+    /* 6. ViT patchify */
+    function patchDemo() {
+      var cv = $("vp-canvas"); if (!cv) return;
+      var ctx = cv.getContext("2d"), img = new Image(), order = null, hover = -1;
+      function grid() { return +$("vp-img").value / +$("vp-p").value; }
+      function reset() { var g = grid(); order = []; for (var i = 0; i < g * g; i++) order.push(i); }
+      function draw() {
+        var g = grid(), S = 640, c = S / g;
+        ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, S, S);
+        if (img.complete && img.naturalWidth) {
+          var sw = img.naturalWidth / g;
+          for (var k = 0; k < g * g; k++) {
+            var src = order[k], sx = (src % g) * sw, sy = Math.floor(src / g) * sw;
+            ctx.drawImage(img, sx, sy, sw, sw, (k % g) * c, Math.floor(k / g) * c, c, c);
+          }
+        }
+        ctx.strokeStyle = "rgba(255,255,255,0.85)"; ctx.lineWidth = g > 30 ? 0.5 : 1.2;
+        for (var t = 0; t <= g; t++) { ctx.beginPath(); ctx.moveTo(t * c, 0); ctx.lineTo(t * c, S); ctx.moveTo(0, t * c); ctx.lineTo(S, t * c); ctx.stroke(); }
+        if (hover >= 0) { ctx.strokeStyle = "#ea580c"; ctx.lineWidth = 4; ctx.strokeRect((hover % g) * c, Math.floor(hover / g) * c, c, c); }
+        var P = +$("vp-p").value, I = +$("vp-img").value, N = g * g;
+        $("vp-out").textContent =
+          "image " + I + " × " + I + " × 3, patch " + P + " × " + P + "\n" +
+          "grid " + g + " × " + g + "  →  N = " + N + " patch tokens\n" +
+          "each token = " + P + "·" + P + "·3 = " + (P * P * 3) + " numbers → Linear → D\n" +
+          "sequence length with [class] = " + (N + 1) + "\n" +
+          "attention matrix per head = " + fmtInt((N + 1) * (N + 1)) + " entries\n" +
+          "vs ViT-B/16 at 224 (197²): " + ((N + 1) * (N + 1) / (197 * 197)).toFixed(2) + " ×" +
+          (hover >= 0 ? "\n\nhovered: patch " + hover + " (row " + Math.floor(hover / g) + ", col " + (hover % g) + ")" : "");
+      }
+      cv.addEventListener("mousemove", function (e) {
+        var r = cv.getBoundingClientRect(), g = grid(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+        var h = Math.floor(y * g) * g + Math.floor(x * g); if (h !== hover) { hover = h; draw(); }
+      });
+      cv.addEventListener("mouseleave", function () { hover = -1; draw(); });
+      $("vp-img").addEventListener("change", function () { reset(); draw(); });
+      $("vp-p").addEventListener("change", function () { reset(); draw(); });
+      $("vp-shuffle").addEventListener("click", function () {
+        for (var i = order.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), t = order[i]; order[i] = order[j]; order[j] = t; } draw();
+      });
+      $("vp-reset").addEventListener("click", function () { reset(); draw(); });
+      img.onload = draw; img.src = "assets/07_paper_implementation/g_vit_input.jpg";
+      reset(); draw();
+    }
+
+    /* 7. click any slide image to view it full screen */
+    function lightbox() {
+      var box = document.createElement("div"); box.id = "lb";
+      box.innerHTML = '<img alt=""><p>Click anywhere or press Esc to close</p>';
+      document.body.appendChild(box);
+      var big = box.querySelector("img");
+      function close() { box.classList.remove("on"); big.removeAttribute("src"); }
+      box.addEventListener("click", close);
+      document.addEventListener("keydown", function (e) {
+        if (box.classList.contains("on") && (e.key === "Escape" || e.key === "Esc")) { e.stopImmediatePropagation(); e.preventDefault(); close(); }
+      }, true);
+      document.querySelector(".reveal .slides").addEventListener("click", function (e) {
+        var t = e.target;
+        if (t.tagName !== "IMG" || t.closest("a")) return;
+        if (document.documentElement.classList.contains("print-pdf")) return;
+        big.src = t.currentSrc || t.src || t.getAttribute("data-src");
+        big.alt = t.alt || "";
+        box.classList.add("on");
+      });
+    }
+    /* keep keyboard arrows inside number inputs from changing slides */
+    function guardInputs() {
+      document.querySelectorAll(".reveal input").forEach(function (el) {
+        el.addEventListener("keydown", function (e) { e.stopPropagation(); });
+      });
+    }
+
+    function init() { anatomyDemo(); convDemo(); attentionDemo(); peDemo(); unetDemo(); patchDemo(); lightbox(); guardInputs(); }
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init); else init();
+  })();
+  </script>
+</body></html>
