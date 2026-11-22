@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lecture 7 Mind Map – Intelligent Vision Systems</title>
+<meta name="description" content="One-page mind map of Lecture 7: reading research papers, tools, the 7-step recipe, PyTorch essentials, Attention and the Transformer, U-Net, ResNet, the Vision Transformer, and Lab 7.">
+<style>
+  :root { --ink: #1f2933; --muted: #5b6b7b; --navy: #1c2b45; --bg: #ffffff; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink); font-family: "Segoe UI", "Source Sans 3", system-ui, -apple-system, sans-serif; }
+  .bar { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; padding: 10px 16px; border-bottom: 1px solid #e5e9f0; font-size: 14px; }
+  .bar a { color: #28568a; text-decoration: none; font-weight: 600; }
+  .bar a:hover { text-decoration: underline; }
+  .wrap { overflow: auto; padding: 8px 0 24px; }
+  svg { display: block; margin: 0 auto; }
+  @media print { .bar { display: none; } }
+</style>
+</head>
+<body>
+<div class="bar">
+  <a href="07_Paper_Implementation.html">← Lecture 7 slides</a>
+  <a href="../tutorials/10_paper_code_side_by_side.html">Paper ↔ Code handbook</a>
+  <a href="../labs.html#lab-7-papers">Lab 7</a>
+  <a href="assets/07_paper_implementation/mindmap_lecture7.png" download>Download PNG</a>
+</div>
+<div class="wrap"><svg id="mm" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Mind map of Lecture 7: Reading and Implementing Research Papers"></svg></div>
+<script>
+(function () {
+  var CENTER = { icon: "📄", text: "Research Papers → Code" };
+  var LEFT = [
+    { icon: "📖", text: "How to Read a Paper", color: "#2563eb", items: [
+      ["Anatomy of a paper", "title, abstract, method, experiments, appendix"],
+      ["Three-pass method", "10 min → 1 hour → implement (Keshav, 2007)"],
+      ["The 5 Cs", "category, context, correctness, contributions, clarity"],
+      ["Paper card", "one page in your own words + shape table"],
+      ["Worked examples", "Neuralangelo, Transformer, U-Net"]]},
+    { icon: "🛠️", text: "Tools & Setup", color: "#0891b2", items: [
+      ["Find papers", "arXiv, HF Daily Papers, alphaXiv, CVF, OpenReview"],
+      ["Find code", "official repos, labml.ai, Annotated Transformer"],
+      ["Google Colab", "Save a copy in Drive; CPU is enough, T4 optional"],
+      ["Cursor", "venv → Select Kernel → AI in tutor mode"],
+      ["AI rule", "tutor, not ghost-writer; declare AI use"]]},
+    { icon: "🧭", text: "The 7-Step Recipe", color: "#7c3aed", items: [
+      ["1 · Pass 1", "paper card, decide: implement or not"],
+      ["2 · Pass 2", "figure, tensor shapes, key equations"],
+      ["3 · Map", "one box → one class, one equation → one line"],
+      ["4 · Build & test", "shape, hand example, parameter count, reference"],
+      ["5 · Overfit one batch", "loss ≈ 0, otherwise there is a bug"],
+      ["6 · Small experiment", "test the main claim + one ablation"],
+      ["7 · Honest report", "what matched, what didn't, AI-use declaration"]]},
+    { icon: "🔥", text: "PyTorch Essentials", color: "#ea580c", items: [
+      ["Tensors", "images are (B, C, H, W), channels first"],
+      ["Conv size", "⌊(n + 2p − d(k−1) − 1) / s⌋ + 1"],
+      ["reshape vs permute", "the #1 silent bug: right shape, wrong numbers"],
+      ["nn.Module", "__init__ = the boxes, forward = the arrows"],
+      ["Training loop", "zero_grad → forward → loss → backward → step"]]}
+  ];
+  var RIGHT = [
+    { icon: "⚡", text: "Attention & Transformer", color: "#dc2626", items: [
+      ["Scaled dot-product", "softmax(QKᵀ / √dₖ) · V"],
+      ["Why ÷ √dₖ", "Var(q·k) = dₖ → back to 1, softmax stays soft"],
+      ["Multi-head", "view + transpose; 4(d² + d) parameters"],
+      ["Positional encoding", "sin / cos clock gives every position a code"],
+      ["Add & Norm, FFN", "LayerNorm(x + sublayer(x)); 512 → 2048 → 512"],
+      ["Encoder / decoder", "causal mask, cross-attention to the encoder"],
+      ["Lab 7B–7C", "Transformer reverses sequences: 98.8 %"]]},
+    { icon: "🩻", text: "U-Net", color: "#059669", items: [
+      ["Architecture", "contracting path + expansive path"],
+      ["Skip connections", "copy, crop, concatenate on channels"],
+      ["Size formula", "572 → 388, out = n − 184"],
+      ["Size of the model", "23 conv layers · 31 030 658 parameters"],
+      ["Dice score", "2|A∩B| / (|A| + |B|)"],
+      ["Lab 7D ablation", "no skips: Dice 0.94 → 0.89"]]},
+    { icon: "🧱", text: "ResNet", color: "#b45309", items: [
+      ["Residual block", "y = F(x) + x, ReLU after the add"],
+      ["Gradient highway", "∂y/∂x = F′(x) + 1"],
+      ["Projection shortcut", "1×1 conv, stride 2, when shapes change"],
+      ["ResNet-18", "11 689 512 parameters = torchvision"],
+      ["Lab 7E", "plain-56: 36 % vs ResNet-56: 98 %"]]},
+    { icon: "🖼️", text: "Vision Transformer", color: "#4f46e5", items: [
+      ["Patches", "224² image → 196 patches × 768 numbers"],
+      ["Patch embedding", "Conv2d with kernel = stride = 16"],
+      ["[class] + positions", "197 tokens, learned position embeddings"],
+      ["Encoder (Eq. 2–3)", "pre-norm attention + MLP with GELU"],
+      ["ViT-B/16", "86 567 656 parameters = torchvision"],
+      ["Lab 7F", "tiny ViT 98.6 %; no positions 80.5 %"]]},
+    { icon: "🎯", text: "Lab 7 & Challenge", color: "#be185d", items: [
+      ["Notebooks 7A–7I", "auto-checks ✅ / 💡, all on a free Colab CPU"],
+      ["7G bug hunt", "8 silent bugs, in pairs"],
+      ["Paper challenge", "Bronze 3 · Silver 4 · Gold 5 papers"],
+      ["3-hour handbook", "paper ↔ code side by side + 7I workbook"]]}
+  ];
+
+  var NS = "http://www.w3.org/2000/svg", svg = document.getElementById("mm");
+  var FONT = "Segoe UI, Source Sans 3, system-ui, sans-serif", NAVY = "#1c2b45";
+  function el(tag, attrs, parent) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    (parent || svg).appendChild(e); return e;
+  }
+  function txt(s, attrs, parent) { var t = el("text", attrs, parent); t.textContent = s; return t; }
+  function width(s, size, weight) {
+    var t = txt(s, { "font-size": size, "font-weight": weight || 400, "font-family": FONT, x: -9999, y: -9999 });
+    var w = t.getComputedTextLength(); svg.removeChild(t); return w;
+  }
+  var ROW = 40, GAP = 20, TOP = 150, LBL = 16, DET = 15, PILL = 17;
+  function maxW(side, i, size, wt) { var m = 0; side.forEach(function (b) { b.items.forEach(function (it) { m = Math.max(m, width(it[i], size, wt)); }); }); return m; }
+  function pillW(b) { return width(b.text, PILL, 700) + 58; }
+  var L = { lab: maxW(LEFT, 0, LBL, 600), det: maxW(LEFT, 1, DET), pill: Math.max.apply(null, LEFT.map(pillW)) };
+  var R = { lab: maxW(RIGHT, 0, LBL, 600), det: maxW(RIGHT, 1, DET), pill: Math.max.apply(null, RIGHT.map(pillW)) };
+  var cw = width(CENTER.text, 20, 700) + 74, G1 = 70, G2 = 60, COL = 28, PAD = 40;
+  var leftLeafW = L.det + COL + L.lab + 12, rightLeafW = R.lab + COL + R.det + 12;
+  var cx = PAD + leftLeafW + G2 + L.pill + G1 + cw / 2;
+  var W = cx + cw / 2 + G1 + R.pill + G2 + rightLeafW + PAD;
+
+  function rows(side) { var n = 0; side.forEach(function (b) { n += b.items.length; }); return n * ROW + (side.length - 1) * GAP; }
+  var bodyH = Math.max(rows(LEFT), rows(RIGHT)), H = TOP + bodyH + 120, cy = TOP + bodyH / 2;
+  svg.setAttribute("viewBox", "0 0 " + W + " " + H); svg.setAttribute("width", W); svg.setAttribute("height", H);
+  el("rect", { x: 0, y: 0, width: W, height: H, fill: "#ffffff" });
+
+  // title
+  txt("Lecture 7 · Reading & Implementing Research Papers", { x: PAD, y: 56, "font-size": 30, "font-weight": 800, fill: NAVY, "font-family": FONT });
+  txt("From a PDF to working PyTorch: read a paper in three passes, then build Attention, the Transformer, U-Net, ResNet and the Vision Transformer, testing every block.",
+      { x: PAD, y: 90, "font-size": 17, fill: "#5b6b7b", "font-family": FONT });
+
+  function curve(x1, y1, x2, y2, color, w) {
+    var mx = (x1 + x2) / 2;
+    el("path", { d: "M" + x1 + "," + y1 + " C" + mx + "," + y1 + " " + mx + "," + y2 + " " + x2 + "," + y2, fill: "none", stroke: color, "stroke-width": w, "stroke-linecap": "round" });
+  }
+  function pill(x, y, w, h, b, center) {
+    var g = el("g", {});
+    el("rect", { x: x, y: y - h / 2, width: w, height: h, rx: h / 2, fill: center ? NAVY : "#f6f1e7", stroke: center ? NAVY : b.color, "stroke-width": center ? 0 : 2.5 }, g);
+    txt(b.icon, { x: x + 18, y: y + 7, "font-size": center ? 22 : 19, "font-family": "Segoe UI Emoji, Apple Color Emoji, Noto Color Emoji, sans-serif" }, g);
+    txt(b.text, { x: x + (center ? 50 : 46), y: y + 6, "font-size": center ? 20 : PILL, "font-weight": 700, fill: center ? "#ffffff" : NAVY, "font-family": FONT }, g);
+  }
+
+  function side(list, dir, m) {
+    var y = TOP + (bodyH - rows(list)) / 2;
+    var cEdge = cx + dir * cw / 2;
+    list.forEach(function (b) {
+      var n = b.items.length, top = y, by = top + (n * ROW) / 2 - ROW / 2 + 10;
+      var w = pillW(b);
+      var near = cEdge + dir * G1;                        // pill edge near the centre
+      var px = dir > 0 ? near : near - w;
+      var far = dir > 0 ? px + m.pill : px + w - m.pill;   // aligned outer edge for all pills on this side
+      var pillOuter = dir > 0 ? px + w : px;
+      curve(cEdge, cy, near, by, NAVY, 2.6);
+      b.items.forEach(function (it, i) {
+        var ly = top + i * ROW + 26, uy = ly + 9;
+        var start = far + dir * G2;                       // where the underline meets the curve
+        var end = start + dir * (dir > 0 ? rightLeafW : leftLeafW);
+        curve(pillOuter, by, start, uy, b.color, 1.8);
+        el("line", { x1: start, y1: uy, x2: end, y2: uy, stroke: b.color, "stroke-width": 1.8, "stroke-linecap": "round", opacity: 0.9 });
+        if (dir > 0) {
+          txt(it[0], { x: start + 6, y: ly, "font-size": LBL, "font-weight": 600, fill: NAVY, "font-family": FONT });
+          txt(it[1], { x: start + 6 + m.lab + COL, y: ly, "font-size": DET, fill: "#334155", "font-family": FONT });
+        } else {
+          txt(it[0], { x: start - 6, y: ly, "font-size": LBL, "font-weight": 600, fill: NAVY, "text-anchor": "end", "font-family": FONT });
+          txt(it[1], { x: start - 6 - m.lab - COL, y: ly, "font-size": DET, fill: "#334155", "text-anchor": "end", "font-family": FONT });
+        }
+      });
+      pill(px, by, w, 40, b, false);
+      y += n * ROW + GAP;
+    });
+  }
+  side(LEFT, -1, L);
+  side(RIGHT, 1, R);
+  pill(cx - cw / 2, cy, cw, 50, CENTER, true);
+
+  // footnotes
+  var fy = H - 62;
+  ["1. Ablation: remove one part of a model and measure the drop.", "2. Dice: overlap score for masks, 0 = none, 1 = perfect.  3. dₖ: features per attention head."]
+    .forEach(function (s, i) { txt(s, { x: PAD, y: fy + i * 22, "font-size": 14, fill: "#8a99aa", "font-family": FONT }); });
+  txt("Intelligent Vision Systems · University of Lahore · Dr. Muhammad Kazim", { x: W - PAD, y: H - 40, "font-size": 14, fill: "#8a99aa", "text-anchor": "end", "font-family": FONT });
+  window.MINDMAP_READY = true;
+})();
+</script>
+</body>
+</html>
